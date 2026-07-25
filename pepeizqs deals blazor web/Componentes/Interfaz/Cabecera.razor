@@ -160,13 +160,13 @@
                         @if (mostrarMinimosDropdown == true)
                         {
                             <div class="menu-dropdown-contenido-centrado">
-                                <a href="/historical-lows" style="font-size: 15px;">
+                                <a href="/historical-lows" @onclick='() => mostrarMinimosDropdown = false' style="font-size: 15px;">
                                     <div style="text-align: center;">
                                         @Herramientas.Idiomas.BuscarTexto(idioma, "HistoricalLows", "Header")
                                     </div>
                                 </a>
                                 <hr style="margin: 5px 0px; border-top: var(--glaseadoCabeceraBorde) solid; opacity: 0.6;" />
-                                <a href="/steamdeck" style="font-size: 15px;">
+                                <a href="/steamdeck" @onclick='() => mostrarMinimosDropdown = false' style="font-size: 15px;">
                                     <div style="text-align: center; display: flex; align-items: center; gap: 15px; justify-content: center;">
                                         @{
                                             string iconoSteamDeck = "/imagenes/otros/steamdeck_cabecera.webp";
@@ -184,7 +184,7 @@
                                         </div>
                                     </div>
                                 </a>
-                                <a href="/steammachine" style="font-size: 15px;">
+                                <a href="/steammachine" @onclick='() => mostrarMinimosDropdown = false' style="font-size: 15px;">
                                     <div style="text-align: center; display: flex; align-items: center; gap: 15px; justify-content: center;">
                                         @{
                                             string iconoSteamMachine = "/imagenes/otros/steammachine_cabecera.webp";
@@ -202,7 +202,7 @@
                                         </div>
                                     </div>
                                 </a>
-                                <a href="/steamframe" style="font-size: 15px;">
+                                <a href="/steamframe" @onclick='() => mostrarMinimosDropdown = false' style="font-size: 15px;">
                                     <div style="text-align: center; display: flex; align-items: center; gap: 15px; justify-content: center;">
                                         @{
                                             string iconoSteamFrame = "/imagenes/otros/steamframe_cabecera.webp";
@@ -220,7 +220,7 @@
                                         </div>
                                     </div>
                                 </a>
-                                <a href="/steamos" style="font-size: 15px;">
+                                <a href="/steamos" @onclick='() => mostrarMinimosDropdown = false' style="font-size: 15px;">
                                     <div style="text-align: center; display: flex; align-items: center; gap: 15px; justify-content: center;">
                                         @{
                                             string iconoSteamOS = Juegos.JuegoDRM2.SacarImagen(Juegos.JuegoDRM.Steam);
@@ -239,7 +239,7 @@
                                     </div>
                                 </a>
                                 <hr style="margin: 5px 0px; border-top: var(--glaseadoCabeceraBorde) solid; opacity: 0.6;" />
-                                <a href="/geforcenow" style="font-size: 15px;">
+                                <a href="/geforcenow" @onclick='() => mostrarMinimosDropdown = false' style="font-size: 15px;">
                                     <div style="text-align: center; display: flex; align-items: center; gap: 15px; justify-content: center;">
                                         @{
                                             string iconoGeforceNow = "/imagenes/streaming/geforcenow_icono.webp";
@@ -257,7 +257,7 @@
                                         </div>
                                     </div>
                                 </a>
-                                <a href="/boosteroid" style="font-size: 15px;">
+                                <a href="/boosteroid" @onclick='() => mostrarMinimosDropdown = false' style="font-size: 15px;">
                                     <div style="text-align: center; display: flex; align-items: center; gap: 15px; justify-content: center;">
                                         @{
                                             string iconoBoosteroid = "/imagenes/streaming/boosteroid_icono.webp";
@@ -309,13 +309,13 @@
                         @if (mostrarExtensionDropdown == true)
                         {
                             <div class="menu-dropdown-contenido-centrado">
-                                <a href="https://pepeizqapps.com/extension/pepeizq-deals" target="_blank" style="font-size: 15px;">
+                                <a href="https://pepeizqapps.com/extension/pepeizq-deals" target="_blank" @onclick='() => mostrarExtensionDropdown = false' style="font-size: 15px;">
                                     <div style="text-align: center;">
                                         @Herramientas.Idiomas.BuscarTexto(idioma, "String3", "Header")
                                     </div>
                                 </a>
                                 <hr style="margin: 5px 0px; border-top: var(--glaseadoCabeceraBorde) solid; opacity: 0.6;" />
-                                <a href="@enlaceChrome" target="_blank" style="font-size: 15px;">
+                                <a href="@enlaceChrome" target="_blank" @onclick='() => mostrarExtensionDropdown = false' style="font-size: 15px;">
                                     <div style="text-align: center; display: flex; align-items: center; gap: 15px; justify-content: center;">
                                         <div style="width: 24px; height: 24px;">
                                             <svg class="svg-icono" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
@@ -328,7 +328,7 @@
                                         </div>
                                     </div>
                                 </a>
-                                <a href="@enlaceFirefox" target="_blank" style="font-size: 15px;">
+                                <a href="@enlaceFirefox" target="_blank" @onclick='() => mostrarExtensionDropdown = false' style="font-size: 15px;">
                                     <div style="text-align: center; display: flex; align-items: center; gap: 15px; justify-content: center;">
                                         <div style="width: 24px; height: 24px;">
                                             <svg class="svg-icono" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
@@ -341,7 +341,7 @@
                                         </div>
                                     </div>
                                 </a>
-                                <a href="@enlaceEdge" target="_blank" style="font-size: 15px;">
+                                <a href="@enlaceEdge" target="_blank" @onclick='() => mostrarExtensionDropdown = false' style="font-size: 15px;">
                                     <div style="text-align: center; display: flex; align-items: center; gap: 15px; justify-content: center;">
                                         <div style="width: 24px; height: 24px;">
                                             <svg class="svg-icono" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
@@ -372,17 +372,20 @@
                             @if (mostrarPatreonDropdown == true)
                             {
                                 <div class="menu-dropdown-contenido-centrado">
-                                    <a href="@enlacePatreon" target="_blank" style="font-size: 15px;">
+                                    <a href="@enlacePatreon" target="_blank" @onclick='() => mostrarPatreonDropdown = false' style="font-size: 15px;">
                                         <div style="text-align: center;">
                                             Patreon
                                         </div>
                                     </a>
-                                    <a href="/patreon" style="font-size: 15px;">
+
+                                    <hr style="margin: 5px 0px; border-top: var(--glaseadoCabeceraBorde) solid; opacity: 0.6;" />
+
+                                    <a href="/patreon" @onclick='() => mostrarPatreonDropdown = false' style="font-size: 15px;">
                                         <div style="text-align: center;">
                                             @Herramientas.Idiomas.BuscarTexto(idioma, "String4", "Header")
                                         </div>
                                     </a>
-                                    <a href="/cost-web" style="font-size: 15px;">
+                                    <a href="/cost-web" @onclick='() => mostrarPatreonDropdown = false' style="font-size: 15px;">
                                         <div style="text-align: center;">
                                             @Herramientas.Idiomas.BuscarTexto(idioma, "String5", "Header")
                                         </div>
@@ -396,7 +399,7 @@
                         <Authorized>
                             <div style="display: flex; align-items: center; gap: 10px; margin-left: auto;">
                                 <div class="menu-dropdown2">
-                                    <div style="display: flex; align-items: center; font-size: 14px; cursor: pointer; gap: 15px;">
+                                    <div @onclick="AbrirCuenta" style="display: flex; align-items: center; font-size: 14px; cursor: pointer; gap: 15px;">
                                         @if (opcionesCabecera != null)
                                         {
                                             if (string.IsNullOrEmpty(opcionesCabecera.Avatar) == true)
@@ -426,89 +429,92 @@
                                         </div>
                                     </div>
 
-                                    <div class="menu-dropdown-contenido-derecha">
-                                        @{
-                                            string enlaceCuenta = "/account/";
-                                        }
+                                    @if (mostrarCuentaDropdown == true)
+                                    {
+                                        <div class="menu-dropdown-contenido-derecha">
+                                            @{
+                                                string enlaceCuenta = "/account/";
+                                            }
 
-                                        <button @onclick="(e => AbrirEnlace(e, enlaceCuenta, false))" style="font-size: 15px; width: 100%; text-align: right;">
-                                            @Herramientas.Idiomas.BuscarTexto(idioma, "Account", "Header")
-                                        </button>
-
-                                        @{
-                                            string enlaceSincronizarCuenta = "/account/sync/";
-                                        }
-
-                                        <button @onclick="(e => AbrirEnlace(e, enlaceSincronizarCuenta, false))" style="font-size: 15px; width: 100%; text-align: right;">
-                                            @Herramientas.Idiomas.BuscarTexto(idioma, "String7", "Header")
-                                        </button>
-
-                                        @if (usuarioPatreon == true || usuarioAdmin == true)
-                                        {
-                                            string enlacePatreonCuenta = "/account/patreon-store/";
-
-                                            <button @onclick="(e => AbrirEnlace(e, enlacePatreonCuenta, false))" style="font-size: 15px; width: 100%; text-align: right;">
-                                                @Herramientas.Idiomas.BuscarTexto(idioma, "String6", "Header")
+                                            <button @onclick="(e => AbrirEnlace(e, enlaceCuenta, false))" style="font-size: 15px; width: 100%; text-align: right;">
+                                                @Herramientas.Idiomas.BuscarTexto(idioma, "Account", "Header")
                                             </button>
-                                        }
 
-                                        @if (EnseñarOpciones() == true)
-                                        {
-                                            <button @onclick="AlternarOpciones" style="font-size: 15px; width: 100%; text-align: right;">
-                                                @DevolverOpcionesTexto()
+                                            @{
+                                                string enlaceSincronizarCuenta = "/account/sync/";
+                                            }
+
+                                            <button @onclick="(e => AbrirEnlace(e, enlaceSincronizarCuenta, false))" style="font-size: 15px; width: 100%; text-align: right;">
+                                                @Herramientas.Idiomas.BuscarTexto(idioma, "String7", "Header")
                                             </button>
-                                        }
 
-                                        <hr style="margin: 5px 0px; border-top: var(--glaseadoCabeceraBorde) solid; opacity: 0.6;" />
+                                            @if (usuarioPatreon == true || usuarioAdmin == true)
+                                            {
+                                                string enlacePatreonCuenta = "/account/patreon-store/";
 
-                                        <button @onclick="(e => CambiarDivisa(e, 0))" style="font-size: 15px; width: 100%; text-align: right;">
-                                            <div style="display: flex; align-items: center; gap: 10px; justify-content: right;">
-                                                @if (usuarioRegion == TiendaRegion.Europa)
-                                                {
-                                                    <div style="display: flex; width: 20px; height: 20px;">
-                                                        <svg class="svg-icono" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                                                            <path d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
-                                                        </svg>
+                                                <button @onclick="(e => AbrirEnlace(e, enlacePatreonCuenta, false))" style="font-size: 15px; width: 100%; text-align: right;">
+                                                    @Herramientas.Idiomas.BuscarTexto(idioma, "String6", "Header")
+                                                </button>
+                                            }
+
+                                            @if (EnseñarOpciones() == true)
+                                            {
+                                                <button @onclick="AlternarOpciones" style="font-size: 15px; width: 100%; text-align: right;">
+                                                    @DevolverOpcionesTexto()
+                                                </button>
+                                            }
+
+                                            <hr style="margin: 5px 0px; border-top: var(--glaseadoCabeceraBorde) solid; opacity: 0.6;" />
+
+                                            <button @onclick="(e => CambiarDivisa(e, 0))" style="font-size: 15px; width: 100%; text-align: right;">
+                                                <div style="display: flex; align-items: center; gap: 10px; justify-content: right;">
+                                                    @if (usuarioRegion == TiendaRegion.Europa)
+                                                    {
+                                                        <div style="display: flex; width: 20px; height: 20px;">
+                                                            <svg class="svg-icono" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                                                                <path d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
+                                                            </svg>
+                                                        </div>
+                                                    }
+
+                                                    <img src="/imagenes/banderas/europe.svg" style="width: 20px; height: 20px;" loading="lazy" alt="@Herramientas.Idiomas.BuscarTexto(idioma, "String8", "Header")" />
+
+                                                    <div>
+                                                        @Herramientas.Idiomas.BuscarTexto(idioma, "String8", "Header") (€)
                                                     </div>
-                                                }
-
-                                                <img src="/imagenes/banderas/europe.svg" style="width: 20px; height: 20px;" loading="lazy" alt="@Herramientas.Idiomas.BuscarTexto(idioma, "String8", "Header")" />
-
-                                                <div>
-                                                    @Herramientas.Idiomas.BuscarTexto(idioma, "String8", "Header") (€)
                                                 </div>
-                                            </div>
-                                        </button>
+                                            </button>
 
-                                        <button @onclick="(e => CambiarDivisa(e, 1))" style="font-size: 15px; width: 100%; text-align: right;">
-                                            <div style="display: flex; align-items: center; gap: 10px; justify-content: right;">
-                                                @if (usuarioRegion == TiendaRegion.EstadosUnidos)
-                                                {
-                                                    <div style="display: flex; width: 20px; height: 20px;">
-                                                        <svg class="svg-icono" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                                                            <path d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
-                                                        </svg>
+                                            <button @onclick="(e => CambiarDivisa(e, 1))" style="font-size: 15px; width: 100%; text-align: right;">
+                                                <div style="display: flex; align-items: center; gap: 10px; justify-content: right;">
+                                                    @if (usuarioRegion == TiendaRegion.EstadosUnidos)
+                                                    {
+                                                        <div style="display: flex; width: 20px; height: 20px;">
+                                                            <svg class="svg-icono" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                                                                <path d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
+                                                            </svg>
+                                                        </div>
+                                                    }
+
+                                                    <img src="/imagenes/banderas/english.svg" style="width: 20px; height: 20px;" loading="lazy" alt="@Herramientas.Idiomas.BuscarTexto(idioma, "String9", "Header")" />
+
+                                                    <div>
+                                                        @Herramientas.Idiomas.BuscarTexto(idioma, "String9", "Header") ($)
                                                     </div>
-                                                }
-
-                                                <img src="/imagenes/banderas/english.svg" style="width: 20px; height: 20px;" loading="lazy" alt="@Herramientas.Idiomas.BuscarTexto(idioma, "String9", "Header")" />
-
-                                                <div>
-                                                    @Herramientas.Idiomas.BuscarTexto(idioma, "String9", "Header") ($)
                                                 </div>
-                                            </div>
-                                        </button>
+                                            </button>
 
-                                        <hr style="margin: 5px 0px; border-top: var(--glaseadoCabeceraBorde) solid; opacity: 0.6;" />
+                                            <hr style="margin: 5px 0px; border-top: var(--glaseadoCabeceraBorde) solid; opacity: 0.6;" />
 
-                                        @{
-                                            string enlaceDesconectar = "/account/logout";
-                                        }
+                                            @{
+                                                string enlaceDesconectar = "/account/logout";
+                                            }
 
-                                        <button @onclick="(e => AbrirEnlace(e, enlaceDesconectar, false))" style="font-size: 15px; width: 100%; text-align: right;">
-                                            @Herramientas.Idiomas.BuscarTexto(idioma, "Logout", "Header")
-                                        </button>
-                                    </div>
+                                            <button @onclick="(e => AbrirEnlace(e, enlaceDesconectar, false))" style="font-size: 15px; width: 100%; text-align: right;">
+                                                @Herramientas.Idiomas.BuscarTexto(idioma, "Logout", "Header")
+                                            </button>
+                                        </div>                                        
+                                    }
                                 </div>
                             </div>
                         </Authorized>
@@ -528,7 +534,7 @@
                                 </a>
                                 
                                 <div class="menu-dropdown2">
-                                    <div style="display: flex; align-items: center; font-size: 14px; cursor: pointer; gap: 15px;">
+                                    <div @onclick="AbrirRegistrar" style="display: flex; align-items: center; font-size: 14px; cursor: pointer; gap: 15px;">
                                         @if (usuarioRegion == TiendaRegion.Europa)
                                         {
                                             <img src="/imagenes/banderas/europe.svg" style="width: 20px; height: 20px; display: block;" loading="lazy" alt="@Herramientas.Idiomas.BuscarTexto(idioma, "String8", "Header")" />
@@ -545,60 +551,63 @@
                                         </div>
                                     </div>
 
-                                    <div class="menu-dropdown-contenido-derecha">
-                                        @{
-                                            string enlaceLogin = "/account/login";
-                                            string enlaceRegistro = "/account/register";
-                                        }
+                                    @if (mostrarRegistrarDropdown == true)
+                                    {
+                                        <div class="menu-dropdown-contenido-derecha">
+                                            @{
+                                                string enlaceLogin = "/account/login";
+                                                string enlaceRegistro = "/account/register";
+                                            }
 
-                                        <button @onclick="(e => AbrirEnlace(e, enlaceLogin, false))" class="boton-superior" style="font-size: 15px; width: 100%; text-align: right;">
-                                            @Herramientas.Idiomas.BuscarTexto(idioma, "Login", "Header")
-                                        </button>
+                                            <button @onclick="(e => AbrirEnlace(e, enlaceLogin, false))" class="boton-superior" style="font-size: 15px; width: 100%; text-align: right;">
+                                                @Herramientas.Idiomas.BuscarTexto(idioma, "Login", "Header")
+                                            </button>
 
-                                        <button @onclick="(e => AbrirEnlace(e, enlaceRegistro, false))" class="boton-superior" style="font-size: 15px; width: 100%; text-align: right;">
-                                            @Herramientas.Idiomas.BuscarTexto(idioma, "Register", "Header")
-                                        </button>
+                                            <button @onclick="(e => AbrirEnlace(e, enlaceRegistro, false))" class="boton-superior" style="font-size: 15px; width: 100%; text-align: right;">
+                                                @Herramientas.Idiomas.BuscarTexto(idioma, "Register", "Header")
+                                            </button>
 
-                                        <hr style="margin: 5px 0px; border-top: var(--glaseadoCabeceraBorde) solid; opacity: 0.6;" />
+                                            <hr style="margin: 5px 0px; border-top: var(--glaseadoCabeceraBorde) solid; opacity: 0.6;" />
 
-                                        <button class="boton-superior" @onclick="(e => CambiarDivisa(e, 0))" style="font-size: 15px; width: 100%; text-align: right;">
-                                            <div style="display: flex; align-items: center; gap: 10px; justify-content: right;">
-                                                @if (usuarioRegion == TiendaRegion.Europa)
-                                                {
-                                                    <div style="display: flex; width: 20px; height: 20px;">
-                                                        <svg class="svg-icono" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                                                            <path d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
-                                                        </svg>
+                                            <button class="boton-superior" @onclick="(e => CambiarDivisa(e, 0))" style="font-size: 15px; width: 100%; text-align: right;">
+                                                <div style="display: flex; align-items: center; gap: 10px; justify-content: right;">
+                                                    @if (usuarioRegion == TiendaRegion.Europa)
+                                                    {
+                                                        <div style="display: flex; width: 20px; height: 20px;">
+                                                            <svg class="svg-icono" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                                                                <path d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
+                                                            </svg>
+                                                        </div>
+                                                    }
+
+                                                    <img src="/imagenes/banderas/europe.svg" style="width: 20px; height: 20px; display: block;" loading="lazy" alt="@Herramientas.Idiomas.BuscarTexto(idioma, "String8", "Header")" />
+
+                                                    <div>
+                                                        @Herramientas.Idiomas.BuscarTexto(idioma, "String8", "Header") (€)
                                                     </div>
-                                                }
-
-                                                <img src="/imagenes/banderas/europe.svg" style="width: 20px; height: 20px; display: block;" loading="lazy" alt="@Herramientas.Idiomas.BuscarTexto(idioma, "String8", "Header")" />
-
-                                                <div>
-                                                    @Herramientas.Idiomas.BuscarTexto(idioma, "String8", "Header") (€)
-                                                </div>        
-                                            </div>
-                                        </button>
-
-                                        <button class="boton-superior" @onclick="(e => CambiarDivisa(e, 1))" style="font-size: 15px; width: 100%; text-align: right;">
-                                            <div style="display: flex; align-items: center; gap: 10px; justify-content: right;">
-                                                @if (usuarioRegion == TiendaRegion.EstadosUnidos)
-                                                {
-                                                    <div style="display: flex; width: 20px; height: 20px;">
-                                                        <svg class="svg-icono" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                                                            <path d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
-                                                        </svg>
-                                                    </div>
-                                                }
-
-                                                <img src="/imagenes/banderas/english.svg" style="width: 20px; height: 20px; display: block;" loading="lazy" alt="@Herramientas.Idiomas.BuscarTexto(idioma, "String9", "Header")" />
-
-                                                <div>
-                                                    @Herramientas.Idiomas.BuscarTexto(idioma, "String9", "Header") ($)
                                                 </div>
-                                            </div>
-                                        </button>
-                                    </div>
+                                            </button>
+
+                                            <button class="boton-superior" @onclick="(e => CambiarDivisa(e, 1))" style="font-size: 15px; width: 100%; text-align: right;">
+                                                <div style="display: flex; align-items: center; gap: 10px; justify-content: right;">
+                                                    @if (usuarioRegion == TiendaRegion.EstadosUnidos)
+                                                    {
+                                                        <div style="display: flex; width: 20px; height: 20px;">
+                                                            <svg class="svg-icono" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                                                                <path d="M530.8 134.1C545.1 144.5 548.3 164.5 537.9 178.8L281.9 530.8C276.4 538.4 267.9 543.1 258.5 543.9C249.1 544.7 240 541.2 233.4 534.6L105.4 406.6C92.9 394.1 92.9 373.8 105.4 361.3C117.9 348.8 138.2 348.8 150.7 361.3L252.2 462.8L486.2 141.1C496.6 126.8 516.6 123.6 530.9 134z" />
+                                                            </svg>
+                                                        </div>
+                                                    }
+
+                                                    <img src="/imagenes/banderas/english.svg" style="width: 20px; height: 20px; display: block;" loading="lazy" alt="@Herramientas.Idiomas.BuscarTexto(idioma, "String9", "Header")" />
+
+                                                    <div>
+                                                        @Herramientas.Idiomas.BuscarTexto(idioma, "String9", "Header") ($)
+                                                    </div>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                         </NotAuthorized>
@@ -1240,6 +1249,20 @@
         mostrarPatreonDropdown = !mostrarPatreonDropdown;
     }
 
+    private bool mostrarCuentaDropdown = false;
+
+    private void AbrirCuenta(MouseEventArgs e)
+    {
+        mostrarCuentaDropdown = !mostrarCuentaDropdown;
+    }
+
+    private bool mostrarRegistrarDropdown = false;
+
+    private void AbrirRegistrar(MouseEventArgs e)
+    {
+        mostrarRegistrarDropdown = !mostrarRegistrarDropdown;
+    }
+
     #endregion
 
     #region Buscador
@@ -1792,9 +1815,12 @@
 
     private async Task AbrirDeseado(MouseEventArgs e, string enlace)
     {
+        mostrarDeseadosDropdown = false;
+
         if (datosDeseados.Juegos?.Count > 0)
         {
             datosDeseados.Juegos.RemoveAll(j => j.Enlace == enlace);
+            deseadosCantidad = datosDeseados.Cantidad - 1;
         }
 
         await BaseDatos.Usuarios.Actualizar.Opcion("WishlistData", JsonSerializer.Serialize(datosDeseados), usuarioId);

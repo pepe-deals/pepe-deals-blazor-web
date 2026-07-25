@@ -15,7 +15,7 @@ namespace BaseDatos.Juegos
 		public static async Task<(string sql, DynamicParameters parametros)> Comprobacion(int id, int idSteam, List<JuegoPrecio> ofertasActuales, List<JuegoPrecio> ofertasHistoricas, List<JuegoHistorico> historicos, JuegoPrecio nuevaOferta,
 			string slugGOG = null, string idGOG = null, string slugEpic = null, JuegoAnalisis reseñas = null, int indice = 0)
 		{
-			bool cambioPrecio = true;
+			bool añadidoEnHistoricos = true;
 			bool ultimaModificacion = false;
 			bool añadir = true;
 			bool huboCambioReal = false;
@@ -332,11 +332,11 @@ namespace BaseDatos.Juegos
 
 								if (historicos.Count > cantidadHistoricos)
 								{
-									cambioPrecio = true;
+									añadidoEnHistoricos = true;
 								}
 								else
 								{
-									cambioPrecio = false;
+									añadidoEnHistoricos = false;
 								}
 
 								ultimaModificacion = true;
@@ -401,7 +401,7 @@ namespace BaseDatos.Juegos
 			sql.Append($"precioActualesTiendas=@precioActualesTiendas{indice}, ");
 			sql.Append($"precioMinimosHistoricos=@precioMinimosHistoricos{indice} ");
 
-			if (cambioPrecio == true)
+			if (añadidoEnHistoricos == true)
 			{
 				sql.Append($", historicos=@historicos{indice} ");
 			}
@@ -425,7 +425,7 @@ namespace BaseDatos.Juegos
 			parametros.Add($"@precioActualesTiendas{indice}", JsonSerializer.Serialize(ofertasActuales));
 			parametros.Add($"@precioMinimosHistoricos{indice}", JsonSerializer.Serialize(ofertasHistoricas));
 
-			if (cambioPrecio == true)
+			if (añadidoEnHistoricos == true)
 			{
 				parametros.Add($"@historicos{indice}", JsonSerializer.Serialize(historicos));
 			}
@@ -822,7 +822,7 @@ namespace BaseDatos.Juegos
 			sql.Append($"precioActualesTiendasUS=@precioActualesTiendasUS{indice}, ");
 			sql.Append($"precioMinimosHistoricosUS=@precioMinimosHistoricosUS{indice} ");
 
-			if (cambioPrecio) sql.Append($", historicosUS=@historicosUS{indice} ");
+			if (cambioPrecio == true) sql.Append($", historicosUS=@historicosUS{indice} ");
 			if (string.IsNullOrEmpty(slugGOG) == false) sql.Append($", idGog=@idGog{indice}, slugGOG=@slugGOG{indice} ");
 			if (string.IsNullOrEmpty(slugEpic) == false) sql.Append($", slugEpic=@slugEpic{indice} ");
 			if (ahora != null) sql.Append($", ultimaModificacion=@ultimaModificacion{indice} ");
@@ -837,7 +837,7 @@ namespace BaseDatos.Juegos
 			parametros.Add($"@id{indice}", id);
 			parametros.Add($"@precioActualesTiendasUS{indice}", JsonSerializer.Serialize(ofertasActualesUS));
 			parametros.Add($"@precioMinimosHistoricosUS{indice}", JsonSerializer.Serialize(ofertasHistoricasUS));
-			if (cambioPrecio) parametros.Add($"@historicosUS{indice}", JsonSerializer.Serialize(historicosUS));
+			if (cambioPrecio == true) parametros.Add($"@historicosUS{indice}", JsonSerializer.Serialize(historicosUS));
 			if (string.IsNullOrEmpty(slugGOG) == false) { parametros.Add($"@idGog{indice}", idGOG); parametros.Add($"@slugGOG{indice}", slugGOG); }
 			if (string.IsNullOrEmpty(slugEpic) == false) parametros.Add($"@slugEpic{indice}", slugEpic);
 			if (ahora != null) parametros.Add($"@ultimaModificacion{indice}", ahora);

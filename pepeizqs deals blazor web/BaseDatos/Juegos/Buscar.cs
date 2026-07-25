@@ -1404,14 +1404,14 @@ END DESC";
 			{
 				DataTable tablaSteam = CrearDataTable(excluirSteamIds);
 				parametros.Add("excluirSteam", tablaSteam.AsTableValuedParameter("dbo.ListaIdsNumericos"));
-				exclusionSteam = $" NOT EXISTS (SELECT 1 FROM @excluirSteam WHERE Id = jg.idSteam AND JSON_VALUE(j.{precioMinimosHistoricos}, '$[0].DRM') = '0')";
+				exclusionSteam = $" NOT EXISTS (SELECT 1 FROM @excluirSteam WHERE Id = jg.idSteam AND pmh.DRM = '0')";
 			}
 
 			if (excluirGogIds?.Count > 0)
 			{
 				DataTable tablaGog = CrearDataTable(excluirGogIds);
 				parametros.Add("excluirGog", tablaGog.AsTableValuedParameter("dbo.ListaIdsNumericos"));
-				exclusionGog = $" NOT EXISTS (SELECT 1 FROM @excluirGog WHERE Id = jg.idGog AND JSON_VALUE(j.{precioMinimosHistoricos}, '$[0].DRM') = '8')";
+				exclusionGog = $" NOT EXISTS (SELECT 1 FROM @excluirGog WHERE Id = jg.idGog AND pmh.DRM = '8')";
 			}
 
 			string busqueda = $@"SELECT j.idMaestra, jg.nombre, jg.imagenes, j.{precioMinimosHistoricos}, jg.Media,
@@ -1437,34 +1437,42 @@ END DESC";
 					SELECT g.gratis
 					FROM gratis g
 					WHERE g.juegoId = j.idMaestra
-					  AND g.fechaEmpieza <= GETDATE()
-					  AND g.fechaTermina >= GETDATE()
+						AND g.fechaEmpieza <= GETDATE()
+						AND g.fechaTermina >= GETDATE()
 					FOR JSON PATH
 				) AS GratisActuales,
 				(
 					SELECT g.gratis
 					FROM gratis g
 					WHERE g.juegoId = j.idMaestra
-					  AND g.fechaTermina < GETDATE()
+						AND g.fechaTermina < GETDATE()
 					FOR JSON PATH
 				) AS GratisPasados,
 				(
 					SELECT s.suscripcion
 					FROM suscripciones s
 					WHERE s.juegoId = j.idMaestra
-					  AND s.FechaEmpieza <= GETDATE()
-					  AND s.FechaTermina >= GETDATE()
+						AND s.FechaEmpieza <= GETDATE()
+						AND s.FechaTermina >= GETDATE()
 					FOR JSON PATH
 				) AS SuscripcionesActuales,
 				(
 					SELECT s.suscripcion
 					FROM suscripciones s
 					WHERE s.juegoId = j.idMaestra
-					  AND s.FechaTermina < GETDATE()
+						AND s.FechaTermina < GETDATE()
 					FOR JSON PATH
 				) AS SuscripcionesPasados
 			FROM {tabla} j
-			LEFT JOIN dbo.juegos jg ON jg.id = j.idMaestra";
+			LEFT JOIN dbo.juegos jg ON jg.id = j.idMaestra
+			OUTER APPLY OPENJSON(j.{precioMinimosHistoricos}, '$[0]')
+				WITH (
+					Tienda         nvarchar(50) '$.Tienda',
+					DRM            nvarchar(50) '$.DRM',
+					Descuento      int          '$.Descuento',
+					Precio         decimal(18,2) '$.Precio',
+					FechaDetectado date         '$.FechaDetectado'
+				) AS pmh";
 
 			string dondeTiendas = string.Empty;
 
@@ -1481,7 +1489,7 @@ END DESC";
 							dondeTiendas = dondeTiendas + " OR ";
 						}
 
-						dondeTiendas = dondeTiendas + $"JSON_VALUE(j.{precioMinimosHistoricos}, '$[0].Tienda') = '" + tienda.TiendaId + "'";
+						dondeTiendas = dondeTiendas + "pmh.Tienda = '" + tienda.TiendaId + "'";
 					}
 				}
 			}
@@ -1504,7 +1512,7 @@ END DESC";
 							dondeDRMs = dondeDRMs + " OR ";
 						}
 
-						dondeDRMs = dondeDRMs + $"JSON_VALUE(j.{precioMinimosHistoricos}, '$[0].DRM') = '" + ((int)drm.DRMId).ToString() + "'";
+						dondeDRMs = dondeDRMs + "pmh.DRM = '" + ((int)drm.DRMId).ToString() + "'";
 					}
 				}
 			}
@@ -1572,7 +1580,7 @@ END DESC";
 
 			if (minimoDescuento > 0)
 			{
-				dondeMinimoDescuento = $"JSON_VALUE(j.{precioMinimosHistoricos}, '$[0].Descuento') >= " + minimoDescuento.ToString();
+				dondeMinimoDescuento = "pmh.Descuento >= " + minimoDescuento.ToString();
 			}
 
 			if (string.IsNullOrEmpty(dondeMinimoDescuento) == false)
@@ -1589,7 +1597,7 @@ END DESC";
 
 			if (maximoPrecio > 0)
 			{
-				dondeMaximoPrecio = $"CONVERT(decimal, JSON_VALUE(j.{precioMinimosHistoricos}, '$[0].Precio')) <= " + maximoPrecio.ToString();
+				dondeMaximoPrecio = "pmh.Precio <= " + maximoPrecio.ToString();
 			}
 
 			if (string.IsNullOrEmpty(dondeMaximoPrecio) == false)
@@ -1726,15 +1734,15 @@ END DESC";
 			if (ordenar == 0)
 			{
 				busqueda = busqueda + @" ORDER BY CASE
-											WHEN jg.analisis = 'null' OR jg.analisis IS NULL THEN 0 ELSE CONVERT(int, REPLACE(JSON_VALUE(jg.analisis, '$.Cantidad'),',',''))
-										 END DESC";
+									WHEN jg.analisis = 'null' OR jg.analisis IS NULL THEN 0 ELSE CONVERT(int, REPLACE(JSON_VALUE(jg.analisis, '$.Cantidad'),',',''))
+								 END DESC";
 			}
 
 			if (ordenar == 1)
 			{
 				busqueda = busqueda + @" ORDER BY CASE
-											WHEN jg.analisis = 'null' OR jg.analisis IS NULL THEN 0 ELSE CONVERT(int, JSON_VALUE(jg.analisis, '$.Porcentaje'))
-										 END DESC";
+									WHEN jg.analisis = 'null' OR jg.analisis IS NULL THEN 0 ELSE CONVERT(int, JSON_VALUE(jg.analisis, '$.Porcentaje'))
+								 END DESC";
 			}
 
 			if (ordenar == 2)
@@ -1749,17 +1757,17 @@ END DESC";
 
 			if (ordenar == 4)
 			{
-				busqueda = busqueda + $" ORDER BY CASE WHEN j.{precioMinimosHistoricos} = 'null' OR j.{precioMinimosHistoricos} IS NULL THEN 1000000 ELSE CAST(JSON_VALUE(j.{precioMinimosHistoricos}, '$[0].Precio') AS decimal(18,2)) END";
+				busqueda = busqueda + " ORDER BY CASE WHEN pmh.Precio IS NULL THEN 1000000 ELSE pmh.Precio END";
 			}
 
 			if (ordenar == 5)
 			{
-				busqueda = busqueda + $" ORDER BY CASE WHEN j.{precioMinimosHistoricos} = 'null' OR j.{precioMinimosHistoricos} IS NULL THEN 0 ELSE CAST(JSON_VALUE(j.{precioMinimosHistoricos}, '$[0].Descuento') AS bigint) END DESC";
+				busqueda = busqueda + " ORDER BY CASE WHEN pmh.Descuento IS NULL THEN 0 ELSE pmh.Descuento END DESC";
 			}
 
 			if (ordenar == 6)
 			{
-				busqueda = busqueda + $" ORDER BY CASE WHEN j.{precioMinimosHistoricos} = 'null' OR j.{precioMinimosHistoricos} IS NULL THEN DATEADD(YEAR, -20, CAST(GETDATE() as date)) ELSE CAST(JSON_VALUE(j.{precioMinimosHistoricos}, '$[0].FechaDetectado') AS date) END DESC";
+				busqueda = busqueda + " ORDER BY CASE WHEN pmh.FechaDetectado IS NULL THEN DATEADD(YEAR, -20, CAST(GETDATE() as date)) ELSE pmh.FechaDetectado END DESC";
 			}
 
 			if (ordenar == 7)
@@ -1772,7 +1780,7 @@ END DESC";
 			if (string.IsNullOrEmpty(busqueda) == false)
 			{
 				busqueda = busqueda + @$" OFFSET {posicion} ROWS
-										FETCH NEXT 100 ROWS ONLY";
+								FETCH NEXT 100 ROWS ONLY";
 
 				try
 				{
@@ -1812,14 +1820,14 @@ END DESC";
 			{
 				DataTable tablaSteam = CrearDataTable(excluirSteamIds);
 				parametros.Add("excluirSteam", tablaSteam.AsTableValuedParameter("dbo.ListaIdsNumericos"));
-				exclusionSteam = $" AND NOT EXISTS (SELECT 1 FROM @excluirSteam WHERE Id = j.idSteam AND JSON_VALUE(j.{precioMinimosHistoricos}, '$[0].DRM') = '0')";
+				exclusionSteam = $" AND NOT EXISTS (SELECT 1 FROM @excluirSteam WHERE Id = jg.idSteam AND pmh.DRM = '0')";
 			}
 
 			if (excluirGogIds?.Count > 0)
 			{
 				DataTable tablaGog = CrearDataTable(excluirGogIds);
 				parametros.Add("excluirGog", tablaGog.AsTableValuedParameter("dbo.ListaIdsNumericos"));
-				exclusionGog = $" AND NOT EXISTS (SELECT 1 FROM @excluirGog WHERE Id = j.idGog AND JSON_VALUE(j.{precioMinimosHistoricos}, '$[0].DRM') = '8')";
+				exclusionGog = $" AND NOT EXISTS (SELECT 1 FROM @excluirGog WHERE Id = jg.idGog AND pmh.DRM = '8')";
 			}
 
 			string busqueda = $@"SELECT j.idMaestra, jg.nombre, jg.imagenes, j.{precioMinimosHistoricos}, jg.Media,
@@ -1873,7 +1881,13 @@ END DESC";
 				) AS SuscripcionesPasados
 			FROM {tablaMinimos} j
 			LEFT JOIN dbo.juegos jg ON jg.id = j.idMaestra
-			WHERE j.Tipo = 0 {exclusionJuegos} {exclusionSteam} {exclusionGog}
+			OUTER APPLY OPENJSON(j.{precioMinimosHistoricos}, '$[0]')
+				WITH (
+					DRM       nvarchar(50)  '$.DRM',
+					Descuento int           '$.Descuento',
+					Precio    decimal(18,2) '$.Precio'
+				) AS pmh
+			WHERE jg.Tipo = 0 {exclusionJuegos} {exclusionSteam} {exclusionGog}
 			AND EXISTS (
 				SELECT 1
 				FROM {tabla} sgn
@@ -1887,7 +1901,7 @@ END DESC";
 							ON d.value = p.DRM
 				  )
 			)
-			AND JSON_VALUE(j.{precioMinimosHistoricos}, '$[0].DRM') = " + ((int)drm).ToString();
+			AND pmh.DRM = '" + ((int)drm).ToString() + "'";
 
 			string dondeMinimoDescuento = string.Empty;
 
@@ -1898,7 +1912,7 @@ END DESC";
 
 			if (minimoDescuento > 0)
 			{
-				dondeMinimoDescuento = $"JSON_VALUE(j.{precioMinimosHistoricos}, '$[0].Descuento') >= " + minimoDescuento.ToString();
+				dondeMinimoDescuento = "pmh.Descuento >= " + minimoDescuento.ToString();
 			}
 
 			if (string.IsNullOrEmpty(dondeMinimoDescuento) == false)
@@ -1915,7 +1929,7 @@ END DESC";
 
 			if (maximoPrecio > 0)
 			{
-				dondeMaximoPrecio = $"CONVERT(decimal, JSON_VALUE(j.{precioMinimosHistoricos}, '$[0].Precio')) <= " + maximoPrecio.ToString();
+				dondeMaximoPrecio = "pmh.Precio <= " + maximoPrecio.ToString();
 			}
 
 			if (string.IsNullOrEmpty(dondeMaximoPrecio) == false)
@@ -1941,8 +1955,8 @@ END DESC";
 				}
 
 				busqueda = busqueda + @" ORDER BY CASE
-											WHEN jg.analisis = 'null' OR jg.analisis IS NULL THEN 0 ELSE CONVERT(int, REPLACE(JSON_VALUE(jg.analisis, '$.Cantidad'),',',''))
-										 END DESC";
+									WHEN jg.analisis = 'null' OR jg.analisis IS NULL THEN 0 ELSE CONVERT(int, REPLACE(JSON_VALUE(jg.analisis, '$.Cantidad'),',',''))
+								 END DESC";
 
 				busqueda = busqueda + @$" OFFSET {posicion} ROWS FETCH NEXT 100 ROWS ONLY";
 
