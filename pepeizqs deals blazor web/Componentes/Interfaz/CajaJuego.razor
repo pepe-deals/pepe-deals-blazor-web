@@ -526,9 +526,10 @@
 			<a @key="@claveBundle" class="boton-pequeño" style="padding: 0px; @fondoColor" href="@enlace" target="@enlaceNuevaPestaña">
 				<div style="padding: 0px; position: relative;">
 					@{
+						int cantidadBundles = (juego.BundlesActuales?.Count ?? 0) + (juego.BundlesPasados?.Count ?? 0);
 						bool añadirNuevo = false;
 
-						if ((juego.Bundles?.Count + juego.BundlesActuales?.Count + juego.BundlesPasados?.Count) == 1)
+						if (cantidadBundles == 1)
 						{
 							añadirNuevo = true;
 						}

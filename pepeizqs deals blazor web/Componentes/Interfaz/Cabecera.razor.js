@@ -99,3 +99,39 @@ export function actualizarPosicionTooltipBuscador(clientX, clientY, id) {
     tooltip.style.left = left + 'px';
     tooltip.style.top = top + 'px';
 }
+
+let cabeceraSuperiorEl = null;
+let ultimoScrollY = window.scrollY;
+let tickingScroll = false;
+
+function alActualizarScroll() {
+    const scrollActual = window.scrollY;
+
+    if (scrollActual <= 0) {
+        cabeceraSuperiorEl.classList.remove("oculta");
+    } else if (scrollActual > ultimoScrollY) {
+        cabeceraSuperiorEl.classList.add("oculta");
+    }
+
+    ultimoScrollY = scrollActual;
+    tickingScroll = false;
+}
+
+function alHacerScroll() {
+    if (tickingScroll === false) {
+        window.requestAnimationFrame(alActualizarScroll);
+        tickingScroll = true;
+    }
+}
+
+export function iniciarScrollCabecera() {
+    cabeceraSuperiorEl = document.querySelector(".cabecera-superior");
+
+    if (cabeceraSuperiorEl != null) {
+        window.addEventListener("scroll", alHacerScroll, { passive: true });
+    }
+}
+
+export function destruirScrollCabecera() {
+    window.removeEventListener("scroll", alHacerScroll);
+}

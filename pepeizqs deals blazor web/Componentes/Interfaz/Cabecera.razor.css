@@ -12,9 +12,6 @@
 }
 
 .cabecera2 {
-    z-index: 9999;
-    position: sticky;
-    top: 0;
     padding: 15px 0px;
     display: flex;
     width: 100%;
@@ -342,3 +339,21 @@ a:hover .boton-cabecera-deseados {
     align-items: center;
     justify-content: space-between;
 }
+
+.contenedor-cabeceras {
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+}
+
+.cabecera-superior {
+    max-height: 40px; 
+    overflow: hidden;
+    opacity: 1;
+    transition: max-height 0.3s ease, opacity 0.25s ease;
+}
+
+    .cabecera-superior.oculta {
+        max-height: 0px;
+        opacity: 0;
+    }

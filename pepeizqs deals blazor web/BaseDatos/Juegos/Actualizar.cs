@@ -251,43 +251,6 @@ namespace BaseDatos.Juegos
 			{
 				BaseDatos.Errores.Insertar.Mensaje("Mayor Edad 1 " + juego.Id.ToString(), ex);
 			}
-
-			string buscarMinimos = @"
-				SELECT COUNT(1)
-				FROM seccionMinimos
-				WHERE idMaestra = @IdMaestra";
-
-			try
-			{
-				bool actualizar = await Herramientas.BaseDatos.Select(async conexion =>
-				{
-					int resultado = await conexion.ExecuteScalarAsync<int>(buscarMinimos, new
-					{
-						IdMaestra = juego.Id
-					});
-
-					return resultado > 0;
-				});
-
-				if (actualizar == true)
-				{
-					string actualizarMinimos = "UPDATE seccionMinimos " +
-						"SET mayorEdad=@mayorEdad WHERE idMaestra=@idMaestra";
-
-					await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
-					{
-						return await conexion.ExecuteAsync(actualizarMinimos, new
-						{
-							idMaestra = juego.Id,
-							mayorEdad = juego.MayorEdad
-						}, transaction: sentencia);
-					});
-				}
-			}
-			catch (Exception ex)
-			{
-				BaseDatos.Errores.Insertar.Mensaje("Mayor Edad 2 " + juego.Id.ToString(), ex);
-			}
 		}
 
 		public static async Task OcultarPortada(Juego juego)
