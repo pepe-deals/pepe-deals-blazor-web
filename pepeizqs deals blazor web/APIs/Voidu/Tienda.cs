@@ -18,6 +18,7 @@ namespace APIs.Voidu
 			{
 				Id = "voidu",
 				Nombre = "Voidu",
+				Tipo = TiendaTipo.Oficial,
 				ImagenLogo = "/imagenes/tiendas/voidu_logo.webp",
 				Imagen300x80 = "/imagenes/tiendas/voidu_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/voidu_icono.ico",

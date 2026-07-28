@@ -18,6 +18,7 @@ namespace APIs.Muvegames
 			{
 				Id = "muvegames",
 				Nombre = "Muve.games",
+				Tipo = TiendaTipo.Oficial,
 				ImagenLogo = "/imagenes/tiendas/muvegames_logo.webp",
 				Imagen300x80 = "/imagenes/tiendas/muvegames_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/muvegames_icono.ico",

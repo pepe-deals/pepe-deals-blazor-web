@@ -17,6 +17,7 @@ namespace APIs.PlanetPlay
 			{
 				Id = "planetplay",
 				Nombre = "PlanetPlay",
+				Tipo = TiendaTipo.Oficial,
 				ImagenLogo = "/imagenes/tiendas/planetplay_logo.webp",
 				Imagen300x80 = "/imagenes/tiendas/planetplay_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/planetplay_icono.webp",

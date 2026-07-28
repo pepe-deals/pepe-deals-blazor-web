@@ -18,6 +18,7 @@ namespace APIs.Playsum
 			{
 				Id = "playsum",
 				Nombre = "Playsum",
+				Tipo = TiendaTipo.Oficial,
 				ImagenLogo = "/imagenes/tiendas/playsum_logo.webp",
 				Imagen300x80 = "/imagenes/tiendas/playsum_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/playsum_icono.ico",

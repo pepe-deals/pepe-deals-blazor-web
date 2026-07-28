@@ -347,13 +347,37 @@ a:hover .boton-cabecera-deseados {
 }
 
 .cabecera-superior {
-    max-height: 40px; 
-    overflow: hidden;
+    max-height: 40px;
     opacity: 1;
+    overflow: visible;
     transition: max-height 0.3s ease, opacity 0.25s ease;
 }
 
     .cabecera-superior.oculta {
         max-height: 0px;
         opacity: 0;
+        overflow: hidden;
+    }
+
+.boton-cabecera-mini {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    padding: 4px 10px;
+    height: 100%;
+    max-height: 30px;
+    color: var(--colorTexto);
+    background-color: transparent;
+    cursor: pointer;
+    border: 0;
+}
+
+    button.boton-cabecera-mini:hover {
+        background-color: var(--fondoBotonHover);
+    }
+
+    .boton-cabecera-mini img {
+        width: 16px;
+        height: 16px;
     }

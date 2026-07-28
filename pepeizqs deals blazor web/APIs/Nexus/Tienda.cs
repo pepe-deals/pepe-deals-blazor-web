@@ -18,6 +18,7 @@ namespace APIs.Nexus
 			{
 				Id = "nexus",
 				Nombre = "Nexus",
+				Tipo = TiendaTipo.Oficial,
 				ImagenLogo = "/imagenes/tiendas/nexus_logo.webp",
 				Imagen300x80 = "/imagenes/tiendas/nexus_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/nexus_icono.webp",

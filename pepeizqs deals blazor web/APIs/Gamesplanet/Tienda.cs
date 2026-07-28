@@ -4,7 +4,6 @@ using Herramientas;
 using Juegos;
 using System.Net;
 using System.Xml;
-using System.Xml.Linq;
 using System.Xml.Serialization;
 using Tiendas2;
 
@@ -18,6 +17,7 @@ namespace APIs.Gamesplanet
 			{
 				Id = "gamesplanetuk",
 				Nombre = "Gamesplanet (UK)",
+				Tipo = TiendaTipo.Oficial,
 				ImagenLogo = "/imagenes/tiendas/gamesplanet_logo.webp",
 				Imagen300x80 = "/imagenes/tiendas/gamesplanetuk_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/gamesplanet_icono.webp",
@@ -36,6 +36,7 @@ namespace APIs.Gamesplanet
 			{
 				Id = "gamesplanetfr",
 				Nombre = "Gamesplanet (FR)",
+				Tipo = TiendaTipo.Oficial,
 				ImagenLogo = "/imagenes/tiendas/gamesplanet_logo.webp",
 				Imagen300x80 = "/imagenes/tiendas/gamesplanetfr_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/gamesplanet_icono.webp",
@@ -54,6 +55,7 @@ namespace APIs.Gamesplanet
 			{
 				Id = "gamesplanetde",
 				Nombre = "Gamesplanet (DE)",
+				Tipo = TiendaTipo.Oficial,
 				ImagenLogo = "/imagenes/tiendas/gamesplanet_logo.webp",
 				Imagen300x80 = "/imagenes/tiendas/gamesplanetde_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/gamesplanet_icono.webp",
@@ -72,6 +74,7 @@ namespace APIs.Gamesplanet
 			{
 				Id = "gamesplanetus",
 				Nombre = "Gamesplanet (US)",
+				Tipo = TiendaTipo.Oficial,
 				ImagenLogo = "/imagenes/tiendas/gamesplanet_logo.webp",
 				Imagen300x80 = "/imagenes/tiendas/gamesplanetus_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/gamesplanet_icono.webp",

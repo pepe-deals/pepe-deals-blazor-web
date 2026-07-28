@@ -20,6 +20,7 @@ namespace APIs.EpicGames
 			{
 				Id = "epicgamesstore",
 				Nombre = "Epic Games Store",
+				Tipo = TiendaTipo.Oficial,
 				ImagenLogo = "/imagenes/tiendas/epic_logo.webp",
 				Imagen300x80 = "/imagenes/tiendas/epic_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/epic_icono.ico",

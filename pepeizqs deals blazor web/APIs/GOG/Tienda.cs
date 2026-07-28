@@ -18,6 +18,7 @@ namespace APIs.GOG
 			{
 				Id = "gog",
 				Nombre = "GOG",
+				Tipo = TiendaTipo.Oficial,
 				ImagenLogo = "/imagenes/tiendas/gog_logo.webp",
 				Imagen300x80 = "/imagenes/tiendas/gog_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/gog_icono.ico",

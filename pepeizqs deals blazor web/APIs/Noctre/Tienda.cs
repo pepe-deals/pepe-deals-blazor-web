@@ -16,6 +16,7 @@ namespace APIs.Noctre
 			{
 				Id = "noctre",
 				Nombre = "Noctre",
+				Tipo = TiendaTipo.Oficial,
 				ImagenLogo = "/imagenes/tiendas/noctre_logo.webp",
 				Imagen300x80 = "/imagenes/tiendas/noctre_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/noctre_icono.webp",

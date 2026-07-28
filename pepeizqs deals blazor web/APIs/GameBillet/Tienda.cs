@@ -23,6 +23,7 @@ namespace APIs.GameBillet
 			{
 				Id = "gamebillet",
 				Nombre = "GameBillet",
+				Tipo = TiendaTipo.Oficial,
 				ImagenLogo = "/imagenes/tiendas/gamebillet_logo.webp",
 				Imagen300x80 = "/imagenes/tiendas/gamebillet_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/gamebillet_icono.webp",

@@ -19,11 +19,19 @@ namespace Tiendas2
 		public bool AdminInteractuar;
 		public bool UsuarioInteractuar = true;
 		public List<TiendaRegion> Regiones;
+		public TiendaTipo Tipo;
 	}
 
 	public enum TiendaRegion
 	{
 		Europa,
 		EstadosUnidos
+	}
+
+	public enum TiendaTipo
+	{
+		Oficial,
+		NoOficial,
+		Marketplace
 	}
 }

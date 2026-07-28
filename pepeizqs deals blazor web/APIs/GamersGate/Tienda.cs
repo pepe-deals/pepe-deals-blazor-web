@@ -17,6 +17,7 @@ namespace APIs.GamersGate
 			{
 				Id = "gamersgate",
 				Nombre = "GamersGate",
+				Tipo = TiendaTipo.Oficial,
 				ImagenLogo = "/imagenes/tiendas/gamersgate_logo.webp",
 				Imagen300x80 = "/imagenes/tiendas/gamersgate_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/gamersgate_icono.ico",

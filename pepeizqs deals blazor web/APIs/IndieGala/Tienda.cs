@@ -21,6 +21,7 @@ namespace APIs.IndieGala
 			{
 				Id = "indiegala",
 				Nombre = "IndieGala",
+				Tipo = TiendaTipo.Oficial,
 				ImagenLogo = "/imagenes/tiendas/indiegala_logo.webp",
 				Imagen300x80 = "/imagenes/tiendas/indiegala_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/indiegala_icono.webp",

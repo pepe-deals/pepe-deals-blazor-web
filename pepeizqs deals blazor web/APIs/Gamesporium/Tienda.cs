@@ -17,6 +17,7 @@ namespace APIs.Gamesporium
 			{
 				Id = "gamesporium",
 				Nombre = "Gamesporium",
+				Tipo = TiendaTipo.Oficial,
 				ImagenLogo = "/imagenes/tiendas/gamesporium_logo.webp",
 				Imagen300x80 = "/imagenes/tiendas/gamesporium_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/gamesporium_icono.webp",

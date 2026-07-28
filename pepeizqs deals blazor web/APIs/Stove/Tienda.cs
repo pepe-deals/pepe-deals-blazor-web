@@ -17,6 +17,7 @@ namespace APIs.Stove
 			{
 				Id = "stove",
 				Nombre = "Stove",
+				Tipo = TiendaTipo.Oficial,
 				ImagenLogo = "/imagenes/tiendas/stove_logo.webp",
 				Imagen300x80 = "/imagenes/tiendas/stove_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/stove_icono.ico",

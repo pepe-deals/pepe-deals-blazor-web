@@ -20,6 +20,7 @@ namespace APIs.GreenManGaming
 			{
 				Id = "greenmangaming",
 				Nombre = "Green Man Gaming",
+				Tipo = TiendaTipo.Oficial,
 				ImagenLogo = "/imagenes/tiendas/greenmangaming_logo.webp",
 				Imagen300x80 = "/imagenes/tiendas/greenmangaming_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/greenmangaming_icono.webp",
@@ -43,6 +44,7 @@ namespace APIs.GreenManGaming
 			{
 				Id = "greenmangaminggold",
 				Nombre = "Green Man Gaming Gold",
+				Tipo = TiendaTipo.Oficial,
 				ImagenLogo = "/imagenes/tiendas/greenmangaminggold_logo.webp",
 				Imagen300x80 = "/imagenes/tiendas/greenmangaminggold_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/greenmangaming_icono.webp",

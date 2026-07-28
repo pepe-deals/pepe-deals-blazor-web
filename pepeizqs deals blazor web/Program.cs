@@ -198,7 +198,7 @@ builder.Services.AddSingleton<Tareas.Minimos.Europa>();
 builder.Services.AddSingleton<Tareas.LimpiezaLog>();
 //builder.Services.AddSingleton<Tareas.LimpiezaCircuits>();
 builder.Services.AddSingleton<Tareas.Mantenimiento.Diario>();
-builder.Services.AddSingleton<Tareas.Mantenimiento.Encoger>();
+//builder.Services.AddSingleton<Tareas.Mantenimiento.Encoger>();
 builder.Services.AddSingleton<Tareas.Pings>();
 builder.Services.AddSingleton<Tareas.CorreosEnviar>();
 builder.Services.AddSingleton<Tareas.Patreon>();
@@ -217,7 +217,7 @@ builder.Services.AddHostedService(provider => provider.GetRequiredService<Tareas
 builder.Services.AddHostedService(provider => provider.GetRequiredService<Tareas.LimpiezaLog>());
 //builder.Services.AddHostedService(provider => provider.GetRequiredService<Tareas.LimpiezaCircuits>());
 builder.Services.AddHostedService(provider => provider.GetRequiredService<Tareas.Mantenimiento.Diario>());
-builder.Services.AddHostedService(provider => provider.GetRequiredService<Tareas.Mantenimiento.Encoger>());
+//builder.Services.AddHostedService(provider => provider.GetRequiredService<Tareas.Mantenimiento.Encoger>());
 builder.Services.AddHostedService(provider => provider.GetRequiredService<Tareas.Pings>());
 builder.Services.AddHostedService(provider => provider.GetRequiredService<Tareas.CorreosEnviar>());
 builder.Services.AddHostedService(provider => provider.GetRequiredService<Tareas.Patreon>());

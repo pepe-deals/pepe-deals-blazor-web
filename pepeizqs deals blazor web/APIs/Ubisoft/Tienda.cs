@@ -23,6 +23,7 @@ namespace APIs.Ubisoft
 			{
 				Id = "ubisoft",
 				Nombre = "Ubisoft Store",
+				Tipo = TiendaTipo.Oficial,
 				ImagenLogo = "/imagenes/tiendas/ubisoft2_logo.webp",
 				Imagen300x80 = "/imagenes/tiendas/ubisoft2_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/ubisoft_icono.webp",

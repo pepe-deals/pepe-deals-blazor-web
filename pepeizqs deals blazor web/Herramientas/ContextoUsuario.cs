@@ -15,7 +15,8 @@ namespace Herramientas
 				UsuarioId = contexto?.HttpContext?.User?.FindFirst(u => u.Type.Contains("nameidentifier"))?.Value,
 				UserAgent = contexto?.HttpContext?.Request?.Headers?.UserAgent.ToString(),
 				Dominio = contexto?.HttpContext?.Request?.Host.Value,
-				Region = contexto?.HttpContext?.Request?.Cookies.TryGetValue("user_currency", out string valorRegion) == true && int.TryParse(valorRegion, out int valorRegionInt) && Enum.IsDefined(typeof(TiendaRegion), valorRegionInt) ? (TiendaRegion)valorRegionInt : TiendaRegion.Europa
+				Region = contexto?.HttpContext?.Request?.Cookies.TryGetValue("user_currency", out string valorRegion) == true && int.TryParse(valorRegion, out int valorRegionInt) && Enum.IsDefined(typeof(TiendaRegion), valorRegionInt) ? (TiendaRegion)valorRegionInt : TiendaRegion.Europa,
+				NoOficial = contexto?.HttpContext?.Request?.Cookies.TryGetValue("noofficial", out string valorNoOficial) == true && bool.TryParse(valorNoOficial, out bool valorNoOficialBool) ? valorNoOficialBool : false
 			};
 
 			return datos;
@@ -29,5 +30,6 @@ namespace Herramientas
         public string UserAgent { get; set; }
 		public string Dominio { get; set; }
 		public TiendaRegion Region { get; set; } = TiendaRegion.Europa;
+		public bool NoOficial { get; set; } = false;
 	}
 }

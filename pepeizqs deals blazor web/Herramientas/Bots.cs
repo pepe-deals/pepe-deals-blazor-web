@@ -48,6 +48,8 @@ namespace Herramientas
 			"meta-externalagent",
 			"MJ12bot",
 			"MojeekBot",
+			"Mozilla/5.0+AppleWebKit/605.1.15+(KHTML,+like+Gecko)+Chrome/139.0.0.0+Safari/605.1.15",
+			"Mozilla/5.0 AppleWebKit/605.1.15+(KHTML, like Gecko) Chrome/139.0.0.0 Safari/605.1.15",
 			"nbot",
 			"OpenWebSearchBot",
 			"Owler",

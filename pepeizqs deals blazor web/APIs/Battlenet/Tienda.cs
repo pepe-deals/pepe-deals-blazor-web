@@ -17,7 +17,8 @@ namespace APIs.Battlenet
             {
                 Id = "battlenet",
                 Nombre = "Battlenet Store",
-                ImagenLogo = "/imagenes/tiendas/battlenet_logo.webp",
+				Tipo = TiendaTipo.Oficial,
+				ImagenLogo = "/imagenes/tiendas/battlenet_logo.webp",
                 Imagen300x80 = "/imagenes/tiendas/battlenet_300x80.webp",
                 ImagenIcono = "/imagenes/tiendas/battlenet_icono.webp",
                 Color = "#005aad",

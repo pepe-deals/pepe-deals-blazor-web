@@ -23,6 +23,7 @@ namespace APIs.DLGamer
 			{
 				Id = "dlgamer",
 				Nombre = "DLGamer",
+				Tipo = TiendaTipo.Oficial,
 				ImagenLogo = "/imagenes/tiendas/dlgamer_logo.webp",
 				Imagen300x80 = "/imagenes/tiendas/dlgamer_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/dlgamer_icono.webp",

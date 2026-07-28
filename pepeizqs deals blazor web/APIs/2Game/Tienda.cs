@@ -16,6 +16,7 @@ namespace APIs._2Game
 			{
 				Id = "2game",
 				Nombre = "2Game",
+				Tipo = TiendaTipo.Oficial,
 				ImagenLogo = "/imagenes/tiendas/2game_logo.webp",
 				Imagen300x80 = "/imagenes/tiendas/2game_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/2game_icono.webp",

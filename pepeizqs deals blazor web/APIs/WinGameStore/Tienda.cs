@@ -17,6 +17,7 @@ namespace APIs.WinGameStore
 			{
 				Id = "wingamestore",
 				Nombre = "WinGameStore",
+				Tipo = TiendaTipo.Oficial,
 				ImagenLogo = "/imagenes/tiendas/wingamestore_logo.webp",
 				Imagen300x80 = "/imagenes/tiendas/wingamestore_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/wingamestore_icono.webp",

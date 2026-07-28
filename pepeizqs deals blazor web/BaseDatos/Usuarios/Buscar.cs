@@ -192,7 +192,7 @@ namespace BaseDatos.Usuarios
 				return null;
 			}
 
-			string busqueda = "SELECT Avatar, Email, Nickname, Currency, PatreonCoins FROM AspNetUsers WHERE Id=@Id";
+			string busqueda = "SELECT Avatar, Email, Nickname, Currency, PatreonCoins, NoOfficial, Marketplace FROM AspNetUsers WHERE Id=@Id";
 
 			try
 			{

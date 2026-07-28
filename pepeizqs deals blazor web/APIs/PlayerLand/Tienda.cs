@@ -17,6 +17,7 @@ namespace APIs.PlayerLand
 			{
 				Id = "playerland",
 				Nombre = "Playerland",
+				Tipo = TiendaTipo.Oficial,
 				ImagenLogo = "/imagenes/tiendas/playerland_logo.webp",
 				Imagen300x80 = "/imagenes/tiendas/playerland_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/playerland_icono.webp",

@@ -124,14 +124,38 @@ function alHacerScroll() {
     }
 }
 
+let resizeObserverCabecera = null;
+
 export function iniciarScrollCabecera() {
     cabeceraSuperiorEl = document.querySelector(".cabecera-superior");
 
     if (cabeceraSuperiorEl != null) {
         window.addEventListener("scroll", alHacerScroll, { passive: true });
     }
+
+    observarAlturaCabecera();
 }
 
 export function destruirScrollCabecera() {
     window.removeEventListener("scroll", alHacerScroll);
+
+    if (resizeObserverCabecera != null) {
+        resizeObserverCabecera.disconnect();
+        resizeObserverCabecera = null;
+    }
+}
+
+function observarAlturaCabecera() {
+    const contenedor = document.querySelector('.contenedor-cabeceras');
+    if (!contenedor) return;
+
+    const actualizar = () => {
+        const altura = contenedor.getBoundingClientRect().height;
+        document.documentElement.style.setProperty('--alturaCabeceraReal', `${altura}px`);
+    };
+
+    resizeObserverCabecera = new ResizeObserver(actualizar);
+    resizeObserverCabecera.observe(contenedor);
+
+    actualizar();
 }

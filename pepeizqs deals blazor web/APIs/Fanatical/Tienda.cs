@@ -22,6 +22,7 @@ namespace APIs.Fanatical
 			{
 				Id = "fanatical",
 				Nombre = "Fanatical",
+				Tipo = TiendaTipo.Oficial,
 				ImagenLogo = "/imagenes/tiendas/fanatical_logo.webp",
 				Imagen300x80 = "/imagenes/tiendas/fanatical_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/fanatical_icono.webp",

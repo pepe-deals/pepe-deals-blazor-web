@@ -18,6 +18,7 @@ namespace APIs.Allyouplay
 			{
 				Id = "allyouplay",
 				Nombre = "Allyouplay",
+				Tipo = TiendaTipo.Oficial,
 				ImagenLogo = "/imagenes/tiendas/allyouplay_logo.webp",
 				Imagen300x80 = "/imagenes/tiendas/allyouplay_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/allyouplay_icono.webp",

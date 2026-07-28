@@ -16,7 +16,8 @@ namespace APIs.JoyBuggy
             {
                 Id = "joybuggy",
                 Nombre = "JoyBuggy",
-                ImagenLogo = "/imagenes/tiendas/joybuggy_logo.webp",
+				Tipo = TiendaTipo.Oficial,
+				ImagenLogo = "/imagenes/tiendas/joybuggy_logo.webp",
                 Imagen300x80 = "/imagenes/tiendas/joybuggy_300x80.webp",
                 ImagenIcono = "/imagenes/tiendas/joybuggy_icono.ico",
                 Color = "#39f2d3",

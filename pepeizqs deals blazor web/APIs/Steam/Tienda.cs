@@ -27,6 +27,7 @@ namespace APIs.Steam
 			{
 				Id = "steam",
 				Nombre = "Steam",
+				Tipo = TiendaTipo.Oficial,
 				ImagenLogo = "/imagenes/tiendas/steam_logo.webp",
 				Imagen300x80 = "/imagenes/tiendas/steam_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/steam_icono.webp",
