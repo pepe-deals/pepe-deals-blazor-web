@@ -1687,7 +1687,7 @@
                                     </div>
                                 }
         
-                                <JuegoTiendas region="@usuarioRegion" preciosActualesDRM="@preciosActualesDRM" mensajeMinimoDRM=@mensajeMinimoDRM usuarioId="@usuarioId" idioma="@idioma" userAgent="@userAgent"
+                                <JuegoTiendas noOficial="@usuarioTiendasNoOficial" region="@usuarioRegion" preciosActualesDRM="@preciosActualesDRM" mensajeMinimoDRM=@mensajeMinimoDRM usuarioId="@usuarioId" idioma="@idioma" userAgent="@userAgent"
                                         usuarioPatreon="@usuarioPatreon" juegosUsuario="@juegosUsuario" juegoNombre="@juego.Nombre"/>
                             </div>
                         </div>
@@ -3379,6 +3379,7 @@
     private bool usuarioPatreon = false;
     private bool usuarioAdmin = false;
     private TiendaRegion usuarioRegion = TiendaRegion.Europa;
+    private bool usuarioTiendasNoOficial = false;
 
     [PersistentState] public Usuario opciones { get; set; }
 
@@ -3411,6 +3412,7 @@
         userAgent = datos.UserAgent;
         dominio = datos.Dominio;
         usuarioRegion = datos.Region;
+        usuarioTiendasNoOficial = datos.NoOficial;
 
         idiomaJuego = idioma;
 
@@ -3422,10 +3424,11 @@
             Task<DateTime?> tareaPatreon = BaseDatos.Usuarios.Buscar.FechaPatreon(usuarioId);
             Task<bool> tareaAdmin = BaseDatos.Usuarios.Buscar.RolDios(usuarioId);
             Task<int> tareaRegion = BaseDatos.Usuarios.Buscar.OpcionInt(usuarioId, "Currency");
+            Task<bool> tareaNoOficial = BaseDatos.Usuarios.Buscar.OpcionBool(usuarioId, "NoOfficial");
             Task<string> tareaIdiomaJuego = BaseDatos.Usuarios.Buscar.IdiomaJuegos(usuarioId);
             Task<Usuario> tareaOpciones = (opciones != null) ? Task.FromResult(opciones) : BaseDatos.Usuarios.Buscar.OpcionesJuego(usuarioId);
 
-            await Task.WhenAll(tareaIdioma, tareaJuegos, tareaDeseados, tareaPatreon, tareaAdmin, tareaRegion, tareaIdiomaJuego, tareaOpciones);
+            await Task.WhenAll(tareaIdioma, tareaJuegos, tareaDeseados, tareaPatreon, tareaAdmin, tareaRegion, tareaNoOficial, tareaIdiomaJuego, tareaOpciones);
 
             idioma = tareaIdioma.Result;
             juegosUsuario = tareaJuegos.Result;
@@ -3433,6 +3436,7 @@
             usuarioPatreon = Herramientas.Patreon.VerificarActivo(tareaPatreon.Result);
             usuarioAdmin = tareaAdmin.Result;
             usuarioRegion = (TiendaRegion)tareaRegion.Result;
+            usuarioTiendasNoOficial = tareaNoOficial.Result;
 
             string idiomaJuegoTemp = tareaIdiomaJuego.Result;
             if (string.IsNullOrEmpty(idiomaJuegoTemp) == false)

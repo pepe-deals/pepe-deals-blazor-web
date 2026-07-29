@@ -369,8 +369,11 @@ a:hover .boton-cabecera-deseados {
     max-height: 30px;
     color: var(--colorTexto);
     background-color: transparent;
-    cursor: pointer;
     border: 0;
+}
+
+button.boton-cabecera-mini {
+    cursor: pointer;
 }
 
     button.boton-cabecera-mini:hover {

@@ -10,7 +10,7 @@
             {
                 <Virtualize Context="precio" Items="preciosMostrar">
                     <ItemContent>
-                        <JuegoTiendasEnlace @key="(precio.Enlace + precio.Tienda)" region="@region" precio="@precio" usuarioId="@usuarioId" idioma="@idioma" userAgent="@userAgent"
+                        <JuegoTiendasEnlace @key="(precio.Enlace + precio.Tienda)" noOficial="@noOficial" region="@region" precio="@precio" usuarioId="@usuarioId" idioma="@idioma" userAgent="@userAgent"
                                             usuarioPatreon="@usuarioPatreon" juegosUsuario="@juegosUsuario" juegoNombre="@juegoNombre"
                                             OnPrecioFinalCalculado="pf => preciosFinalesCalculados[precio.Enlace + precio.Tienda] = pf" />
                     </ItemContent>
@@ -20,7 +20,7 @@
             {
                 foreach (var precio in preciosMostrar.Take(3))
                 {
-                    <JuegoTiendasEnlace @key="(precio.Enlace + precio.Tienda)" region="@region" precio="@precio" usuarioId="@usuarioId" idioma="@idioma" userAgent="@userAgent"
+                    <JuegoTiendasEnlace @key="(precio.Enlace + precio.Tienda)" noOficial="@noOficial" region="@region" precio="@precio" usuarioId="@usuarioId" idioma="@idioma" userAgent="@userAgent"
                                         usuarioPatreon="@usuarioPatreon" juegosUsuario="@juegosUsuario" juegoNombre="@juegoNombre"
                                         OnPrecioFinalCalculado="pf => preciosFinalesCalculados[precio.Enlace + precio.Tienda] = pf" />
                 }
@@ -62,7 +62,7 @@
                 {
                     <Virtualize Context="precioBajo" Items="preciosBajos">
                         <ItemContent>
-                            <JuegoTiendasEnlace @key="(precioBajo.Enlace + precioBajo.Tienda)" region="@region" precio="@precioBajo" usuarioId="@usuarioId" idioma="@idioma" userAgent="@userAgent"
+                            <JuegoTiendasEnlace @key="(precioBajo.Enlace + precioBajo.Tienda)" noOficial="@noOficial" region="@region" precio="@precioBajo" usuarioId="@usuarioId" idioma="@idioma" userAgent="@userAgent"
                                                 usuarioPatreon="@usuarioPatreon" juegosUsuario="@juegosUsuario" juegoNombre="@juegoNombre" />
                         </ItemContent>
                     </Virtualize>
@@ -71,7 +71,7 @@
                 {
                     foreach (var precioBajo in preciosBajos.Take(3))
                     {
-                        <JuegoTiendasEnlace @key="(precioBajo.Enlace + precioBajo.Tienda)" region="@region" precio="@precioBajo" usuarioId="@usuarioId" idioma="@idioma" userAgent="@userAgent"
+                        <JuegoTiendasEnlace @key="(precioBajo.Enlace + precioBajo.Tienda)" noOficial="@noOficial" region="@region" precio="@precioBajo" usuarioId="@usuarioId" idioma="@idioma" userAgent="@userAgent"
                                             usuarioPatreon="@usuarioPatreon" juegosUsuario="@juegosUsuario" juegoNombre="@juegoNombre" />
                     }
                 }
@@ -90,7 +90,10 @@ else
 
 @code {
 
-#nullable disable
+    #nullable disable
+
+    [Parameter]
+    public bool noOficial { get; set; }
 
     [Parameter]
     public TiendaRegion region { get; set; }

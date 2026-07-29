@@ -180,6 +180,7 @@ builder.Services.AddSingleton<IEmailSender<Usuario>, Herramientas.Correos.Identi
 
 #region Servicios
 
+builder.Services.AddScoped<Servicios.TiendaNoOficial>();
 builder.Services.AddScoped<Servicios.Moneda>();
 builder.Services.AddScoped<Servicios.Opciones>();
 

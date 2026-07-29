@@ -1,5 +1,8 @@
+.juego-caja-boton {
+    padding: 20px;
+}
+
 .juego-imagen-boton {
-    margin: 20px;
     max-height: 40px;
 }
 
@@ -25,8 +28,11 @@
 }
 
 @media(max-width: 900px) {
+    .juego-caja-boton {
+        padding: 5px;
+    }
+
     .juego-imagen-boton {
-        margin: 5px;
         max-height: 25px;
     }
 

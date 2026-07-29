@@ -18,6 +18,7 @@
 @inject IHttpContextAccessor Contexto
 @inject IJSRuntime JavaScript
 @inject IConfiguration Configuracion
+@inject Servicios.TiendaNoOficial ServicioTiendasNoOficial
 @inject Servicios.Moneda ServiciosMoneda
 @inject Servicios.Opciones ServicioOpciones
 
@@ -1758,6 +1759,10 @@
             {
                 opcionesCabecera.NoOfficial = usuarioTiendasNoOficial;
             }
+        }
+        else
+        {
+            await ServicioTiendasNoOficial.AsignarValor(usuarioTiendasNoOficial);
         }
 
         NavManager.Refresh(true);

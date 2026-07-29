@@ -78,6 +78,10 @@ namespace Juegos
 		public List<JuegoDeckToken> SteamFrameTokens { get; set; }
 		public JuegoSteamMachine SteamMachine { get; set; }
 		public List<JuegoDeckToken> SteamMachineTokens { get; set; }
+		public List<JuegoPrecio> PreciosActualesNoOficialesEU { get; set; }
+		public List<JuegoPrecio> PreciosHistoricosNoOficialesEU { get; set; }
+		public List<JuegoPrecio> PreciosActualesNoOficialesUS { get; set; }
+		public List<JuegoPrecio> PreciosHistoricosNoOficialesUS { get; set; }
 	}
 
 	public static class JuegoCrear

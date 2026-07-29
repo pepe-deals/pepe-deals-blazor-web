@@ -1427,6 +1427,35 @@ SELECT id FROM AspNetUsers WHERE CHARINDEX(@idEA, Wishlist) > 0";
 			return 0;
 		}
 
+		public static async Task<bool> OpcionBool(string usuarioId, string valor)
+		{
+			if (string.IsNullOrEmpty(usuarioId) == true && string.IsNullOrEmpty(valor) == true)
+			{
+				return false;
+			}
+
+			if (string.IsNullOrEmpty(usuarioId) == false && string.IsNullOrEmpty(valor) == false)
+			{
+				try
+				{
+					string busqueda = $"SELECT {valor} FROM AspNetUsers WHERE id=@Id";
+
+					bool? resultado = await Herramientas.BaseDatos.Select(async conexion =>
+					{
+						return await conexion.QueryFirstOrDefaultAsync<bool?>(busqueda, new { Id = usuarioId });
+					});
+
+					return resultado ?? false;
+				}
+				catch (Exception ex)
+				{
+					BaseDatos.Errores.Insertar.Mensaje("Usuario Opcion Bool", ex);
+				}
+			}
+
+			return false;
+		}
+
 		public static async Task<bool> OpcionBoolRegion(TiendaRegion region, string usuarioId, string valor)
 		{
 			if (string.IsNullOrEmpty(usuarioId) == true && string.IsNullOrEmpty(valor) == true)

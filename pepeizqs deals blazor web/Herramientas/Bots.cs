@@ -68,6 +68,7 @@ namespace Herramientas
 			"Sogou+web+spider",
 			"spider",
 			"TelegramBot",
+			"TikTokSpider",
 			"Twitterbot",
 			"Valve Client",
 			"Valve Steam",

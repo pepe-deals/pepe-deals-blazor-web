@@ -21,38 +21,38 @@ namespace BaseDatos.Portada
 			}
 
 			string busqueda = @$"SELECT j.id, j.{precioMinimosHistoricos}, pmh.DRM as DRMElegido
-FROM juegos j
-CROSS APPLY OPENJSON(j.{precioMinimosHistoricos})
-WITH (
-    FechaActualizacion DATETIME2 '$.FechaActualizacion',
-    FechaTermina DATETIME2 '$.FechaTermina',
-    DRM INT '$.DRM',
-    Tienda NVARCHAR(50) '$.Tienda'
-) AS pmh
-WHERE j.ultimaModificacion >= DATEADD(day, -3, GETDATE())
-  AND j.analisis IS NOT NULL
-  AND j.analisis <> 'null'
-  AND ISJSON(j.analisis) = 1
-  AND JSON_VALUE(j.analisis, '$.Cantidad') IS NOT NULL
-  AND TRY_CONVERT(bigint, REPLACE(JSON_VALUE(j.analisis, '$.Cantidad'), ',', '')) > 99
-  AND j.nombre IS NOT NULL
-  AND j.imagenes IS NOT NULL
-  AND (j.mayorEdad = 'false' OR j.mayorEdad IS NULL)
-  AND (j.freeToPlay = 'false' OR j.freeToPlay IS NULL)
-  AND j.{precioMinimosHistoricos} IS NOT NULL
-  AND j.{precioMinimosHistoricos} <> 'null'
-  AND ISJSON(j.{precioMinimosHistoricos}) = 1
-  AND (
-        (pmh.FechaActualizacion >= DATEADD(hour, -24, GETDATE()) AND (pmh.Tienda = 'steam' OR pmh.Tienda = 'steambundles')) OR
-        (pmh.FechaActualizacion >= DATEADD(hour, -25, GETDATE()) AND (pmh.Tienda = 'humblestore' OR pmh.Tienda = 'humblechoice')) OR
-        (pmh.FechaActualizacion >= DATEADD(hour, -48, GETDATE()) AND pmh.Tienda = 'epicgamesstore') OR
-        (pmh.FechaActualizacion >= DATEADD(hour, -12, GETDATE()))    
-      )
-AND (
-	pmh.FechaTermina IS NULL
-	OR pmh.FechaTermina = '0001-01-01'
-	OR pmh.FechaTermina > GETDATE()
-)";
+				FROM juegos j
+				CROSS APPLY OPENJSON(j.{precioMinimosHistoricos})
+				WITH (
+					FechaActualizacion DATETIME2 '$.FechaActualizacion',
+					FechaTermina DATETIME2 '$.FechaTermina',
+					DRM INT '$.DRM',
+					Tienda NVARCHAR(50) '$.Tienda'
+				) AS pmh
+				WHERE j.ultimaModificacion >= DATEADD(day, -3, GETDATE())
+				  AND j.analisis IS NOT NULL
+				  AND j.analisis <> 'null'
+				  AND ISJSON(j.analisis) = 1
+				  AND JSON_VALUE(j.analisis, '$.Cantidad') IS NOT NULL
+				  AND TRY_CONVERT(bigint, REPLACE(JSON_VALUE(j.analisis, '$.Cantidad'), ',', '')) > 99
+				  AND j.nombre IS NOT NULL
+				  AND j.imagenes IS NOT NULL
+				  AND (j.mayorEdad = 'false' OR j.mayorEdad IS NULL)
+				  AND (j.freeToPlay = 'false' OR j.freeToPlay IS NULL)
+				  AND j.{precioMinimosHistoricos} IS NOT NULL
+				  AND j.{precioMinimosHistoricos} <> 'null'
+				  AND ISJSON(j.{precioMinimosHistoricos}) = 1
+				  AND (
+						(pmh.FechaActualizacion >= DATEADD(hour, -24, GETDATE()) AND (pmh.Tienda = 'steam' OR pmh.Tienda = 'steambundles')) OR
+						(pmh.FechaActualizacion >= DATEADD(hour, -25, GETDATE()) AND (pmh.Tienda = 'humblestore' OR pmh.Tienda = 'humblechoice')) OR
+						(pmh.FechaActualizacion >= DATEADD(hour, -48, GETDATE()) AND pmh.Tienda = 'epicgamesstore') OR
+						(pmh.FechaActualizacion >= DATEADD(hour, -12, GETDATE()))    
+					  )
+				AND (
+					pmh.FechaTermina IS NULL
+					OR pmh.FechaTermina = '0001-01-01'
+					OR pmh.FechaTermina > GETDATE()
+				)";
 
 			if (string.IsNullOrEmpty(tienda) == false)
 			{
@@ -109,9 +109,9 @@ AND (
 				exclusionSteam = $"AND NOT EXISTS (SELECT 1 FROM @excluirSteam WHERE Id = jg.idSteam AND JSON_VALUE(j.{precioMinimosHistoricos}, '$[0].DRM') = '0')";
 			}
 
-			string busqueda = @$"SELECT TOP {cantidadJuegos} j.idMaestra, jg.nombre,     
-				JSON_VALUE(jg.imagenes, '$.Logo') as logo, JSON_VALUE(jg.imagenes, '$.Library_1920x620') as fondo, JSON_VALUE(jg.imagenes, '$.Header_460x215') as header, JSON_VALUE(jg.media, '$.Videos[0].Micro') as video,
-				j.{precioMinimosHistoricos}, jg.idSteam FROM {tabla} j 
+			string busqueda = @$";WITH Candidatos AS (
+				SELECT TOP {cantidadJuegos} j.idMaestra, j.{precioMinimosHistoricos}, jg.idSteam
+				FROM {tabla} j 
 				INNER JOIN dbo.juegos jg ON jg.id = j.idMaestra
 				CROSS APPLY OPENJSON(j.{precioMinimosHistoricos}, '$[0]') WITH (
 					Precio float '$.Precio',
@@ -121,24 +121,33 @@ AND (
 					FechaActualizacion datetime2 '$.FechaActualizacion'
 				) precioMin
 				WHERE jg.tipo = 0 {exclusionJuegos} {exclusionSteam} AND 
-				year(getdate()) < year(JSON_VALUE(jg.caracteristicas, '$.FechaLanzamientoSteam')) + 11 AND
-				precioMin.Precio >= 1.99 AND 
-				precioMin.Descuento > 0 AND 
-				precioMin.DRM = 0 AND 
-				(
-					(YEAR(precioMin.FechaTermina) > 2020 AND precioMin.FechaTermina > GETDATE())
-					OR
+					year(getdate()) < year(JSON_VALUE(jg.caracteristicas, '$.FechaLanzamientoSteam')) + 11 AND
+					precioMin.Precio >= 1.99 AND 
+					precioMin.Descuento > 0 AND 
+					precioMin.DRM = 0 AND 
 					(
-						NOT (YEAR(precioMin.FechaTermina) > 2020 AND precioMin.FechaTermina > GETDATE())
-						AND precioMin.FechaActualizacion > DATEADD(HOUR,-24,GetDate())
-					)
-				) AND 
-				(CONVERT(bigint, REPLACE(JSON_VALUE(jg.analisis, '$.Cantidad'),',','')) >= {minimoReseñas}) AND 
-				{(ocultarBundles == true ? $"NOT EXISTS (SELECT 1 FROM bundles b INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id WHERE bj.JuegoId = j.idMaestra AND b.fechaTermina > DATEADD(MONTH, -{ocultarBundlesCantidad}, GETDATE())) AND " : "")} 
-				{(ocultarGratis == true ? "NOT EXISTS (SELECT 1 FROM gratis WHERE gratis.juegoId = j.idMaestra AND gratis.DRM = 0) AND " : "")}
-				{(ocultarSuscripciones == true ? @$"NOT EXISTS (SELECT 1 FROM suscripciones WHERE suscripciones.juegoId = j.idMaestra AND suscripciones.DRM = 0 AND suscripciones.fechaTermina > DATEADD(MONTH, -{ocultarSuscripcionesCantidad}, GETDATE())) AND " : "")}
-				(jg.ocultarPortada IS NULL OR jg.ocultarPortada = 'false') 
-				ORDER BY NEWID()";
+						(YEAR(precioMin.FechaTermina) > 2020 AND precioMin.FechaTermina > GETDATE())
+						OR
+						(
+							NOT (YEAR(precioMin.FechaTermina) > 2020 AND precioMin.FechaTermina > GETDATE())
+							AND precioMin.FechaActualizacion > DATEADD(HOUR,-24,GetDate())
+						)
+					) AND 
+					(CONVERT(bigint, REPLACE(JSON_VALUE(jg.analisis, '$.Cantidad'),',','')) >= {minimoReseñas}) AND 
+					{(ocultarBundles == true ? $"NOT EXISTS (SELECT 1 FROM bundles b INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id WHERE bj.JuegoId = j.idMaestra AND b.fechaTermina > DATEADD(MONTH, -{ocultarBundlesCantidad}, GETDATE())) AND " : "")} 
+					{(ocultarGratis == true ? "NOT EXISTS (SELECT 1 FROM gratis WHERE gratis.juegoId = j.idMaestra AND gratis.DRM = 0) AND " : "")}
+					{(ocultarSuscripciones == true ? @$"NOT EXISTS (SELECT 1 FROM suscripciones WHERE suscripciones.juegoId = j.idMaestra AND suscripciones.DRM = 0 AND suscripciones.fechaTermina > DATEADD(MONTH, -{ocultarSuscripcionesCantidad}, GETDATE())) AND " : "")}
+					(jg.ocultarPortada IS NULL OR jg.ocultarPortada = 'false')
+				ORDER BY NEWID()
+			)
+			SELECT c.idMaestra, jg.nombre,
+				JSON_VALUE(jg.imagenes, '$.Logo') as logo, 
+				JSON_VALUE(jg.imagenes, '$.Library_1920x620') as fondo, 
+				JSON_VALUE(jg.imagenes, '$.Header_460x215') as header, 
+				JSON_VALUE(jg.media, '$.Videos[0].Micro') as video,
+				c.{precioMinimosHistoricos}, c.idSteam
+			FROM Candidatos c
+			INNER JOIN dbo.juegos jg ON jg.id = c.idMaestra;";
 
 			try
 			{

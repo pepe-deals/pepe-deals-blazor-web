@@ -37,9 +37,33 @@
         </div>
     }
 
-    <a class="boton-pequeño" title="@Tiendas2.TiendasCargar.DevolverTienda(precio.Tienda).Nombre" href="@enlace" target="_blank" style="width: 100%;">
-        <div class="caja-drm-tienda" style="display: flex; align-items: center; justify-content: space-between; gap: 20px;">
-            <img src="@SacarImagenTienda(precio.Tienda)" class="juego-imagen-boton" alt="@precio.Tienda" style="contain: layout; aspect-ratio: 300/80;" loading="lazy" />
+    <a class="boton-pequeño" title="@Tiendas2.TiendasCargar.DevolverTienda(precio.Tienda).Nombre" href="@enlace" target="_blank" style="padding: 0px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; border: 5px solid transparent; border-image: linear-gradient(to right, rgba(0,0,0,.1), transparent) 1;">
+            <div class="juego-caja-boton" style="background-color: rgba(0,0,0,.1); align-self: stretch; display: flex; align-items: center;">
+                <div style="display: flex; align-items: center; flex-direction: column; gap: 10px;">
+                    <img src="@SacarImagenTienda(precio.Tienda)" class="juego-imagen-boton" alt="@precio.Tienda" style="contain: layout; aspect-ratio: 300/80; display: block;" loading="lazy" />
+            
+                    @if (noOficial == true)
+                    {
+                        TiendaTipo tipo = SacarTipoTienda(precio.Tienda);
+
+                        <div style="font-size: 13px; line-height: 13px;">
+                            @if (tipo == TiendaTipo.Oficial)
+                            {
+                                @Herramientas.Idiomas.BuscarTexto(idioma, "String141", "Game")
+                            }
+                            else if (tipo == TiendaTipo.NoOficial)
+                            {
+                                @Herramientas.Idiomas.BuscarTexto(idioma, "String142", "Game")
+                            }
+                            else if (tipo == TiendaTipo.Marketplace)
+                            {
+                                @Herramientas.Idiomas.BuscarTexto(idioma, "String143", "Game")
+                            }
+                        </div>
+                    }
+                </div> 
+            </div>
 
             <div style="font-size: 14px; flex: 1; display: flex; flex-direction: column; gap: 12px; min-width: 0;">
                 @if (juegosBundle == null || juegosBundle?.Count == 0)
@@ -158,6 +182,9 @@
 @code {
 
     #nullable disable
+
+    [Parameter]
+    public bool noOficial { get; set; }
 
     [Parameter]
     public TiendaRegion region { get; set; }
@@ -325,6 +352,11 @@
     public static string SacarImagenTienda(string codigo)
     {
         return TiendasCargar.GenerarListado().Find(t => t.Id == codigo)?.Imagen300x80 ?? string.Empty;
+    }
+
+    public static TiendaTipo SacarTipoTienda(string codigo)
+    {
+        return TiendasCargar.GenerarListado().Find(t => t.Id == codigo)?.Tipo ?? TiendaTipo.Oficial;
     }
 
     private static string ComprobarEdicion(string juego, string oferta)
