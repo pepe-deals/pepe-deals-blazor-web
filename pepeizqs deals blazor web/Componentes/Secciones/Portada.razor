@@ -1432,52 +1432,56 @@ else
 							{
 								posicionMostrarDestacados = 0;
 								videoDestacado = null;
-							}
 
-							foreach (var juego in juegosDestacadosMostrar2)
-							{
-								if (juego != null)
+								foreach (var juego in juegosDestacadosMostrar2)
 								{
-									JuegoDRM drmDestacados = JuegoDRM.NoEspecificado;
+									if (juego != null)
+									{
+										JuegoDRM drmDestacados = JuegoDRM.NoEspecificado;
 
-									if (usuarioRegion == TiendaRegion.Europa)
-									{
-										drmDestacados = juego.PrecioMinimosHistoricos[0].DRM;
-									}
-									else if (usuarioRegion == TiendaRegion.EstadosUnidos)
-									{
-										drmDestacados = juego.PrecioMinimosHistoricosUS[0].DRM;
-									}
-
-									JuegoMostrar juegoDestacadoMostrar = new JuegoMostrar
-									{
-										Juego = juego,
-										DeseadoImportado = false,
-										Color = "var(--fondoBotonPequeño)",
-										DesplegableMostrar = true
-									};
-
-									if (Herramientas.UsuarioJuegos.ComprobarSiTiene(juegosUsuarioIndex, juego, drmDestacados) == true)
-									{
-										juegoDestacadoMostrar.Color = "var(--fondoBien)";
-									}
-									else
-									{
-										if (Herramientas.Deseados.ComprobarSiEstaImportado(deseadosImportadosIndex, juego, drmDestacados) == true)
+										if (usuarioRegion == TiendaRegion.Europa)
 										{
-											juegoDestacadoMostrar.Color = "var(--fondoAlerta)";
-											juegoDestacadoMostrar.DeseadoImportado = true;
+											drmDestacados = juego.PrecioMinimosHistoricos[0].DRM;
+										}
+										else if (usuarioRegion == TiendaRegion.EstadosUnidos)
+										{
+											drmDestacados = juego.PrecioMinimosHistoricosUS[0].DRM;
 										}
 
-										if (Herramientas.Deseados.ComprobarSiEstaWeb(deseadosWebIndex, juego, drmDestacados, true) == true)
+										JuegoMostrar juegoDestacadoMostrar = new JuegoMostrar
 										{
-											juegoDestacadoMostrar.Color = "var(--fondoAlerta)";
-										}
-									}
+											Juego = juego,
+											Tiene = false,
+											DeseadoImportado = false,
+											DeseadoWeb = false,
+											Color = "var(--fondoBotonPequeño)",
+											DesplegableMostrar = true
+										};
 
-									juegosDestacadosMostrar.Add(juegoDestacadoMostrar);									
+										if (Herramientas.UsuarioJuegos.ComprobarSiTiene(juegosUsuarioIndex, juego, drmDestacados) == true)
+										{
+											juegoDestacadoMostrar.Color = "var(--fondoBien)";
+											juegoDestacadoMostrar.Tiene = true;
+										}
+										else
+										{
+											if (Herramientas.Deseados.ComprobarSiEstaImportado(deseadosImportadosIndex, juego, drmDestacados) == true)
+											{
+												juegoDestacadoMostrar.Color = "var(--fondoAlerta)";
+												juegoDestacadoMostrar.DeseadoImportado = true;
+											}
+
+											if (Herramientas.Deseados.ComprobarSiEstaWeb(deseadosWebIndex, juego, drmDestacados, true) == true)
+											{
+												juegoDestacadoMostrar.Color = "var(--fondoAlerta)";
+												juegoDestacadoMostrar.DeseadoWeb = true;
+											}
+										}
+
+										juegosDestacadosMostrar.Add(juegoDestacadoMostrar);									
+									}
 								}
-							}
+							}			
 						}
 					}
 

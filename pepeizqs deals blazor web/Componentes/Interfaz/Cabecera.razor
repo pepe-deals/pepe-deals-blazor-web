@@ -1129,16 +1129,16 @@
         {
             try
             {
+                await moduloJs.InvokeVoidAsync("destruirScrollCabecera");
+            }
+            catch { }
+
+            try
+            {
                 await moduloJs.DisposeAsync();
             }
             catch { }
         }
-
-        try
-        {
-            await moduloJs.InvokeVoidAsync("destruirScrollCabecera");
-        }
-        catch { }
     }
 
     private bool mostrarDivisaDropdown = false;

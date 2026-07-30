@@ -38,7 +38,8 @@ namespace Tiendas2
 				APIs.Muvegames.Tienda.Generar(),
 				APIs.Stove.Tienda.Generar(),
 				APIs.Gamesporium.Tienda.Generar(),
-				APIs.PlayerLand.Tienda.Generar()
+				APIs.PlayerLand.Tienda.Generar(),
+				APIs.Loaded.Tienda.Generar()
 			};
 
 			return tiendas;
@@ -153,6 +154,10 @@ namespace Tiendas2
 			else if (id == APIs.Stove.Tienda.Generar().Id)
 			{
 				await APIs.Stove.Tienda.BuscarOfertas(region);
+			}
+			else if (id == APIs.Loaded.Tienda.Generar().Id)
+			{
+				await APIs.Loaded.Tienda.BuscarOfertas(region);
 			}
 		}
 

@@ -220,7 +220,7 @@ namespace Juegos
 				Id = JuegoDRM.PlayStation,
 				Nombre = "PlayStation",
 				Imagen = "/imagenes/drm/playstation.webp",
-				Acepciones = new List<string> { "playstation" }
+				Acepciones = new List<string> { "playstation", "playstation network" }
 			};
 
 			drms.Add(ps);

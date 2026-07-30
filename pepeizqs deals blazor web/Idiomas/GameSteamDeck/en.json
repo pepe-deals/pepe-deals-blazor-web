@@ -107,6 +107,7 @@
   "SteamMachine_TestResult_CrossPlatformCloudSavesNotSupported": "This game does not support cross-platform saved games",
   "SteamMachine_TestResult_SimultaneousInputGyroTrackpadFriendly": "This game supports using the gyro/trackpad in mouse mode for camera controls with gamepad controls for movement",
   "SteamMachine_TestResult_HDRMustBeManuallyEnabled": "This game supports HDR but it must be manually enabled using in-game settings",
+  "SteamMachine_TestResult_MultiWindowAppAutomaticallySetsFocus": "This game uses multiple windows and may require you to focus the appropriate windows manually via the Steam overlay",
   "SteamFrame_TestResult_UnsupportedAntiCheatConfiguration": "This game's anti-cheat is not configured to support Steam Frame",
   "SteamFrame_TestResult_UnsupportedAntiCheat_Other": "This game is unsupported on Steam Frame due to use of an unsupported anti-cheat or multiplayer service",
   "SteamFrame_TestResult_SteamOSDoesNotSupport": "Valve is still working on adding support for this game on Steam Frame",

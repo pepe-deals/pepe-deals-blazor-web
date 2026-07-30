@@ -17,7 +17,7 @@ namespace BaseDatos.Tiendas
 				return;
 			}
 
-			var idsSteam = new List<int>();
+			List<int> idsSteam = new List<int>();
 			var mapaOfertas = new Dictionary<int, JuegoPrecio>();
 			var mapaReseñas = new Dictionary<int, JuegoReseñas>();
 
@@ -756,17 +756,26 @@ WHERE t.enlace = @Enlace
 
 										if (resultado.Item1 != null && resultado.Item2 != null)
 										{
-											var ofertasActualesActualizado = JsonSerializer.Deserialize<List<JuegoPrecio>>(
-												resultado.Item2.Get<string>($"@precioActualesTiendasUS{indice}"));
+											if (tiendaTipo == TiendaTipo.Oficial)
+											{
+												var ofertasActualesActualizado = JsonSerializer.Deserialize<List<JuegoPrecio>>(resultado.Item2.Get<string>($"@precioActualesTiendasUS{indice}"));
 
-											var ofertasHistoricasActualizado = JsonSerializer.Deserialize<List<JuegoPrecio>>(
-												resultado.Item2.Get<string>($"@precioMinimosHistoricosUS{indice}"));
+												var ofertasHistoricasActualizado = JsonSerializer.Deserialize<List<JuegoPrecio>>(resultado.Item2.Get<string>($"@precioMinimosHistoricosUS{indice}"));
 
-											var historicosActualizado = resultado.Item2.ParameterNames.Contains($"@historicosUS{indice}")
-												? JsonSerializer.Deserialize<List<JuegoHistorico>>(resultado.Item2.Get<string>($"@historicosUS{indice}"))
-												: historicosUS;
+												var historicosActualizado = resultado.Item2.ParameterNames.Contains($"@historicosUS{indice}")
+													? JsonSerializer.Deserialize<List<JuegoHistorico>>(resultado.Item2.Get<string>($"@historicosUS{indice}"))
+													: historicosUS;
 
-											estadosPorJuego[id] = (ofertasActualesActualizado, ofertasHistoricasActualizado, historicosActualizado, reseñas, idSteam);
+												estadosPorJuego[id] = (ofertasActualesActualizado, ofertasHistoricasActualizado, historicosActualizado, reseñas, idSteam);
+											}
+											else if (tiendaTipo == TiendaTipo.NoOficial)
+											{
+												var ofertasActualesActualizado = JsonSerializer.Deserialize<List<JuegoPrecio>>(resultado.Item2.Get<string>($"@preciosActualesNoOficialesUS{indice}"));
+
+												var ofertasHistoricasActualizado = JsonSerializer.Deserialize<List<JuegoPrecio>>(resultado.Item2.Get<string>($"@preciosHistoricosNoOficialesUS{indice}"));
+
+												estadosPorJuego[id] = (ofertasActualesActualizado, ofertasHistoricasActualizado, null, reseñas, idSteam);
+											}
 
 											updates[id] = (resultado.Item1, resultado.Item2);
 											indice += 1;
@@ -827,11 +836,11 @@ WHERE t.enlace = @Enlace
 							var oferta = kvp.Value;
 
 							string sqlMergear = $@"MERGE INTO {esquema} AS mergeador
-							USING (SELECT @Enlace AS enlace) AS fuente
-							ON mergeador.enlace = fuente.enlace
-							WHEN NOT MATCHED THEN
-								INSERT (enlace, nombre, imagen)
-								VALUES (@Enlace, @Nombre, @Imagen);";
+								USING (SELECT @Enlace AS enlace) AS fuente
+								ON mergeador.enlace = fuente.enlace
+								WHEN NOT MATCHED THEN
+									INSERT (enlace, nombre, imagen)
+									VALUES (@Enlace, @Nombre, @Imagen);";
 
 							try
 							{

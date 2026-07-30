@@ -2084,35 +2084,32 @@ END DESC";
 				}
 			}
 
+			DynamicParameters parametros = new DynamicParameters();
+
 			string etiquetasTexto = string.Empty;
 
 			if (etiquetas?.Count > 0)
 			{
 				int i = 0;
+				List<string> condiciones = new List<string>();
 
 				foreach (var etiqueta in etiquetas)
 				{
-					string etiqueta2 = etiqueta;
-					etiqueta2 = etiqueta2.Replace("t", null);
+					string etiqueta2 = etiqueta.Replace("t", null);
 
 					if (etiquetasTexto.Contains(etiqueta2) == false)
 					{
-						if (i == 0)
-						{
-							etiquetasTexto = "j.etiquetas LIKE '%" + Strings.ChrW(34) + etiqueta2 + Strings.ChrW(34) + "%'";
-						}
-						else
-						{
-							etiquetasTexto = etiquetasTexto + " AND j.etiquetas LIKE '%" + Strings.ChrW(34) + etiqueta2 + Strings.ChrW(34) + "%'";
-						}
-
+						string nombreParam = $"etq{i}";
+						parametros.Add(nombreParam, "%\"" + etiqueta2 + "\"%");
+						condiciones.Add($"j.etiquetas LIKE @{nombreParam}");
+						etiquetasTexto += etiqueta2;
 						i += 1;
 					}
 				}
 
-				if (string.IsNullOrEmpty(etiquetasTexto) == false)
+				if (condiciones.Count > 0)
 				{
-					etiquetasTexto = " AND ISJSON(j.etiquetas) > 0 AND (" + etiquetasTexto + ")";
+					etiquetasTexto = " AND ISJSON(j.etiquetas) > 0 AND (" + string.Join(" AND ", condiciones) + ")";
 				}
 			}
 
@@ -2121,31 +2118,25 @@ END DESC";
 			if (categorias.Count > 0)
 			{
 				int i = 0;
+				List<string> condiciones = new List<string>();
 
 				foreach (var categoria in categorias)
 				{
-					string categoria2 = categoria;
-					categoria2 = categoria2.Replace("c", null);
-					categoria2 = categoria2.Replace("a", null);
+					string categoria2 = categoria.Replace("c", null).Replace("a", null);
 
 					if (categoriasTexto.Contains(categoria2) == false)
 					{
-						if (i == 0)
-						{
-							categoriasTexto = "j.categorias LIKE '%" + Strings.ChrW(34) + categoria2 + Strings.ChrW(34) + "%'";
-						}
-						else
-						{
-							categoriasTexto = categoriasTexto + " AND j.categorias LIKE '%" + Strings.ChrW(34) + categoria2 + Strings.ChrW(34) + "%'";
-						}
-
+						string nombreParam = $"cat{i}";
+						parametros.Add(nombreParam, "%\"" + categoria2 + "\"%");
+						condiciones.Add($"j.categorias LIKE @{nombreParam}");
+						categoriasTexto += categoria2;
 						i += 1;
 					}
 				}
 
-				if (string.IsNullOrEmpty(categoriasTexto) == false)
+				if (condiciones.Count > 0)
 				{
-					categoriasTexto = " AND ISJSON(j.categorias) > 0 AND (" + categoriasTexto + ")";
+					categoriasTexto = " AND ISJSON(j.categorias) > 0 AND (" + string.Join(" AND ", condiciones) + ")";
 				}
 			}
 
@@ -2154,30 +2145,30 @@ END DESC";
 			if (decks.Count > 0)
 			{
 				int i = 0;
+				List<string> condiciones = new List<string>();
 
 				foreach (var deck in decks)
 				{
-					string deck2 = deck;
-					deck2 = deck2.Replace("d", null);
+					string deck2 = deck.Replace("d", null);
+
+					if (int.TryParse(deck2, out int deckId) == false)
+					{
+						continue;
+					}
 
 					if (deckTexto.Contains(deck2) == false)
 					{
-						if (i == 0)
-						{
-							deckTexto = "j.deck = " + deck2;
-						}
-						else
-						{
-							deckTexto = deckTexto + " AND j.deck = " + deck2;
-						}
-
+						string nombreParam = $"deck{i}";
+						parametros.Add(nombreParam, deckId);
+						condiciones.Add($"j.deck = @{nombreParam}");
+						deckTexto += deck2;
 						i += 1;
 					}
 				}
 
-				if (string.IsNullOrEmpty(deckTexto) == false)
+				if (condiciones.Count > 0)
 				{
-					deckTexto = " AND (" + deckTexto + ")";
+					deckTexto = " AND (" + string.Join(" AND ", condiciones) + ")";
 				}
 			}
 
@@ -2185,35 +2176,30 @@ END DESC";
 
 			if (sistemas.Count > 0)
 			{
+				List<string> condiciones = new List<string>();
+				int i = 0;
+
 				foreach (var sistema in sistemas)
 				{
-					string sistema2 = sistema;
-					sistema2 = sistema2.Replace("s", null);
+					string sistema2 = sistema.Replace("s", null);
+					string nombreSistema = null;
 
-					if (string.IsNullOrEmpty(sistemasTexto) == false)
-					{
-						sistemasTexto = sistemasTexto + " AND ";
-					}
+					if (sistema2 == "1") nombreSistema = "Windows";
+					if (sistema2 == "2") nombreSistema = "Mac";
+					if (sistema2 == "3") nombreSistema = "Linux";
 
-					if (sistema2 == "1")
+					if (nombreSistema != null)
 					{
-						sistemasTexto = sistemasTexto + "j.caracteristicas LIKE '%" + Strings.ChrW(34) + "Windows" + Strings.ChrW(34) + ":true%'";
-					}
-
-					if (sistema2 == "2")
-					{
-						sistemasTexto = sistemasTexto + "j.caracteristicas LIKE '%" + Strings.ChrW(34) + "Mac" + Strings.ChrW(34) + ":true%'";
-					}
-
-					if (sistema2 == "3")
-					{
-						sistemasTexto = sistemasTexto + "j.caracteristicas LIKE '%" + Strings.ChrW(34) + "Linux" + Strings.ChrW(34) + ":true%'";
+						string nombreParam = $"sis{i}";
+						parametros.Add(nombreParam, "%\"" + nombreSistema + "\":true%");
+						condiciones.Add($"j.caracteristicas LIKE @{nombreParam}");
+						i += 1;
 					}
 				}
 
-				if (string.IsNullOrEmpty(sistemasTexto) == false)
+				if (condiciones.Count > 0)
 				{
-					sistemasTexto = " AND (" + sistemasTexto + ")";
+					sistemasTexto = " AND (" + string.Join(" AND ", condiciones) + ")";
 				}
 			}
 
@@ -2222,106 +2208,102 @@ END DESC";
 			if (tipos.Count > 0)
 			{
 				int i = 0;
+				List<string> condiciones = new List<string>();
 
 				foreach (var tipo in tipos)
 				{
-					string tipo2 = tipo;
-					tipo2 = tipo2.Replace("i", null);
+					string tipo2 = tipo.Replace("i", null);
+
+					if (int.TryParse(tipo2, out int tipoId) == false)
+					{
+						continue;
+					}
 
 					if (tiposTexto.Contains(tipo2) == false)
 					{
-						if (i == 0)
-						{
-							tiposTexto = "j.tipo = " + tipo2;
-						}
-						else
-						{
-							tiposTexto = tiposTexto + " AND j.tipo = " + tipo2;
-						}
-
+						string nombreParam = $"tipo{i}";
+						parametros.Add(nombreParam, tipoId);
+						condiciones.Add($"j.tipo = @{nombreParam}");
+						tiposTexto += tipo2;
 						i += 1;
 					}
 				}
 
-				if (string.IsNullOrEmpty(tiposTexto) == false)
+				if (condiciones.Count > 0)
 				{
-					tiposTexto = " AND (" + tiposTexto + ")";
+					tiposTexto = " AND (" + string.Join(" AND ", condiciones) + ")";
 				}
 			}
 
 			string busqueda = @"SELECT j.id, j.nombre, j.imagenes, j.precioMinimosHistoricos, j.precioActualesTiendas,
-    j.tipo, j.analisis, j.idSteam, j.idGog, j.media, j.freeToPlay,
-	(
-		SELECT b.id, b.bundleTipo
-		FROM bundles b
-		INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
-		WHERE bj.juegoId = j.id
-			AND b.fechaEmpieza <= GETDATE()
-			AND b.fechaTermina >= GETDATE()
-		FOR JSON PATH
-	) AS BundlesActuales,
-	(
-		SELECT b.id, b.bundleTipo
-		FROM bundles b
-		INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
-		WHERE bj.juegoId = j.id
-			AND b.fechaTermina < GETDATE()
-		FOR JSON PATH
-	) AS BundlesPasados,
-	(
-        SELECT g.gratis
-        FROM gratis g
-        WHERE g.juegoId = j.id
-          AND g.fechaEmpieza <= GETDATE()
-          AND g.fechaTermina >= GETDATE()
-        FOR JSON PATH
-    ) AS GratisActuales,
-	(
-        SELECT g.gratis
-        FROM gratis g
-        WHERE g.juegoId = j.id
-          AND g.fechaTermina < GETDATE()
-        FOR JSON PATH
-    ) AS GratisPasados,
-    (
-        SELECT s.suscripcion
-        FROM suscripciones s
-        WHERE s.juegoId = j.id
-          AND s.FechaEmpieza <= GETDATE()
-          AND s.FechaTermina >= GETDATE()
-        FOR JSON PATH
-    ) AS SuscripcionesActuales,
-    (
-        SELECT s.suscripcion
-        FROM suscripciones s
-        WHERE s.juegoId = j.id
-          AND s.FechaTermina < GETDATE()
-        FOR JSON PATH
-    ) AS SuscripcionesPasados, CONVERT(bigint, REPLACE(JSON_VALUE(j.analisis, '$.Cantidad'),',','')) AS Cantidad FROM juegos j " + Environment.NewLine +
+				j.tipo, j.analisis, j.idSteam, j.idGog, j.media, j.freeToPlay,
+				(
+					SELECT b.id, b.bundleTipo
+					FROM bundles b
+					INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
+					WHERE bj.juegoId = j.id
+						AND b.fechaEmpieza <= GETDATE()
+						AND b.fechaTermina >= GETDATE()
+					FOR JSON PATH
+				) AS BundlesActuales,
+				(
+					SELECT b.id, b.bundleTipo
+					FROM bundles b
+					INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
+					WHERE bj.juegoId = j.id
+						AND b.fechaTermina < GETDATE()
+					FOR JSON PATH
+				) AS BundlesPasados,
+				(
+					SELECT g.gratis
+					FROM gratis g
+					WHERE g.juegoId = j.id
+					  AND g.fechaEmpieza <= GETDATE()
+					  AND g.fechaTermina >= GETDATE()
+					FOR JSON PATH
+				) AS GratisActuales,
+				(
+					SELECT g.gratis
+					FROM gratis g
+					WHERE g.juegoId = j.id
+					  AND g.fechaTermina < GETDATE()
+					FOR JSON PATH
+				) AS GratisPasados,
+				(
+					SELECT s.suscripcion
+					FROM suscripciones s
+					WHERE s.juegoId = j.id
+					  AND s.FechaEmpieza <= GETDATE()
+					  AND s.FechaTermina >= GETDATE()
+					FOR JSON PATH
+				) AS SuscripcionesActuales,
+				(
+					SELECT s.suscripcion
+					FROM suscripciones s
+					WHERE s.juegoId = j.id
+					  AND s.FechaTermina < GETDATE()
+					FOR JSON PATH
+				) AS SuscripcionesPasados, CONVERT(bigint, REPLACE(JSON_VALUE(j.analisis, '$.Cantidad'),',','')) AS Cantidad FROM juegos j " + Environment.NewLine +
 				"WHERE ISJSON(analisis) > 0 " + etiquetasTexto + " " + categoriasTexto + " " + deckTexto + " " + sistemasTexto + " " + tiposTexto +
 				" ORDER BY Cantidad DESC";
 
-			if (string.IsNullOrEmpty(busqueda) == false)
-			{
-				busqueda = busqueda + @$" OFFSET {posicion} ROWS
-										FETCH NEXT 50 ROWS ONLY";
+			busqueda = busqueda + @$" OFFSET {posicion} ROWS
+								FETCH NEXT 50 ROWS ONLY";
 
-				try
+			try
+			{
+				return await Herramientas.BaseDatos.Select(async conexion =>
 				{
-					return await Herramientas.BaseDatos.Select(async conexion =>
-					{
-						return (await conexion.QueryAsync<Juego>(busqueda)).ToList();
-					});
-				}
-				catch (Exception ex)
-				{
-					BaseDatos.Errores.Insertar.Mensaje("Juego Filtro", ex);
-				}
+					return (await conexion.QueryAsync<Juego>(busqueda, parametros)).ToList();
+				});
+			}
+			catch (Exception ex)
+			{
+				BaseDatos.Errores.Insertar.Mensaje("Juego Filtro", ex);
 			}
 
-			return new List<Juego>();
+			return null;
 		}
-
 		public static async Task<List<Juego>> Duplicados()
 		{
 			string busqueda = @"SELECT * FROM juegos

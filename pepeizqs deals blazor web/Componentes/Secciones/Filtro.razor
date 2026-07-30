@@ -536,33 +536,36 @@ else
 			}
 		</div>
 
-		<div style="width: 100%;">
-			<div style="margin: -30px 0px; display: flex; flex-direction: column; gap: 30px;">
-				<Virtualize Context="juego" Items="@resultadosGestor">
-					<ItemContent>
-						<CajaJuego idioma="@idioma" juego="@juego" juegosUsuarioIndex="@juegosUsuarioIndex" usuarioDeseadosImportados="@deseadosImportadosIndex" usuarioDeseadosWeb="@deseadosWebIndex" tipo="CajaJuego.Tipo.Filtro" userAgent="@userAgent" />
-					</ItemContent>
-				</Virtualize>
-			</div>
-
-			@if (Herramientas.Bots.UserAgentEsBot(userAgent) == false)
-			{
-				<div style="margin-top: 40px; width: 100%; display: flex; align-items: center; gap: 20px; justify-content: center;">
-					@if (cargandoMas == false)
-					{
-						<button class="boton-pequeño" @onclick="CargarMasResultados" style="width: fit-content; padding: 10px 25px;">
-							@Herramientas.Idiomas.BuscarTexto(idioma, "String11", "Filter")
-						</button>
-					}
-					else
-					{
-						<div style="padding: 10px 25px;">
-							@Herramientas.Idiomas.BuscarTexto(idioma, "String12", "Filter")
-						</div>
-					}
+		@if (resultadosGestor?.Count > 0)
+		{
+			<div style="width: 100%;">
+				<div style="margin: -30px 0px; display: flex; flex-direction: column; gap: 30px;">
+					<Virtualize Context="juego" Items="@resultadosGestor">
+						<ItemContent>
+							<CajaJuego idioma="@idioma" juego="@juego" juegosUsuarioIndex="@juegosUsuarioIndex" usuarioDeseadosImportados="@deseadosImportadosIndex" usuarioDeseadosWeb="@deseadosWebIndex" tipo="CajaJuego.Tipo.Filtro" userAgent="@userAgent" />
+						</ItemContent>
+					</Virtualize>
 				</div>
-			}
-		</div>
+
+				@if (Herramientas.Bots.UserAgentEsBot(userAgent) == false)
+				{
+					<div style="margin-top: 40px; width: 100%; display: flex; align-items: center; gap: 20px; justify-content: center;">
+						@if (cargandoMas == false)
+						{
+							<button class="boton-pequeño" @onclick="CargarMasResultados" style="width: fit-content; padding: 10px 25px;">
+								@Herramientas.Idiomas.BuscarTexto(idioma, "String11", "Filter")
+							</button>
+						}
+						else
+						{
+							<div style="padding: 10px 25px;">
+								@Herramientas.Idiomas.BuscarTexto(idioma, "String12", "Filter")
+							</div>
+						}
+					</div>
+				}
+			</div>
+		}
 	</div>
 }
 

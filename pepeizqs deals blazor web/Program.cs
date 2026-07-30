@@ -140,6 +140,9 @@ Herramientas.BaseDatos.cadenaConexion = conexionTexto;
 APIs.Steam.Cuenta.ApiKey = builder.Configuration.GetValue<string>("SteamAPI:Key");
 APIs.Fanatical.Tienda.ApiKey = builder.Configuration.GetValue<string>("FanaticalAPI:Key");
 
+Impact.AccountSid = builder.Configuration.GetValue<string>("ImpactLoaded:AccountSid");
+Impact.AuthToken = builder.Configuration.GetValue<string>("ImpactLoaded:AuthToken");
+
 builder.Services.AddDbContextPool<pepeizqs_deals_webContext>(opciones => {
 	opciones.UseSqlServer(conexionTexto, opciones2 =>
 	{

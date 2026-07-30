@@ -13,7 +13,7 @@ export function teclearBusqueda(inputEl, dotnetRef, delay) {
 
         timer = setTimeout(async () => {
             await dotnetRef.invokeMethodAsync('EventoTecleoBuscador', e.target.value);
-            mostrarSpinner(false); 
+            mostrarSpinner(false);
         }, delay);
     });
 }
@@ -100,17 +100,19 @@ export function actualizarPosicionTooltipBuscador(clientX, clientY, id) {
     tooltip.style.top = top + 'px';
 }
 
-let cabeceraSuperiorEl = null;
 let ultimoScrollY = window.scrollY;
 let tickingScroll = false;
 
 function alActualizarScroll() {
+    const cabeceraSuperiorEl = document.querySelector(".cabecera-superior");
     const scrollActual = window.scrollY;
 
-    if (scrollActual <= 0) {
-        cabeceraSuperiorEl.classList.remove("oculta");
-    } else if (scrollActual > ultimoScrollY) {
-        cabeceraSuperiorEl.classList.add("oculta");
+    if (cabeceraSuperiorEl != null) {
+        if (scrollActual <= 0) {
+            cabeceraSuperiorEl.classList.remove("oculta");
+        } else if (scrollActual > ultimoScrollY) {
+            cabeceraSuperiorEl.classList.add("oculta");
+        }
     }
 
     ultimoScrollY = scrollActual;
@@ -127,11 +129,7 @@ function alHacerScroll() {
 let resizeObserverCabecera = null;
 
 export function iniciarScrollCabecera() {
-    cabeceraSuperiorEl = document.querySelector(".cabecera-superior");
-
-    if (cabeceraSuperiorEl != null) {
-        window.addEventListener("scroll", alHacerScroll, { passive: true });
-    }
+    window.addEventListener("scroll", alHacerScroll, { passive: true });
 
     observarAlturaCabecera();
 }
