@@ -1,7 +1,7 @@
 ﻿@using Juegos
 @using Tiendas2
 
-@if (preciosActualesDRM.Count > 0)
+@if (preciosActualesOficialesDRM.Count > 0)
 {
     <div style="display: flex; flex-direction: column; gap: 20px; padding: 0px 20px;">
         @if (preciosMostrar?.Count > 0)
@@ -99,7 +99,10 @@ else
     public TiendaRegion region { get; set; }
 
     [Parameter]
-    public List<JuegoPrecio> preciosActualesDRM { get; set; }
+    public List<JuegoPrecio> preciosActualesOficialesDRM { get; set; }
+
+    [Parameter]
+    public List<JuegoPrecio> preciosActualesNoOficialesDRM { get; set; }
 
     [Parameter]
     public string mensajeMinimoDRM { get; set; }
@@ -132,7 +135,9 @@ else
         preciosMostrar = new List<JuegoPrecio>();
         preciosBajos = new List<JuegoPrecio>();
 
-        List<JuegoPrecio> preciosActivos = preciosActualesDRM.Where(p => Herramientas.OfertaActiva.Verificar(p)).ToList();
+        List<JuegoPrecio> preciosActivos = preciosActualesOficialesDRM.Where(p => Herramientas.OfertaActiva.Verificar(p))
+            .Concat(noOficial == true ? preciosActualesNoOficialesDRM.Where(p => Herramientas.OfertaActiva.Verificar(p)) : Enumerable.Empty<JuegoPrecio>())
+            .ToList();
 
         if (preciosActivos.Any() == false)
         {

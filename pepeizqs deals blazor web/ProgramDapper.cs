@@ -145,26 +145,43 @@ public static class ClasesDapper
 
 public static class DapperSentencias
 {
-	public static string GenerarTexto(string sql, DynamicParameters parametros)
+	public static string ConstruirSqlDebug(string sql, object parametros)
 	{
-		if (parametros == null)
+		var valores = new Dictionary<string, object>();
+
+		if (parametros is DynamicParameters dinamicos)
 		{
-			return sql;
+			foreach (var nombre in dinamicos.ParameterNames)
+			{
+				valores[nombre] = dinamicos.Get<object>(nombre);
+			}
+		}
+		else if (parametros != null)
+		{
+			foreach (var propiedad in parametros.GetType().GetProperties())
+			{
+				valores[propiedad.Name] = propiedad.GetValue(parametros);
+			}
 		}
 
-		foreach (var nombre in parametros.ParameterNames)
+		string sqlConValores = sql;
+		foreach (var kvp in valores)
 		{
-			var valor = parametros.Get<object>(nombre);
+			string valorTexto = kvp.Value switch
+			{
+				null => "NULL",
+				string s => $"'{s.Replace("'", "''")}'",
+				DateTime d => $"'{d:yyyy-MM-dd HH:mm:ss}'",
+				bool b => b ? "1" : "0",
+				_ => Convert.ToString(kvp.Value, System.Globalization.CultureInfo.InvariantCulture)
+			};
 
-			string valorFormateado =
-				valor == null ? "NULL" :
-				valor is string or DateTime ? $"'{valor.ToString().Replace("'", "''")}'" :
-				valor is bool b ? (b ? "1" : "0") :
-				valor.ToString();
-
-			sql = sql.Replace("@" + nombre, valorFormateado);
+			sqlConValores = System.Text.RegularExpressions.Regex.Replace(
+				sqlConValores,
+				$@"@{kvp.Key}\b",
+				valorTexto.Replace("$", "$$"));
 		}
 
-		return sql;
+		return sqlConValores;
 	}
 }

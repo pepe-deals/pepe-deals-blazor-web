@@ -1,13 +1,5 @@
 ﻿#nullable disable
 
-using Microsoft.Identity.Client;
-using System.IO.Compression;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Text.Json;
-
-#nullable disable
-
 using System.Globalization;
 using System.Net.Http.Headers;
 using System.Text;

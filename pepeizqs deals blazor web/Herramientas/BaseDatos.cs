@@ -121,11 +121,6 @@ namespace Herramientas
 				conexion = Conectar();
 			}
 
-			if (conexion.State != ConnectionState.Open)
-			{
-				conexion.OpenAsync();
-			}
-
 			try
 			{
 				return accion(conexion);
@@ -134,7 +129,7 @@ namespace Herramientas
 			{
 				if (cerrar == true)
 				{
-					conexion.CloseAsync();
+					conexion.Close();
 				}
 			}
 		}

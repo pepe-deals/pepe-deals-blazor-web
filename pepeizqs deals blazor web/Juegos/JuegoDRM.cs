@@ -100,7 +100,7 @@ namespace Juegos
 				Id = JuegoDRM.Rockstar,
 				Nombre = "Rockstar Games Launcher",
 				Imagen = "/imagenes/drm/rockstar.webp",
-				Acepciones = new List<string> { "rockstar social club", "rockstar", "rockstar launcher", "rockstarsocialclub", "rockstarsocial" }
+				Acepciones = new List<string> { "rockstar social club", "rockstar", "rockstar launcher", "rockstarsocialclub", "rockstarsocial", "rockstar games" }
 			};
 
 			drms.Add(rockstar);
@@ -136,7 +136,7 @@ namespace Juegos
 				Id = JuegoDRM.Epic,
 				Nombre = "Epic Games Store",
 				Imagen = "/imagenes/drm/epic.webp",
-				Acepciones = new List<string> { "epic game store", "epic games store", "epic games", "epic", "epic_keyless", "epic keyless", "epicgames" }
+				Acepciones = new List<string> { "epic game store", "epic games store", "epic games", "epic", "epic_keyless", "epic keyless", "epicgames", "epic games launcher" }
 			};
 
 			drms.Add(epic);
@@ -148,7 +148,7 @@ namespace Juegos
 				Id = JuegoDRM.ElderScrolls,
 				Nombre = "Elder Scrolls Online",
 				Imagen = "/imagenes/drm/elderscrolls.webp",
-				Acepciones = new List<string> { "esonline" }
+				Acepciones = new List<string> { "esonline", "the elder scrolls online" }
 			};
 
 			drms.Add(elderscrolls);
@@ -184,7 +184,7 @@ namespace Juegos
                 Id = JuegoDRM.PearlAbyss,
                 Nombre = "Pearl Abyss",
                 Imagen = "/imagenes/drm/pearlabyss.webp",
-                Acepciones = new List<string> { "pearl abyss" }
+                Acepciones = new List<string> { "pearl abyss", "pearl abyss launcher" }
             };
 
             drms.Add(pearl);
@@ -268,7 +268,7 @@ namespace Juegos
 				Id = JuegoDRM.ArenaNet,
 				Nombre = "Arena Net",
 				Imagen = "/imagenes/drm/arenanet.webp",
-				Acepciones = new List<string> { "arenanet", "arena net" }
+				Acepciones = new List<string> { "arenanet", "arena net", "guild wars" }
 			};
 
 			drms.Add(arenanet);
@@ -373,17 +373,30 @@ namespace Juegos
 					"activation key",
 					"all",
 					"android",
+					"antstream",
 					"antstream arcade",
+					"apple",
 					"asmjs",
 					"audio-download",
 					"desura",
+					"developer website",
 					"download",
 					"download_drm",
 					"drivethrurpg",
+					"football manager",
 					"gaijin",
+					"genshin impact",
 					"glyph",
 					"idw",
+					"kobo",
+					"league of legends",
+					"mcafee",
+					"minecraft",
 					"mogstation",
+					"mog station",
+					"mytrainz",
+					"ncsoft",
+					"nintendo",
 					"nintendo switch",
 					"no",
 					"none",
@@ -396,15 +409,26 @@ namespace Juegos
 					"platform &gt; linux",
 					"platform &gt; mac",
 					"platform &gt; windows",
+					"ps5",
+					"pubg mobile",
+					"riot access",
+					"roblox",
+					"switch 2",
 					"topware protection (psi-key.com)",
 					"unknown",
 					"video-download",
 					"voucher",
 					"wargaming",
 					"website",
+					"windows",
 					"xbox-anywhere",
+					"xbox live",
 					"xbox-live-cross-gen",
+					"xbox one",
 					"xbox-one",
+					"xbox one & xbox series x/s",
+					"xbox play anywhere",
+					"xbox series x/s",
 					"xbox store",
 					"yes",
 					"zenimax",

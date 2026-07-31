@@ -419,6 +419,11 @@ namespace BaseDatos.Juegos
 					sql.Append($", slugEpic=@slugEpic{indice} ");
 				}
 			}
+			else if (tiendaTipo == TiendaTipo.NoOficial)
+			{
+				sql.Append($"preciosActualesNoOficialesEU=@preciosActualesNoOficialesEU{indice}, ");
+				sql.Append($"preciosHistoricosNoOficialesEU=@preciosHistoricosNoOficialesEU{indice} ");
+			}
 
 			if (ahora != null)
 			{
@@ -867,6 +872,11 @@ namespace BaseDatos.Juegos
 				{
 					sql.Append($", slugEpic=@slugEpic{indice} ");
 				}
+			}
+			else if (tiendaTipo == TiendaTipo.NoOficial)
+			{
+				sql.Append($"preciosActualesNoOficialesUS=@preciosActualesNoOficialesUS{indice}, ");
+				sql.Append($"preciosHistoricosNoOficialesUS=@preciosHistoricosNoOficialesUS{indice} ");
 			}
 
 			if (ahora != null)

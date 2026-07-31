@@ -17,9 +17,9 @@ namespace APIs.Loaded
 				Id = "loaded",
 				Nombre = "Loaded",
 				Tipo = TiendaTipo.NoOficial,
-				ImagenLogo = "/imagenes/tiendas/muvegames_logo.webp",
-				Imagen300x80 = "/imagenes/tiendas/muvegames_300x80.webp",
-				ImagenIcono = "/imagenes/tiendas/muvegames_icono.ico",
+				ImagenLogo = "/imagenes/tiendas/loaded_logo.webp",
+				Imagen300x80 = "/imagenes/tiendas/loaded_300x80.webp",
+				ImagenIcono = "/imagenes/tiendas/loaded_icono.webp",
 				Color = "#558205",
 				AdminEnseñar = true,
 				AdminInteractuar = true,
@@ -74,8 +74,6 @@ namespace APIs.Loaded
 						}
 					}
 				}
-
-				BaseDatos.Errores.Insertar.Mensaje(Generar().Id, resultados.Count.ToString() + " " + ofertas.Count.ToString());
 
 				if (ofertas?.Count > 0)
 				{

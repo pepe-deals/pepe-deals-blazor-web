@@ -784,7 +784,7 @@ WHERE t.enlace = @Enlace
 								}
 							}
 						}
-					}
+					}	
 
 					if (indice > 0)
 					{
@@ -820,10 +820,19 @@ WHERE t.enlace = @Enlace
 								indiceGlobal++;
 							}
 
-							await Herramientas.BaseDatos.RestoOperaciones(async (conexion, transaccion) =>
+							try
 							{
-								return await conexion.ExecuteAsync(sqlBatch.ToString(), parametrosBatch, transaction: transaccion);
-							});
+								await Herramientas.BaseDatos.RestoOperaciones(async (conexion, transaccion) =>
+								{
+									return await conexion.ExecuteAsync(sqlBatch.ToString(), parametrosBatch, transaction: transaccion);
+								});
+							}
+							catch
+							{
+								string sqlDebug = DapperSentencias.ConstruirSqlDebug(sqlBatch.ToString(), parametrosBatch);
+								
+								BaseDatos.Errores.Insertar.Mensaje("Error en sentencia SQL", sqlDebug);
+							}
 						}
 					}
 

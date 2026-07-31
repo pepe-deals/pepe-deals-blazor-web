@@ -360,6 +360,10 @@ namespace Tareas
 								siguienteComprobacion = TimeSpan.FromHours(3);
 							}
 						}
+						else if (tienda.Id == APIs.Loaded.Tienda.Generar().Id)
+						{
+							siguienteComprobacion = TimeSpan.FromHours(2);
+						}
 
 						if (siguienteComprobacion > TimeSpan.Zero)
 						{
