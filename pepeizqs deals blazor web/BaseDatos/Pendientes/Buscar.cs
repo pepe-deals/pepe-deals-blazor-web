@@ -12,7 +12,11 @@ namespace BaseDatos.Pendientes
 			{
 				nombre = (nombre.EndsWith("PC", StringComparison.OrdinalIgnoreCase) ? nombre[..^2] : nombre).TrimEnd();
 				nombre = (nombre.EndsWith("(PC)", StringComparison.OrdinalIgnoreCase) ? nombre[..^2] : nombre).TrimEnd();
-				nombre = (nombre.EndsWith("PC - DLC", StringComparison.OrdinalIgnoreCase) ? nombre[..^2] : nombre).TrimEnd();
+
+				nombre = System.Text.RegularExpressions.Regex.Replace(
+					nombre, @"\s*PC\s*[-–—]\s*DLC$", "",
+					System.Text.RegularExpressions.RegexOptions.IgnoreCase
+				).TrimEnd();
 
 				string busqueda1 = "SELECT id FROM juegos WHERE nombre=@nombre OR REPLACE(nombreCodigo, ' ', '')=@nombreLimpio";
 

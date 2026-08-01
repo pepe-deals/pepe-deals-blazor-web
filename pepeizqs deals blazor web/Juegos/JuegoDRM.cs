@@ -394,6 +394,7 @@ namespace Juegos
 					"minecraft",
 					"mogstation",
 					"mog station",
+					"ms store",
 					"mytrainz",
 					"ncsoft",
 					"nintendo",

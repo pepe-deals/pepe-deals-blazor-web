@@ -209,6 +209,14 @@
                                 @if (mostrarDeseadosDropdown == true && datosDeseados?.Juegos?.Count > 0)
                                 {
                                     <div class="menu-dropdown-contenido-centrado" style="min-width: 400px; background-color: color-mix(in srgb, var(--fondoBotonPequeño) 50%, var(--fondoAlerta)); border-radius: 5px; border: 2px solid var(--fondoAlerta); display: flex; flex-direction: column; gap: 5px;">
+                                        <a href="/wishlist" @onclick='() => mostrarDeseadosDropdown = false' style="font-size: 15px;">
+                                            <div style="text-align: center;">
+                                                @Herramientas.Idiomas.BuscarTexto(idioma, "Wishlist", "Header")
+                                            </div>
+                                        </a>
+
+                                        <hr style="margin: 5px 0px; border-top: var(--glaseadoCabeceraBorde) solid; opacity: 0.6;" />
+                                        
                                         @foreach (var juego in datosDeseados.Juegos.OrderByDescending(j => j.Fecha).Take(5))
                                         {
                                             List<Tiendas2.Tienda> tiendas = Tiendas2.TiendasCargar.GenerarListado();
