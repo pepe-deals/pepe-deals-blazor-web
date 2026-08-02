@@ -270,7 +270,7 @@ namespace Herramientas
 			return drmPreparado;
 		}
 
-		private static bool ExisteEnActuales(JuegoPrecio historico, List<JuegoPrecio> actuales, JuegoDRM drm)
+		public static bool ExisteEnActuales(JuegoPrecio historico, List<JuegoPrecio> actuales, JuegoDRM drm)
 		{
 			if (actuales?.Count == 0)
 			{
