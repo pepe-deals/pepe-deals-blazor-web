@@ -991,7 +991,7 @@
 
                                                                 if (usuarioRegion == TiendaRegion.Europa && juego.PrecioMinimosHistoricos?.Count > 0)
                                                                 {
-                                                                    JuegoPrecio historicoMostrar = null;
+                                                                    JuegoPrecio? historicoMostrar = null;
 
                                                                     foreach (var historico in juego.PrecioMinimosHistoricos)
                                                                     {
@@ -1031,7 +1031,7 @@
                                                                 }
                                                                 else if (usuarioRegion == TiendaRegion.EstadosUnidos && juego.PrecioMinimosHistoricosUS?.Count > 0)
                                                                 {
-                                                                    JuegoPrecio historicoMostrar = null;
+                                                                    JuegoPrecio? historicoMostrar = null;
 
                                                                     foreach (var historico in juego.PrecioMinimosHistoricosUS)
                                                                     {
@@ -1113,7 +1113,7 @@
 
                                                                 if (usuarioRegion == TiendaRegion.Europa && juego.PreciosHistoricosNoOficialesEU?.Count > 0)
                                                                 {
-                                                                    JuegoPrecio historicoMostrar = null;
+                                                                    JuegoPrecio? historicoMostrar = null;
 
                                                                     foreach (var historico in juego.PreciosHistoricosNoOficialesEU)
                                                                     {
@@ -1153,7 +1153,7 @@
                                                                 }
                                                                 else if (usuarioRegion == TiendaRegion.EstadosUnidos && juego.PreciosHistoricosNoOficialesUS?.Count > 0)
                                                                 {
-                                                                    JuegoPrecio historicoMostrar = null;
+                                                                    JuegoPrecio? historicoMostrar = null;
 
                                                                     foreach (var historico in juego.PreciosHistoricosNoOficialesUS)
                                                                     {

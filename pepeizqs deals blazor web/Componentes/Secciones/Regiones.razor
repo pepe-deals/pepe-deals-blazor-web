@@ -52,7 +52,7 @@
 
 			@{
 				var tiendas = Tiendas2.TiendasCargar.GenerarListado()
-                    .Where(t => t.Regiones?.Count > 0)
+                    .Where(t => t.Regiones?.Count > 0 && t.Tipo == TiendaTipo.Oficial)
 					.OrderBy(t => t.Nombre).ToList();
 			}
 

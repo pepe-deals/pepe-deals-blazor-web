@@ -33,7 +33,16 @@ namespace APIs.Loaded
 		{
 			await BaseDatos.Admin.Actualizar.Tiendas(region, Generar().Id, DateTime.Now, 0);
 
-			var resultados = await Herramientas.Impact.ObtenerCatalogo("12138");
+			List<ImpactCatalogItem> resultados = new List<ImpactCatalogItem>(); 
+				
+			if (region == TiendaRegion.Europa)
+			{
+				resultados = await Herramientas.Impact.ObtenerCatalogo("12138");
+			}
+			else if (region == TiendaRegion.EstadosUnidos)
+			{
+				resultados = await Herramientas.Impact.ObtenerCatalogo("12134");
+			}
 
 			if (resultados?.Count > 0)
 			{
@@ -66,6 +75,11 @@ namespace APIs.Loaded
 								FechaDetectado = DateTime.Now,
 								FechaActualizacion = DateTime.Now
 							};
+
+							if (region == TiendaRegion.EstadosUnidos)
+							{
+								oferta.Moneda = JuegoMoneda.Dolar;
+							}
 
 							if (drm == JuegoDRM.Steam)
 							{
