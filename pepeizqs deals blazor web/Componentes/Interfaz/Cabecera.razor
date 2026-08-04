@@ -1156,8 +1156,9 @@
         mostrarDivisaDropdown = !mostrarDivisaDropdown;
     }
 
-    private void CerrarDivisaDropdown()
+    private async Task CerrarDivisaDropdown()
     {
+        await Task.Delay(150);
         mostrarDivisaDropdown = false;
     }
 

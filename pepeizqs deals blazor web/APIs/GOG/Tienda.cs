@@ -353,24 +353,256 @@ namespace APIs.GOG
 	#region Datos
 
 	public class GOGGalaxy
-    {
-        [JsonPropertyName("content_system_compatibility")]
-        public GOGGalaxySistemas Sistemas { get; set; }
-    }
-
-    public class GOGGalaxySistemas
 	{
-        [JsonPropertyName("windows")]
-        public bool Windows { get; set; }
+	    [JsonPropertyName("id")]
+		public long Id { get; set; }
 
-        [JsonPropertyName("osx")]
-        public bool Mac { get; set; }
+		[JsonPropertyName("title")]
+		public string Title { get; set; }
 
-        [JsonPropertyName("linux")]
-        public bool Linux { get; set; }
-    }
+		[JsonPropertyName("purchase_link")]
+		public string PurchaseLink { get; set; }
 
-    public class GOGGalaxy2
+		[JsonPropertyName("slug")]
+		public string Slug { get; set; }
+
+		[JsonPropertyName("content_system_compatibility")]
+		public GogContentSystemCompatibility ContentSystemCompatibility { get; set; }
+
+		[JsonPropertyName("languages")]
+		public Dictionary<string, string> Languages { get; set; }
+
+		[JsonPropertyName("links")]
+		public GogLinks Links { get; set; }
+
+		[JsonPropertyName("in_development")]
+		public GogInDevelopment InDevelopment { get; set; }
+
+		[JsonPropertyName("is_secret")]
+		public bool IsSecret { get; set; }
+
+		[JsonPropertyName("is_installable")]
+		public bool IsInstallable { get; set; }
+
+		[JsonPropertyName("game_type")]
+		public string GameType { get; set; }
+
+		[JsonPropertyName("is_pre_order")]
+		public bool IsPreOrder { get; set; }
+
+		[JsonPropertyName("images")]
+		public GogImages Images { get; set; }
+
+		[JsonPropertyName("dlcs")]
+		public List<object> Dlcs { get; set; }
+
+		[JsonPropertyName("description")]
+		public GogDescription Description { get; set; }
+
+		[JsonPropertyName("screenshots")]
+		public List<GogScreenshot> Screenshots { get; set; }
+
+		[JsonPropertyName("videos")]
+		public List<GogVideo> Videos { get; set; }
+
+		[JsonPropertyName("related_products")]
+		public List<object> RelatedProducts { get; set; }
+
+		[JsonPropertyName("changelog")]
+		public string Changelog { get; set; }
+
+		[JsonPropertyName("downloads")]
+		public GogDownloads Downloads { get; set; }
+
+		[JsonPropertyName("expanded_dlcs")]
+		public List<object> ExpandedDlcs { get; set; }
+	}
+
+
+	public class GogContentSystemCompatibility
+	{
+		[JsonPropertyName("windows")]
+		public bool Windows { get; set; }
+
+		[JsonPropertyName("osx")]
+		public bool Osx { get; set; }
+
+		[JsonPropertyName("linux")]
+		public bool Linux { get; set; }
+	}
+
+	public class GogLinks
+	{
+		[JsonPropertyName("purchase_link")]
+		public string PurchaseLink { get; set; }
+
+		[JsonPropertyName("product_card")]
+		public string ProductCard { get; set; }
+
+		[JsonPropertyName("support")]
+		public string Support { get; set; }
+
+		[JsonPropertyName("forum")]
+		public string Forum { get; set; }
+	}
+
+	public class GogInDevelopment
+	{
+		[JsonPropertyName("active")]
+		public bool Active { get; set; }
+
+		[JsonPropertyName("until")]
+		public DateTime? Until { get; set; }
+	}
+
+	public class GogImages
+	{
+		[JsonPropertyName("background")]
+		public string Background { get; set; }
+
+		[JsonPropertyName("logo")]
+		public string Logo { get; set; }
+
+		[JsonPropertyName("logo2x")]
+		public string Logo2x { get; set; }
+
+		[JsonPropertyName("sidebarIcon")]
+		public string SidebarIcon { get; set; }
+
+		[JsonPropertyName("sidebarIcon2x")]
+		public string SidebarIcon2x { get; set; }
+
+		[JsonPropertyName("menuNotificationAv")]
+		public string MenuNotificationAv { get; set; }
+
+		[JsonPropertyName("menuNotificationAv2")]
+		public string MenuNotificationAv2 { get; set; }
+
+		[JsonPropertyName("icon")]
+		public string Icon { get; set; }
+	}
+
+	public class GogDownloads
+	{
+		[JsonPropertyName("installers")]
+		public List<GogInstaller> Installers { get; set; }
+
+		[JsonPropertyName("patches")]
+		public List<object> Patches { get; set; }
+
+		[JsonPropertyName("language_packs")]
+		public List<object> LanguagePacks { get; set; }
+
+		[JsonPropertyName("bonus_content")]
+		public List<GogBonusContent> BonusContent { get; set; }
+	}
+
+	public class GogInstaller
+	{
+		[JsonPropertyName("id")]
+		public string Id { get; set; }
+
+		[JsonPropertyName("name")]
+		public string Name { get; set; }
+
+		[JsonPropertyName("os")]
+		public string Os { get; set; }
+
+		[JsonPropertyName("language")]
+		public string Language { get; set; }
+
+		[JsonPropertyName("language_full")]
+		public string LanguageFull { get; set; }
+
+		[JsonPropertyName("version")]
+		public string Version { get; set; }
+
+		[JsonPropertyName("total_size")]
+		public long TotalSize { get; set; }
+
+		[JsonPropertyName("files")]
+		public List<GogFile> Files { get; set; }
+	}
+
+	public class GogFile
+	{
+		[JsonPropertyName("id")]
+		public string Id { get; set; }
+
+		[JsonPropertyName("size")]
+		public long Size { get; set; }
+
+		[JsonPropertyName("downlink")]
+		public string Downlink { get; set; }
+	}
+
+	public class GogBonusContent
+	{
+		[JsonPropertyName("id")]
+		public long Id { get; set; }
+
+		[JsonPropertyName("name")]
+		public string Name { get; set; }
+
+		[JsonPropertyName("type")]
+		public string Type { get; set; }
+
+		[JsonPropertyName("count")]
+		public int Count { get; set; }
+
+		[JsonPropertyName("total_size")]
+		public long TotalSize { get; set; }
+
+		[JsonPropertyName("files")]
+		public List<GogFile> Files { get; set; }
+	}
+
+	public class GogDescription
+	{
+		[JsonPropertyName("lead")]
+		public string Lead { get; set; }
+
+		[JsonPropertyName("full")]
+		public string Full { get; set; }
+
+		[JsonPropertyName("whats_cool_about_it")]
+		public string WhatsCoolAboutIt { get; set; }
+	}
+
+	public class GogScreenshot
+	{
+		[JsonPropertyName("image_id")]
+		public string ImageId { get; set; }
+
+		[JsonPropertyName("formatter_template_url")]
+		public string FormatterTemplateUrl { get; set; }
+
+		[JsonPropertyName("formatted_images")]
+		public List<GogFormattedImage> FormattedImages { get; set; }
+	}
+
+	public class GogFormattedImage
+	{
+		[JsonPropertyName("formatter_name")]
+		public string FormatterName { get; set; }
+
+		[JsonPropertyName("image_url")]
+		public string ImageUrl { get; set; }
+	}
+
+	public class GogVideo
+	{
+		[JsonPropertyName("video_url")]
+		public string VideoUrl { get; set; }
+
+		[JsonPropertyName("thumbnail_url")]
+		public string ThumbnailUrl { get; set; }
+
+		[JsonPropertyName("provider")]
+		public string Provider { get; set; }
+	}
+
+	public class GOGGalaxy2
     {
         [JsonPropertyName("_embedded")]
         public GOGGalaxy2Caracteristicas Caracteristicas { get; set; }

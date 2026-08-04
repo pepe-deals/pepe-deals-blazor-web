@@ -908,10 +908,9 @@
                                                     @if (usuarioTiendasNoOficial == false)
                                                     {
                                                         <div style="margin-top: 10px;">
-                                                        
                                                             @if (usuarioRegion == TiendaRegion.Europa && juego.PrecioMinimosHistoricos?.Count > 0 || (usuarioRegion == TiendaRegion.EstadosUnidos && juego.PrecioMinimosHistoricosUS?.Count > 0))
                                                             {
-                                                                <div style="background: rgba(0,0,0,.15);">
+                                                                <div style="background: rgba(0,0,0,.15); width: fit-content;">
                                                                     <div style="display: flex; align-items: center; gap: 8px; width: fit-content; @(usuarioTiendasNoOficial == true ? "padding: 10px;" : "padding: 5px;") ">
                                                                         @{
                                                                             decimal precioMinimoValor = 100000;
@@ -1179,7 +1178,7 @@
                                                                             
                                                                     if (historicoMostrar != null)
                                                                     {
-                                                                        mostrarAlertaHistoricoNoOficial = Herramientas.Minimos.ExisteEnActuales(historicoMostrar, juego.PreciosHistoricosNoOficialesEU, drm.Id);
+                                                                        mostrarAlertaHistoricoNoOficial = Herramientas.Minimos.ExisteEnActuales(historicoMostrar, juego.PreciosHistoricosNoOficialesUS, drm.Id);
                                                                             
                                                                         if (mostrarAlertaHistoricoNoOficial == true && Herramientas.OfertaActiva.Verificar(historicoMostrar) == true && historicoMostrar.Descuento > 0)
                                                                         {

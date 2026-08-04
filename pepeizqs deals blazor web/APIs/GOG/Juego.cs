@@ -251,7 +251,12 @@ namespace APIs.GOG
 
 		public static async Task<JuegoGalaxyGOG> GalaxyDatos(string id)
 		{
-			JuegoGalaxyGOG galaxy = new JuegoGalaxyGOG();
+			JsonSerializerOptions opciones = new JsonSerializerOptions
+			{
+				UnknownTypeHandling = JsonUnknownTypeHandling.JsonElement
+			};
+
+			JuegoGalaxyGOG galaxy = null;
 
 			string html = await Decompiladores.Estandar("https://api.gog.com/products/" + id + "?expand=downloads,expanded_dlcs,description,screenshots,videos,related_products,changelog");
 
@@ -267,19 +272,24 @@ namespace APIs.GOG
 
 					try
 					{
-						datos = JsonSerializer.Deserialize<GOGGalaxy>(html);
+						datos = JsonSerializer.Deserialize<GOGGalaxy>(html, opciones);
 					}
 					catch (JsonException ex)
 					{
-						BaseDatos.Errores.Insertar.Mensaje("GOG Actualizar Datos " + id, ex, false);
+						BaseDatos.Errores.Insertar.Mensaje("GOG Actualizar Datos " + id, ex);
 						return null;
 					}
 
 					if (datos != null)
 					{
-						galaxy.Windows = datos.Sistemas.Windows;
-						galaxy.Mac = datos.Sistemas.Mac;
-						galaxy.Linux = datos.Sistemas.Linux;
+						if (galaxy == null)
+						{
+							galaxy = new JuegoGalaxyGOG();
+						}
+
+						galaxy.Windows = datos.ContentSystemCompatibility.Windows;
+						galaxy.Mac = datos.ContentSystemCompatibility.Osx;
+						galaxy.Linux = datos.ContentSystemCompatibility.Linux;
 					}
 				}	
 			}
@@ -288,7 +298,7 @@ namespace APIs.GOG
 
 			if (string.IsNullOrEmpty(html2) == false)
 			{
-				GOGGalaxy2 datos = JsonSerializer.Deserialize<GOGGalaxy2>(html2);
+				GOGGalaxy2 datos = JsonSerializer.Deserialize<GOGGalaxy2>(html2, opciones);
 
 				if (datos != null)
 				{
@@ -296,6 +306,11 @@ namespace APIs.GOG
 					{
 						if (datos.Caracteristicas.Producto != null)
 						{
+							if (galaxy == null)
+							{
+								galaxy = new JuegoGalaxyGOG();
+							}
+
 							galaxy.FechaLanzamiento = DateTime.Parse(datos.Caracteristicas.Producto.FechaLanzamiento);
 						}
 
@@ -303,11 +318,21 @@ namespace APIs.GOG
 						{
 							if (caracteristica.Id == "achievements")
 							{
+								if (galaxy == null)
+								{
+									galaxy = new JuegoGalaxyGOG();
+								}
+
 								galaxy.Logros = true;
 							}
 
 							if (caracteristica.Id == "cloud_saves")
 							{
+								if (galaxy == null)
+								{
+									galaxy = new JuegoGalaxyGOG();
+								}
+
 								galaxy.GuardadoNube = true;
 							}
 						}
@@ -316,6 +341,11 @@ namespace APIs.GOG
 						{
 							if (propiedad.Slug == "good-old-game")
 							{
+								if (galaxy == null)
+								{
+									galaxy = new JuegoGalaxyGOG();
+								}
+
 								galaxy.Preservacion = true;
 							}
 						}
@@ -323,7 +353,10 @@ namespace APIs.GOG
 				}
 			}
 
-			galaxy.Fecha = DateTime.Now;
+			if (galaxy != null)
+			{
+				galaxy.Fecha = DateTime.Now;
+			}
 
 			return galaxy;
 		}
