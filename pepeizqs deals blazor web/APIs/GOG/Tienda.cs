@@ -393,8 +393,8 @@ namespace APIs.GOG
 		[JsonPropertyName("images")]
 		public GogImages Images { get; set; }
 
-		[JsonPropertyName("dlcs")]
-		public List<object> Dlcs { get; set; }
+		//[JsonPropertyName("dlcs")]
+		//public List<object> Dlcs { get; set; }
 
 		[JsonPropertyName("description")]
 		public GogDescription Description { get; set; }
@@ -405,8 +405,8 @@ namespace APIs.GOG
 		[JsonPropertyName("videos")]
 		public List<GogVideo> Videos { get; set; }
 
-		[JsonPropertyName("related_products")]
-		public List<object> RelatedProducts { get; set; }
+		//[JsonPropertyName("related_products")]
+		//public List<object> RelatedProducts { get; set; }
 
 		[JsonPropertyName("changelog")]
 		public string Changelog { get; set; }
@@ -414,8 +414,8 @@ namespace APIs.GOG
 		[JsonPropertyName("downloads")]
 		public GogDownloads Downloads { get; set; }
 
-		[JsonPropertyName("expanded_dlcs")]
-		public List<object> ExpandedDlcs { get; set; }
+		//[JsonPropertyName("expanded_dlcs")]
+		//public List<object> ExpandedDlcs { get; set; }
 	}
 
 
