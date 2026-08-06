@@ -1901,6 +1901,37 @@
                                                         }
                                                     </div>
                                                 }
+
+                                                bool añadirDiv3 = false;
+
+                                                if (drm.Id == JuegoDRM.Steam && string.IsNullOrEmpty(juego.Caracteristicas?.CuentaNecesaria) == false)
+                                                {
+                                                    añadirDiv3 = true;
+                                                }
+
+                                                if (drm.Id == JuegoDRM.Steam && string.IsNullOrEmpty(juego.Caracteristicas?.DRMExterno) == false)
+                                                {
+                                                    añadirDiv3 = true;
+                                                }
+
+                                                if (añadirDiv3 == true)
+                                                {
+                                                    <div style="display: flex; flex-direction: column; gap: 10px; padding-left: 2px;">
+                                                        @if (drm.Id == JuegoDRM.Steam && string.IsNullOrEmpty(juego.Caracteristicas?.CuentaNecesaria) == false)
+                                                        {
+                                                            <div style="background-color: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 5px 10px; font-size: 14px; width: fit-content;">
+                                                                 @string.Format(Herramientas.Idiomas.BuscarTexto(idioma, "String144", "Game"), juego.Caracteristicas.CuentaNecesaria)
+                                                            </div>
+                                                        }
+
+                                                        @if (drm.Id == JuegoDRM.Steam && string.IsNullOrEmpty(juego.Caracteristicas?.DRMExterno) == false)
+                                                        {
+                                                            <div style="background-color: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 5px 10px; font-size: 14px; width: fit-content;">
+                                                                 @string.Format(Herramientas.Idiomas.BuscarTexto(idioma, "String145", "Game"), juego.Caracteristicas.DRMExterno)
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                }
                                             }
                                         </div>
 

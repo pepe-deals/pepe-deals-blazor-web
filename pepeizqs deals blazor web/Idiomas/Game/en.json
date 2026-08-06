@@ -140,5 +140,7 @@
   "String140": "Device compatibility",
   "String141": "Official",
   "String142": "No Official",
-  "String143": "Marketplace"
+  "String143": "Marketplace",
+  "String144": "Account required: {0}",
+  "String145": "DRM external: {0}"
 }

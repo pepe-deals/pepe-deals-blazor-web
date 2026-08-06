@@ -11,15 +11,32 @@ namespace BaseDatos.Portada
 {
 	public static class Buscar
 	{
-		public static async Task<List<JuegoMinimoTarea>> BuscarMinimos(TiendaRegion region, string tienda = null)
+		public static async Task<List<JuegoMinimoTarea>> BuscarMinimos(TiendaTipo tipo, TiendaRegion region, string tienda = null)
 		{
 			DynamicParameters parametros = new DynamicParameters();
 
-			string precioMinimosHistoricos = "precioMinimosHistoricos";
+			string precioMinimosHistoricos = string.Empty;
 
-			if (region == TiendaRegion.EstadosUnidos)
+			if (tipo == TiendaTipo.Oficial && region == TiendaRegion.Europa)
+			{
+				precioMinimosHistoricos = "precioMinimosHistoricos";
+			}
+			else if (tipo == TiendaTipo.Oficial && region == TiendaRegion.EstadosUnidos)
 			{
 				precioMinimosHistoricos = "precioMinimosHistoricosUS";
+			}
+			else if (tipo == TiendaTipo.NoOficial && region == TiendaRegion.Europa)
+			{
+				precioMinimosHistoricos = "preciosHistoricosNoOficialesEU";
+			}
+			else if (tipo == TiendaTipo.NoOficial && region == TiendaRegion.EstadosUnidos)
+			{
+				precioMinimosHistoricos = "preciosHistoricosNoOficialesUS";
+			}
+
+			if (string.IsNullOrEmpty(precioMinimosHistoricos) == true)
+			{
+				return null;
 			}
 
 			string busqueda = @$"SELECT j.id, j.{precioMinimosHistoricos}, pmh.DRM as DRMElegido
@@ -221,7 +238,7 @@ namespace BaseDatos.Portada
 			return null;
 		}
 
-		public static async Task<List<Juego>> Minimos(TiendaRegion region, int tipo, int posicion = 0, List<string> categorias = null, List<string> drms = null, int cantidadReseñas = 199, List<int> excluirJuegosIds = null, List<int> excluirSteamIds = null, List<int> excluirGogIds = null)
+		public static async Task<List<Juego>> Minimos(bool noOficial, TiendaRegion region, int tipo, int posicion = 0, List<string> categorias = null, List<string> drms = null, int cantidadReseñas = 199, List<int> excluirJuegosIds = null, List<int> excluirSteamIds = null, List<int> excluirGogIds = null)
 		{
 			string tabla = "seccionMinimos";
 
@@ -309,61 +326,83 @@ namespace BaseDatos.Portada
 				exclusionGog = $"AND NOT EXISTS (SELECT 1 FROM @excluirGog WHERE Id = jg.idGog AND precioMin.DRM = 8)";
 			}
 
-			string busqueda = @$"SELECT j.idMaestra, jg.nombre, jg.imagenes, j.{precioMinimosHistoricos}, JSON_VALUE(jg.media, '$.Videos[0].Micro') as video, jg.etiquetas,
-	(
-		SELECT b.id, b.bundleTipo
-		FROM bundles b
-		INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
-		WHERE bj.juegoId = j.idMaestra
-		  AND b.fechaEmpieza <= GETDATE()
-		  AND b.fechaTermina >= GETDATE()
-		FOR JSON PATH
-	) AS BundlesActuales,
-	(
-		SELECT b.id, b.bundleTipo
-		FROM bundles b
-		INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
-		WHERE bj.juegoId = j.idMaestra
-		  AND b.fechaTermina < GETDATE()
-		FOR JSON PATH
-	) AS BundlesPasados,
-	(
-		SELECT g.gratis
-		FROM gratis g
-		WHERE g.juegoId = j.idMaestra
-		  AND g.fechaEmpieza <= GETDATE()
-		  AND g.fechaTermina >= GETDATE()
-		FOR JSON PATH
-	) AS GratisActuales,
-	(
-		SELECT g.gratis
-		FROM gratis g
-		WHERE g.juegoId = j.idMaestra
-		  AND g.fechaTermina < GETDATE()
-		FOR JSON PATH
-	) AS GratisPasados,
-	(
-		SELECT s.suscripcion
-		FROM suscripciones s
-		WHERE s.juegoId = j.idMaestra
-		  AND s.FechaEmpieza <= GETDATE()
-		  AND s.FechaTermina >= GETDATE()
-		FOR JSON PATH
-	) AS SuscripcionesActuales,
-	(
-		SELECT s.suscripcion
-		FROM suscripciones s
-		WHERE s.juegoId = j.idMaestra
-		  AND s.FechaTermina < GETDATE()
-		FOR JSON PATH
-	) AS SuscripcionesPasados, jg.idSteam, precioMin.FechaDetectado AS Fecha, jg.idGog, jg.analisis, CONVERT(datetime2, JSON_VALUE(jg.caracteristicas, '$.FechaLanzamientoSteam')) as FechaLanzamiento FROM {tabla} j
-		INNER JOIN dbo.juegos jg ON jg.id = j.idMaestra
-		CROSS APPLY OPENJSON(j.{precioMinimosHistoricos}, '$[0]') WITH (
-			Descuento int '$.Descuento',
-			DRM int '$.DRM',
-			FechaDetectado datetime2 '$.FechaDetectado'
-		) precioMin
-		WHERE CONVERT(bigint, REPLACE(JSON_VALUE(jg.analisis, '$.Cantidad'),',','')) >= @cantidadAnalisis AND precioMin.Descuento > 0 AND (jg.MayorEdad <> 'true' OR jg.MayorEdad IS NULL) {categoria} {drm} {exclusionJuegos} {exclusionSteam} {exclusionGog}";
+			string filtroTipo = string.Empty;
+
+			if (tipo == 2)
+			{
+				filtroTipo = " AND CONVERT(datetime2, JSON_VALUE(jg.caracteristicas, '$.FechaLanzamientoSteam')) > DATEADD(DAY,-30,GetDate())";
+			}
+
+			string ConstruirBusqueda(string tablaOrigen, string columnaPrecio)
+			{
+				return @$"SELECT j.idMaestra, jg.nombre, jg.imagenes, j.{columnaPrecio}, JSON_VALUE(jg.media, '$.Videos[0].Micro') as video, jg.etiquetas,
+				(
+					SELECT b.id, b.bundleTipo
+					FROM bundles b
+					INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
+					WHERE bj.juegoId = j.idMaestra
+					  AND b.fechaEmpieza <= GETDATE()
+					  AND b.fechaTermina >= GETDATE()
+					FOR JSON PATH
+				) AS BundlesActuales,
+				(
+					SELECT b.id, b.bundleTipo
+					FROM bundles b
+					INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
+					WHERE bj.juegoId = j.idMaestra
+					  AND b.fechaTermina < GETDATE()
+					FOR JSON PATH
+				) AS BundlesPasados,
+				(
+					SELECT g.gratis
+					FROM gratis g
+					WHERE g.juegoId = j.idMaestra
+					  AND g.fechaEmpieza <= GETDATE()
+					  AND g.fechaTermina >= GETDATE()
+					FOR JSON PATH
+				) AS GratisActuales,
+				(
+					SELECT g.gratis
+					FROM gratis g
+					WHERE g.juegoId = j.idMaestra
+					  AND g.fechaTermina < GETDATE()
+					FOR JSON PATH
+				) AS GratisPasados,
+				(
+					SELECT s.suscripcion
+					FROM suscripciones s
+					WHERE s.juegoId = j.idMaestra
+					  AND s.FechaEmpieza <= GETDATE()
+					  AND s.FechaTermina >= GETDATE()
+					FOR JSON PATH
+				) AS SuscripcionesActuales,
+				(
+					SELECT s.suscripcion
+					FROM suscripciones s
+					WHERE s.juegoId = j.idMaestra
+					  AND s.FechaTermina < GETDATE()
+					FOR JSON PATH
+				) AS SuscripcionesPasados, jg.idSteam, precioMin.FechaDetectado AS Fecha, jg.idGog, jg.analisis, CONVERT(datetime2, JSON_VALUE(jg.caracteristicas, '$.FechaLanzamientoSteam')) as FechaLanzamiento FROM {tablaOrigen} j
+					INNER JOIN dbo.juegos jg ON jg.id = j.idMaestra
+					CROSS APPLY OPENJSON(j.{columnaPrecio}, '$[0]') WITH (
+						Descuento int '$.Descuento',
+						DRM int '$.DRM',
+						FechaDetectado datetime2 '$.FechaDetectado'
+					) precioMin
+					WHERE CONVERT(bigint, REPLACE(JSON_VALUE(jg.analisis, '$.Cantidad'),',','')) >= @cantidadAnalisis AND precioMin.Descuento > 0 AND (jg.MayorEdad <> 'true' OR jg.MayorEdad IS NULL) {categoria} {drm} {exclusionJuegos} {exclusionSteam} {exclusionGog} {filtroTipo}";
+			}
+
+			string busqueda = ConstruirBusqueda(tabla, precioMinimosHistoricos);
+
+			if (noOficial == true)
+			{
+				string tablaNoOficial = region == TiendaRegion.EstadosUnidos ? "seccionMinimosNoOficialesUS" : "seccionMinimosNoOficialesEU";
+				string columnaNoOficial = region == TiendaRegion.EstadosUnidos ? "preciosHistoricosNoOficialesUS" : "preciosHistoricosNoOficialesEU";
+
+				string busquedaNoOficial = ConstruirBusqueda(tablaNoOficial, columnaNoOficial);
+
+				busqueda = $"({busqueda}) UNION ALL ({busquedaNoOficial})";
+			}
 
 			if (tipo == 0)
 			{
@@ -414,19 +453,24 @@ namespace BaseDatos.Portada
 						juego.Imagenes = JsonSerializer.Deserialize<JuegoImagenes>(fila.imagenes);
 					}
 
-					if (region == TiendaRegion.Europa)
+					if (string.IsNullOrEmpty(fila.precioMinimosHistoricos) == false)
 					{
-						if (string.IsNullOrEmpty(fila.precioMinimosHistoricos) == false)
-						{
-							juego.PrecioMinimosHistoricos = JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.precioMinimosHistoricos);
-						}
+						juego.PrecioMinimosHistoricos = JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.precioMinimosHistoricos);
 					}
-					else if (region == TiendaRegion.EstadosUnidos)
+
+					if (string.IsNullOrEmpty(fila.precioMinimosHistoricosUS) == false)
 					{
-						if (string.IsNullOrEmpty(fila.precioMinimosHistoricosUS) == false)
-						{
-							juego.PrecioMinimosHistoricosUS = JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.precioMinimosHistoricosUS);
-						}
+						juego.PrecioMinimosHistoricosUS = JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.precioMinimosHistoricosUS);
+					}
+
+					if (string.IsNullOrEmpty(fila.preciosHistoricosNoOficialesEU) == false)
+					{
+						juego.PreciosHistoricosNoOficialesEU = JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.preciosHistoricosNoOficialesEU);
+					}
+
+					if (string.IsNullOrEmpty(fila.preciosHistoricosNoOficialesUS) == false)
+					{
+						juego.PreciosHistoricosNoOficialesUS = JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.preciosHistoricosNoOficialesUS);
 					}
 
 					if (string.IsNullOrEmpty(fila.video) == false)

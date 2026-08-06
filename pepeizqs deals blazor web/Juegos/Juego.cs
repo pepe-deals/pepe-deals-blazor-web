@@ -161,6 +161,8 @@ namespace Juegos
 		public bool AccesoAnticipado { get; set; }
 		public JuegoCaracteristicasRealidadVirtual RealidadVirtual { get; set; }
 		public int DemoIdSteam { get; set; }
+		public string CuentaNecesaria { get; set; }
+		public string DRMExterno { get; set; }
 	}
 
 	public class JuegoCaracteristicasCurator

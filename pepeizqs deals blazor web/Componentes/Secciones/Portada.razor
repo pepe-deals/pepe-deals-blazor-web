@@ -426,21 +426,42 @@ else
 						@if (juego.Excluido == false)
 						{
 							JuegoDRM drmJuego = JuegoDRM.NoEspecificado;
+							TiendaTipo tiendaTipo = TiendaTipo.Oficial;
 
 							if (usuarioRegion == TiendaRegion.Europa)
 							{
-								drmJuego = (juego.Juego.PrecioMinimosHistoricos?.Count > 0) ? juego.Juego.PrecioMinimosHistoricos[0].DRM : JuegoDRM.NoEspecificado;
+								if (juego.Juego.PrecioMinimosHistoricos?.Count > 0)
+								{
+									drmJuego = juego.Juego.PrecioMinimosHistoricos[0].DRM;
+									tiendaTipo = TiendaTipo.Oficial;
+								}
+
+								if (juego.Juego.PreciosHistoricosNoOficialesEU?.Count > 0)
+								{
+									drmJuego = juego.Juego.PreciosHistoricosNoOficialesEU[0].DRM;
+									tiendaTipo = TiendaTipo.NoOficial;
+								}
 							}
 							else if (usuarioRegion == TiendaRegion.EstadosUnidos)
 							{
-								drmJuego = (juego.Juego.PrecioMinimosHistoricosUS?.Count > 0) ? juego.Juego.PrecioMinimosHistoricosUS[0].DRM : JuegoDRM.NoEspecificado;
+								if (juego.Juego.PrecioMinimosHistoricosUS?.Count > 0)
+								{
+									drmJuego = juego.Juego.PrecioMinimosHistoricosUS[0].DRM;
+									tiendaTipo = TiendaTipo.Oficial;
+								}
+
+								if (juego.Juego.PreciosHistoricosNoOficialesUS?.Count > 0)
+								{
+									drmJuego = juego.Juego.PreciosHistoricosNoOficialesUS[0].DRM;
+									tiendaTipo = TiendaTipo.NoOficial;
+								}
 							}
 
 							if (drmJuego != JuegoDRM.NoEspecificado)
 							{
-								string keyJuego = juego.Juego.Id.ToString() + "-" + ((int)drmJuego).ToString() + "-" + ((int)tipoJuego).ToString();
+								string keyJuego = juego.Juego.Id.ToString() + "-" + ((int)drmJuego).ToString() + "-" + ((int)tipoJuego).ToString() + "-" + ((int)tiendaTipo).ToString();
 
-								<div @key="keyJuego" style="display: flex; align-items: center; gap: 20px; position: relative;" @onmouseenter="(e => MostrarBotonDeseados(e, juego))" @onmouseleave="(e => OcultarBotonDeseados(e, juego))">
+								<div style="display: flex; align-items: center; gap: 20px; position: relative;" @onmouseenter="(e => MostrarBotonDeseados(e, juego))" @onmouseleave="(e => OcultarBotonDeseados(e, juego))">
 									<div style="width: 100%; overflow: hidden; box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.28),0px 0px 1px 0px rgba(0, 0, 0, 0.24);">
 										<CajaJuego region="@usuarioRegion" idioma="@idioma" juego="@juego.Juego" color="@juego.Color" juegosUsuarioIndex="@juegosUsuarioIndex" usuarioDeseadosImportados="@deseadosImportadosIndex" usuarioDeseadosWeb="@deseadosWebIndex" tipo="@tipoJuego" userAgent="@userAgent"/>
 									</div>
@@ -938,6 +959,7 @@ else
 	private bool usuarioPatreon = false;
 	private bool usuarioAdmin = false;
 	private TiendaRegion usuarioRegion = TiendaRegion.Europa;
+	private bool usuarioTiendasNoOficial = false;
 
 	[PersistentState] public Usuario opciones { get; set; }
 
@@ -951,6 +973,7 @@ else
 		userAgent = datos.UserAgent;
 		dominio = datos.Dominio;
 		usuarioRegion = datos.Region;
+		usuarioTiendasNoOficial = datos.NoOficial;
 
 		if (string.IsNullOrEmpty(usuarioId) == false)
 		{
@@ -996,6 +1019,11 @@ else
 				if (opciones.Currency.HasValue == true)
 				{
 					usuarioRegion = (TiendaRegion)opciones.Currency.Value;		
+				}
+
+				if (opciones.NoOfficial.HasValue == true)
+				{
+					usuarioTiendasNoOficial = opciones.NoOfficial.Value;
 				}
 
 				#region Opciones
@@ -1569,33 +1597,33 @@ else
 			{
 				if (fusionar == false)
 				{
-					juegosMinimosGestor = await BaseDatos.Portada.Buscar.Minimos(usuarioRegion, 0, posicionJuegosMinimos, categoriasNumeros, drmsNumeros, minimoReseñasMinimos, excluirJuegosIds, excluirSteamIds, excluirGogIds);
+					juegosMinimosGestor = await BaseDatos.Portada.Buscar.Minimos(usuarioTiendasNoOficial, usuarioRegion, 0, posicionJuegosMinimos, categoriasNumeros, drmsNumeros, minimoReseñasMinimos, excluirJuegosIds, excluirSteamIds, excluirGogIds);
 				}
 				else
 				{
-					juegosMinimosGestor.AddRange(await BaseDatos.Portada.Buscar.Minimos(usuarioRegion, 0, posicionJuegosMinimos, categoriasNumeros, drmsNumeros, minimoReseñasMinimos, excluirJuegosIds, excluirSteamIds, excluirGogIds));
+					juegosMinimosGestor.AddRange(await BaseDatos.Portada.Buscar.Minimos(usuarioTiendasNoOficial, usuarioRegion, 0, posicionJuegosMinimos, categoriasNumeros, drmsNumeros, minimoReseñasMinimos, excluirJuegosIds, excluirSteamIds, excluirGogIds));
 				}				
 			}
 			else if (tipoSeleccionadoMinimos == MinimosTipo.Populares)
 			{
 				if (fusionar == false)
 				{
-					juegosMinimosGestor = await BaseDatos.Portada.Buscar.Minimos(usuarioRegion, 1, posicionJuegosMinimos, categoriasNumeros, drmsNumeros, minimoReseñasMinimos, excluirJuegosIds, excluirSteamIds, excluirGogIds);
+					juegosMinimosGestor = await BaseDatos.Portada.Buscar.Minimos(usuarioTiendasNoOficial, usuarioRegion, 1, posicionJuegosMinimos, categoriasNumeros, drmsNumeros, minimoReseñasMinimos, excluirJuegosIds, excluirSteamIds, excluirGogIds);
 				}
 				else
 				{
-					juegosMinimosGestor.AddRange(await BaseDatos.Portada.Buscar.Minimos(usuarioRegion, 1, posicionJuegosMinimos, categoriasNumeros, drmsNumeros, minimoReseñasMinimos, excluirJuegosIds, excluirSteamIds, excluirGogIds));
+					juegosMinimosGestor.AddRange(await BaseDatos.Portada.Buscar.Minimos(usuarioTiendasNoOficial, usuarioRegion, 1, posicionJuegosMinimos, categoriasNumeros, drmsNumeros, minimoReseñasMinimos, excluirJuegosIds, excluirSteamIds, excluirGogIds));
 				}
 			}
 			else if (tipoSeleccionadoMinimos == MinimosTipo.Lanzamientos)
 			{
 				if (fusionar == false)
 				{
-					juegosMinimosGestor = await BaseDatos.Portada.Buscar.Minimos(usuarioRegion, 2, posicionJuegosMinimos, categoriasNumeros, drmsNumeros, minimoReseñasMinimos, excluirJuegosIds, excluirSteamIds, excluirGogIds);
+					juegosMinimosGestor = await BaseDatos.Portada.Buscar.Minimos(usuarioTiendasNoOficial, usuarioRegion, 2, posicionJuegosMinimos, categoriasNumeros, drmsNumeros, minimoReseñasMinimos, excluirJuegosIds, excluirSteamIds, excluirGogIds);
 				}
 				else
 				{
-					juegosMinimosGestor.AddRange(await BaseDatos.Portada.Buscar.Minimos(usuarioRegion, 2, posicionJuegosMinimos, categoriasNumeros, drmsNumeros, minimoReseñasMinimos, excluirJuegosIds, excluirSteamIds, excluirGogIds));
+					juegosMinimosGestor.AddRange(await BaseDatos.Portada.Buscar.Minimos(usuarioTiendasNoOficial, usuarioRegion, 2, posicionJuegosMinimos, categoriasNumeros, drmsNumeros, minimoReseñasMinimos, excluirJuegosIds, excluirSteamIds, excluirGogIds));
 				}
 			}
 			else if (tipoSeleccionadoMinimos == MinimosTipo.Proximamente)

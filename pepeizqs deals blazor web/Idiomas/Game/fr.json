@@ -140,5 +140,7 @@
   "String140": "Compatibilité des appareils",
   "String141": "Officiel",
   "String142": "Aucun officiel",
-  "String143": "Marché"
+  "String143": "Marché",
+  "String144": "Compte requis : {0}",
+  "String145": "DRM externe : {0}"
 }

@@ -140,5 +140,7 @@
   "String140": "Gerätekompatibilität",
   "String141": "Offiziell",
   "String142": "Kein Beamter",
-  "String143": "Marktplatz"
+  "String143": "Marktplatz",
+  "String144": "Konto erforderlich: {0}",
+  "String145": "DRM extern: {0}"
 }

@@ -32,7 +32,7 @@ namespace APIs.Steam
 				return null;
 			}
 
-			string html2 = await Decompiladores.Estandar(@"https://api.steampowered.com/IStoreBrowseService/GetItems/v1?input_json={""ids"":[{""appid"":" + id + @"}],""context"":{""language"":""english"",""country_code"":""ES"",""steam_realm"":1},""data_request"":{""include_reviews"":true,""include_basic_info"":true, ""include_assets"": true, ""include_links"": true, ""include_tag_count"": 20, ""include_release"": true, ""include_platforms"": true, ""include_screenshots"": true, ""include_trailers"": true, ""include_supported_languages"": true, ""include_all_purchase_options"": true}}");
+			string html2 = await Decompiladores.Estandar(@"https://api.steampowered.com/IStoreBrowseService/GetItems/v1?input_json={""ids"":[{""appid"":" + id + @"}],""context"":{""language"":""english"",""country_code"":""ES"",""steam_realm"":1},""data_request"":{""include_reviews"":true,""include_basic_info"":true, ""include_assets"": true, ""include_links"": true, ""include_tag_count"": 20, ""include_release"": true, ""include_platforms"": true, ""include_screenshots"": true, ""include_trailers"": true, ""include_supported_languages"": true, ""include_all_purchase_options"": true, ""include_extra_details"": true}}");
 
 			if (string.IsNullOrEmpty(html2) == false)
 			{
@@ -190,6 +190,16 @@ namespace APIs.Steam
 							if (juegoApi?.Cosas?.DemoId2?.Count > 0)
 							{
 								caracteristicas.DemoIdSteam = juegoApi.Cosas.DemoId2[0];
+							}
+
+							if (string.IsNullOrEmpty(juegoApi?.Extra?.PideCuenta) == false)
+							{
+								caracteristicas.CuentaNecesaria = juegoApi.Extra.PideCuenta;
+							}
+
+							if (string.IsNullOrEmpty(juegoApi?.Extra?.DRMExterno) == false)
+							{
+								caracteristicas.DRMExterno = juegoApi.Extra.DRMExterno;
 							}
 
 							#endregion
@@ -970,7 +980,7 @@ namespace APIs.Steam
 
 		public static string EnlaceAPI(string id)
 		{
-			string enlace = "https://api.steampowered.com/IStoreBrowseService/GetItems/v1?input_json={\"ids\":[{\"appid\":" + id + "}],\"context\":{\"language\":\"english\",\"country_code\":\"ES\",\"steam_realm\":1},\"data_request\":{\"include_reviews\":true,\"include_basic_info\":true, \"include_assets\": true, \"include_links\": true, \"include_tag_count\": 20, \"include_release\": true, \"include_platforms\": true, \"include_screenshots\": true, \"include_trailers\": true, \"include_supported_languages\": true, \"include_all_purchase_options\": true}}";
+			string enlace = "https://api.steampowered.com/IStoreBrowseService/GetItems/v1?input_json={\"ids\":[{\"appid\":" + id + "}],\"context\":{\"language\":\"english\",\"country_code\":\"ES\",\"steam_realm\":1},\"data_request\":{\"include_reviews\":true,\"include_basic_info\":true, \"include_assets\": true, \"include_links\": true, \"include_tag_count\": 20, \"include_release\": true, \"include_platforms\": true, \"include_screenshots\": true, \"include_trailers\": true, \"include_supported_languages\": true, \"include_all_purchase_options\": true, \"include_extra_details\": true}}";
 
 			return enlace;
 		}
@@ -1198,6 +1208,9 @@ namespace APIs.Steam
 
 		[JsonPropertyName("accessories")]
 		public List<SteamJuegoAPI2JuegoPrecio> Suscripciones { get; set; }
+
+		[JsonPropertyName("extra_details")]
+		public SteamJuegoAPI2JuegoExtra Extra { get; set; }
 	}
 
 	public class SteamJuegoAPI2JuegoImagenes
@@ -1441,6 +1454,24 @@ namespace APIs.Steam
 
 		[JsonPropertyName("standalone_demo_appid")]
 		public List<int> DemoId2 { get; set; }
+	}
+
+	public class SteamJuegoAPI2JuegoExtra
+	{
+		[JsonPropertyName("drm_third_party_type")]
+		public string DRMExterno { get; set; }
+
+		[JsonPropertyName("user_account_third_party")]
+		public string PideCuenta { get; set; }
+
+		[JsonPropertyName("anticheat")]
+		public SteamJuegoAPI2JuegoExtraAntichetos Antichetos { get; set; }
+	}
+
+	public class SteamJuegoAPI2JuegoExtraAntichetos
+	{
+		[JsonPropertyName("kernel_mode")]
+		public bool Kernel { get; set; }
 	}
 
 	#endregion

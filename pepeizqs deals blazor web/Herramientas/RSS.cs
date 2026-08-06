@@ -229,7 +229,7 @@ namespace Herramientas
 
                 List<SyndicationItem> items = new List<SyndicationItem>();
 
-                List<Juegos.Juego> juegos = await global::BaseDatos.Portada.Buscar.Minimos(region, 3, 50, null, drmsUsar, cantidadReseñas);
+                List<Juegos.Juego> juegos = await global::BaseDatos.Portada.Buscar.Minimos(false, region, 3, 50, null, drmsUsar, cantidadReseñas);
 
                 if (juegos.Count > 0)
                 {

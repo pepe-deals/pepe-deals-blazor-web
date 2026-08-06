@@ -22,15 +22,15 @@ using static Dapper.SqlMapper;
 
 namespace Tareas.Minimos
 {
-	public class EstadosUnidos : BackgroundService
+	public class OficialesEstadosUnidos : BackgroundService
 	{
-		private readonly ILogger<EstadosUnidos> _logger;
+		private readonly ILogger<OficialesEstadosUnidos> _logger;
 		private readonly IServiceScopeFactory _factoria;
 		private readonly IDecompiladores _decompilador;
 		private readonly IConfiguration _configuracion;
 		private readonly SemaphoreSlim _semaforo = new SemaphoreSlim(1, 1);
 
-		public EstadosUnidos(ILogger<EstadosUnidos> logger, IServiceScopeFactory factory, IDecompiladores decompilador, IConfiguration configuracion)
+		public OficialesEstadosUnidos(ILogger<OficialesEstadosUnidos> logger, IServiceScopeFactory factory, IDecompiladores decompilador, IConfiguration configuracion)
 		{
 			_logger = logger;
 			_factoria = factory;
@@ -56,13 +56,13 @@ namespace Tareas.Minimos
 
 					if (piscinaMinimos == piscinaUsada && await BaseDatos.Admin.Buscar.TareaPosibleUsar("mantenimiento", TimeSpan.FromMinutes(30)) == true)
 					{
-						await BaseDatos.Portada.Limpiar.Total(TiendaRegion.EstadosUnidos);
+						await BaseDatos.Portada.Limpiar.Total(TiendaTipo.Oficial, TiendaRegion.EstadosUnidos);
 
 						foreach (var tienda in TiendasCargar.GenerarListado())
 						{
 							List<Juego> juegosParaInsertar = new List<Juego>();
 
-							List<JuegoMinimoTarea> juegos = await BaseDatos.Portada.Buscar.BuscarMinimos(TiendaRegion.EstadosUnidos, tienda.Id);
+							List<JuegoMinimoTarea> juegos = await BaseDatos.Portada.Buscar.BuscarMinimos(TiendaTipo.Oficial, TiendaRegion.EstadosUnidos, tienda.Id);
 
 							if (juegos == null)
 							{
@@ -114,7 +114,7 @@ namespace Tareas.Minimos
 				}
 				catch (Exception ex)
 				{
-					BaseDatos.Errores.Insertar.Mensaje("Tarea - Minimos US", ex, false);
+					BaseDatos.Errores.Insertar.Mensaje("Tarea - Minimos Oficiales Estados Unidos", ex, false);
 				}
 				finally
 				{

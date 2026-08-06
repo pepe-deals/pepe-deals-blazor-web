@@ -198,7 +198,7 @@ builder.Services.Configure<HostOptions>(opciones =>
 
 builder.Services.AddSingleton<Tareas.VigiladorRAM>();
 builder.Services.AddSingleton<Tareas.Comprobador>();
-builder.Services.AddSingleton<Tareas.Minimos.Europa>();
+builder.Services.AddSingleton<Tareas.Minimos.OficialesEuropa>();
 builder.Services.AddSingleton<Tareas.LimpiezaLog>();
 //builder.Services.AddSingleton<Tareas.LimpiezaCircuits>();
 builder.Services.AddSingleton<Tareas.Mantenimiento.Diario>();
@@ -213,11 +213,13 @@ builder.Services.AddSingleton<Tareas.RedesSociales>();
 builder.Services.AddSingleton<Tareas.IndexNow>();
 builder.Services.AddSingleton<Tareas.SteamBundles>();
 builder.Services.AddSingleton<Tareas.SteamDLCs>();
-builder.Services.AddSingleton<Tareas.Minimos.EstadosUnidos>();
+builder.Services.AddSingleton<Tareas.Minimos.OficialesEstadosUnidos>();
+builder.Services.AddSingleton<Tareas.Minimos.NoOficialesEuropa>();
+builder.Services.AddSingleton<Tareas.Minimos.NoOficialesEstadosUnidos>();
 
 builder.Services.AddHostedService(provider => provider.GetRequiredService<Tareas.VigiladorRAM>());
 builder.Services.AddHostedService(provider => provider.GetRequiredService<Tareas.Comprobador>());
-builder.Services.AddHostedService(provider => provider.GetRequiredService<Tareas.Minimos.Europa>());
+builder.Services.AddHostedService(provider => provider.GetRequiredService<Tareas.Minimos.OficialesEuropa>());
 builder.Services.AddHostedService(provider => provider.GetRequiredService<Tareas.LimpiezaLog>());
 //builder.Services.AddHostedService(provider => provider.GetRequiredService<Tareas.LimpiezaCircuits>());
 builder.Services.AddHostedService(provider => provider.GetRequiredService<Tareas.Mantenimiento.Diario>());
@@ -232,7 +234,9 @@ builder.Services.AddHostedService(provider => provider.GetRequiredService<Tareas
 builder.Services.AddHostedService(provider => provider.GetRequiredService<Tareas.IndexNow>());
 builder.Services.AddHostedService(provider => provider.GetRequiredService<Tareas.SteamBundles>());
 builder.Services.AddHostedService(provider => provider.GetRequiredService<Tareas.SteamDLCs>());
-builder.Services.AddHostedService(provider => provider.GetRequiredService<Tareas.Minimos.EstadosUnidos>());
+builder.Services.AddHostedService(provider => provider.GetRequiredService<Tareas.Minimos.OficialesEstadosUnidos>());
+builder.Services.AddHostedService(provider => provider.GetRequiredService<Tareas.Minimos.NoOficialesEuropa>());
+builder.Services.AddHostedService(provider => provider.GetRequiredService<Tareas.Minimos.NoOficialesEstadosUnidos>());
 
 #endregion
 
