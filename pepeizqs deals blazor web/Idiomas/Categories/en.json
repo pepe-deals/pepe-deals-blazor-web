@@ -65,6 +65,9 @@
   "77": "Touch Only Option",
   "78": "Adjustable Difficulty",
   "79": "Save Anytime",
+  "80": "Playable At Your Own Pace",
+  "81": "Playable without Vision",
+  "82": "Search Contrast Controls",
   "seo-1": "Browse the best deals on multiplayer PC games at pepe.deals. Find discounts on online games and play with friends across Steam, GOG, Epic Games, and more.",
   "seo-2": "Discover the best deals on single-player PC games at pepe.deals. Find discounts on top story-driven and solo games across Steam, GOG, Epic Games, and more.",
   "seo-8": "Browse PC games with Valve Anti-Cheat enabled and find the best deals on pepe.deals. Stay safe in competitive games while saving money on your purchases.",
@@ -130,5 +133,8 @@
   "seo-76": "Browse PC games with a mouse-only option and find the best deals at pepe.deals. Discover fully playable mouse-driven titles and save money across top stores.",
   "seo-77": "Find the best deals on PC games with a touch-only option at pepe.deals. Browse titles fully playable by touch input and save money across Steam, GOG, and more.",
   "seo-78": "Browse PC games with adjustable difficulty and find the best deals at pepe.deals. Enjoy games at your own pace and save money across Steam, GOG, Epic, and more.",
-  "seo-79": "Find the best deals on PC games with save anytime support at pepe.deals. Browse titles with flexible saving options and save money across Steam, GOG, and more."
+  "seo-79": "Find the best deals on PC games with save anytime support at pepe.deals. Browse titles with flexible saving options and save money across Steam, GOG, and more.",
+  "seo-80": "Find the best deals on PC games with adjustable text size at pepe.deals. Browse accessible titles with customizable UI across Steam, GOG, and more.",
+  "seo-81": "Browse PC games playable without vision and find the best deals at pepe.deals. Discover accessible titles with audio navigation across Steam, GOG, and more.",
+  "seo-82": "Find the best deals on PC games with search contrast controls at pepe.deals. Browse accessible titles with customizable contrast settings across Steam, GOG, and more."
 }

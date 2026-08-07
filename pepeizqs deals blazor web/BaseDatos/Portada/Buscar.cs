@@ -94,7 +94,7 @@ namespace BaseDatos.Portada
 			return null;
 		}
 
-		public static async Task<List<Juego>> Destacados(TiendaRegion region, int cantidadJuegos, int minimoReseñas, List<int> excluirJuegosIds = null, List<int> excluirSteamIds = null, bool ocultarBundles = true, int ocultarBundlesCantidad = 6, bool ocultarGratis = true, bool ocultarSuscripciones = true, int ocultarSuscripcionesCantidad = 6)
+		public static async Task<List<Juego>> Destacados(bool noOficial, TiendaRegion region, int cantidadJuegos, int minimoReseñas, List<int> excluirJuegosIds = null, List<int> excluirSteamIds = null, bool ocultarBundles = true, int ocultarBundlesCantidad = 6, bool ocultarGratis = true, bool ocultarSuscripciones = true, int ocultarSuscripcionesCantidad = 6)
 		{
 			string tabla = "seccionMinimos";
 
@@ -129,45 +129,70 @@ namespace BaseDatos.Portada
 				exclusionSteam = $"AND NOT EXISTS (SELECT 1 FROM @excluirSteam WHERE Id = jg.idSteam AND JSON_VALUE(j.{precioMinimosHistoricos}, '$[0].DRM') = '0')";
 			}
 
-			string busqueda = @$";WITH Candidatos AS (
-				SELECT TOP {cantidadJuegos} j.idMaestra, j.{precioMinimosHistoricos}, jg.idSteam
-				FROM {tabla} j 
-				INNER JOIN dbo.juegos jg ON jg.id = j.idMaestra
-				CROSS APPLY OPENJSON(j.{precioMinimosHistoricos}, '$[0]') WITH (
-					Precio float '$.Precio',
-					Descuento int '$.Descuento',
-					DRM int '$.DRM',
-					FechaTermina datetime2 '$.FechaTermina',
-					FechaActualizacion datetime2 '$.FechaActualizacion'
-				) precioMin
-				WHERE jg.tipo = 0 {exclusionJuegos} {exclusionSteam} AND 
-					year(getdate()) < year(JSON_VALUE(jg.caracteristicas, '$.FechaLanzamientoSteam')) + 11 AND
-					precioMin.Precio >= 1.99 AND 
-					precioMin.Descuento > 0 AND 
-					precioMin.DRM = 0 AND 
-					(
-						(YEAR(precioMin.FechaTermina) > 2020 AND precioMin.FechaTermina > GETDATE())
-						OR
+			string ConstruirCandidatos(string tablaOrigen, string columnaPrecio)
+			{
+				string exclusionSteam = excluirSteamIds?.Count > 0
+					? $"AND NOT EXISTS (SELECT 1 FROM @excluirSteam WHERE Id = jg.idSteam AND JSON_VALUE(j.{columnaPrecio}, '$[0].DRM') = '0')"
+					: string.Empty;
+
+				return @$"SELECT j.idMaestra, j.{columnaPrecio} AS PrecioJson, jg.idSteam
+					FROM {tablaOrigen} j 
+					INNER JOIN dbo.juegos jg ON jg.id = j.idMaestra
+					CROSS APPLY OPENJSON(j.{columnaPrecio}, '$[0]') WITH (
+						Precio float '$.Precio',
+						Descuento int '$.Descuento',
+						DRM int '$.DRM',
+						FechaTermina datetime2 '$.FechaTermina',
+						FechaActualizacion datetime2 '$.FechaActualizacion'
+					) precioMin
+					WHERE jg.tipo = 0 {exclusionJuegos} {exclusionSteam} AND 
+						year(getdate()) < year(JSON_VALUE(jg.caracteristicas, '$.FechaLanzamientoSteam')) + 11 AND
+						precioMin.Precio >= 1.99 AND 
+						precioMin.Descuento > 0 AND 
+						precioMin.DRM = 0 AND 
 						(
-							NOT (YEAR(precioMin.FechaTermina) > 2020 AND precioMin.FechaTermina > GETDATE())
-							AND precioMin.FechaActualizacion > DATEADD(HOUR,-24,GetDate())
-						)
-					) AND 
-					(CONVERT(bigint, REPLACE(JSON_VALUE(jg.analisis, '$.Cantidad'),',','')) >= {minimoReseñas}) AND 
-					{(ocultarBundles == true ? $"NOT EXISTS (SELECT 1 FROM bundles b INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id WHERE bj.JuegoId = j.idMaestra AND b.fechaTermina > DATEADD(MONTH, -{ocultarBundlesCantidad}, GETDATE())) AND " : "")} 
-					{(ocultarGratis == true ? "NOT EXISTS (SELECT 1 FROM gratis WHERE gratis.juegoId = j.idMaestra AND gratis.DRM = 0) AND " : "")}
-					{(ocultarSuscripciones == true ? @$"NOT EXISTS (SELECT 1 FROM suscripciones WHERE suscripciones.juegoId = j.idMaestra AND suscripciones.DRM = 0 AND suscripciones.fechaTermina > DATEADD(MONTH, -{ocultarSuscripcionesCantidad}, GETDATE())) AND " : "")}
-					(jg.ocultarPortada IS NULL OR jg.ocultarPortada = 'false')
-				ORDER BY NEWID()
-			)
-			SELECT c.idMaestra, jg.nombre,
-				JSON_VALUE(jg.imagenes, '$.Logo') as logo, 
-				JSON_VALUE(jg.imagenes, '$.Library_1920x620') as fondo, 
-				JSON_VALUE(jg.imagenes, '$.Header_460x215') as header, 
-				JSON_VALUE(jg.media, '$.Videos[0].Micro') as video,
-				c.{precioMinimosHistoricos}, c.idSteam
-			FROM Candidatos c
-			INNER JOIN dbo.juegos jg ON jg.id = c.idMaestra;";
+							(YEAR(precioMin.FechaTermina) > 2020 AND precioMin.FechaTermina > GETDATE())
+							OR
+							(
+								NOT (YEAR(precioMin.FechaTermina) > 2020 AND precioMin.FechaTermina > GETDATE())
+								AND precioMin.FechaActualizacion > DATEADD(HOUR,-24,GetDate())
+							)
+						) AND 
+						(CONVERT(bigint, REPLACE(JSON_VALUE(jg.analisis, '$.Cantidad'),',','')) >= {minimoReseñas}) AND 
+						{(ocultarBundles == true ? $"NOT EXISTS (SELECT 1 FROM bundles b INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id WHERE bj.JuegoId = j.idMaestra AND b.fechaTermina > DATEADD(MONTH, -{ocultarBundlesCantidad}, GETDATE())) AND " : "")} 
+						{(ocultarGratis == true ? "NOT EXISTS (SELECT 1 FROM gratis WHERE gratis.juegoId = j.idMaestra AND gratis.DRM = 0) AND " : "")}
+						{(ocultarSuscripciones == true ? @$"NOT EXISTS (SELECT 1 FROM suscripciones WHERE suscripciones.juegoId = j.idMaestra AND suscripciones.DRM = 0 AND suscripciones.fechaTermina > DATEADD(MONTH, -{ocultarSuscripcionesCantidad}, GETDATE())) AND " : "")}
+						(jg.ocultarPortada IS NULL OR jg.ocultarPortada = 'false')";
+						}
+
+						string candidatosBase = ConstruirCandidatos(tabla, precioMinimosHistoricos);
+
+						if (noOficial == true)
+						{
+							string tablaNoOficial = region == TiendaRegion.EstadosUnidos ? "seccionMinimosNoOficialesUS" : "seccionMinimosNoOficialesEU";
+							string columnaNoOficial = region == TiendaRegion.EstadosUnidos ? "preciosHistoricosNoOficialesUS" : "preciosHistoricosNoOficialesEU";
+
+							string candidatosNoOficial = ConstruirCandidatos(tablaNoOficial, columnaNoOficial);
+
+							candidatosBase = $"{candidatosBase} UNION ALL {candidatosNoOficial}";
+						}
+
+						string busqueda = @$";WITH CandidatosBase AS (
+					{candidatosBase}
+				),
+				Candidatos AS (
+					SELECT TOP ({cantidadJuegos}) idMaestra, PrecioJson, idSteam
+					FROM CandidatosBase
+					ORDER BY NEWID()
+				)
+				SELECT c.idMaestra, jg.nombre,
+					JSON_VALUE(jg.imagenes, '$.Logo') as logo, 
+					JSON_VALUE(jg.imagenes, '$.Library_1920x620') as fondo, 
+					JSON_VALUE(jg.imagenes, '$.Header_460x215') as header, 
+					JSON_VALUE(jg.media, '$.Videos[0].Micro') as video,
+					c.PrecioJson AS {precioMinimosHistoricos}, c.idSteam
+				FROM Candidatos c
+				INNER JOIN dbo.juegos jg ON jg.id = c.idMaestra;";
 
 			try
 			{
@@ -195,21 +220,24 @@ namespace BaseDatos.Portada
 							};
 						}
 
-						if (region == TiendaRegion.Europa)
+						if (string.IsNullOrEmpty(fila.precioMinimosHistoricos) == false)
 						{
-							if (string.IsNullOrEmpty(fila.precioMinimosHistoricos) == false)
-							{
-								juego.PrecioMinimosHistoricos =
-									JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.precioMinimosHistoricos);
-							}
+							juego.PrecioMinimosHistoricos = JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.precioMinimosHistoricos);
 						}
-						else if (region == TiendaRegion.EstadosUnidos)
+
+						if (string.IsNullOrEmpty(fila.precioMinimosHistoricosUS) == false)
 						{
-							if (string.IsNullOrEmpty(fila.precioMinimosHistoricosUS) == false)
-							{
-								juego.PrecioMinimosHistoricosUS =
-									JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.precioMinimosHistoricosUS);
-							}
+							juego.PrecioMinimosHistoricosUS = JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.precioMinimosHistoricosUS);
+						}
+
+						if (string.IsNullOrEmpty(fila.preciosHistoricosNoOficialesEU) == false)
+						{
+							juego.PreciosHistoricosNoOficialesEU = JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.preciosHistoricosNoOficialesEU);
+						}
+
+						if (string.IsNullOrEmpty(fila.preciosHistoricosNoOficialesUS) == false)
+						{
+							juego.PreciosHistoricosNoOficialesUS = JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.preciosHistoricosNoOficialesUS);
 						}
 
 						if (string.IsNullOrEmpty(fila.video) == false)

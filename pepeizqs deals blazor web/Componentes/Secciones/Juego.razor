@@ -1082,9 +1082,9 @@
                                                                         precioMinimoTexto = Herramientas.Precios.Dolar(precioMinimoValor);
                                                                     }
 
-                                                                    <div class="tooltip-juego" id="trigger-historicallowofficial"
-                                                                        @onmouseenter="@(() => ActivarTooltip("trigger-historicallowofficial", "tooltip-historicallowofficial"))"
-                                                                        @onmouseleave="@(() => DesactivarTooltip("trigger-historicallowofficial"))">
+                                                                    <div class="tooltip-juego" id="trigger-historicallowofficial-@drm.Id"
+                                                                        @onmouseenter="@(() => ActivarTooltip("trigger-historicallowofficial-" + drm.Id, "tooltip-historicallowofficial-" + drm.Id))"
+                                                                        @onmouseleave="@(() => DesactivarTooltip("trigger-historicallowofficial-" + drm.Id))">
                                                                     
                                                                         <div style="box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.5),0px 0px 1px 0px rgba(0, 0, 0, 0.5); @(mostrarAlertaHistorico == true ? "background-color: color-mix(in srgb, var(--fondoAlerta) 50%, transparent);" : "background: rgba(0,0,0,.15);")">
                                                                             <div style="padding: 10px 20px; background: rgba(0,0,0,.4); text-align: center;">
@@ -1096,7 +1096,7 @@
                                                                             </div>
                                                                         </div>
 
-                                                                        <div id="tooltip-historicallowofficial" class="tooltip-relleno">
+                                                                        <div id="tooltip-historicallowofficial-@drm.Id" class="tooltip-relleno">
                                                                             <div style="margin: 8px; max-width: 300px; font-size: 14px;">
                                                                                 @mensajeMinimoOficialDRM
                                                                             </div>
@@ -1204,10 +1204,10 @@
                                                                         precioMinimoTexto = Herramientas.Precios.Dolar(precioMinimoValorNoOficial);
                                                                     }
 
-                                                                    <div class="tooltip-juego" id="trigger-historicallownoofficial"
-                                                                        @onmouseenter="@(() => ActivarTooltip("trigger-historicallownoofficial", "tooltip-historicallownoofficial"))"
-                                                                        @onmouseleave="@(() => DesactivarTooltip("trigger-historicallownoofficial"))">
-                                                                    
+                                                                    <div class="tooltip-juego" id="trigger-historicallownoofficial-@drm.Id"
+                                                                        @onmouseenter="@(() => ActivarTooltip("trigger-historicallownoofficial-" + drm.Id, "tooltip-historicallownoofficial-" + drm.Id))"
+                                                                        @onmouseleave="@(() => DesactivarTooltip("trigger-historicallownoofficial-" + drm.Id))">
+        
                                                                         <div style="box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.5),0px 0px 1px 0px rgba(0, 0, 0, 0.5); @(mostrarAlertaHistoricoNoOficial == true ? "background-color: color-mix(in srgb, var(--fondoAlerta) 50%, transparent);" : "background: rgba(0,0,0,.15);")">
                                                                             <div style="padding: 10px 20px; background: rgba(0,0,0,.4); text-align: center;">
                                                                                 @Herramientas.Idiomas.BuscarTexto(idioma, "String142", "Game")
@@ -1218,7 +1218,7 @@
                                                                             </div>
                                                                         </div>
 
-                                                                        <div id="tooltip-historicallownoofficial" class="tooltip-relleno">
+                                                                        <div id="tooltip-historicallownoofficial-@drm.Id" class="tooltip-relleno">
                                                                             <div style="margin: 8px; max-width: 300px; font-size: 14px;">
                                                                                 @mensajeMinimoNoOficialDRM
                                                                             </div>
