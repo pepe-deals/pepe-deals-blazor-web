@@ -82,6 +82,10 @@ namespace Juegos
 		public List<JuegoPrecio> PreciosHistoricosNoOficialesEU { get; set; }
 		public List<JuegoPrecio> PreciosActualesNoOficialesUS { get; set; }
 		public List<JuegoPrecio> PreciosHistoricosNoOficialesUS { get; set; }
+		public List<JuegoPrecio> PreciosActualesMarketplacesEU { get; set; }
+		public List<JuegoPrecio> PreciosHistoricosMarketplacesEU { get; set; }
+		public List<JuegoPrecio> PreciosActualesMarketplacesUS { get; set; }
+		public List<JuegoPrecio> PreciosHistoricosMarketplacesUS { get; set; }
 	}
 
 	public static class JuegoCrear

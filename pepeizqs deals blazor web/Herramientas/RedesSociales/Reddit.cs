@@ -62,6 +62,12 @@ namespace Herramientas.RedesSociales
 							estado = true;
 						}
 					}
+					catch (UriFormatException)
+					{
+						// Bug conocido de RedditSharp: el post se crea correctamente en Reddit,
+						// pero falla al parsear la respuesta (campo url/permalink mal formado).
+						estado = true;
+					}
 					catch (Exception ex)
 					{
 						global::BaseDatos.Errores.Insertar.Mensaje("Reddit Postear Noticia EU", ex);
@@ -80,6 +86,12 @@ namespace Herramientas.RedesSociales
 						{
 							estado = true;
 						}
+					}
+					catch (UriFormatException)
+					{
+						// Bug conocido de RedditSharp: el post se crea correctamente en Reddit,
+						// pero falla al parsear la respuesta (campo url/permalink mal formado).
+						estado = true;
 					}
 					catch (Exception ex)
 					{

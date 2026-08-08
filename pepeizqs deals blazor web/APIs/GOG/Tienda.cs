@@ -493,8 +493,8 @@ namespace APIs.GOG
 		[JsonPropertyName("language_packs")]
 		public List<object> LanguagePacks { get; set; }
 
-		[JsonPropertyName("bonus_content")]
-		public List<GogBonusContent> BonusContent { get; set; }
+		//[JsonPropertyName("bonus_content")]
+		//public List<GogBonusContent> BonusContent { get; set; }
 	}
 
 	public class GogInstaller

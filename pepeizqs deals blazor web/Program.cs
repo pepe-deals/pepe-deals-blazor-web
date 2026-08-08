@@ -184,6 +184,7 @@ builder.Services.AddSingleton<IEmailSender<Usuario>, Herramientas.Correos.Identi
 #region Servicios
 
 builder.Services.AddScoped<Servicios.TiendaNoOficial>();
+builder.Services.AddScoped<Servicios.Marketplace>();
 builder.Services.AddScoped<Servicios.Moneda>();
 builder.Services.AddScoped<Servicios.Opciones>();
 
@@ -707,6 +708,21 @@ Disallow: /link/
 Disallow: /publisher/
 Disallow: /_framework/
 Disallow: /_blazor/
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: SERankingBacklinksBot
+Disallow: /
+
+User-agent: meta-externalagent
+Disallow: /
+
+User-agent: Amazonbot
+Disallow: /
 ";
 
 	return Results.Text(texto, "text/plain; charset=utf-8");

@@ -106,7 +106,7 @@ namespace Herramientas
 			return nombre;
 		}
 
-		public static string GenerarMensaje(TiendaRegion region, string idioma, Juegos.Juego juego, bool buscarBundles, bool buscarGratis, bool buscarSuscripciones)
+		public static string GenerarMensaje(bool noOficiales, TiendaRegion region, string idioma, Juegos.Juego juego, bool buscarBundles, bool buscarGratis, bool buscarSuscripciones)
 		{
 			string mensaje = string.Empty;
 
@@ -193,84 +193,114 @@ namespace Herramientas
 			decimal minimoCantidad = 10000000;
 			Juegos.JuegoPrecio minimoFinal = new Juegos.JuegoPrecio();
 
-			if (region == TiendaRegion.Europa && juego.PrecioActualesTiendas?.Count > 0)
+			if (region == TiendaRegion.Europa)
 			{
-				foreach (var oferta in juego.PrecioActualesTiendas)
+				List<Juegos.JuegoPrecio> preciosActualesEU = new List<Juegos.JuegoPrecio>();
+				
+				if (juego.PrecioActualesTiendas?.Count > 0)
 				{
-					bool drmAdecuado = true;
+					preciosActualesEU.AddRange(juego.PrecioActualesTiendas);
+				}
 
-					if (oferta.DRM == Juegos.JuegoDRM.NoEspecificado)
-					{
-						drmAdecuado = false;
-					}
-					else if (oferta.DRM == Juegos.JuegoDRM.Microsoft)
-					{
-						drmAdecuado = false;
-					}
+				if (noOficiales == true && juego.PreciosActualesNoOficialesEU?.Count > 0)
+				{
+					preciosActualesEU.AddRange(juego.PreciosActualesNoOficialesEU);
+				}
 
-					if (drmAdecuado == true)
+				if (preciosActualesEU?.Count > 0)
+				{
+					foreach (var oferta in preciosActualesEU)
 					{
-						if (Herramientas.OfertaActiva.Verificar(oferta) == true)
+						bool drmAdecuado = true;
+
+						if (oferta.DRM == Juegos.JuegoDRM.NoEspecificado)
 						{
-							if (oferta.Descuento > 0)
+							drmAdecuado = false;
+						}
+						else if (oferta.DRM == Juegos.JuegoDRM.Microsoft)
+						{
+							drmAdecuado = false;
+						}
+
+						if (drmAdecuado == true)
+						{
+							if (Herramientas.OfertaActiva.Verificar(oferta) == true)
 							{
-								decimal tempPrecio = oferta.Precio;
-
-								if (oferta.PrecioCambiado > 0)
+								if (oferta.Descuento > 0)
 								{
-									tempPrecio = oferta.PrecioCambiado;
-								}
+									decimal tempPrecio = oferta.Precio;
 
-								if (oferta.Moneda != Herramientas.JuegoMoneda.Euro && oferta.PrecioCambiado == 0)
-								{
-									tempPrecio = Herramientas.Divisas.CambioEuro(tempPrecio, oferta.Moneda);
-								}
+									if (oferta.PrecioCambiado > 0)
+									{
+										tempPrecio = oferta.PrecioCambiado;
+									}
 
-								if (tempPrecio < minimoCantidad)
-								{
-									minimoCantidad = tempPrecio;
+									if (oferta.Moneda != Herramientas.JuegoMoneda.Euro && oferta.PrecioCambiado == 0)
+									{
+										tempPrecio = Herramientas.Divisas.CambioEuro(tempPrecio, oferta.Moneda);
+									}
+
+									if (tempPrecio < minimoCantidad)
+									{
+										minimoCantidad = tempPrecio;
+									}
 								}
 							}
 						}
 					}
 				}
 			}
-			else if (region == TiendaRegion.EstadosUnidos && juego.PrecioActualesTiendasUS?.Count > 0)
+			else if (region == TiendaRegion.EstadosUnidos)
 			{
-				foreach (var oferta in juego.PrecioActualesTiendasUS)
+				List<Juegos.JuegoPrecio> preciosActualesUS = new List<Juegos.JuegoPrecio>();
+
+				if (juego.PrecioActualesTiendasUS?.Count > 0)
 				{
-					bool drmAdecuado = true;
+					preciosActualesUS.AddRange(juego.PrecioActualesTiendasUS);
+				}
 
-					if (oferta.DRM == Juegos.JuegoDRM.NoEspecificado)
-					{
-						drmAdecuado = false;
-					}
-					else if (oferta.DRM == Juegos.JuegoDRM.Microsoft)
-					{
-						drmAdecuado = false;
-					}
+				if (noOficiales == true && juego.PreciosActualesNoOficialesUS?.Count > 0)
+				{
+					preciosActualesUS.AddRange(juego.PreciosActualesNoOficialesUS);
+				}
 
-					if (drmAdecuado == true)
+				if (preciosActualesUS?.Count > 0)
+				{
+					foreach (var oferta in juego.PrecioActualesTiendasUS)
 					{
-						if (Herramientas.OfertaActiva.Verificar(oferta) == true)
+						bool drmAdecuado = true;
+
+						if (oferta.DRM == Juegos.JuegoDRM.NoEspecificado)
 						{
-							if (oferta.Descuento > 0)
+							drmAdecuado = false;
+						}
+						else if (oferta.DRM == Juegos.JuegoDRM.Microsoft)
+						{
+							drmAdecuado = false;
+						}
+
+						if (drmAdecuado == true)
+						{
+							if (Herramientas.OfertaActiva.Verificar(oferta) == true)
 							{
-								decimal tempPrecio = oferta.Precio;
-
-								if (oferta.PrecioCambiado > 0)
+								if (oferta.Descuento > 0)
 								{
-									tempPrecio = oferta.PrecioCambiado;
-								}
+									decimal tempPrecio = oferta.Precio;
 
-								if (oferta.Moneda != Herramientas.JuegoMoneda.Dolar && oferta.PrecioCambiado == 0)
-								{
-									tempPrecio = Herramientas.Divisas.CambioDolar(tempPrecio, oferta.Moneda);
-								}
+									if (oferta.PrecioCambiado > 0)
+									{
+										tempPrecio = oferta.PrecioCambiado;
+									}
 
-								if (tempPrecio < minimoCantidad)
-								{
-									minimoCantidad = tempPrecio;
+									if (oferta.Moneda != Herramientas.JuegoMoneda.Dolar && oferta.PrecioCambiado == 0)
+									{
+										tempPrecio = Herramientas.Divisas.CambioDolar(tempPrecio, oferta.Moneda);
+									}
+
+									if (tempPrecio < minimoCantidad)
+									{
+										minimoCantidad = tempPrecio;
+									}
 								}
 							}
 						}
