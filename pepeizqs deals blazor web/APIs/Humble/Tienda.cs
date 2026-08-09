@@ -39,8 +39,27 @@ namespace APIs.Humble
 
 		public static string Referido(string enlace)
 		{
-            return "https://humblebundleinc.sjv.io/c/1382810/2059850/25796?u=" + Uri.EscapeDataString(enlace);
+			var slug = new Uri(enlace).AbsolutePath.Trim('/').Split('/').Last();
+			var palabras = slug.Split('-', StringSplitOptions.RemoveEmptyEntries);
+
+			string prodsku;
+			if (palabras.Length > 1)
+			{
+				var titulo = string.Join(" ", palabras.Take(palabras.Length - 1).Select(Capitalizar));
+				prodsku = $"{titulo} - {palabras[^1].ToUpperInvariant()}";
+			}
+			else
+			{
+				prodsku = Capitalizar(palabras[0]);
+			}
+
+			return "https://humblebundleinc.sjv.io/c/1382810/2087718/25796"
+				+ "?prodsku=" + Uri.EscapeDataString(prodsku)
+				+ "&u=" + Uri.EscapeDataString(enlace)
+				+ "&intsrc=CATF_18045";
 		}
+
+		private static string Capitalizar(string palabra) => palabra.Length == 0 ? palabra : char.ToUpperInvariant(palabra[0]) + palabra[1..];
 
 		public static Tiendas2.Tienda GenerarChoice()
 		{
@@ -59,19 +78,6 @@ namespace APIs.Humble
 			};
 
 			return tienda;
-		}
-
-		public static string ReferidoChoice(string enlace)
-		{
-            enlace = enlace + "?partner=pepeizq";
-
-            enlace = enlace.Replace(":", "%3A");
-            enlace = enlace.Replace("/", "%2F");
-            enlace = enlace.Replace("/", "%2F");
-            enlace = enlace.Replace("?", "%3F");
-            enlace = enlace.Replace("=", "%3D");
-
-            return "https://humblebundleinc.sjv.io/c/1382810/2059850/25796?u=" + enlace;
 		}
 
 		public static async Task BuscarOfertas(TiendaRegion region)

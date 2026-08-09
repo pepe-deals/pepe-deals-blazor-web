@@ -4,6 +4,7 @@ using Dapper;
 using Juegos;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Tiendas2;
 
 namespace BaseDatos.Extension
 {
@@ -361,7 +362,7 @@ namespace BaseDatos.Extension
 					continue;
 				}
 
-				precio.Enlace = Herramientas.EnlaceAcortador.Generar(precio.Enlace, precio.Tienda, false, false);
+				precio.Enlace = Herramientas.EnlaceAcortador.Generar(TiendaRegion.Europa, precio.Enlace, precio.Tienda, false, false);
 
 				destino.Add(new ExtensionPrecio
 				{

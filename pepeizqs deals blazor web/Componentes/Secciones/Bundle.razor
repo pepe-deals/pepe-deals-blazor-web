@@ -6,6 +6,7 @@
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.JSInterop
 @using Microsoft.VisualBasic
+@using Tiendas2
 @using pepeizqs_deals_blazor_web.Componentes.Interfaz
 @using pepeizqs_deals_web.Data
 
@@ -258,7 +259,7 @@
 
 		if (Herramientas.Bots.UserAgentEsBot(userAgent) == false)
 		{
-			enlaceBundle = Herramientas.EnlaceAcortador.Generar(bundle.Enlace, bundle.BundleTipo, usuarioPatreon, false);
+			enlaceBundle = Herramientas.EnlaceAcortador.Generar(usuarioRegion, bundle.Enlace, bundle.BundleTipo, usuarioPatreon, false);
 		}
 
 		<div class="cuerpo-ancho" style="position: sticky; top: var(--alturaCabecera); z-index: 1000; width: 100%;">
@@ -605,6 +606,7 @@
 
 	private bool usuarioPatreon = false;
 	private bool usuarioAdmin = false;
+	private TiendaRegion usuarioRegion = TiendaRegion.Europa;
 
 	[Parameter]
 	public int bundleId { get; set; }
@@ -627,6 +629,7 @@
 		usuarioId = datos.UsuarioId;
 		userAgent = datos.UserAgent;
 		dominio = datos.Dominio;
+		usuarioRegion = datos.Region;
 
 		if (string.IsNullOrEmpty(usuarioId) == false)
 		{
@@ -635,14 +638,16 @@
 			Task<Usuario> tareaDeseados = (deseadosUsuario != null) ? Task.FromResult(deseadosUsuario) : BaseDatos.Usuarios.Buscar.DeseadosTiene(usuarioId);
 			Task<DateTime?> tareaPatreon = BaseDatos.Usuarios.Buscar.FechaPatreon(usuarioId);
 			Task<bool> tareaAdmin = BaseDatos.Usuarios.Buscar.RolDios(usuarioId);
+			Task<int> tareaRegion = BaseDatos.Usuarios.Buscar.OpcionInt(usuarioId, "Currency");
 
-			await Task.WhenAll(tareaIdioma, tareaJuegos, tareaDeseados, tareaPatreon, tareaAdmin);
+			await Task.WhenAll(tareaIdioma, tareaJuegos, tareaDeseados, tareaPatreon, tareaAdmin, tareaRegion);
 
 			idioma = tareaIdioma.Result;
 			juegosUsuario = tareaJuegos.Result;
 			deseadosUsuario = tareaDeseados.Result;
 			usuarioPatreon = Herramientas.Patreon.VerificarActivo(tareaPatreon.Result);
 			usuarioAdmin = tareaAdmin.Result;
+			usuarioRegion = (TiendaRegion)tareaRegion.Result;
 
 			if (juegosUsuarioIndex == null)
 			{
@@ -668,7 +673,7 @@
 
 			if (Herramientas.Bots.UserAgentEsBot(userAgent) == false)
 			{
-				enlaceBundle = Herramientas.EnlaceAcortador.Generar(bundle.Enlace, bundle.BundleTipo, usuarioPatreon, false);
+				enlaceBundle = Herramientas.EnlaceAcortador.Generar(usuarioRegion, bundle.Enlace, bundle.BundleTipo, usuarioPatreon, false);
 			}		
 		}
 	}

@@ -1,6 +1,7 @@
 ﻿using Herramientas;
 using Microsoft.VisualBasic;
 using System.Net;
+using Tiendas2;
 
 namespace APIs.GreenManGaming
 {
@@ -33,20 +34,31 @@ namespace APIs.GreenManGaming
             return bundle;
         }
 
-        public static string Referido(string enlace)
-        {
-            string sku = enlace;
-            sku = sku.Remove(0, sku.IndexOf("/bundles/") + 9);
+		public static string Referido(TiendaRegion region, string enlace)
+		{
+			var slug = new Uri(enlace).AbsolutePath.Trim('/').Split('/').Last();
+			var palabras = slug.Split('-', StringSplitOptions.RemoveEmptyEntries);
 
-            if (sku.Contains("/") == true)
-            {
-                sku = sku.Remove(sku.IndexOf("/"), sku.Length - sku.IndexOf("/"));
-            }
+			string prodsku;
+			if (palabras.Length > 1)
+			{
+				var titulo = string.Join(" ", palabras.Take(palabras.Length - 1).Select(Capitalizar));
+				prodsku = $"{titulo} - {palabras[^1].ToUpperInvariant()}";
+			}
+			else
+			{
+				prodsku = Capitalizar(palabras[0]);
+			}
 
-            return "https://greenmangaming.sjv.io/c/1382810/1219987/15105?prodsku=" + sku + "&u=" + Uri.EscapeDataString(enlace);
-        }
+			return (region == TiendaRegion.Europa ? "https://greenmangaming.sjv.io/c/1382810/3390766/15105" : "https://greenmangaming.sjv.io/c/1382810/3390753/15105")
+				+ "?prodsku=" + Uri.EscapeDataString(prodsku)
+				+ "&u=" + Uri.EscapeDataString(enlace)
+				+ (region == TiendaRegion.Europa ? "&intsrc=CATF_28790" : "&intsrc=CATF_28789");
+		}
 
-        public static async Task<Bundles2.Bundle> ExtraerDatos(Bundles2.Bundle bundle)
+		private static string Capitalizar(string palabra) => palabra.Length == 0 ? palabra : char.ToUpperInvariant(palabra[0]) + palabra[1..];
+
+		public static async Task<Bundles2.Bundle> ExtraerDatos(Bundles2.Bundle bundle)
         {
             if (bundle.Enlace != "https://www.greenmangamingbundles.com/")
             {

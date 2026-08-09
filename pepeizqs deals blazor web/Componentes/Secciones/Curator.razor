@@ -335,7 +335,7 @@
 																		minimoFinal2 = minimoMostrar.PrecioCambiado;
 																	}
 
-																	string enlaceFinal = Herramientas.EnlaceAcortador.Generar(minimoMostrar.Enlace, minimoMostrar.Tienda, usuarioPatreon, false);
+																	string enlaceFinal = Herramientas.EnlaceAcortador.Generar(usuarioRegion, minimoMostrar.Enlace, minimoMostrar.Tienda, usuarioPatreon, false);
 
 																	<a href="@enlaceFinal" class="boton-pequeño" target="_blank" style="width: fit-content; padding: 10px 20px;">
 																		<div style="display: flex; align-items: center; gap: 15px;">
@@ -399,7 +399,7 @@
 															{
 																if (destacado.FreeToPlay?.ToLower() == "true" && destacado.IdSteam > 0)
 																{
-																	string enlaceFinal = Herramientas.EnlaceAcortador.Generar("https://store.steampowered.com/app/" + destacado.IdSteam, "steam", usuarioPatreon, false);
+																	string enlaceFinal = Herramientas.EnlaceAcortador.Generar(usuarioRegion, "https://store.steampowered.com/app/" + destacado.IdSteam, "steam", usuarioPatreon, false);
 
 																	<a href="@enlaceFinal" class="boton-pequeño" target="_blank" style="width: fit-content; padding: 10px 20px;">
 																		<div style="display: flex; align-items: center; gap: 15px;">
@@ -624,7 +624,7 @@
 															minimoFinal2 = minimoMostrar.PrecioCambiado;
 														}
 
-														string enlaceFinal = Herramientas.EnlaceAcortador.Generar(minimoMostrar.Enlace, minimoMostrar.Tienda, usuarioPatreon, false);
+														string enlaceFinal = Herramientas.EnlaceAcortador.Generar(usuarioRegion, minimoMostrar.Enlace, minimoMostrar.Tienda, usuarioPatreon, false);
 
 														<a href="@enlaceFinal" class="boton-pequeño" target="_blank" style="width: fit-content; padding: 10px 20px;">
 															<div style="display: flex; align-items: center; gap: 15px;">
@@ -692,7 +692,7 @@
 												{
 													if (destacado.FreeToPlay?.ToLower() == "true" && destacado.IdSteam > 0)
 													{
-														string enlaceFinal = Herramientas.EnlaceAcortador.Generar("https://store.steampowered.com/app/" + destacado.IdSteam, "steam", usuarioPatreon, false);
+														string enlaceFinal = Herramientas.EnlaceAcortador.Generar(usuarioRegion, "https://store.steampowered.com/app/" + destacado.IdSteam, "steam", usuarioPatreon, false);
 
 														<a href="@enlaceFinal" class="boton-pequeño" target="_blank" style="width: fit-content; padding: 10px 20px;">
 															<div style="display: flex; align-items: center; gap: 15px;">

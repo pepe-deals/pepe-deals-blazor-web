@@ -1,7 +1,9 @@
 ﻿#nullable disable
 
 using Bundles2;
+using pepeizqs_deals_web.Data;
 using System.Text.Json;
+using Tiendas2;
 
 namespace Herramientas.Correos
 {
@@ -20,7 +22,10 @@ namespace Herramientas.Correos
 	{
 		public static async Task Nuevo(string usuarioId, Bundle bundle, BundleJuego juego, string correoHacia)
 		{
-			string idioma = await global::BaseDatos.Usuarios.Buscar.IdiomaSobreescribir(usuarioId);
+			Usuario opciones = await global::BaseDatos.Usuarios.Buscar.OpcionesDeseadoCorreo(usuarioId);
+			string idioma = opciones.LanguageOverride;
+
+			TiendaRegion regionUsar = (TiendaRegion)opciones.Currency;
 
 			if (string.IsNullOrEmpty(idioma) == true)
 			{
@@ -103,7 +108,7 @@ namespace Herramientas.Correos
 </body>
 </html>";
 
-			string enlace = Herramientas.EnlaceAcortador.Generar(bundle.Enlace, bundle.BundleTipo, false, false);
+			string enlace = Herramientas.EnlaceAcortador.Generar(regionUsar, bundle.Enlace, bundle.BundleTipo, false, false);
 			html = html.Replace("{{enlace}}", enlace);
 			html = html.Replace("{{imagenJuego}}", juego.Imagen);
 

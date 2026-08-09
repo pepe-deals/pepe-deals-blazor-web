@@ -7,6 +7,7 @@
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.JSInterop
 @using pepeizqs_deals_blazor_web.Componentes.Interfaz
+@using Tiendas2
 
 @inject IHttpContextAccessor Contexto
 @inject IJSRuntime JavaScript
@@ -478,7 +479,7 @@ else
 
 			if (Herramientas.Bots.UserAgentEsBot(userAgent) == false)
 			{
-				enlaceBundle = Herramientas.EnlaceAcortador.Generar(bundleSeleccionado.Enlace, bundleSeleccionado.BundleTipo, usuarioPatreon, false);
+				enlaceBundle = Herramientas.EnlaceAcortador.Generar(usuarioRegion, bundleSeleccionado.Enlace, bundleSeleccionado.BundleTipo, usuarioPatreon, false);
 			}
 
 			<div class="cuerpo-ancho" style="position: sticky; top: var(--alturaCabecera); z-index: 1000;">
@@ -539,6 +540,7 @@ else
 
 	private bool usuarioPatreon = false;
 	private bool usuarioAdmin = false;
+	private TiendaRegion usuarioRegion = TiendaRegion.Europa;
 
 	[PersistentState] public List<Bundles2.Bundle> bundlesActuales { get; set; }
 	[PersistentState] public List<Bundles2.Bundle> bundlesPasados { get; set; }
@@ -562,22 +564,21 @@ else
 		usuarioId = datos.UsuarioId;
 		userAgent = datos.UserAgent;
 		dominio = datos.Dominio;
+		usuarioRegion = datos.Region;
 
 		if (string.IsNullOrEmpty(usuarioId) == false)
 		{
-			idioma = await BaseDatos.Usuarios.Buscar.IdiomaSobreescribir(usuarioId);
-			usuarioPatreon = Herramientas.Patreon.VerificarActivo(await BaseDatos.Usuarios.Buscar.FechaPatreon(usuarioId));
-			usuarioAdmin = await BaseDatos.Usuarios.Buscar.RolDios(usuarioId);
-
 			Task<string> tareaIdioma = BaseDatos.Usuarios.Buscar.IdiomaSobreescribir(usuarioId);
 			Task<DateTime?> tareaPatreon = BaseDatos.Usuarios.Buscar.FechaPatreon(usuarioId);
 			Task<bool> tareaAdmin = BaseDatos.Usuarios.Buscar.RolDios(usuarioId);
+			Task<int> tareaRegion = BaseDatos.Usuarios.Buscar.OpcionInt(usuarioId, "Currency");
 
-			await Task.WhenAll(tareaIdioma, tareaPatreon, tareaAdmin);
+			await Task.WhenAll(tareaIdioma, tareaPatreon, tareaAdmin, tareaRegion);
 
 			idioma = tareaIdioma.Result;
 			usuarioPatreon = Herramientas.Patreon.VerificarActivo(tareaPatreon.Result);
 			usuarioAdmin = tareaAdmin.Result;
+			usuarioRegion = (TiendaRegion)tareaRegion.Result;
 		}
 
 		//--------------------------------------------------------------------

@@ -185,6 +185,30 @@ namespace BaseDatos.Usuarios
 			return null;
 		}
 
+		public static async Task<Usuario> OpcionesDeseadoCorreo(string usuarioId)
+		{
+			if (string.IsNullOrEmpty(usuarioId) == true)
+			{
+				return null;
+			}
+
+			string busqueda = "SELECT LanguageOverride, Currency FROM AspNetUsers WHERE Id=@Id";
+
+			try
+			{
+				return await Herramientas.BaseDatos.Select(async conexion =>
+				{
+					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
+				});
+			}
+			catch (Exception ex)
+			{
+				BaseDatos.Errores.Insertar.Mensaje("Usuario Opciones Deseado Minimo", ex);
+			}
+
+			return null;
+		}
+
 		public static async Task<Usuario> OpcionesCabecera(string usuarioId)
 		{
 			if (string.IsNullOrEmpty(usuarioId) == true)

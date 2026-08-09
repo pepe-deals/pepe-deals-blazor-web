@@ -24,7 +24,7 @@
 
         public static string Referido(string enlace)
         {
-            return "https://humblebundleinc.sjv.io/c/1382810/2059850/25796?u=" + Uri.EscapeDataString(enlace);
+			return Tienda.Referido(enlace);
 		}
     }
 }

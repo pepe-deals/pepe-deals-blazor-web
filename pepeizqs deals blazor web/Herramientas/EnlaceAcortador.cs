@@ -3,6 +3,7 @@
 using Bundles2;
 using Gratis2;
 using Suscripciones2;
+using Tiendas2;
 
 namespace Herramientas
 {
@@ -67,7 +68,7 @@ namespace Herramientas
 
 		private static string dominio = "https://pepe.deals";
 
-		public static string Generar(string enlace, string tienda = null, bool usuarioPatreon = false, bool acortar = true)
+		public static string Generar(TiendaRegion region, string enlace, string tienda = null, bool usuarioPatreon = false, bool acortar = true)
 		{
 			bool usarReferido = true;
 
@@ -105,7 +106,7 @@ namespace Herramientas
 					}
 					else if (tienda == APIs.GreenManGaming.Tienda.Generar().Id || tienda == APIs.GreenManGaming.Tienda.GenerarGold().Id)
 					{
-						enlace = APIs.GreenManGaming.Tienda.Referido(enlace);
+						enlace = APIs.GreenManGaming.Tienda.Referido(region, enlace);
 					}
 					else if (tienda == APIs.IndieGala.Tienda.Generar().Id)
 					{
@@ -152,7 +153,7 @@ namespace Herramientas
 			}
 		}
 
-		public static string Generar(string enlace, BundleTipo tipo, bool usuarioPatreon = false, bool acortar = true)
+		public static string Generar(TiendaRegion region, string enlace, BundleTipo tipo, bool usuarioPatreon = false, bool acortar = true)
 		{
 			bool usarReferido = true;
 
@@ -173,7 +174,7 @@ namespace Herramientas
 				}
                 else if (tipo == BundleTipo.GreenManGaming)
                 {
-                    enlace = APIs.GreenManGaming.Bundle.Referido(enlace);
+                    enlace = APIs.GreenManGaming.Bundle.Referido(region, enlace);
                 }
             }
 

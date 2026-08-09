@@ -1,8 +1,10 @@
 ﻿#nullable disable
 
 using Juegos;
+using pepeizqs_deals_web.Data;
 using System.Globalization;
 using System.Text.Json;
+using Tiendas2;
 
 namespace Herramientas.Correos
 {
@@ -30,7 +32,10 @@ namespace Herramientas.Correos
 
 		public static async Task Nuevo(string usuarioId, Juego juego, JuegoPrecio precio, string correoHacia)
 		{
-			string idioma = await global::BaseDatos.Usuarios.Buscar.IdiomaSobreescribir(usuarioId);
+			Usuario opciones = await global::BaseDatos.Usuarios.Buscar.OpcionesDeseadoCorreo(usuarioId);
+			string idioma = opciones.LanguageOverride;
+
+			TiendaRegion regionUsar = (TiendaRegion)opciones.Currency;
 
 			if (string.IsNullOrEmpty(idioma) == true)
 			{
@@ -86,11 +91,26 @@ namespace Herramientas.Correos
 							</body>
 							</html>";
 
-			string precio2 = Herramientas.Precios.Euro(precio.Precio);
+			string precio2 = string.Empty;
 
-			if (precio.PrecioCambiado > 0)
+			if (regionUsar == TiendaRegion.Europa)
 			{
-				precio2 = Herramientas.Precios.Euro(precio.PrecioCambiado);
+				precio2 = Herramientas.Precios.Euro(precio.Precio);
+
+				if (precio.PrecioCambiado > 0)
+				{
+					precio2 = Herramientas.Precios.Euro(precio.PrecioCambiado);
+				}
+			}
+
+			if (regionUsar == TiendaRegion.EstadosUnidos)
+			{
+				precio2 = Herramientas.Precios.Dolar(precio.Precio);
+
+				if (precio.PrecioCambiado > 0)
+				{
+					precio2 = Herramientas.Precios.Dolar(precio.PrecioCambiado);
+				}
 			}
 
 			string tiendaFinal = string.Empty;
@@ -110,7 +130,7 @@ namespace Herramientas.Correos
 			string descripcion = string.Format(Herramientas.Idiomas.BuscarTexto(idioma, "Lows2", "Mails"), juego.Nombre, tiendaFinal);
 			string imagen = juego.Imagenes.Header_460x215;
 			string descuento = precio.Descuento.ToString() + "%";
-			string enlace = Herramientas.EnlaceAcortador.Generar(precio.Enlace, precio.Tienda, false, false);
+			string enlace = Herramientas.EnlaceAcortador.Generar(regionUsar, precio.Enlace, precio.Tienda, false, false);
 
 			string mensajeAbrir = string.Empty;
 

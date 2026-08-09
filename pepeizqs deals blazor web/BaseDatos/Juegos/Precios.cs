@@ -424,6 +424,11 @@ namespace BaseDatos.Juegos
 				sql.Append($"preciosActualesNoOficialesEU=@preciosActualesNoOficialesEU{indice}, ");
 				sql.Append($"preciosHistoricosNoOficialesEU=@preciosHistoricosNoOficialesEU{indice} ");
 			}
+			else if (tiendaTipo == TiendaTipo.Marketplace)
+			{
+				sql.Append($"preciosActualesMarketplacesEU=@preciosActualesMarketplacesEU{indice}, ");
+				sql.Append($"preciosHistoricosMarketplacesEU=@preciosHistoricosMarketplacesEU{indice} ");
+			}
 
 			if (ahora != null)
 			{
@@ -464,6 +469,11 @@ namespace BaseDatos.Juegos
 			{
 				parametros.Add($"@preciosActualesNoOficialesEU{indice}", JsonSerializer.Serialize(ofertasActuales));
 				parametros.Add($"@preciosHistoricosNoOficialesEU{indice}", JsonSerializer.Serialize(ofertasHistoricas));
+			}
+			else if (tiendaTipo == TiendaTipo.Marketplace)
+			{
+				parametros.Add($"@preciosActualesMarketplacesEU{indice}", JsonSerializer.Serialize(ofertasActuales));
+				parametros.Add($"@preciosHistoricosMarketplacesEU{indice}", JsonSerializer.Serialize(ofertasHistoricas));
 			}
 
 			if (ahora != null)
@@ -878,6 +888,11 @@ namespace BaseDatos.Juegos
 				sql.Append($"preciosActualesNoOficialesUS=@preciosActualesNoOficialesUS{indice}, ");
 				sql.Append($"preciosHistoricosNoOficialesUS=@preciosHistoricosNoOficialesUS{indice} ");
 			}
+			else if (tiendaTipo == TiendaTipo.Marketplace)
+			{
+				sql.Append($"preciosActualesMarketplacesUS=@preciosActualesMarketplacesUS{indice}, ");
+				sql.Append($"preciosHistoricosMarketplacesUS=@preciosHistoricosMarketplacesUS{indice} ");
+			}
 
 			if (ahora != null)
 			{
@@ -918,6 +933,11 @@ namespace BaseDatos.Juegos
 			{
 				parametros.Add($"@preciosActualesNoOficialesUS{indice}", JsonSerializer.Serialize(ofertasActualesUS));
 				parametros.Add($"@preciosHistoricosNoOficialesUS{indice}", JsonSerializer.Serialize(ofertasHistoricasUS));
+			}
+			else if (tiendaTipo == TiendaTipo.Marketplace)
+			{
+				parametros.Add($"@preciosActualesMarketplacesUS{indice}", JsonSerializer.Serialize(ofertasActualesUS));
+				parametros.Add($"@preciosHistoricosMarketplacesUS{indice}", JsonSerializer.Serialize(ofertasHistoricasUS));
 			}
 
 			if (ahora != null)

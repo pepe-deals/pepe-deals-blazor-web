@@ -2,6 +2,7 @@
 
 using Microsoft.AspNetCore.Mvc;
 using Noticias;
+using Tiendas2;
 
 namespace Herramientas.Redireccionador
 {
@@ -17,7 +18,7 @@ namespace Herramientas.Redireccionador
 			{
 				if (noticia.NoticiaTipo == NoticiaTipo.Bundles)
 				{
-					return Redirect(EnlaceAcortador.Generar(noticia.Enlace, noticia.BundleTipo, false, false));
+					return Redirect(EnlaceAcortador.Generar(TiendaRegion.Europa, noticia.Enlace, noticia.BundleTipo, false, false));
 				}
 				else if (noticia.NoticiaTipo == NoticiaTipo.Gratis)
 				{

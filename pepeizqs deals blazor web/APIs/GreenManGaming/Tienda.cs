@@ -33,10 +33,29 @@ namespace APIs.GreenManGaming
 			return tienda;
 		}
 
-		public static string Referido(string enlace)
+		public static string Referido(TiendaRegion region, string enlace)
 		{
-			return "https://greenmangaming.sjv.io/c/1382810/1219987/15105?u=" + Uri.EscapeDataString(enlace);
+			var slug = new Uri(enlace).AbsolutePath.Trim('/').Split('/').Last();
+			var palabras = slug.Split('-', StringSplitOptions.RemoveEmptyEntries);
+
+			string prodsku;
+			if (palabras.Length > 1)
+			{
+				var titulo = string.Join(" ", palabras.Take(palabras.Length - 1).Select(Capitalizar));
+				prodsku = $"{titulo} - {palabras[^1].ToUpperInvariant()}";
+			}
+			else
+			{
+				prodsku = Capitalizar(palabras[0]);
+			}
+
+			return (region == TiendaRegion.Europa ? "https://greenmangaming.sjv.io/c/1382810/1272000/15105": "https://greenmangaming.sjv.io/c/1382810/1269775/15105")
+				+ "?prodsku=" + Uri.EscapeDataString(prodsku)
+				+ "&u=" + Uri.EscapeDataString(enlace)
+				+ (region == TiendaRegion.Europa ? "&intsrc=CATF_9616" : "&intsrc=CATF_9608");
 		}
+
+		private static string Capitalizar(string palabra) => palabra.Length == 0 ? palabra : char.ToUpperInvariant(palabra[0]) + palabra[1..];
 
 		public static Tiendas2.Tienda GenerarGold()
 		{

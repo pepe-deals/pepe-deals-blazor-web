@@ -190,7 +190,7 @@
 							<ItemContent>
 								<div style="margin: 20px 0px; display: flex; align-items: center; position: relative;">
 									@{
-										string enlaceDeseado = Herramientas.EnlaceAcortador.Generar(juego.Precio.Enlace, juego.Precio.Tienda, usuarioPatreon, false);
+										string enlaceDeseado = Herramientas.EnlaceAcortador.Generar(usuarioRegion, juego.Precio.Enlace, juego.Precio.Tienda, usuarioPatreon, false);
 									
 										string iconoDRM = Juegos.JuegoDRM2.SacarImagen(juego.DRM);
 										string iconoDRM1 = iconoDRM.Replace(".webp", "-sm.webp");
@@ -309,7 +309,7 @@
 								<ItemContent>
 									@if (juego.IdBundle > 0 && bundlesCache.TryGetValue(juego.IdBundle, out var bundle) && bundle != null)
 									{
-										string enlaceBundle = Herramientas.EnlaceAcortador.Generar(bundle.Enlace, bundle.BundleTipo, usuarioPatreon, false);
+										string enlaceBundle = Herramientas.EnlaceAcortador.Generar(usuarioRegion, bundle.Enlace, bundle.BundleTipo, usuarioPatreon, false);
 
 										string iconoDRM = Juegos.JuegoDRM2.SacarImagen(juego.DRM);
 										string iconoDRM1 = iconoDRM.Replace(".webp", "-sm.webp");

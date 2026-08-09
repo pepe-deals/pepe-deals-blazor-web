@@ -531,6 +531,16 @@ WHERE t.enlace = @Enlace
 				precioMinimosHistoricos = "preciosHistoricosNoOficialesUS";
 				precioActualesTiendas = "preciosActualesNoOficialesUS";
 			}
+			else if (tiendaTipo == TiendaTipo.Marketplace && region == TiendaRegion.Europa)
+			{
+				precioMinimosHistoricos = "preciosHistoricosMarketplacesEU";
+				precioActualesTiendas = "preciosActualesMarketplacesEU";
+			}
+			else if (tiendaTipo == TiendaTipo.Marketplace && region == TiendaRegion.EstadosUnidos)
+			{
+				precioMinimosHistoricos = "preciosHistoricosMarketplacesUS";
+				precioActualesTiendas = "preciosActualesMarketplacesUS";
+			}
 
 			if (string.IsNullOrEmpty(precioMinimosHistoricos) == false && string.IsNullOrEmpty(precioActualesTiendas) == false)
 			{
@@ -663,6 +673,16 @@ WHERE t.enlace = @Enlace
 												? new List<JuegoPrecio>()
 												: JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.preciosActualesNoOficialesEU);
 										}
+										else if (tiendaTipo == TiendaTipo.Marketplace)
+										{
+											ofertasHistoricasEU = string.IsNullOrEmpty(fila.preciosHistoricosMarketplacesEU) || fila.preciosHistoricosMarketplacesEU == "null"
+												? new List<JuegoPrecio>()
+												: JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.preciosHistoricosMarketplacesEU);
+
+											ofertasActualesEU = string.IsNullOrEmpty(fila.preciosActualesMarketplacesEU) || fila.preciosActualesMarketplacesEU == "null"
+												? new List<JuegoPrecio>()
+												: JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.preciosActualesMarketplacesEU);
+										}
 
 										if (string.IsNullOrEmpty(fila.analisis) == false && fila.analisis != "null")
 										{
@@ -693,6 +713,14 @@ WHERE t.enlace = @Enlace
 												var ofertasActualesActualizado = JsonSerializer.Deserialize<List<JuegoPrecio>>(resultado.Item2.Get<string>($"@preciosActualesNoOficialesEU{indice}"));
 
 												var ofertasHistoricasActualizado = JsonSerializer.Deserialize<List<JuegoPrecio>>(resultado.Item2.Get<string>($"@preciosHistoricosNoOficialesEU{indice}"));
+
+												estadosPorJuego[id] = (ofertasActualesActualizado, ofertasHistoricasActualizado, null, reseñas, idSteam);
+											}
+											else if (tiendaTipo == TiendaTipo.Marketplace)
+											{
+												var ofertasActualesActualizado = JsonSerializer.Deserialize<List<JuegoPrecio>>(resultado.Item2.Get<string>($"@preciosActualesMarketplacesEU{indice}"));
+
+												var ofertasHistoricasActualizado = JsonSerializer.Deserialize<List<JuegoPrecio>>(resultado.Item2.Get<string>($"@preciosHistoricosMarketplacesEU{indice}"));
 
 												estadosPorJuego[id] = (ofertasActualesActualizado, ofertasHistoricasActualizado, null, reseñas, idSteam);
 											}
@@ -743,6 +771,16 @@ WHERE t.enlace = @Enlace
 												? new List<JuegoPrecio>()
 												: JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.preciosActualesNoOficialesUS);
 										}
+										else if (tiendaTipo == TiendaTipo.Marketplace)
+										{
+											ofertasHistoricasUS = string.IsNullOrEmpty(fila.preciosHistoricosMarketplacesUS) || fila.preciosHistoricosMarketplacesUS == "null"
+												? new List<JuegoPrecio>()
+												: JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.preciosHistoricosMarketplacesUS);
+											
+											ofertasActualesUS = string.IsNullOrEmpty(fila.preciosActualesMarketplacesUS) || fila.preciosActualesMarketplacesUS == "null"
+												? new List<JuegoPrecio>()
+												: JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.preciosActualesMarketplacesUS);
+										}
 
 										if (string.IsNullOrEmpty(fila.analisis) == false && fila.analisis != "null")
 										{
@@ -774,6 +812,14 @@ WHERE t.enlace = @Enlace
 
 												var ofertasHistoricasActualizado = JsonSerializer.Deserialize<List<JuegoPrecio>>(resultado.Item2.Get<string>($"@preciosHistoricosNoOficialesUS{indice}"));
 
+												estadosPorJuego[id] = (ofertasActualesActualizado, ofertasHistoricasActualizado, null, reseñas, idSteam);
+											}
+											else if (tiendaTipo == TiendaTipo.Marketplace)
+											{
+												var ofertasActualesActualizado = JsonSerializer.Deserialize<List<JuegoPrecio>>(resultado.Item2.Get<string>($"@preciosActualesMarketplacesUS{indice}"));
+												
+												var ofertasHistoricasActualizado = JsonSerializer.Deserialize<List<JuegoPrecio>>(resultado.Item2.Get<string>($"@preciosHistoricosMarketplacesUS{indice}"));
+												
 												estadosPorJuego[id] = (ofertasActualesActualizado, ofertasHistoricasActualizado, null, reseñas, idSteam);
 											}
 

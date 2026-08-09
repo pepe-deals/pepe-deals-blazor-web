@@ -242,7 +242,7 @@
                                             List<Tiendas2.Tienda> tiendas = Tiendas2.TiendasCargar.GenerarListado();
                                             var tienda = tiendas.FirstOrDefault(t => t.Id == juego.Tienda);
                                             string iconoTienda = tienda?.ImagenIcono ?? string.Empty;
-                                            string enlaceFinal = Herramientas.EnlaceAcortador.Generar(juego.Enlace, juego.Tienda, usuarioPatreon, false);
+                                            string enlaceFinal = Herramientas.EnlaceAcortador.Generar(usuarioRegion, juego.Enlace, juego.Tienda, usuarioPatreon, false);
 
                                             <a @key="juego.Enlace" @onclick="(e => AbrirDeseado(e, juego.Enlace))" class="boton-superior" href="@enlaceFinal" target="_blank" style="font-size: 15px; padding: 0px; border-radius: 5px;">
                                                 <div style="text-align: center; display: flex; align-items: center; gap: 15px;">

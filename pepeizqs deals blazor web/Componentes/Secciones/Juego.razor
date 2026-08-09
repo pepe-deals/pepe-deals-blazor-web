@@ -1885,7 +1885,7 @@
                                                                 <div class="tooltip-juego" id="trigger-demosteam"
                                                                      @onmouseenter="@(() => ActivarTooltip("trigger-demosteam", "tooltip-demosteam"))"
                                                                      @onmouseleave="@(() => DesactivarTooltip("trigger-demosteam"))">
-                                                                    <a href="@Herramientas.EnlaceAcortador.Generar(enlaceDemo, APIs.Steam.Tienda.Generar().Id, usuarioPatreon, false)" target="_blank" class="boton-expandir" style="display: inline-flex; line-height: 34px; color: var(--colorTexto); text-decoration: none; border: 0px; height: 34px; padding: 0px 12px; box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.28),0px 0px 1px 0px rgba(0, 0, 0, 0.24);">
+                                                                    <a href="@Herramientas.EnlaceAcortador.Generar(usuarioRegion, enlaceDemo, APIs.Steam.Tienda.Generar().Id, usuarioPatreon, false)" target="_blank" class="boton-expandir" style="display: inline-flex; line-height: 34px; color: var(--colorTexto); text-decoration: none; border: 0px; height: 34px; padding: 0px 12px; box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.28),0px 0px 1px 0px rgba(0, 0, 0, 0.24);">
                                                                         <div style="font-size: 14px;">
                                                                             @Herramientas.Idiomas.BuscarTexto(idioma, "String83", "Game")
                                                                         </div>
@@ -1916,7 +1916,7 @@
 
                                                 if (añadirDiv3 == true)
                                                 {
-                                                    <div style="display: flex; flex-direction: column; gap: 10px; padding-left: 2px;">
+                                                    <div style="display: flex; flex-direction: column; gap: 10px;">
                                                         @if (drm.Id == JuegoDRM.Steam && string.IsNullOrEmpty(juego.Caracteristicas?.CuentaNecesaria) == false)
                                                         {
                                                             <div style="background-color: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 5px 10px; font-size: 14px; width: fit-content;">
@@ -1959,7 +1959,7 @@
                                                 {
                                                     if (juego.IdSteam > 0)
                                                     {
-                                                        string enlaceSteam = Herramientas.EnlaceAcortador.Generar("https://store.steampowered.com/app/" + juego.IdSteam.ToString(), APIs.Steam.Tienda.Generar().Id, usuarioPatreon, false);
+                                                        string enlaceSteam = Herramientas.EnlaceAcortador.Generar(usuarioRegion, "https://store.steampowered.com/app/" + juego.IdSteam.ToString(), APIs.Steam.Tienda.Generar().Id, usuarioPatreon, false);
 
                                                         <a href="@enlaceSteam" target="_blank" class="juego-boton-pequeño" style="width: auto; min-width: 200px; text-align: center; box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.28),0px 0px 1px 0px rgba(0, 0, 0, 0.24);">
                                                             @string.Format("{0} {1}", Herramientas.Idiomas.BuscarTexto(idioma, "String1", "Game"), "Steam")
@@ -1971,7 +1971,7 @@
                                                 {
                                                     if (string.IsNullOrEmpty(juego.SlugGOG) == false)
                                                     {
-                                                        string enlaceGog = Herramientas.EnlaceAcortador.Generar("https://www.gog.com/game/" + juego.SlugGOG, APIs.GOG.Tienda.Generar().Id, usuarioPatreon, false);
+                                                        string enlaceGog = Herramientas.EnlaceAcortador.Generar(usuarioRegion, "https://www.gog.com/game/" + juego.SlugGOG, APIs.GOG.Tienda.Generar().Id, usuarioPatreon, false);
 
                                                         <a href="@enlaceGog" target="_blank" class="juego-boton-pequeño" style="width: auto; min-width: 200px; text-align: center; box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.28),0px 0px 1px 0px rgba(0, 0, 0, 0.24);">
                                                             @string.Format("{0} {1}", Herramientas.Idiomas.BuscarTexto(idioma, "String1", "Game"), "GOG")
@@ -1983,7 +1983,7 @@
                                                 {
                                                     if (string.IsNullOrEmpty(juego.SlugEpic) == false)
                                                     {
-                                                        string enlaceEpic = Herramientas.EnlaceAcortador.Generar("https://store.epicgames.com/p/" + juego.SlugEpic, APIs.EpicGames.Tienda.Generar().Id, usuarioPatreon, false);
+                                                        string enlaceEpic = Herramientas.EnlaceAcortador.Generar(usuarioRegion, "https://store.epicgames.com/p/" + juego.SlugEpic, APIs.EpicGames.Tienda.Generar().Id, usuarioPatreon, false);
 
                                                         <a href="@enlaceEpic" target="_blank" class="juego-boton-pequeño" style="width: auto; min-width: 200px; text-align: center; box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.28),0px 0px 1px 0px rgba(0, 0, 0, 0.24);">
                                                             @string.Format("{0} {1}", Herramientas.Idiomas.BuscarTexto(idioma, "String1", "Game"), "Epic Games")
@@ -2026,7 +2026,7 @@
 
                                             if (Herramientas.Bots.UserAgentEsBot(userAgent) == false)
                                             {
-                                                enlaceBundle = Herramientas.EnlaceAcortador.Generar(bundle2.Enlace, bundle3.BundleTipo, usuarioPatreon, false);
+                                                enlaceBundle = Herramientas.EnlaceAcortador.Generar(usuarioRegion, bundle2.Enlace, bundle3.BundleTipo, usuarioPatreon, false);
                                             }
 
                                             <a class="juego-boton-pequeño" href="@enlaceBundle" target="_blank" rel="nofollow" style="font-size: 17px; padding: 20px 25px; margin-top: 10px; margin-bottom: 10px; cursor: pointer; display: inline-block; width: 100%; box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.28),0px 0px 1px 0px rgba(0, 0, 0, 0.24);">

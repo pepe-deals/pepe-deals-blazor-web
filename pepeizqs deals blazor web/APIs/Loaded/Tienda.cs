@@ -7,7 +7,6 @@ using Tiendas2;
 
 namespace APIs.Loaded
 {
-
 	public static class Tienda
 	{
 		public static Tiendas2.Tienda Generar()
@@ -23,7 +22,7 @@ namespace APIs.Loaded
 				Color = "#558205",
 				AdminEnseñar = true,
 				AdminInteractuar = true,
-				Regiones = new List<TiendaRegion> { TiendaRegion.Europa }
+				Regiones = new List<TiendaRegion> { TiendaRegion.Europa, TiendaRegion.EstadosUnidos }
 			};
 
 			return tienda;
@@ -81,7 +80,7 @@ namespace APIs.Loaded
 								oferta.Moneda = JuegoMoneda.Dolar;
 							}
 
-							if (drm == JuegoDRM.Steam)
+							if (drm == JuegoDRM.Steam || drm == JuegoDRM.Epic || drm == JuegoDRM.GOG)
 							{
 								ofertas.Add(oferta);
 							}
