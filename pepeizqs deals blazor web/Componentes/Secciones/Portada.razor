@@ -426,6 +426,7 @@ else
 						@if (juego.Excluido == false)
 						{
 							JuegoDRM drmJuego = JuegoDRM.NoEspecificado;
+							string tiendaJuego = string.Empty;
 							TiendaTipo tiendaTipo = TiendaTipo.Oficial;
 
 							if (usuarioRegion == TiendaRegion.Europa)
@@ -433,12 +434,14 @@ else
 								if (juego.Juego.PrecioMinimosHistoricos?.Count > 0)
 								{
 									drmJuego = juego.Juego.PrecioMinimosHistoricos[0].DRM;
+									tiendaJuego = juego.Juego.PrecioMinimosHistoricos[0].Tienda;
 									tiendaTipo = TiendaTipo.Oficial;
 								}
 
 								if (juego.Juego.PreciosHistoricosNoOficialesEU?.Count > 0)
 								{
 									drmJuego = juego.Juego.PreciosHistoricosNoOficialesEU[0].DRM;
+									tiendaJuego = juego.Juego.PreciosHistoricosNoOficialesEU[0].Tienda;
 									tiendaTipo = TiendaTipo.NoOficial;
 								}
 							}
@@ -447,19 +450,21 @@ else
 								if (juego.Juego.PrecioMinimosHistoricosUS?.Count > 0)
 								{
 									drmJuego = juego.Juego.PrecioMinimosHistoricosUS[0].DRM;
+									tiendaJuego = juego.Juego.PrecioMinimosHistoricosUS[0].Tienda;
 									tiendaTipo = TiendaTipo.Oficial;
 								}
 
 								if (juego.Juego.PreciosHistoricosNoOficialesUS?.Count > 0)
 								{
 									drmJuego = juego.Juego.PreciosHistoricosNoOficialesUS[0].DRM;
+									tiendaJuego = juego.Juego.PreciosHistoricosNoOficialesUS[0].Tienda;
 									tiendaTipo = TiendaTipo.NoOficial;
 								}
 							}
 
 							if (drmJuego != JuegoDRM.NoEspecificado)
 							{
-								string keyJuego = juego.Juego.Id.ToString() + "-" + ((int)drmJuego).ToString() + "-" + ((int)tipoJuego).ToString() + "-" + ((int)tiendaTipo).ToString();
+								string keyJuego = juego.Juego.Id.ToString() + "-" + ((int)drmJuego).ToString() + "-" + ((int)tipoJuego).ToString() + "-" + ((int)tiendaTipo).ToString() + "-" + tiendaJuego;
 
 								<div @key="keyJuego" style="display: flex; align-items: center; gap: 20px; position: relative;" @onmouseenter="(e => MostrarBotonDeseados(e, juego))" @onmouseleave="(e => OcultarBotonDeseados(e, juego))">
 									<div style="width: 100%; overflow: hidden; box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.28),0px 0px 1px 0px rgba(0, 0, 0, 0.24);">
