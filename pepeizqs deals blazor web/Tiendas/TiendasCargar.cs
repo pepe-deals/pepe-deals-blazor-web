@@ -39,7 +39,8 @@ namespace Tiendas2
 				APIs.Stove.Tienda.Generar(),
 				APIs.Gamesporium.Tienda.Generar(),
 				APIs.PlayerLand.Tienda.Generar(),
-				APIs.Loaded.Tienda.Generar()
+				APIs.Loaded.Tienda.Generar(),
+				APIs.Yuplay.Tienda.Generar()
 			};
 
 			return tiendas;
@@ -158,6 +159,10 @@ namespace Tiendas2
 			else if (id == APIs.Loaded.Tienda.Generar().Id)
 			{
 				await APIs.Loaded.Tienda.BuscarOfertas(region);
+			}
+			else if (id == APIs.Yuplay.Tienda.Generar().Id)
+			{
+				await APIs.Yuplay.Tienda.BuscarOfertas(region);
 			}
 		}
 

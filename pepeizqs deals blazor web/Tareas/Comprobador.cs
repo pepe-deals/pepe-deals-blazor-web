@@ -364,6 +364,10 @@ namespace Tareas
 						{
 							siguienteComprobacion = TimeSpan.FromHours(2);
 						}
+						else if (tienda.Id == APIs.Yuplay.Tienda.Generar().Id)
+						{
+							siguienteComprobacion = TimeSpan.FromHours(2);
+						}
 
 						if (siguienteComprobacion > TimeSpan.Zero)
 						{

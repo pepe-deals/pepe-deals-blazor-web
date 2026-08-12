@@ -859,10 +859,22 @@ namespace Herramientas.RedesSociales
 			if (string.IsNullOrEmpty(texto) == false)
 			{
 				try
-				{
-					var post = await subreddit.SubmitTextPostAsync(titulo, texto);
+				{					
+					await subreddit.SubmitTextPostAsync(titulo, texto);
 
-					if (string.IsNullOrEmpty(post?.Id) == false)
+					var redditor = await reddit.GetUserAsync(cuenta);
+					bool yaPublicado = false;
+
+					await foreach (var post in redditor.GetPosts(RedditSharp.Things.Sort.New, 3))
+					{
+						if (post.SubredditName == sub && post.Title == titulo)
+						{
+							yaPublicado = true;
+							break;
+						}
+					}
+
+					if (yaPublicado == true)
 					{
 						return true;
 					}
