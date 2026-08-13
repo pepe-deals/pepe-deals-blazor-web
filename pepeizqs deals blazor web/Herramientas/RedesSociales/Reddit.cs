@@ -861,28 +861,13 @@ namespace Herramientas.RedesSociales
 				try
 				{					
 					await subreddit.SubmitTextPostAsync(titulo, texto);
-
-					var redditor = await reddit.GetUserAsync(cuenta);
-					bool yaPublicado = false;
-
-					await foreach (var post in redditor.GetPosts(RedditSharp.Things.Sort.New, 3))
-					{
-						if (post.SubredditName == sub && post.Title == titulo)
-						{
-							yaPublicado = true;
-							break;
-						}
-					}
-
-					if (yaPublicado == true)
-					{
-						return true;
-					}
 				}
 				catch (Exception ex)
 				{
 					global::BaseDatos.Errores.Insertar.Mensaje("Reddit Ofertas Dia", ex);
 				}
+
+				return true;
 			}
 
 			return false;
