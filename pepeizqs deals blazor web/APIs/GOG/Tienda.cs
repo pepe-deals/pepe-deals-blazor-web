@@ -369,8 +369,8 @@ namespace APIs.GOG
 		[JsonPropertyName("content_system_compatibility")]
 		public GogContentSystemCompatibility ContentSystemCompatibility { get; set; }
 
-		[JsonPropertyName("languages")]
-		public Dictionary<string, string> Languages { get; set; }
+		//[JsonPropertyName("languages")]
+		//public Dictionary<string, string> Languages { get; set; }
 
 		[JsonPropertyName("links")]
 		public GogLinks Links { get; set; }

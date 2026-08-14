@@ -1153,11 +1153,6 @@
     {
         enlace = NavManager.Uri;
 
-        if (enlace.Contains("/wishlist") == true)
-        {
-            datosDeseados.Juegos = null;
-        }
-
         await InvokeAsync(StateHasChanged);
     }
 
