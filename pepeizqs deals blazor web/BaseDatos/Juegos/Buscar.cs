@@ -2,7 +2,6 @@
 
 using Dapper;
 using Juegos;
-using Microsoft.VisualBasic;
 using System.Data;
 using Tiendas2;
 using static pepeizqs_deals_blazor_web.Componentes.Cuenta.Cuenta.Juegos;
@@ -1403,10 +1402,11 @@ END DESC";
 			return tabla;
 		}
 
-		public static async Task<List<Juego>> Minimos(TiendaRegion region, int posicion = 0, int ordenar = 0, List<MostrarJuegoTienda> tiendas = null, List<MostrarJuegoDRM> drms = null, List<MostrarJuegoTipo> tipos = null, List<string> categorias = null, List<string> etiquetas = null, int? minimoDescuento = null, int? maximoPrecio = null, List<MostrarJuegoSteamDeck> deck = null, List<MostrarJuegoSteamOS> steamos = null, List<MostrarJuegoSteamMachine> machine = null, List<MostrarJuegoSteamFrame> frame = null, int lanzamiento = 0, int? minimoReseñas = 0, string nombreBusqueda = null, List<int> excluirJuegosIds = null, List<int> excluirSteamIds = null, List<int> excluirGogIds = null)
+		public static async Task<List<Juego>> Minimos(bool noOficial, TiendaRegion region, int posicion = 0, int ordenar = 0, List<MostrarJuegoTienda> tiendas = null, List<MostrarJuegoDRM> drms = null, List<MostrarJuegoTipo> tipos = null, List<string> categorias = null, List<string> etiquetas = null, int? minimoDescuento = null, int? maximoPrecio = null, List<MostrarJuegoSteamDeck> deck = null, List<MostrarJuegoSteamOS> steamos = null, List<MostrarJuegoSteamMachine> machine = null, List<MostrarJuegoSteamFrame> frame = null, int lanzamiento = 0, int? minimoReseñas = 0, string nombreBusqueda = null, List<int> excluirJuegosIds = null, List<int> excluirSteamIds = null, List<int> excluirGogIds = null)
 		{
-			string tabla = region == TiendaRegion.Europa ? "seccionMinimos" : "seccionMinimosUS";
+			string tablaMinimos = region == TiendaRegion.Europa ? "seccionMinimos" : "seccionMinimosUS";
 			string precioMinimosHistoricos = region == TiendaRegion.Europa ? "precioMinimosHistoricos" : "precioMinimosHistoricosUS";
+			string columnaNoOficialNombre = region == TiendaRegion.Europa ? "preciosHistoricosNoOficialesEU" : "preciosHistoricosNoOficialesUS";
 
 			DynamicParameters parametros = new DynamicParameters();
 			parametros.Add("etiquetas2", etiquetas?.Count > 0 ? string.Join(",", etiquetas) : "");
@@ -1435,66 +1435,6 @@ END DESC";
 				parametros.Add("excluirGog", tablaGog.AsTableValuedParameter("dbo.ListaIdsNumericos"));
 				exclusionGog = $" NOT EXISTS (SELECT 1 FROM @excluirGog WHERE Id = jg.idGog AND pmh.DRM = '8')";
 			}
-
-			string busqueda = $@"SELECT j.idMaestra, jg.nombre, jg.imagenes, j.{precioMinimosHistoricos}, jg.Media,
-				jg.tipo, jg.analisis, jg.idSteam, jg.idGog, jg.freeToPlay, jg.etiquetas,
-				(
-					SELECT b.id, b.bundleTipo
-					FROM bundles b
-					INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
-					WHERE bj.juegoId = j.idMaestra
-						AND b.fechaEmpieza <= GETDATE()
-						AND b.fechaTermina >= GETDATE()
-					FOR JSON PATH
-				) AS BundlesActuales,
-				(
-					SELECT b.id, b.bundleTipo
-					FROM bundles b
-					INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
-					WHERE bj.juegoId = j.idMaestra
-						AND b.fechaTermina < GETDATE()
-					FOR JSON PATH
-				) AS BundlesPasados,
-				(
-					SELECT g.gratis
-					FROM gratis g
-					WHERE g.juegoId = j.idMaestra
-						AND g.fechaEmpieza <= GETDATE()
-						AND g.fechaTermina >= GETDATE()
-					FOR JSON PATH
-				) AS GratisActuales,
-				(
-					SELECT g.gratis
-					FROM gratis g
-					WHERE g.juegoId = j.idMaestra
-						AND g.fechaTermina < GETDATE()
-					FOR JSON PATH
-				) AS GratisPasados,
-				(
-					SELECT s.suscripcion
-					FROM suscripciones s
-					WHERE s.juegoId = j.idMaestra
-						AND s.FechaEmpieza <= GETDATE()
-						AND s.FechaTermina >= GETDATE()
-					FOR JSON PATH
-				) AS SuscripcionesActuales,
-				(
-					SELECT s.suscripcion
-					FROM suscripciones s
-					WHERE s.juegoId = j.idMaestra
-						AND s.FechaTermina < GETDATE()
-					FOR JSON PATH
-				) AS SuscripcionesPasados
-			FROM {tabla} j
-			LEFT JOIN dbo.juegos jg ON jg.id = j.idMaestra
-			OUTER APPLY OPENJSON(j.{precioMinimosHistoricos}, '$[0]')
-				WITH (
-					Tienda         nvarchar(50) '$.Tienda',
-					DRM            nvarchar(50) '$.DRM',
-					Descuento      int          '$.Descuento',
-					Precio         decimal(18,2) '$.Precio',
-					FechaDetectado date         '$.FechaDetectado'
-				) AS pmh";
 
 			string dondeTiendas = string.Empty;
 
@@ -1719,108 +1659,191 @@ END DESC";
 				dondeSteamFrame = " (" + dondeSteamFrame + ")";
 			}
 
-			busqueda = busqueda + " WHERE " + string.Join(" AND ", new[] { dondeTiendas, dondeDRMs, dondeTipos, dondeCategorias, dondeEtiquetas, dondeMinimoDescuento, dondeMaximoPrecio, dondeDeck, dondeSteamOS, exclusionJuegos, exclusionSteam, exclusionGog, dondeSteamMachine, dondeSteamFrame }.Where(x => string.IsNullOrEmpty(x) == false));
-
-			if (lanzamiento == 1)
-			{
-				busqueda = busqueda + " AND (JSON_VALUE(jg.caracteristicas, '$.FechaLanzamientoSteam') > DATEADD(MONTH, -6, CAST(GETDATE() as date)) OR JSON_VALUE(jg.caracteristicas, '$.FechaLanzamientoOriginal') > DATEADD(MONTH, -6, CAST(GETDATE() as date))) ";
-			}
-
-			if (lanzamiento == 2)
-			{
-				busqueda = busqueda + " AND (JSON_VALUE(jg.caracteristicas, '$.FechaLanzamientoSteam') > DATEADD(MONTH, -12, CAST(GETDATE() as date)) OR JSON_VALUE(jg.caracteristicas, '$.FechaLanzamientoOriginal') > DATEADD(MONTH, -12, CAST(GETDATE() as date))) ";
-			}
-
-			if (lanzamiento == 3)
-			{
-				busqueda = busqueda + " AND (JSON_VALUE(jg.caracteristicas, '$.FechaLanzamientoSteam') > DATEADD(MONTH, -24, CAST(GETDATE() as date)) OR JSON_VALUE(jg.caracteristicas, '$.FechaLanzamientoOriginal') > DATEADD(MONTH, -24, CAST(GETDATE() as date))) ";
-			}
-
-			if (minimoReseñas != null)
-			{
-				if (minimoReseñas > 0)
-				{
-					busqueda = busqueda + " AND jg.analisis IS NOT NULL and CONVERT(int, REPLACE(JSON_VALUE(jg.analisis, '$.Cantidad'),',','')) > " + minimoReseñas.ToString();
-				}
-			}
-
-			if (string.IsNullOrEmpty(nombreBusqueda) == false)
-			{
-				busqueda += $@"AND jg.nombre COLLATE Latin1_General_CI_AI LIKE '%{nombreBusqueda}%'";
-			}
-
 			#endregion
+
+			string ConstruirBusqueda(string tablaOrigen, string columnaPrecio, bool esOficial)
+			{
+				string selectOficial = esOficial
+					? $"j.{columnaPrecio} AS {precioMinimosHistoricos}"
+					: $"NULL AS {precioMinimosHistoricos}";
+
+				string selectNoOficial = esOficial
+					? $"NULL AS {columnaNoOficialNombre}"
+					: $"j.{columnaPrecio} AS {columnaNoOficialNombre}";
+
+				string consulta = $@"SELECT j.idMaestra, jg.nombre, jg.imagenes, {selectOficial}, {selectNoOficial}, jg.Media,
+					jg.tipo, jg.analisis, jg.idSteam, jg.idGog, jg.freeToPlay, jg.etiquetas,
+					(
+						SELECT b.id, b.bundleTipo
+						FROM bundles b
+						INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
+						WHERE bj.juegoId = j.idMaestra
+							AND b.fechaEmpieza <= GETDATE()
+							AND b.fechaTermina >= GETDATE()
+						FOR JSON PATH
+					) AS BundlesActuales,
+					(
+						SELECT b.id, b.bundleTipo
+						FROM bundles b
+						INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
+						WHERE bj.juegoId = j.idMaestra
+							AND b.fechaTermina < GETDATE()
+						FOR JSON PATH
+					) AS BundlesPasados,
+					(
+						SELECT g.gratis
+						FROM gratis g
+						WHERE g.juegoId = j.idMaestra
+							AND g.fechaEmpieza <= GETDATE()
+							AND g.fechaTermina >= GETDATE()
+						FOR JSON PATH
+					) AS GratisActuales,
+					(
+						SELECT g.gratis
+						FROM gratis g
+						WHERE g.juegoId = j.idMaestra
+							AND g.fechaTermina < GETDATE()
+						FOR JSON PATH
+					) AS GratisPasados,
+					(
+						SELECT s.suscripcion
+						FROM suscripciones s
+						WHERE s.juegoId = j.idMaestra
+							AND s.FechaEmpieza <= GETDATE()
+							AND s.FechaTermina >= GETDATE()
+						FOR JSON PATH
+					) AS SuscripcionesActuales,
+					(
+						SELECT s.suscripcion
+						FROM suscripciones s
+						WHERE s.juegoId = j.idMaestra
+							AND s.FechaTermina < GETDATE()
+						FOR JSON PATH
+					) AS SuscripcionesPasados,
+					CASE WHEN pmh.Precio IS NULL THEN 1000000 ELSE pmh.Precio END AS OrdenPrecio,
+					CASE WHEN pmh.Descuento IS NULL THEN 0 ELSE pmh.Descuento END AS OrdenDescuento,
+					CASE WHEN pmh.FechaDetectado IS NULL THEN DATEADD(YEAR, -20, CAST(GETDATE() as date)) ELSE pmh.FechaDetectado END AS OrdenFecha,
+					CASE WHEN jg.analisis = 'null' OR jg.analisis IS NULL THEN 0 ELSE CONVERT(int, REPLACE(JSON_VALUE(jg.analisis, '$.Cantidad'),',','')) END AS OrdenReseñas,
+					CASE WHEN jg.analisis = 'null' OR jg.analisis IS NULL THEN 0 ELSE CONVERT(int, JSON_VALUE(jg.analisis, '$.Porcentaje')) END AS OrdenPorcentaje,
+					CASE WHEN jg.caracteristicas = 'null' OR jg.caracteristicas IS NULL THEN DATEADD(YEAR, -20, CAST(GETDATE() as date)) ELSE CAST(JSON_VALUE(jg.caracteristicas, '$.FechaLanzamientoSteam') AS date) END AS OrdenLanzamiento
+				FROM {tablaOrigen} j
+				LEFT JOIN dbo.juegos jg ON jg.id = j.idMaestra
+				OUTER APPLY OPENJSON(j.{columnaPrecio}, '$[0]')
+					WITH (
+						Tienda         nvarchar(50) '$.Tienda',
+						DRM            nvarchar(50) '$.DRM',
+						Descuento      int          '$.Descuento',
+						Precio         decimal(18,2) '$.Precio',
+						FechaDetectado date         '$.FechaDetectado'
+					) AS pmh";
+
+				consulta = consulta + " WHERE " + string.Join(" AND ", new[] { dondeTiendas, dondeDRMs, dondeTipos, dondeCategorias, dondeEtiquetas, dondeMinimoDescuento, dondeMaximoPrecio, dondeDeck, dondeSteamOS, exclusionJuegos, exclusionSteam, exclusionGog, dondeSteamMachine, dondeSteamFrame }.Where(x => string.IsNullOrEmpty(x) == false));
+
+				if (lanzamiento == 1)
+				{
+					consulta = consulta + " AND (JSON_VALUE(jg.caracteristicas, '$.FechaLanzamientoSteam') > DATEADD(MONTH, -6, CAST(GETDATE() as date)) OR JSON_VALUE(jg.caracteristicas, '$.FechaLanzamientoOriginal') > DATEADD(MONTH, -6, CAST(GETDATE() as date))) ";
+				}
+
+				if (lanzamiento == 2)
+				{
+					consulta = consulta + " AND (JSON_VALUE(jg.caracteristicas, '$.FechaLanzamientoSteam') > DATEADD(MONTH, -12, CAST(GETDATE() as date)) OR JSON_VALUE(jg.caracteristicas, '$.FechaLanzamientoOriginal') > DATEADD(MONTH, -12, CAST(GETDATE() as date))) ";
+				}
+
+				if (lanzamiento == 3)
+				{
+					consulta = consulta + " AND (JSON_VALUE(jg.caracteristicas, '$.FechaLanzamientoSteam') > DATEADD(MONTH, -24, CAST(GETDATE() as date)) OR JSON_VALUE(jg.caracteristicas, '$.FechaLanzamientoOriginal') > DATEADD(MONTH, -24, CAST(GETDATE() as date))) ";
+				}
+
+				if (minimoReseñas != null)
+				{
+					if (minimoReseñas > 0)
+					{
+						consulta = consulta + " AND jg.analisis IS NOT NULL and CONVERT(int, REPLACE(JSON_VALUE(jg.analisis, '$.Cantidad'),',','')) > " + minimoReseñas.ToString();
+					}
+				}
+
+				if (string.IsNullOrEmpty(nombreBusqueda) == false)
+				{
+					consulta += $@" AND jg.nombre COLLATE Latin1_General_CI_AI LIKE '%{nombreBusqueda}%'";
+				}
+
+				return consulta;
+			}
+
+			string busqueda = ConstruirBusqueda(tablaMinimos, precioMinimosHistoricos, true);
+
+			if (noOficial == true)
+			{
+				string tablaNoOficial = region == TiendaRegion.Europa ? "seccionMinimosNoOficialesEU" : "seccionMinimosNoOficialesUS";
+
+				string busquedaNoOficial = ConstruirBusqueda(tablaNoOficial, columnaNoOficialNombre, false);
+
+				busqueda = $"({busqueda}) UNION ALL ({busquedaNoOficial})";
+			}
 
 			#region Order
 
 			if (ordenar == 0)
 			{
-				busqueda = busqueda + @" ORDER BY CASE
-									WHEN jg.analisis = 'null' OR jg.analisis IS NULL THEN 0 ELSE CONVERT(int, REPLACE(JSON_VALUE(jg.analisis, '$.Cantidad'),',',''))
-								 END DESC";
+				busqueda = busqueda + " ORDER BY OrdenReseñas DESC";
 			}
 
 			if (ordenar == 1)
 			{
-				busqueda = busqueda + @" ORDER BY CASE
-									WHEN jg.analisis = 'null' OR jg.analisis IS NULL THEN 0 ELSE CONVERT(int, JSON_VALUE(jg.analisis, '$.Porcentaje'))
-								 END DESC";
+				busqueda = busqueda + " ORDER BY OrdenPorcentaje DESC";
 			}
 
 			if (ordenar == 2)
 			{
-				busqueda = busqueda + " ORDER BY jg.nombre";
+				busqueda = busqueda + " ORDER BY nombre";
 			}
 
 			if (ordenar == 3)
 			{
-				busqueda = busqueda + " ORDER BY jg.nombre DESC";
+				busqueda = busqueda + " ORDER BY nombre DESC";
 			}
 
 			if (ordenar == 4)
 			{
-				busqueda = busqueda + " ORDER BY CASE WHEN pmh.Precio IS NULL THEN 1000000 ELSE pmh.Precio END";
+				busqueda = busqueda + " ORDER BY OrdenPrecio";
 			}
 
 			if (ordenar == 5)
 			{
-				busqueda = busqueda + " ORDER BY CASE WHEN pmh.Descuento IS NULL THEN 0 ELSE pmh.Descuento END DESC";
+				busqueda = busqueda + " ORDER BY OrdenDescuento DESC";
 			}
 
 			if (ordenar == 6)
 			{
-				busqueda = busqueda + " ORDER BY CASE WHEN pmh.FechaDetectado IS NULL THEN DATEADD(YEAR, -20, CAST(GETDATE() as date)) ELSE pmh.FechaDetectado END DESC";
+				busqueda = busqueda + " ORDER BY OrdenFecha DESC";
 			}
 
 			if (ordenar == 7)
 			{
-				busqueda = busqueda + " ORDER BY CASE WHEN jg.caracteristicas = 'null' OR jg.caracteristicas IS NULL THEN DATEADD(YEAR, -20, CAST(GETDATE() as date)) ELSE CAST(JSON_VALUE(jg.caracteristicas, '$.FechaLanzamientoSteam') AS date) END DESC";
+				busqueda = busqueda + " ORDER BY OrdenLanzamiento DESC";
 			}
 
 			#endregion
 
-			if (string.IsNullOrEmpty(busqueda) == false)
-			{
-				busqueda = busqueda + @$" OFFSET {posicion} ROWS
-								FETCH NEXT 100 ROWS ONLY";
+			busqueda = busqueda + @$" OFFSET {posicion} ROWS
+					FETCH NEXT 100 ROWS ONLY";
 
-				try
+			try
+			{
+				return await Herramientas.BaseDatos.Select(async conexion =>
 				{
-					return await Herramientas.BaseDatos.Select(async conexion =>
-					{
-						return (await conexion.QueryAsync<Juego>(busqueda, parametros)).ToList();
-					});
-				}
-				catch (Exception ex)
-				{
-					BaseDatos.Errores.Insertar.Mensaje("Juego Minimos", ex);
-				}
+					return (await conexion.QueryAsync<Juego>(busqueda, parametros)).ToList();
+				});
+			}
+			catch (Exception ex)
+			{
+				BaseDatos.Errores.Insertar.Mensaje("Juego Minimos", ex);
 			}
 
 			return null;
 		}
 
-		public static async Task<List<Juego>> MinimosStreaming(TiendaRegion region, string tabla, JuegoDRM drm, int posicion = 0, int? minimoDescuento = null, decimal? maximoPrecio = null, int? minimoReseñas = 0, string nombreBusqueda = null, List<int> excluirJuegosIds = null, List<int> excluirSteamIds = null, List<int> excluirGogIds = null)
+		public static async Task<List<Juego>> MinimosStreaming(bool noOficial, TiendaRegion region, string tabla, JuegoDRM drm, int posicion = 0, int? minimoDescuento = null, decimal? maximoPrecio = null, int? minimoReseñas = 0, string nombreBusqueda = null, List<int> excluirJuegosIds = null, List<int> excluirSteamIds = null, List<int> excluirGogIds = null)
 		{
 			string tablaMinimos = region == TiendaRegion.Europa ? "seccionMinimos" : "seccionMinimosUS";
 			string precioMinimosHistoricos = region == TiendaRegion.Europa ? "precioMinimosHistoricos" : "precioMinimosHistoricosUS";
@@ -1851,79 +1874,6 @@ END DESC";
 				parametros.Add("excluirGog", tablaGog.AsTableValuedParameter("dbo.ListaIdsNumericos"));
 				exclusionGog = $" AND NOT EXISTS (SELECT 1 FROM @excluirGog WHERE Id = jg.idGog AND pmh.DRM = '8')";
 			}
-
-			string busqueda = $@"SELECT j.idMaestra, jg.nombre, jg.imagenes, j.{precioMinimosHistoricos}, jg.Media,
-				jg.tipo, jg.analisis, jg.idSteam, jg.idGog, jg.freeToPlay, jg.etiquetas,
-				(
-					SELECT b.id, b.bundleTipo
-					FROM bundles b
-					INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
-					WHERE bj.juegoId = j.idMaestra
-						AND b.fechaEmpieza <= GETDATE()
-						AND b.fechaTermina >= GETDATE()
-					FOR JSON PATH
-				) AS BundlesActuales,
-				(
-					SELECT b.id, b.bundleTipo
-					FROM bundles b
-					INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
-					WHERE bj.juegoId = j.idMaestra
-						AND b.fechaTermina < GETDATE()
-					FOR JSON PATH
-				) AS BundlesPasados,
-				(
-					SELECT g.gratis
-					FROM gratis g
-					WHERE g.juegoId = j.idMaestra
-					  AND g.fechaEmpieza <= GETDATE()
-					  AND g.fechaTermina >= GETDATE()
-					FOR JSON PATH
-				) AS GratisActuales,
-				(
-					SELECT g.gratis
-					FROM gratis g
-					WHERE g.juegoId = j.idMaestra
-					  AND g.fechaTermina < GETDATE()
-					FOR JSON PATH
-				) AS GratisPasados,
-				(
-					SELECT s.suscripcion
-					FROM suscripciones s
-					WHERE s.juegoId = j.idMaestra
-					  AND s.FechaEmpieza <= GETDATE()
-					  AND s.FechaTermina >= GETDATE()
-					FOR JSON PATH
-				) AS SuscripcionesActuales,
-				(
-					SELECT s.suscripcion
-					FROM suscripciones s
-					WHERE s.juegoId = j.idMaestra
-					  AND s.FechaTermina < GETDATE()
-					FOR JSON PATH
-				) AS SuscripcionesPasados
-			FROM {tablaMinimos} j
-			LEFT JOIN dbo.juegos jg ON jg.id = j.idMaestra
-			OUTER APPLY OPENJSON(j.{precioMinimosHistoricos}, '$[0]')
-				WITH (
-					DRM       nvarchar(50)  '$.DRM',
-					Descuento int           '$.Descuento',
-					Precio    decimal(18,2) '$.Precio'
-				) AS pmh
-			WHERE jg.Tipo = 0 {exclusionJuegos} {exclusionSteam} {exclusionGog}
-			AND EXISTS (
-				SELECT 1
-				FROM {tabla} sgn
-				WHERE sgn.idJuego = j.idMaestra
-				  AND sgn.fecha BETWEEN DATEADD(DAY, -3, GETDATE()) AND DATEADD(DAY, 3, GETDATE())
-				  AND EXISTS (
-						SELECT 1
-						FROM OPENJSON(j.{precioMinimosHistoricos})
-							 WITH (DRM INT '$.DRM') p
-						INNER JOIN OPENJSON(sgn.drms2) d
-							ON d.value = p.DRM
-				  )
-			)
-			AND pmh.DRM = '" + ((int)drm).ToString() + "'";
 
 			string dondeMinimoDescuento = string.Empty;
 
@@ -1959,40 +1909,129 @@ END DESC";
 				dondeMaximoPrecio = " (" + dondeMaximoPrecio + ")";
 			}
 
-			if (string.IsNullOrEmpty(busqueda) == false)
+			string ConstruirBusqueda(string tablaOrigen, string columnaPrecio)
 			{
-				busqueda = busqueda + " AND " + string.Join(" AND ", new[] { dondeMinimoDescuento, dondeMaximoPrecio }.Where(x => string.IsNullOrEmpty(x) == false));
+				string consulta = $@"SELECT j.idMaestra, jg.nombre, jg.imagenes, j.{columnaPrecio}, jg.Media,
+					jg.tipo, jg.analisis, jg.idSteam, jg.idGog, jg.freeToPlay, jg.etiquetas,
+					(
+						SELECT b.id, b.bundleTipo
+						FROM bundles b
+						INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
+						WHERE bj.juegoId = j.idMaestra
+							AND b.fechaEmpieza <= GETDATE()
+							AND b.fechaTermina >= GETDATE()
+						FOR JSON PATH
+					) AS BundlesActuales,
+					(
+						SELECT b.id, b.bundleTipo
+						FROM bundles b
+						INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
+						WHERE bj.juegoId = j.idMaestra
+							AND b.fechaTermina < GETDATE()
+						FOR JSON PATH
+					) AS BundlesPasados,
+					(
+						SELECT g.gratis
+						FROM gratis g
+						WHERE g.juegoId = j.idMaestra
+							AND g.fechaEmpieza <= GETDATE()
+							AND g.fechaTermina >= GETDATE()
+						FOR JSON PATH
+					) AS GratisActuales,
+					(
+						SELECT g.gratis
+						FROM gratis g
+						WHERE g.juegoId = j.idMaestra
+							AND g.fechaTermina < GETDATE()
+						FOR JSON PATH
+					) AS GratisPasados,
+					(
+						SELECT s.suscripcion
+						FROM suscripciones s
+						WHERE s.juegoId = j.idMaestra
+							AND s.FechaEmpieza <= GETDATE()
+							AND s.FechaTermina >= GETDATE()
+						FOR JSON PATH
+					) AS SuscripcionesActuales,
+					(
+						SELECT s.suscripcion
+						FROM suscripciones s
+						WHERE s.juegoId = j.idMaestra
+							AND s.FechaTermina < GETDATE()
+						FOR JSON PATH
+					) AS SuscripcionesPasados,
+					CASE
+						WHEN jg.analisis = 'null' OR jg.analisis IS NULL THEN 0
+						ELSE CONVERT(int, REPLACE(JSON_VALUE(jg.analisis, '$.Cantidad'),',',''))
+					END AS OrdenReseñas
+				FROM {tablaOrigen} j
+				LEFT JOIN dbo.juegos jg ON jg.id = j.idMaestra
+				OUTER APPLY OPENJSON(j.{columnaPrecio}, '$[0]')
+					WITH (
+						DRM       nvarchar(50)  '$.DRM',
+						Descuento int           '$.Descuento',
+						Precio    decimal(18,2) '$.Precio'
+					) AS pmh
+				WHERE jg.Tipo = 0 {exclusionJuegos} {exclusionSteam} {exclusionGog}
+				AND EXISTS (
+					SELECT 1
+					FROM {tabla} sgn
+					WHERE sgn.idJuego = j.idMaestra
+						AND sgn.fecha BETWEEN DATEADD(DAY, -3, GETDATE()) AND DATEADD(DAY, 3, GETDATE())
+						AND EXISTS (
+							SELECT 1
+							FROM OPENJSON(j.{columnaPrecio})
+									WITH (DRM INT '$.DRM') p
+							INNER JOIN OPENJSON(sgn.drms2) d
+								ON d.value = p.DRM
+						)
+				)
+				AND pmh.DRM = '" + ((int)drm).ToString() + "'";
 
-				if (minimoReseñas != null)
+				if (string.IsNullOrEmpty(dondeMinimoDescuento) == false || string.IsNullOrEmpty(dondeMaximoPrecio) == false)
 				{
-					if (minimoReseñas > 0)
-					{
-						busqueda = busqueda + " AND jg.analisis IS NOT NULL and CONVERT(int, REPLACE(JSON_VALUE(jg.analisis, '$.Cantidad'),',','')) > " + minimoReseñas.ToString();
-					}
+					consulta = consulta + " AND " + string.Join(" AND ", new[] { dondeMinimoDescuento, dondeMaximoPrecio }.Where(x => string.IsNullOrEmpty(x) == false));
+				}
+
+				if (minimoReseñas != null && minimoReseñas > 0)
+				{
+					consulta = consulta + " AND jg.analisis IS NOT NULL and CONVERT(int, REPLACE(JSON_VALUE(jg.analisis, '$.Cantidad'),',','')) > " + minimoReseñas.ToString();
 				}
 
 				if (string.IsNullOrEmpty(nombreBusqueda) == false)
 				{
-					busqueda += $@"AND jg.nombre COLLATE Latin1_General_CI_AI LIKE '%{nombreBusqueda}%'";
+					consulta += $@" AND jg.nombre COLLATE Latin1_General_CI_AI LIKE '%{nombreBusqueda}%'";
 				}
 
-				busqueda = busqueda + @" ORDER BY CASE
-									WHEN jg.analisis = 'null' OR jg.analisis IS NULL THEN 0 ELSE CONVERT(int, REPLACE(JSON_VALUE(jg.analisis, '$.Cantidad'),',',''))
-								 END DESC";
+				return consulta;
+			}
 
-				busqueda = busqueda + @$" OFFSET {posicion} ROWS FETCH NEXT 100 ROWS ONLY";
+			string busqueda = ConstruirBusqueda(tablaMinimos, precioMinimosHistoricos);
 
-				try
+			if (noOficial == true)
+			{
+				string tablaNoOficial = region == TiendaRegion.Europa ? "seccionMinimosNoOficialesEU" : "seccionMinimosNoOficialesUS";
+				string columnaNoOficial = region == TiendaRegion.Europa ? "preciosHistoricosNoOficialesEU" : "preciosHistoricosNoOficialesUS";
+
+				string busquedaNoOficial = ConstruirBusqueda(tablaNoOficial, columnaNoOficial);
+
+				busqueda = $"({busqueda}) UNION ALL ({busquedaNoOficial})";
+			}
+
+			busqueda = busqueda + " ORDER BY OrdenReseñas DESC";
+
+			busqueda = busqueda + @$" OFFSET {posicion} ROWS FETCH NEXT 100 ROWS ONLY";
+
+			try
+			{
+				return await Herramientas.BaseDatos.Select(async conexion =>
 				{
-					return await Herramientas.BaseDatos.Select(async conexion =>
-					{
-						return (await conexion.QueryAsync<Juego>(busqueda, parametros)).ToList();
-					});
-				}
-				catch (Exception ex)
-				{
-					BaseDatos.Errores.Insertar.Mensaje("Juego Minimos Streaming", ex);
-				}
+					return (await conexion.QueryAsync<Juego>(busqueda, parametros)).ToList();
+				});
+			}
+			catch (Exception ex)
+			{
+				BaseDatos.Errores.Insertar.Mensaje("Juego Minimos Streaming", ex);
 			}
 
 			return null;

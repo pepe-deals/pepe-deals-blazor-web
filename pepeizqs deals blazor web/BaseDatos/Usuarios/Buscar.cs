@@ -713,7 +713,7 @@ namespace BaseDatos.Usuarios
 				return null;
 			}
 
-			string busqueda = "SELECT Currency, SteamDeckOption1, SteamDeckOption2, SteamDeckOption3, SteamDeckOption4 FROM AspNetUsers WHERE Id=@Id";
+			string busqueda = "SELECT Currency, NoOfficial, Marketplace, SteamDeckOption1, SteamDeckOption2, SteamDeckOption3, SteamDeckOption4 FROM AspNetUsers WHERE Id=@Id";
 
 			try
 			{
@@ -737,7 +737,7 @@ namespace BaseDatos.Usuarios
 				return null;
 			}
 
-			string busqueda = "SELECT Currency, SteamMachineOption1, SteamMachineOption2, SteamMachineOption3, SteamMachineOption4 FROM AspNetUsers WHERE Id=@Id";
+			string busqueda = "SELECT Currency, NoOfficial, Marketplace, SteamMachineOption1, SteamMachineOption2, SteamMachineOption3, SteamMachineOption4 FROM AspNetUsers WHERE Id=@Id";
 
 			try
 			{
@@ -761,7 +761,7 @@ namespace BaseDatos.Usuarios
 				return null;
 			}
 
-			string busqueda = "SELECT Currency, SteamFrameOption1, SteamFrameOption2, SteamFrameOption3, SteamFrameOption4 FROM AspNetUsers WHERE Id=@Id";
+			string busqueda = "SELECT Currency, NoOfficial, Marketplace, SteamFrameOption1, SteamFrameOption2, SteamFrameOption3, SteamFrameOption4 FROM AspNetUsers WHERE Id=@Id";
 
 			try
 			{
@@ -785,7 +785,7 @@ namespace BaseDatos.Usuarios
 				return null;
 			}
 
-			string busqueda = "SELECT Currency, SteamOSOption1, SteamOSOption2, SteamOSOption3, SteamOSOption4 FROM AspNetUsers WHERE Id=@Id";
+			string busqueda = "SELECT Currency, NoOfficial, Marketplace, SteamOSOption1, SteamOSOption2, SteamOSOption3, SteamOSOption4 FROM AspNetUsers WHERE Id=@Id";
 
 			try
 			{
@@ -809,7 +809,7 @@ namespace BaseDatos.Usuarios
 				return null;
 			}
 
-			string busqueda = "SELECT Currency, GeforceNOWOption1, GeforceNOWOption2, GeforceNOWOption3, GeforceNOWOption4 FROM AspNetUsers WHERE Id=@Id";
+			string busqueda = "SELECT Currency, NoOfficial, Marketplace, GeforceNOWOption1, GeforceNOWOption2, GeforceNOWOption3, GeforceNOWOption4 FROM AspNetUsers WHERE Id=@Id";
 
 			try
 			{
@@ -833,7 +833,7 @@ namespace BaseDatos.Usuarios
 				return null;
 			}
 
-			string busqueda = "SELECT Currency, BoosteroidOption1, BoosteroidOption2, BoosteroidOption3, BoosteroidOption4 FROM AspNetUsers WHERE Id=@Id";
+			string busqueda = "SELECT Currency, NoOfficial, Marketplace, BoosteroidOption1, BoosteroidOption2, BoosteroidOption3, BoosteroidOption4 FROM AspNetUsers WHERE Id=@Id";
 
 			try
 			{

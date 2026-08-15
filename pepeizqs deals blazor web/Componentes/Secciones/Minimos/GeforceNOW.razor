@@ -104,17 +104,32 @@
 							@if (juego.Excluido == false)
 							{
 								JuegoDRM drmJuego = JuegoDRM.NoEspecificado;
+								string tienda = string.Empty;
 
-								if (usuarioRegion == TiendaRegion.Europa)
+								if (usuarioTiendasNoOficial == false && usuarioRegion == TiendaRegion.Europa)
 								{
 									drmJuego = juego.Juego.PrecioMinimosHistoricos[0].DRM;
+									tienda = juego.Juego.PrecioMinimosHistoricos[0].Tienda;
 								}
-								else if (usuarioRegion == TiendaRegion.EstadosUnidos)
+								else if (usuarioTiendasNoOficial == false && usuarioRegion == TiendaRegion.EstadosUnidos)
 								{
 									drmJuego = juego.Juego.PrecioMinimosHistoricosUS[0].DRM;
+									tienda = juego.Juego.PrecioMinimosHistoricosUS[0].Tienda;
+								}
+								else if (usuarioTiendasNoOficial == true && usuarioRegion == TiendaRegion.Europa)
+								{
+									drmJuego = (juego.Juego.PreciosHistoricosNoOficialesEU?.Count > 0) ? juego.Juego.PreciosHistoricosNoOficialesEU[0].DRM : (juego.Juego.PrecioMinimosHistoricos?.Count > 0) ? juego.Juego.PrecioMinimosHistoricos[0].DRM : JuegoDRM.NoEspecificado;
+									tienda = (juego.Juego.PreciosHistoricosNoOficialesEU?.Count > 0) ? juego.Juego.PreciosHistoricosNoOficialesEU[0].Tienda : (juego.Juego.PrecioMinimosHistoricos?.Count > 0) ? juego.Juego.PrecioMinimosHistoricos[0].Tienda : string.Empty;
+								}
+								else if (usuarioTiendasNoOficial == true && usuarioRegion == TiendaRegion.EstadosUnidos)
+								{
+									drmJuego = (juego.Juego.PreciosHistoricosNoOficialesUS?.Count > 0) ? juego.Juego.PreciosHistoricosNoOficialesUS[0].DRM : (juego.Juego.PrecioMinimosHistoricosUS?.Count > 0) ? juego.Juego.PrecioMinimosHistoricosUS[0].DRM : JuegoDRM.NoEspecificado;
+									tienda = (juego.Juego.PreciosHistoricosNoOficialesUS?.Count > 0) ? juego.Juego.PreciosHistoricosNoOficialesUS[0].Tienda : (juego.Juego.PrecioMinimosHistoricosUS?.Count > 0) ? juego.Juego.PrecioMinimosHistoricosUS[0].Tienda : string.Empty;
 								}
 
-								<div @key="juego.Juego.IdMaestra-drmJuego" style="display: flex; align-items: center; gap: 20px; position: relative;" @onmouseenter="(e => MostrarBotonDeseados(e, juego))" @onmouseleave="(e => OcultarBotonDeseados(e, juego))">
+                                string keyJuego = juego.Juego.IdMaestra.ToString() + "-" + ((int)drmJuego).ToString() + "-" + tienda;
+
+								<div @key="@keyJuego" style="display: flex; align-items: center; gap: 20px; position: relative;" @onmouseenter="(e => MostrarBotonDeseados(e, juego))" @onmouseleave="(e => OcultarBotonDeseados(e, juego))">
 									<div style="width: 100%; overflow: hidden; box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.28),0px 0px 1px 0px rgba(0, 0, 0, 0.24);">
 										<CajaJuego region="@usuarioRegion" idioma="@idioma" juego="@juego.Juego" color="@juego.Color" juegosUsuarioIndex="@juegosUsuarioIndex" usuarioDeseadosImportados="@deseadosImportadosIndex" usuarioDeseadosWeb="@deseadosWebIndex" tipo="CajaJuego.Tipo.GeforceNOW" userAgent="@userAgent"/>
 									</div>
@@ -122,17 +137,17 @@
 									@if (string.IsNullOrEmpty(usuarioId) == false && juego.Tiene == false && juego.DesplegableMostrar == true)
 									{
 										<div style="position: absolute; top: 0; left: 0;">
-											<button @onclick="@(e => DesplegarDropdown(juego.Juego.Id, drmJuego))"
+											<button @onclick="@(e => DesplegarDropdown(keyJuego))"
 													class="boton-pequeño" style="width: fit-content; padding: 10px; background-color: @juego.Color;">
 												<div class="svg-boton" style="display: flex;">
-													<svg style="width: 20px; height: 20px; transform: rotate(@(dropdownAbierto == juego.Juego.Id.ToString() + "-" + ((int)drmJuego).ToString() ? "180deg" : "0deg")); transition: transform 0.2s;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+													<svg style="width: 20px; height: 20px; transform: rotate(@(dropdownAbierto == keyJuego ? "180deg" : "0deg")); transition: transform 0.2s;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
 														<path d="M297.4 438.6C309.9 451.1 330.2 451.1 342.7 438.6L502.7 278.6C515.2 266.1 515.2 245.8 502.7 233.3C490.2 220.8 469.9 220.8 457.4 233.3L320 370.7L182.6 233.4C170.1 220.9 149.8 220.9 137.3 233.4C124.8 245.9 124.8 266.2 137.3 278.7L297.3 438.7z" />
 													</svg>
 												</div>
 											</button>
 										</div>
 
-										@if (dropdownAbierto == juego.Juego.Id.ToString() + "-" + ((int)drmJuego).ToString())
+										@if (dropdownAbierto == keyJuego)
 										{
 											<div style="position: absolute; top: 35px; left: 0; background-color: var(--fondo); border: 1px solid var(--fondoCodigo); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); z-index: 1000; width: fit-content; overflow: hidden; display: flex; flex-direction: column;">
 												@if (juego.DeseadoImportado == false)
@@ -396,6 +411,7 @@
 	private bool usuarioPatreon = false;
 	private bool usuarioAdmin = false;
 	private TiendaRegion usuarioRegion = TiendaRegion.Europa;
+	private bool usuarioTiendasNoOficial = false;
 	[PersistentState] public Usuario opciones { get; set; }
 
 	[PersistentState] public List<JuegoMostrar> juegosMostrar { get; set; }
@@ -413,6 +429,7 @@
 		userAgent = datos.UserAgent;
 		dominio = datos.Dominio;
 		usuarioRegion = datos.Region;
+		usuarioTiendasNoOficial = datos.NoOficial;
 
 		if (string.IsNullOrEmpty(usuarioId) == false)
 		{
@@ -456,6 +473,11 @@
 				if (opciones.Currency.HasValue == true)
 				{
 					usuarioRegion = (TiendaRegion)opciones.Currency.Value;
+				}
+
+				if (opciones.NoOfficial.HasValue == true)
+				{
+					usuarioTiendasNoOficial = opciones.NoOfficial.Value;
 				}
 
 				if (opciones.GeforceNOWOption1 == true)
@@ -577,7 +599,7 @@
 
 		await ExcluirDRMs();
 
-		var juegos = await BaseDatos.Juegos.Buscar.MinimosStreaming(usuarioRegion, "streaminggeforcenow", drmActual, posicionJuegos, descuentoMinimo, precioMaximo, minimoReseñas, textoBuscador, excluirJuegosIds, excluirSteamIds, excluirGogIds);
+		var juegos = await BaseDatos.Juegos.Buscar.MinimosStreaming(usuarioTiendasNoOficial, usuarioRegion, "streaminggeforcenow", drmActual, posicionJuegos, descuentoMinimo, precioMaximo, minimoReseñas, textoBuscador, excluirJuegosIds, excluirSteamIds, excluirGogIds);
 
 		if (juegos?.Count == 0 && juegosMostrar?.Count == 0)
 		{
@@ -617,13 +639,21 @@
 				{
 					JuegoDRM drmUsar = JuegoDRM.NoEspecificado;
 
-					if (usuarioRegion == TiendaRegion.Europa)
+					if (usuarioTiendasNoOficial == false && usuarioRegion == TiendaRegion.Europa)
 					{
 						drmUsar = juego.PrecioMinimosHistoricos[0].DRM;
 					}
-					else if (usuarioRegion == TiendaRegion.EstadosUnidos)
+					else if (usuarioTiendasNoOficial == false && usuarioRegion == TiendaRegion.EstadosUnidos)
 					{
 						drmUsar = juego.PrecioMinimosHistoricosUS[0].DRM;
+					}
+					else if (usuarioTiendasNoOficial == true && usuarioRegion == TiendaRegion.Europa)
+					{
+						drmUsar = (juego.PreciosHistoricosNoOficialesEU?.Count > 0) ? juego.PreciosHistoricosNoOficialesEU[0].DRM : (juego.PrecioMinimosHistoricos?.Count > 0) ? juego.PrecioMinimosHistoricos[0].DRM : JuegoDRM.NoEspecificado;
+					}
+					else if (usuarioTiendasNoOficial == true && usuarioRegion == TiendaRegion.EstadosUnidos)
+					{
+						drmUsar = (juego.PreciosHistoricosNoOficialesUS?.Count > 0) ? juego.PreciosHistoricosNoOficialesUS[0].DRM : (juego.PrecioMinimosHistoricosUS?.Count > 0) ? juego.PrecioMinimosHistoricosUS[0].DRM : JuegoDRM.NoEspecificado;
 					}
 
 					if (drmUsar != JuegoDRM.NoEspecificado)
@@ -687,12 +717,10 @@
 
 	private string dropdownAbierto = string.Empty;
 
-	private void DesplegarDropdown(int juegoId, JuegoDRM drm)
+	private void DesplegarDropdown(string key)
 	{
-		if (juegoId > 0)
+		if (string.IsNullOrEmpty(key) == false)
 		{
-			string key = juegoId.ToString() + "-" + ((int)drm).ToString();
-
 			dropdownAbierto = dropdownAbierto == key ? string.Empty : key;
 		}
 	}
@@ -707,15 +735,37 @@
 
 		foreach (var juego2 in juegosMostrar)
 		{
-			if (juego2.Juego.Id == juego.Juego.Id && juego2.Juego.PrecioMinimosHistoricos[0].DRM == drm)
+			JuegoPrecio precioUsar = null;
+
+			if (juego2.Juego.PrecioMinimosHistoricos?.Count > 0)
 			{
-				if (estado == true)
+				precioUsar = juego2.Juego.PrecioMinimosHistoricos[0];
+			}
+			else if (juego2.Juego.PrecioMinimosHistoricosUS?.Count > 0)
+			{
+				precioUsar = juego2.Juego.PrecioMinimosHistoricosUS[0];
+			}
+			else if (juego2.Juego.PreciosHistoricosNoOficialesEU?.Count > 0)
+			{
+				precioUsar = juego2.Juego.PreciosHistoricosNoOficialesEU[0];
+			}
+			else if (juego2.Juego.PreciosHistoricosNoOficialesUS?.Count > 0)
+			{
+				precioUsar = juego2.Juego.PreciosHistoricosNoOficialesUS[0];
+			}
+
+			if (precioUsar != null)
+			{
+				if (juego2.Juego.IdMaestra == juego.Juego.IdMaestra && precioUsar.DRM == drm)
 				{
-					juego2.Color = "var(--fondoAlerta)";
-				}
-				else
-				{
-					juego2.Color = "var(--fondoBotonPequeño)";
+					if (estado == true)
+					{
+						juego2.Color = "var(--fondoAlerta)";
+					}
+					else
+					{
+						juego2.Color = "var(--fondoBotonPequeño)";
+					}
 				}
 			}
 		}
