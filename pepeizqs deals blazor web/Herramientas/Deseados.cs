@@ -265,7 +265,7 @@ namespace Herramientas
 				juego.IdMaestra = juego.Id;
 			}
 
-			if (juego.Id > 0 && deseados?.Juegos?.Count > 0)
+			if ((juego.Id > 0 && deseados?.Juegos?.Count > 0) || (juego.IdMaestra > 0 && deseados?.Juegos?.Count > 0))
 			{
 				if (usarIdMaestra == false)
 				{

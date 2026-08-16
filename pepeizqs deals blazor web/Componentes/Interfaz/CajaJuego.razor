@@ -49,7 +49,7 @@
 	{
 		JuegoPrecio oferta = null;
 
-		if (region == TiendaRegion.Europa && juego.PrecioMinimosHistoricos?.Count > 0)
+		if (juego.PrecioMinimosHistoricos?.Count > 0)
 		{
 			oferta = juego.PrecioMinimosHistoricos[0];
 
@@ -68,7 +68,7 @@
 				}
 			}
 		}
-		else if (region == TiendaRegion.EstadosUnidos && juego.PrecioMinimosHistoricosUS?.Count > 0)
+		else if (juego.PrecioMinimosHistoricosUS?.Count > 0)
 		{
 			oferta = juego.PrecioMinimosHistoricosUS[0];
 
@@ -86,6 +86,14 @@
 					}
 				}
 			}
+		}
+		else if (juego.PreciosHistoricosNoOficialesEU?.Count > 0)
+		{
+			oferta = juego.PreciosHistoricosNoOficialesEU[0];
+		}
+		else if (juego.PreciosHistoricosNoOficialesUS?.Count > 0)
+		{
+			oferta = juego.PreciosHistoricosNoOficialesUS[0];
 		}
 
 		if (oferta != null)
@@ -153,7 +161,7 @@
 	}
 
 	int numeroTipo = (int)tipo;
-	idTooltip = numeroTipo.ToString() + "-" + idMaestra.ToString() + "-" + drmUsar.ToString();
+	idTooltip = numeroTipo.ToString() + "-" + idMaestra.ToString() + "-" + drmUsar.ToString() + "-" + tiendaUsar;
 
 	if (idCurator > 0)
 	{
@@ -453,7 +461,7 @@
 
 		@if (tipo == Tipo.MinimosHistoricos || tipo == Tipo.SteamDeck || tipo == Tipo.SteamMachine || tipo == Tipo.SteamFrame || tipo == Tipo.SteamOS || tipo == Tipo.GeforceNOW || tipo == Tipo.Boosteroid || tipo == Tipo.AmazonLuna)
 		{
-			string claveJuego = juego.Id.ToString() + "-" + drmUsar;
+			string claveJuego = juego.Id.ToString() + "-" + drmUsar + "-" + tiendaUsar;
 
 			<a @key="@claveJuego" class="boton-pequeño" style="padding: 0px; @fondoColor" href="@enlace" target="@enlaceNuevaPestaña">
 				<div class="perfil-flexible-centrado">
@@ -872,6 +880,7 @@
 	public EventCallback<(bool tieneJuego, bool tieneDeseadoWeb, bool tieneDeseadoImportado)> OnEstadoUsuario { get; set; }
 
 	public JuegoDRM drmUsar = JuegoDRM.NoEspecificado;
+    public string tiendaUsar = string.Empty;
 
 	private bool _estadoInicializado = false;
 
@@ -908,13 +917,25 @@
 		}
 		else
 		{
-			if (region == TiendaRegion.Europa && juego.PrecioMinimosHistoricos?.Count > 0)
+			if (juego.PrecioMinimosHistoricos?.Count > 0)
 			{
 				drmUsar = juego.PrecioMinimosHistoricos[0].DRM;
+				tiendaUsar = juego.PrecioMinimosHistoricos[0].Tienda;
 			}
-			else if (region == TiendaRegion.EstadosUnidos && juego.PrecioMinimosHistoricosUS?.Count > 0)
+			else if (juego.PrecioMinimosHistoricosUS?.Count > 0)
 			{
 				drmUsar = juego.PrecioMinimosHistoricosUS[0].DRM;
+				tiendaUsar = juego.PrecioMinimosHistoricosUS[0].Tienda;
+			}
+			else if (juego.PreciosHistoricosNoOficialesEU?.Count > 0)
+			{
+				drmUsar = juego.PreciosHistoricosNoOficialesEU[0].DRM;
+				tiendaUsar = juego.PreciosHistoricosNoOficialesEU[0].Tienda;
+			}
+			else if (juego.PreciosHistoricosNoOficialesUS?.Count > 0)
+			{
+				drmUsar = juego.PreciosHistoricosNoOficialesUS[0].DRM;
+                tiendaUsar = juego.PreciosHistoricosNoOficialesUS[0].Tienda;
 			}
 		}
 

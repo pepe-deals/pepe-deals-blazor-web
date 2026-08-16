@@ -3,6 +3,7 @@
 using Dapper;
 using Juegos;
 using System.Data;
+using System.Text.Json;
 using Tiendas2;
 using static pepeizqs_deals_blazor_web.Componentes.Cuenta.Cuenta.Juegos;
 using static pepeizqs_deals_blazor_web.Componentes.Secciones.Minimos.Minimos;
@@ -1671,7 +1672,7 @@ END DESC";
 					? $"NULL AS {columnaNoOficialNombre}"
 					: $"j.{columnaPrecio} AS {columnaNoOficialNombre}";
 
-				string consulta = $@"SELECT j.idMaestra, jg.nombre, jg.imagenes, {selectOficial}, {selectNoOficial}, jg.Media,
+				string consulta = $@"SELECT j.idMaestra, jg.nombre, jg.imagenes, {selectOficial}, {selectNoOficial}, JSON_VALUE(jg.media, '$.Videos[0].Micro') as video,
 					jg.tipo, jg.analisis, jg.idSteam, jg.idGog, jg.freeToPlay, jg.etiquetas,
 					(
 						SELECT b.id, b.bundleTipo
@@ -1830,10 +1831,98 @@ END DESC";
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				var filas = await Herramientas.BaseDatos.Select(async conexion =>
 				{
-					return (await conexion.QueryAsync<Juego>(busqueda, parametros)).ToList();
+					return await conexion.QueryAsync(busqueda, parametros);
 				});
+
+				List<Juego> resultados = new List<Juego>();
+
+				foreach (var fila in filas)
+				{
+					Juego juego = new Juego
+					{
+						Id = fila.idMaestra,
+						IdMaestra = fila.idMaestra,
+						Nombre = fila.nombre,
+						IdSteam = fila.idSteam,
+						IdGog = fila.idGog,
+						Caracteristicas = fila.FechaLanzamiento != null ? new JuegoCaracteristicas { FechaLanzamientoSteam = fila.FechaLanzamiento } : null,
+						Etiquetas = string.IsNullOrEmpty(fila.etiquetas) == false ? JsonSerializer.Deserialize<List<string>>(fila.etiquetas) : null
+					};
+
+					if (string.IsNullOrEmpty(fila.imagenes) == false)
+					{
+						juego.Imagenes = JsonSerializer.Deserialize<JuegoImagenes>(fila.imagenes);
+					}
+
+					if (string.IsNullOrEmpty(fila.precioMinimosHistoricos) == false)
+					{
+						juego.PrecioMinimosHistoricos = JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.precioMinimosHistoricos);
+					}
+
+					if (string.IsNullOrEmpty(fila.precioMinimosHistoricosUS) == false)
+					{
+						juego.PrecioMinimosHistoricosUS = JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.precioMinimosHistoricosUS);
+					}
+
+					if (string.IsNullOrEmpty(fila.preciosHistoricosNoOficialesEU) == false)
+					{
+						juego.PreciosHistoricosNoOficialesEU = JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.preciosHistoricosNoOficialesEU);
+					}
+
+					if (string.IsNullOrEmpty(fila.preciosHistoricosNoOficialesUS) == false)
+					{
+						juego.PreciosHistoricosNoOficialesUS = JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.preciosHistoricosNoOficialesUS);
+					}
+
+					if (string.IsNullOrEmpty(fila.video) == false)
+					{
+						juego.Media = new JuegoMedia
+						{
+							Videos = new List<JuegoMediaVideo> { new JuegoMediaVideo { Micro = fila.video } }
+						};
+					}
+
+					if (string.IsNullOrEmpty(fila.BundlesActuales) == false)
+					{
+						juego.BundlesActuales = JsonSerializer.Deserialize<List<JuegoBundlesActuales>>(fila.BundlesActuales);
+					}
+
+					if (string.IsNullOrEmpty(fila.BundlesPasados) == false)
+					{
+						juego.BundlesPasados = JsonSerializer.Deserialize<List<JuegoBundlesPasados>>(fila.BundlesPasados);
+					}
+
+					if (string.IsNullOrEmpty(fila.GratisActuales) == false)
+					{
+						juego.GratisActuales = JsonSerializer.Deserialize<List<JuegoGratisActuales>>(fila.GratisActuales);
+					}
+
+					if (string.IsNullOrEmpty(fila.GratisPasados) == false)
+					{
+						juego.GratisPasados = JsonSerializer.Deserialize<List<JuegoGratisPasados>>(fila.GratisPasados);
+					}
+
+					if (string.IsNullOrEmpty(fila.SuscripcionesActuales) == false)
+					{
+						juego.SuscripcionesActuales = JsonSerializer.Deserialize<List<JuegoSuscripcionActuales>>(fila.SuscripcionesActuales);
+					}
+
+					if (string.IsNullOrEmpty(fila.SuscripcionesPasados) == false)
+					{
+						juego.SuscripcionesPasados = JsonSerializer.Deserialize<List<JuegoSuscripcionPasados>>(fila.SuscripcionesPasados);
+					}
+
+					if (string.IsNullOrEmpty(fila.analisis) == false)
+					{
+						juego.Analisis = JsonSerializer.Deserialize<JuegoAnalisis>(fila.analisis);
+					}
+
+					resultados.Add(juego);
+				}
+
+				return resultados;
 			}
 			catch (Exception ex)
 			{
@@ -1847,6 +1936,9 @@ END DESC";
 		{
 			string tablaMinimos = region == TiendaRegion.Europa ? "seccionMinimos" : "seccionMinimosUS";
 			string precioMinimosHistoricos = region == TiendaRegion.Europa ? "precioMinimosHistoricos" : "precioMinimosHistoricosUS";
+
+			string columnaOficialSalida = region == TiendaRegion.Europa ? "precioMinimosHistoricos" : "precioMinimosHistoricosUS";
+			string columnaNoOficialSalida = region == TiendaRegion.Europa ? "preciosHistoricosNoOficialesEU" : "preciosHistoricosNoOficialesUS";
 
 			DynamicParameters parametros = new DynamicParameters();
 
@@ -1909,9 +2001,13 @@ END DESC";
 				dondeMaximoPrecio = " (" + dondeMaximoPrecio + ")";
 			}
 
-			string ConstruirBusqueda(string tablaOrigen, string columnaPrecio)
+			string ConstruirBusqueda(string tablaOrigen, string columnaPrecio, bool esOficial)
 			{
-				string consulta = $@"SELECT j.idMaestra, jg.nombre, jg.imagenes, j.{columnaPrecio}, jg.Media,
+				string columnasPrecio = esOficial
+					? $"j.{columnaPrecio} AS {columnaOficialSalida},\n\t\t\tNULL AS {columnaNoOficialSalida},"
+					: $"NULL AS {columnaOficialSalida},\n\t\t\tj.{columnaPrecio} AS {columnaNoOficialSalida},";
+
+				string consulta = $@"SELECT j.idMaestra, jg.nombre, jg.imagenes, {columnasPrecio} JSON_VALUE(jg.media, '$.Videos[0].Micro') as video,
 					jg.tipo, jg.analisis, jg.idSteam, jg.idGog, jg.freeToPlay, jg.etiquetas,
 					(
 						SELECT b.id, b.bundleTipo
@@ -2006,28 +2102,115 @@ END DESC";
 				return consulta;
 			}
 
-			string busqueda = ConstruirBusqueda(tablaMinimos, precioMinimosHistoricos);
+			string busqueda = ConstruirBusqueda(tablaMinimos, precioMinimosHistoricos, esOficial: true);
 
 			if (noOficial == true)
 			{
 				string tablaNoOficial = region == TiendaRegion.Europa ? "seccionMinimosNoOficialesEU" : "seccionMinimosNoOficialesUS";
 				string columnaNoOficial = region == TiendaRegion.Europa ? "preciosHistoricosNoOficialesEU" : "preciosHistoricosNoOficialesUS";
 
-				string busquedaNoOficial = ConstruirBusqueda(tablaNoOficial, columnaNoOficial);
+				string busquedaNoOficial = ConstruirBusqueda(tablaNoOficial, columnaNoOficial, esOficial: false);
 
 				busqueda = $"({busqueda}) UNION ALL ({busquedaNoOficial})";
 			}
 
 			busqueda = busqueda + " ORDER BY OrdenReseñas DESC";
-
 			busqueda = busqueda + @$" OFFSET {posicion} ROWS FETCH NEXT 100 ROWS ONLY";
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				var filas = await Herramientas.BaseDatos.Select(async conexion =>
 				{
-					return (await conexion.QueryAsync<Juego>(busqueda, parametros)).ToList();
+					return await conexion.QueryAsync(busqueda, parametros);
 				});
+
+				List<Juego> resultados = new List<Juego>();
+
+				foreach (var fila in filas)
+				{
+					Juego juego = new Juego
+					{
+						Id = fila.idMaestra,
+						IdMaestra = fila.idMaestra,
+						Nombre = fila.nombre,
+						IdSteam = fila.idSteam,
+						IdGog = fila.idGog,
+						Caracteristicas = fila.FechaLanzamiento != null ? new JuegoCaracteristicas { FechaLanzamientoSteam = fila.FechaLanzamiento } : null,
+						Etiquetas = string.IsNullOrEmpty(fila.etiquetas) == false ? JsonSerializer.Deserialize<List<string>>(fila.etiquetas) : null
+					};
+
+					if (string.IsNullOrEmpty(fila.imagenes) == false)
+					{
+						juego.Imagenes = JsonSerializer.Deserialize<JuegoImagenes>(fila.imagenes);
+					}
+
+					if (string.IsNullOrEmpty(fila.precioMinimosHistoricos) == false)
+					{
+						juego.PrecioMinimosHistoricos = JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.precioMinimosHistoricos);
+					}
+
+					if (string.IsNullOrEmpty(fila.precioMinimosHistoricosUS) == false)
+					{
+						juego.PrecioMinimosHistoricosUS = JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.precioMinimosHistoricosUS);
+					}
+
+					if (string.IsNullOrEmpty(fila.preciosHistoricosNoOficialesEU) == false)
+					{
+						juego.PreciosHistoricosNoOficialesEU = JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.preciosHistoricosNoOficialesEU);
+					}
+
+					if (string.IsNullOrEmpty(fila.preciosHistoricosNoOficialesUS) == false)
+					{
+						juego.PreciosHistoricosNoOficialesUS = JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.preciosHistoricosNoOficialesUS);
+					}
+
+					if (string.IsNullOrEmpty(fila.video) == false)
+					{
+						juego.Media = new JuegoMedia
+						{
+							Videos = new List<JuegoMediaVideo> { new JuegoMediaVideo { Micro = fila.video } }
+						};
+					}
+
+					if (string.IsNullOrEmpty(fila.BundlesActuales) == false)
+					{
+						juego.BundlesActuales = JsonSerializer.Deserialize<List<JuegoBundlesActuales>>(fila.BundlesActuales);
+					}
+
+					if (string.IsNullOrEmpty(fila.BundlesPasados) == false)
+					{
+						juego.BundlesPasados = JsonSerializer.Deserialize<List<JuegoBundlesPasados>>(fila.BundlesPasados);
+					}
+
+					if (string.IsNullOrEmpty(fila.GratisActuales) == false)
+					{
+						juego.GratisActuales = JsonSerializer.Deserialize<List<JuegoGratisActuales>>(fila.GratisActuales);
+					}
+
+					if (string.IsNullOrEmpty(fila.GratisPasados) == false)
+					{
+						juego.GratisPasados = JsonSerializer.Deserialize<List<JuegoGratisPasados>>(fila.GratisPasados);
+					}
+
+					if (string.IsNullOrEmpty(fila.SuscripcionesActuales) == false)
+					{
+						juego.SuscripcionesActuales = JsonSerializer.Deserialize<List<JuegoSuscripcionActuales>>(fila.SuscripcionesActuales);
+					}
+
+					if (string.IsNullOrEmpty(fila.SuscripcionesPasados) == false)
+					{
+						juego.SuscripcionesPasados = JsonSerializer.Deserialize<List<JuegoSuscripcionPasados>>(fila.SuscripcionesPasados);
+					}
+
+					if (string.IsNullOrEmpty(fila.analisis) == false)
+					{
+						juego.Analisis = JsonSerializer.Deserialize<JuegoAnalisis>(fila.analisis);
+					}
+
+					resultados.Add(juego);
+				}
+
+				return resultados;
 			}
 			catch (Exception ex)
 			{

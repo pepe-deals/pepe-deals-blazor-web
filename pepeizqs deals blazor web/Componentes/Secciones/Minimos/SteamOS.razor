@@ -119,17 +119,17 @@
 									@if (string.IsNullOrEmpty(usuarioId) == false && juego.Tiene == false && juego.DesplegableMostrar == true)
 									{
 										<div style="position: absolute; top: 0; left: 0;">
-											<button @onclick="@(e => DesplegarDropdown(juego.Juego.Id, drmJuego))"
+											<button @onclick="@(e => DesplegarDropdown(keyJuego))"
 													class="boton-pequeño" style="width: fit-content; padding: 10px; background-color: @juego.Color;">
 												<div class="svg-boton" style="display: flex;">
-													<svg style="width: 20px; height: 20px; transform: rotate(@(dropdownAbierto == juego.Juego.Id.ToString() + "-" + ((int)drmJuego).ToString() ? "180deg" : "0deg")); transition: transform 0.2s;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+													<svg style="width: 20px; height: 20px; transform: rotate(@(dropdownAbierto == keyJuego ? "180deg" : "0deg")); transition: transform 0.2s;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
 														<path d="M297.4 438.6C309.9 451.1 330.2 451.1 342.7 438.6L502.7 278.6C515.2 266.1 515.2 245.8 502.7 233.3C490.2 220.8 469.9 220.8 457.4 233.3L320 370.7L182.6 233.4C170.1 220.9 149.8 220.9 137.3 233.4C124.8 245.9 124.8 266.2 137.3 278.7L297.3 438.7z" />
 													</svg>
 												</div>
 											</button>
 										</div>
 
-										@if (dropdownAbierto == juego.Juego.Id.ToString() + "-" + ((int)drmJuego).ToString())
+										@if (dropdownAbierto == keyJuego)
 										{
 											<div style="position: absolute; top: 35px; left: 0; background-color: var(--fondo); border: 1px solid var(--fondoCodigo); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); z-index: 1000; width: fit-content; overflow: hidden; display: flex; flex-direction: column;">
 												@if (juego.DeseadoImportado == false)
@@ -709,12 +709,10 @@
 
 	private string dropdownAbierto = string.Empty;
 
-	private void DesplegarDropdown(int juegoId, JuegoDRM drm)
+	private void DesplegarDropdown(string key)
 	{
-		if (juegoId > 0)
+		if (string.IsNullOrEmpty(key) == false)
 		{
-			string key = juegoId.ToString() + "-" + ((int)drm).ToString();
-
 			dropdownAbierto = dropdownAbierto == key ? string.Empty : key;
 		}
 	}
@@ -727,7 +725,7 @@
 
 		await Herramientas.Deseados.CambiarEstado(usuarioId, juego.Juego, estado, drm, true);
 
-		var juegoEnLista = juegosMostrar.FirstOrDefault(j => j.Juego.Id == juego.Juego.Id);
+		var juegoEnLista = juegosMostrar.FirstOrDefault(j => j.Juego.IdMaestra == juego.Juego.IdMaestra);
 
 		if (juegoEnLista != null)
 		{
