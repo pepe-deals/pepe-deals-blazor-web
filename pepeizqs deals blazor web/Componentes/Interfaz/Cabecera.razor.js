@@ -26,6 +26,14 @@ function mostrarSpinner(visible) {
     if (icono) icono.style.display = visible ? 'none' : 'block';
 }
 
+export function iniciarDeteccionBfcache(dotnetRef) {
+    window.addEventListener('pageshow', (e) => {
+        if (e.persisted) {
+            dotnetRef.invokeMethodAsync('ActualizarDeseadosDesdeBfcache');
+        }
+    });
+}
+
 export function toggleBodyScroll(disable) {
     if (disable) {
         document.body.classList.add('no-scroll');

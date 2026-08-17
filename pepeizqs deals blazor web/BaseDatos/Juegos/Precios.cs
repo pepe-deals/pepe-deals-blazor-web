@@ -208,7 +208,7 @@ namespace BaseDatos.Juegos
 
 							//------------------------------------------
 
-							if (notificar == true && tiendaTipo == TiendaTipo.Oficial)
+							if (notificar == true)
 							{
 								List<string> usuariosInteresados = await BaseDatos.Usuarios.Buscar.ListaUsuariosTienenDeseado(id, nuevaOferta.DRM);
 
@@ -240,7 +240,6 @@ namespace BaseDatos.Juegos
 													}
 
 													datosDeseados.Cantidad = datosDeseados.Cantidad + 1;
-													datosDeseados.UltimoJuego = DateTime.Now;
 
 													if (datosDeseados.Juegos == null)
 													{
@@ -266,54 +265,57 @@ namespace BaseDatos.Juegos
 												BaseDatos.Errores.Insertar.Mensaje("Actualizar Datos Deseados Minimo", ex);
 											}
 
-											try
+											if (tiendaTipo == TiendaTipo.Oficial)
 											{
-												string correo = await Usuarios.Buscar.UsuarioQuiereCorreos(TiendaRegion.Europa, usuarioInteresado, "NotificationLows");
-
-												if (string.IsNullOrEmpty(correo) == false)
+												try
 												{
-													try
-													{
-														await Herramientas.Correos.DeseadoMinimo.Nuevo(usuarioInteresado, id, minimo, correo);
-													}
-													catch (Exception ex)
-													{
-														BaseDatos.Errores.Insertar.Mensaje("Enviar Correo Minimo 2", ex);
-													}
-												}
-											}
-											catch (Exception ex)
-											{
-												BaseDatos.Errores.Insertar.Mensaje("Enviar Correo Minimo 1", ex);
-											}
+													string correo = await Usuarios.Buscar.UsuarioQuiereCorreos(TiendaRegion.Europa, usuarioInteresado, "NotificationLows");
 
-											try
-											{
-												bool enviarPush = await BaseDatos.Usuarios.Buscar.OpcionBoolRegion(TiendaRegion.Europa, usuarioInteresado, "NotificationPushLows");
-
-												if (enviarPush == true)
-												{
-													try
+													if (string.IsNullOrEmpty(correo) == false)
 													{
-														decimal precioNotificar = minimo.Precio;
-
-														if (minimo.PrecioCambiado > 0)
+														try
 														{
-															precioNotificar = minimo.PrecioCambiado;
+															await Herramientas.Correos.DeseadoMinimo.Nuevo(usuarioInteresado, id, minimo, correo);
 														}
-
-														var notificaciones = ServiciosGlobales.ServiceProvider.GetRequiredService<NotificacionesPush>();
-														await notificaciones.EnviarNotificacion(usuarioInteresado, minimo.Nombre + " - " + Herramientas.Precios.Euro(precioNotificar), minimo.Enlace);
-													}
-													catch (Exception ex)
-													{
-														BaseDatos.Errores.Insertar.Mensaje("Enviar Push Minimo 2", ex);
+														catch (Exception ex)
+														{
+															BaseDatos.Errores.Insertar.Mensaje("Enviar Correo Minimo 2", ex);
+														}
 													}
 												}
-											}
-											catch (Exception ex)
-											{
-												BaseDatos.Errores.Insertar.Mensaje("Enviar Push Minimo 1", ex);
+												catch (Exception ex)
+												{
+													BaseDatos.Errores.Insertar.Mensaje("Enviar Correo Minimo 1", ex);
+												}
+
+												try
+												{
+													bool enviarPush = await BaseDatos.Usuarios.Buscar.OpcionBoolRegion(TiendaRegion.Europa, usuarioInteresado, "NotificationPushLows");
+
+													if (enviarPush == true)
+													{
+														try
+														{
+															decimal precioNotificar = minimo.Precio;
+
+															if (minimo.PrecioCambiado > 0)
+															{
+																precioNotificar = minimo.PrecioCambiado;
+															}
+
+															var notificaciones = ServiciosGlobales.ServiceProvider.GetRequiredService<NotificacionesPush>();
+															await notificaciones.EnviarNotificacion(usuarioInteresado, minimo.Nombre + " - " + Herramientas.Precios.Euro(precioNotificar), minimo.Enlace);
+														}
+														catch (Exception ex)
+														{
+															BaseDatos.Errores.Insertar.Mensaje("Enviar Push Minimo 2", ex);
+														}
+													}
+												}
+												catch (Exception ex)
+												{
+													BaseDatos.Errores.Insertar.Mensaje("Enviar Push Minimo 1", ex);
+												}
 											}
 										}
 									}
@@ -672,7 +674,7 @@ namespace BaseDatos.Juegos
 
 							//------------------------------------------
 
-							if (notificar == true && tiendaTipo == TiendaTipo.Oficial)
+							if (notificar == true)
 							{
 								List<string> usuariosInteresados = await BaseDatos.Usuarios.Buscar.ListaUsuariosTienenDeseado(id, nuevaOferta.DRM);
 
@@ -704,7 +706,6 @@ namespace BaseDatos.Juegos
 													}
 
 													datosDeseados.Cantidad = datosDeseados.Cantidad + 1;
-													datosDeseados.UltimoJuego = DateTime.Now;
 
 													if (datosDeseados.Juegos == null)
 													{
@@ -730,54 +731,57 @@ namespace BaseDatos.Juegos
 												BaseDatos.Errores.Insertar.Mensaje("Actualizar Datos Deseados Minimo", ex);
 											}
 
-											try
+											if (tiendaTipo == TiendaTipo.Oficial)
 											{
-												string correo = await Usuarios.Buscar.UsuarioQuiereCorreos(TiendaRegion.EstadosUnidos, usuarioInteresado, "NotificationLows");
-
-												if (string.IsNullOrEmpty(correo) == false)
+												try
 												{
-													try
-													{
-														await Herramientas.Correos.DeseadoMinimo.Nuevo(usuarioInteresado, id, minimo, correo);
-													}
-													catch (Exception ex)
-													{
-														BaseDatos.Errores.Insertar.Mensaje("Enviar Correo Minimo 2", ex);
-													}
-												}
-											}
-											catch (Exception ex)
-											{
-												BaseDatos.Errores.Insertar.Mensaje("Enviar Correo Minimo 1", ex);
-											}
+													string correo = await Usuarios.Buscar.UsuarioQuiereCorreos(TiendaRegion.EstadosUnidos, usuarioInteresado, "NotificationLows");
 
-											try
-											{
-												bool enviarPush = await BaseDatos.Usuarios.Buscar.OpcionBoolRegion(TiendaRegion.EstadosUnidos, usuarioInteresado, "NotificationPushLows");
-
-												if (enviarPush == true)
-												{
-													try
+													if (string.IsNullOrEmpty(correo) == false)
 													{
-														decimal precioNotificar = minimo.Precio;
-
-														if (minimo.PrecioCambiado > 0)
+														try
 														{
-															precioNotificar = minimo.PrecioCambiado;
+															await Herramientas.Correos.DeseadoMinimo.Nuevo(usuarioInteresado, id, minimo, correo);
 														}
-
-														var notificaciones = ServiciosGlobales.ServiceProvider.GetRequiredService<NotificacionesPush>();
-														await notificaciones.EnviarNotificacion(usuarioInteresado, minimo.Nombre + " - " + Herramientas.Precios.Dolar(precioNotificar), minimo.Enlace);
-													}
-													catch (Exception ex)
-													{
-														BaseDatos.Errores.Insertar.Mensaje("Enviar Push Minimo 2", ex);
+														catch (Exception ex)
+														{
+															BaseDatos.Errores.Insertar.Mensaje("Enviar Correo Minimo 2", ex);
+														}
 													}
 												}
-											}
-											catch (Exception ex)
-											{
-												BaseDatos.Errores.Insertar.Mensaje("Enviar Push Minimo 1", ex);
+												catch (Exception ex)
+												{
+													BaseDatos.Errores.Insertar.Mensaje("Enviar Correo Minimo 1", ex);
+												}
+
+												try
+												{
+													bool enviarPush = await BaseDatos.Usuarios.Buscar.OpcionBoolRegion(TiendaRegion.EstadosUnidos, usuarioInteresado, "NotificationPushLows");
+
+													if (enviarPush == true)
+													{
+														try
+														{
+															decimal precioNotificar = minimo.Precio;
+
+															if (minimo.PrecioCambiado > 0)
+															{
+																precioNotificar = minimo.PrecioCambiado;
+															}
+
+															var notificaciones = ServiciosGlobales.ServiceProvider.GetRequiredService<NotificacionesPush>();
+															await notificaciones.EnviarNotificacion(usuarioInteresado, minimo.Nombre + " - " + Herramientas.Precios.Dolar(precioNotificar), minimo.Enlace);
+														}
+														catch (Exception ex)
+														{
+															BaseDatos.Errores.Insertar.Mensaje("Enviar Push Minimo 2", ex);
+														}
+													}
+												}
+												catch (Exception ex)
+												{
+													BaseDatos.Errores.Insertar.Mensaje("Enviar Push Minimo 1", ex);
+												}
 											}
 										}
 									}

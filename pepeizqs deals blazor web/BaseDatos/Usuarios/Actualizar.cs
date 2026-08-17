@@ -347,7 +347,6 @@ namespace BaseDatos.Usuarios
 	{
 		public int Cantidad { get; set; }
 		public DateTime? UltimaVisita { get; set; }
-		public DateTime? UltimoJuego { get; set; }
 		public List<DeseadosDatosJuego> Juegos { get; set; }
 	}
 

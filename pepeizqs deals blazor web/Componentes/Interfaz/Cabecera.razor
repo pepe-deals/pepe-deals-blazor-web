@@ -95,7 +95,7 @@
                         <div style="color: var(--colorBuscador);">
                             @Herramientas.Idiomas.BuscarTexto(idioma, "String22", "Header")
                         </div>
-                    </button>                    
+                    </button>
                 }
 
                 <div class="menu-dropdown2">
@@ -236,7 +236,7 @@
                                         </a>
 
                                         <hr style="margin: 5px 0px; border-top: var(--glaseadoCabeceraBorde) solid; opacity: 0.6;" />
-                                        
+
                                         @foreach (var juego in datosDeseados.Juegos.OrderByDescending(j => j.Fecha).Take(5))
                                         {
                                             List<Tiendas2.Tienda> tiendas = Tiendas2.TiendasCargar.GenerarListado();
@@ -859,7 +859,7 @@
                                 <div style="margin-bottom: 30px;">
                                     <Virtualize Context="juego" Items="@resultadosMostrar" OverscanCount="3">
                                         <ItemContent>
-                                            <div @key="juego.Juego.Id-2" style="display: flex; flex-direction: row; align-items: center; margin-top: 30px;">
+                                            <div @key="juego.Juego.Id - 2" style="display: flex; flex-direction: row; align-items: center; margin-top: 30px;">
                                                 @{
                                                     string imagen = juego.Juego.Imagenes.Header_460x215;
 
@@ -936,7 +936,7 @@
 
 @code {
 
-    #nullable disable
+#nullable disable
 
     private string idioma = "en";
     private string usuarioId = null;
@@ -1022,7 +1022,7 @@
 
                 if (opcionesCabecera.NoOfficial.HasValue == true)
                 {
-                    usuarioTiendasNoOficial = opcionesCabecera.NoOfficial.Value;                    
+                    usuarioTiendasNoOficial = opcionesCabecera.NoOfficial.Value;
                 }
 
                 if (opcionesCabecera.Marketplace.HasValue == true)
@@ -1063,6 +1063,7 @@
             if (moduloJs != null)
             {
                 await moduloJs.InvokeVoidAsync("teclearBusqueda", inputBuscador, cabeceraReferencia, 200);
+                await moduloJs.InvokeVoidAsync("iniciarDeteccionBfcache", cabeceraReferencia);
             }
 
             if (string.IsNullOrEmpty(Search) == false)
@@ -1140,7 +1141,7 @@
 
                 if (moduloJs != null)
                 {
-                    await moduloJs.InvokeVoidAsync("toggleBodyScroll", resultadosMostrar.Any());                    
+                    await moduloJs.InvokeVoidAsync("toggleBodyScroll", resultadosMostrar.Any());
                 }
             }
         }
@@ -1153,6 +1154,14 @@
     {
         enlace = NavManager.Uri;
 
+        await InvokeAsync(StateHasChanged);
+    }
+
+    //Se llama desde JS cuando pageshow detecta que la página viene de la bfcache de Chrome
+    [JSInvokable]
+    public async Task ActualizarDeseadosDesdeBfcache()
+    {
+        await GenerarDeseadosDropdown();
         await InvokeAsync(StateHasChanged);
     }
 
@@ -1203,16 +1212,18 @@
 
                 if (datosDeseados != null)
                 {
-                    if (datosDeseados.UltimaVisita != null && datosDeseados.UltimoJuego != null)
+                    var ultimoJuego = datosDeseados.Juegos?.OrderByDescending(j => j.Fecha).FirstOrDefault();
+
+                    if (datosDeseados.UltimaVisita != null && ultimoJuego != null)
                     {
-                        if (datosDeseados.UltimaVisita?.Subtract((DateTime)datosDeseados.UltimoJuego).TotalDays > 7)
+                        if (datosDeseados.UltimaVisita?.Subtract(ultimoJuego.Fecha).TotalDays > 7)
                         {
                             datosDeseados.Juegos = null;
                         }
                     }
-                    else if (datosDeseados.UltimaVisita == null && datosDeseados.UltimoJuego != null)
+                    else if (datosDeseados.UltimaVisita == null && ultimoJuego != null)
                     {
-                        if (DateTime.Now.Subtract((DateTime)datosDeseados.UltimoJuego).TotalDays > 7)
+                        if (DateTime.Now.Subtract(ultimoJuego.Fecha).TotalDays > 7)
                         {
                             datosDeseados.Juegos = null;
                         }
@@ -1344,7 +1355,7 @@
             [JuegoTipo.Music] = new() { tipo = JuegoTipo.Music },
             [JuegoTipo.Software] = new() { tipo = JuegoTipo.Software },
             [JuegoTipo.Curator] = new() { tipo = JuegoTipo.Curator },
-            [JuegoTipo.Bundle] = new () { tipo = JuegoTipo.Bundle }
+            [JuegoTipo.Bundle] = new() { tipo = JuegoTipo.Bundle }
         };
     }
 
@@ -1410,7 +1421,7 @@
     private int busquedaActualId = 0;
     private const int retraso = 150;
     private const int minimosCaracteresBusqueda = 2;
-    private const int resultadosMaximos = 30; 
+    private const int resultadosMaximos = 30;
 
     private string claseBuscador => buscadorActivo || string.IsNullOrEmpty(textoBuscador) == false ? "buscador-activo" : "buscador-inactivo";
 
@@ -1669,7 +1680,7 @@
         else
         {
             mostrarPanel = true;
-        } 
+        }
     }
 
     #endregion
