@@ -682,6 +682,7 @@
 
 	private bool usuarioPatreon = false;
 	private TiendaRegion usuarioRegion = TiendaRegion.Europa;
+	private bool usuarioTiendasNoOficial = false;
 
 	public Usuario opciones { get; set; }
 	[PersistentState] public DateTime ultimaVisita { get; set; }
@@ -714,21 +715,36 @@
 		usuarioId = datos.UsuarioId;
 		dominio = datos.Dominio;
 		usuarioRegion = datos.Region;
+		usuarioTiendasNoOficial = datos.NoOficial;
 
 		if (string.IsNullOrEmpty(usuarioId) == false)
 		{
 			Task<string> tareaIdioma = BaseDatos.Usuarios.Buscar.IdiomaSobreescribir(usuarioId);
 			Task<DateTime?> tareaPatreon = BaseDatos.Usuarios.Buscar.FechaPatreon(usuarioId);
 			Task<Usuario> tareaUsuario = (opciones != null) ? Task.FromResult(opciones) : BaseDatos.Usuarios.Buscar.OpcionesDeseados(usuarioId);
-			Task<List<JuegoDeseadoMostrar>> tareaDeseados = (deseadosGestor != null) ? Task.FromResult(deseadosGestor) : Herramientas.Deseados.LeerJuegos(usuarioRegion, usuarioId);
-			Task<List<Bundles2.Bundle>> tareaBundles = (bundlesActuales != null) ? Task.FromResult(bundlesActuales) : BaseDatos.Bundles.Buscar.Actuales();
-			Task<List<JuegoSuscripcion>> tareaSuscripciones = (suscripcionesActuales != null) ? Task.FromResult(suscripcionesActuales) : BaseDatos.Suscripciones.Buscar.Actuales();
 
-			await Task.WhenAll(tareaIdioma, tareaPatreon, tareaUsuario, tareaDeseados, tareaBundles, tareaSuscripciones);
+			await Task.WhenAll(tareaIdioma, tareaPatreon, tareaUsuario);
 
 			idioma = tareaIdioma.Result;
 			usuarioPatreon = Herramientas.Patreon.VerificarActivo(tareaPatreon.Result);
 			opciones = tareaUsuario.Result;
+
+			if (opciones?.Currency.HasValue == true)
+			{
+				usuarioRegion = (TiendaRegion)opciones.Currency.Value;
+			}
+
+			if (opciones?.NoOfficial.HasValue == true)
+			{
+				usuarioTiendasNoOficial = opciones.NoOfficial.Value;
+			}
+
+			Task<List<Bundles2.Bundle>> tareaBundles = (bundlesActuales != null) ? Task.FromResult(bundlesActuales) : BaseDatos.Bundles.Buscar.Actuales();
+			Task<List<JuegoSuscripcion>> tareaSuscripciones = (suscripcionesActuales != null) ? Task.FromResult(suscripcionesActuales) : BaseDatos.Suscripciones.Buscar.Actuales();
+			Task<List<JuegoDeseadoMostrar>> tareaDeseados = (deseadosGestor != null) ? Task.FromResult(deseadosGestor) : Herramientas.Deseados.LeerJuegos(usuarioTiendasNoOficial, usuarioRegion, usuarioId);
+
+			await Task.WhenAll(tareaDeseados, tareaBundles, tareaSuscripciones);
+
 			deseadosGestor = tareaDeseados.Result;
 			bundlesActuales = tareaBundles.Result;
 			suscripcionesActuales = tareaSuscripciones.Result;
@@ -736,11 +752,6 @@
 			if (string.IsNullOrEmpty(perfilUsuarioId) == true)
 			{
 				await CargarWishlistData(opciones);
-			}
-
-			if (opciones?.Currency.HasValue == true)
-			{
-				usuarioRegion = (TiendaRegion)opciones.Currency.Value;
 			}
 
 			if (opciones?.WishlistPosition.HasValue == true)

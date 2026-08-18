@@ -895,7 +895,7 @@
 				}
 			}
 
-			juegosCurator ??= await global::BaseDatos.Juegos.Buscar.MultiplesJuegosSteam2(usuarioRegion, curator.SteamIds);
+			juegosCurator ??= await global::BaseDatos.Juegos.Buscar.MultiplesJuegosSteam2(false, usuarioRegion, curator.SteamIds);
 
 			if (juegosCurator?.Count > 0)
 			{

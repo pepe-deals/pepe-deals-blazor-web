@@ -5,9 +5,10 @@
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.AspNetCore.Components.Web.Virtualization
 @using Microsoft.JSInterop
-@using System.Text.Json
 @using pepeizqs_deals_web.Data
 @using pepeizqs_deals_blazor_web.Componentes.Interfaz
+@using System.Text.Json
+@using Tiendas2
 
 @inject IHttpContextAccessor Contexto
 @inject IJSRuntime JavaScript
@@ -542,7 +543,7 @@ else
 				<div style="margin: -30px 0px; display: flex; flex-direction: column; gap: 30px;">
 					<Virtualize Context="juego" Items="@resultadosGestor">
 						<ItemContent>
-							<CajaJuego idioma="@idioma" juego="@juego" juegosUsuarioIndex="@juegosUsuarioIndex" usuarioDeseadosImportados="@deseadosImportadosIndex" usuarioDeseadosWeb="@deseadosWebIndex" tipo="CajaJuego.Tipo.Filtro" userAgent="@userAgent" />
+							<CajaJuego noOficial="@usuarioTiendasNoOficial" region="@usuarioRegion" idioma="@idioma" juego="@juego" juegosUsuarioIndex="@juegosUsuarioIndex" usuarioDeseadosImportados="@deseadosImportadosIndex" usuarioDeseadosWeb="@deseadosWebIndex" tipo="CajaJuego.Tipo.Filtro" userAgent="@userAgent" />
 						</ItemContent>
 					</Virtualize>
 				</div>
@@ -588,6 +589,10 @@ else
 	[PersistentState] public Herramientas.UsuarioDeseadosImportadosIndex deseadosImportadosIndex { get; set; }
 	[PersistentState] public Herramientas.UsuarioDeseadosWebIndex deseadosWebIndex { get; set; }
 
+	private TiendaRegion usuarioRegion = TiendaRegion.Europa;
+	private bool usuarioTiendasNoOficial = false;
+	[PersistentState] public Usuario opciones { get; set; }
+
 	private string descripcion = string.Empty;
 
 	private bool cargado = false;
@@ -605,18 +610,22 @@ else
 		usuarioId = datos.UsuarioId;
 		userAgent = datos.UserAgent;
 		dominio = datos.Dominio;
+		usuarioRegion = datos.Region;
+		usuarioTiendasNoOficial = datos.NoOficial;
 
 		if (string.IsNullOrEmpty(usuarioId) == false)
 		{
 			Task<string> tareaIdioma = BaseDatos.Usuarios.Buscar.IdiomaSobreescribir(usuarioId);
 			Task<Herramientas.UsuarioListadosJuegos> tareaJuegos = (juegosUsuario != null) ? Task.FromResult(juegosUsuario) : Herramientas.UsuarioJuegos.Cargar(usuarioId);
 			Task<Usuario> tareaDeseados = (deseadosUsuario != null) ? Task.FromResult(deseadosUsuario) : BaseDatos.Usuarios.Buscar.DeseadosTiene(usuarioId);
+			Task<Usuario> tareaUsuario = (opciones != null) ? Task.FromResult(opciones) : BaseDatos.Usuarios.Buscar.OpcionesFiltro(usuarioId);
 
-			await Task.WhenAll(tareaIdioma, tareaJuegos, tareaDeseados);
+			await Task.WhenAll(tareaIdioma, tareaJuegos, tareaDeseados, tareaUsuario);
 
 			idioma = tareaIdioma.Result;
 			juegosUsuario = tareaJuegos.Result;
 			deseadosUsuario = tareaDeseados.Result;
+            opciones = tareaUsuario.Result;
 
 			if (juegosUsuarioIndex == null)
 			{
@@ -631,7 +640,20 @@ else
 			if (deseadosWebIndex == null)
 			{
 				deseadosWebIndex = Herramientas.Deseados.CrearWebIndex(deseadosUsuario);
-			}			
+			}		
+			
+			if (opciones != null)
+			{
+				if (opciones.Currency.HasValue == true)
+				{
+					usuarioRegion = (TiendaRegion)opciones.Currency.Value;
+				}
+
+				if (opciones.NoOfficial.HasValue == true)
+				{
+					usuarioTiendasNoOficial = opciones.NoOfficial.Value;
+				}
+			}
 		}
 
 		Task tareaDeck = CargarDeck();
@@ -734,7 +756,7 @@ else
 			descripcion = Herramientas.Idiomas.BuscarTexto("en", "seo-Filter", "Filter");
 		}
 
-		resultadosGestor ??= await BaseDatos.Juegos.Buscar.Filtro(idsLista, posicion);
+		resultadosGestor ??= await BaseDatos.Juegos.Buscar.Filtro(usuarioTiendasNoOficial, usuarioRegion, idsLista, posicion);
 
 		cargado = true;
 	}
@@ -814,7 +836,7 @@ else
 			ids = ids.Remove(0, 1);
 		}
 
-		resultadosGestor = await BaseDatos.Juegos.Buscar.Filtro(idsLista, 250);
+		resultadosGestor = await BaseDatos.Juegos.Buscar.Filtro(usuarioTiendasNoOficial, usuarioRegion, idsLista, 250);
 
 		if (moduloJs != null)
 		{
@@ -1074,7 +1096,7 @@ else
 
 		cargandoMas = true;
 
-		resultadosGestor.AddRange(await BaseDatos.Juegos.Buscar.Filtro(idsLista, posicion));
+		resultadosGestor.AddRange(await BaseDatos.Juegos.Buscar.Filtro(usuarioTiendasNoOficial, usuarioRegion, idsLista, posicion));
 
 		cargandoMas = false;
 	}

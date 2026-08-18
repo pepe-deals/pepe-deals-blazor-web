@@ -724,6 +724,7 @@
 	public global::Juegos.Juego juego { get; set; }
 
 	private string claveExtension = string.Empty;
+	private string miUsuarioBD = string.Empty;
 
 	private string idSteam = string.Empty;
 	private string idGOG = string.Empty;
@@ -737,6 +738,7 @@
 	protected override void OnParametersSet()
 	{
 		claveExtension = Configuracion.GetValue<string>("Extension:Clave");
+        miUsuarioBD = Configuracion.GetValue<string>("MiUsuarioBD:Id");
 
 		if (juego.Bundles != null)
 		{
@@ -1468,70 +1470,59 @@
 			}
 		}
 
-		List<string> usuariosInteresados = await BaseDatos.Usuarios.Buscar.ListaUsuariosTienenDeseado(id, drm);
+		DeseadosDatos datosDeseados = null;
 
-		if (usuariosInteresados?.Count > 0)
+		string datosDeseadosTexto = await BaseDatos.Usuarios.Buscar.OpcionStringRegion(TiendaRegion.Europa, miUsuarioBD, "WishlistData");
+
+		if (string.IsNullOrEmpty(datosDeseadosTexto) == true)
 		{
-			foreach (var usuarioInteresado in usuariosInteresados)
+			datosDeseados = new DeseadosDatos();
+		}
+		else
+		{
+			try
 			{
-				if (await BaseDatos.Usuarios.Buscar.UsuarioTieneJuego(usuarioInteresado, id, drm) == false)
-				{
-					DeseadosDatos datosDeseados = null;
-
-					string datosDeseadosTexto = await BaseDatos.Usuarios.Buscar.OpcionStringRegion(TiendaRegion.Europa, usuarioInteresado, "WishlistData");
-
-					if (string.IsNullOrEmpty(datosDeseadosTexto) == true)
-					{
-						datosDeseados = new DeseadosDatos();
-					}
-					else
-					{
-						try
-						{
-							datosDeseados = JsonSerializer.Deserialize<DeseadosDatos>(datosDeseadosTexto);
-						}
-						catch
-						{
-							datosDeseados = new DeseadosDatos();
-						}
-
-						datosDeseados.Cantidad = datosDeseados.Cantidad + 1;
-
-						if (datosDeseados.Juegos == null)
-						{
-							datosDeseados.Juegos = new List<DeseadosDatosJuego>();
-						}
-
-						datosDeseados.Juegos.Add(new DeseadosDatosJuego
-						{
-							Id = id,
-							Enlace = nuevaOferta.Enlace,
-							Descuento = nuevaOferta.Descuento.ToString(),
-							Precio = Herramientas.Precios.Euro(nuevaOferta.PrecioCambiado > 0 ? nuevaOferta.PrecioCambiado : nuevaOferta.Precio),
-							Tienda = nuevaOferta.Tienda,
-							DRM = nuevaOferta.DRM,
-							Fecha = DateTime.Now
-						});
-					}
-
-					await BaseDatos.Usuarios.Actualizar.Opcion("WishlistData", JsonSerializer.Serialize(datosDeseados), usuarioInteresado);
-
-					// string correo = await BaseDatos.Usuarios.Buscar.UsuarioQuiereCorreos(TiendaRegion.Europa, usuarioInteresado, "NotificationLows");
-
-					// if (string.IsNullOrEmpty(correo) == false)
-					// {
-					// 	try
-					// 	{
-					// 		await Herramientas.Correos.DeseadoMinimo.Nuevo(usuarioInteresado, id, nuevaOferta, correo);
-					// 	}
-					// 	catch (Exception ex)
-					// 	{
-					// 		BaseDatos.Errores.Insertar.Mensaje("Enviar Correo Minimo", ex);
-					// 	}
-					// }
-				}
+				datosDeseados = JsonSerializer.Deserialize<DeseadosDatos>(datosDeseadosTexto);
 			}
-		}		
+			catch
+			{
+				datosDeseados = new DeseadosDatos();
+			}
+
+			datosDeseados.Cantidad = datosDeseados.Cantidad + 1;
+
+			if (datosDeseados.Juegos == null)
+			{
+				datosDeseados.Juegos = new List<DeseadosDatosJuego>();
+			}
+
+			datosDeseados.Juegos.Add(new DeseadosDatosJuego
+			{
+				Id = id,
+				Enlace = nuevaOferta.Enlace,
+				Descuento = nuevaOferta.Descuento.ToString(),
+				Precio = Herramientas.Precios.Euro(nuevaOferta.PrecioCambiado > 0 ? nuevaOferta.PrecioCambiado : nuevaOferta.Precio),
+				Tienda = nuevaOferta.Tienda,
+				DRM = nuevaOferta.DRM,
+				Fecha = DateTime.Now
+			});
+		}
+
+		await BaseDatos.Usuarios.Actualizar.Opcion("WishlistData", JsonSerializer.Serialize(datosDeseados), miUsuarioBD);
+
+		// string correo = await BaseDatos.Usuarios.Buscar.UsuarioQuiereCorreos(TiendaRegion.Europa, usuarioInteresado, "NotificationLows");
+
+		// if (string.IsNullOrEmpty(correo) == false)
+		// {
+		// 	try
+		// 	{
+		// 		await Herramientas.Correos.DeseadoMinimo.Nuevo(usuarioInteresado, id, nuevaOferta, correo);
+		// 	}
+		// 	catch (Exception ex)
+		// 	{
+		// 		BaseDatos.Errores.Insertar.Mensaje("Enviar Correo Minimo", ex);
+		// 	}
+		// }
 	}
 
 	#endregion

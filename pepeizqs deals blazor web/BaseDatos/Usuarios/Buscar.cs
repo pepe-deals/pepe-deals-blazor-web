@@ -288,7 +288,7 @@ namespace BaseDatos.Usuarios
 				return null;
 			}
 
-			string busqueda = "SELECT GameOption1, GameOption2, GameOption3, GameOption4, GameOption5, GameOption6, GameOption7, GameOption8, GameOption9, GameOption10, GameOption11, GameOption12, GameOption13, GameOption14, GameOption15, GameOption16, LanguageGames FROM AspNetUsers WHERE Id=@Id";
+			string busqueda = "SELECT Currency, NoOfficial, Marketplace, GameOption1, GameOption2, GameOption3, GameOption4, GameOption5, GameOption6, GameOption7, GameOption8, GameOption9, GameOption10, GameOption11, GameOption12, GameOption13, GameOption14, GameOption15, GameOption16, LanguageGames FROM AspNetUsers WHERE Id=@Id";
 
 			try
 			{
@@ -312,7 +312,7 @@ namespace BaseDatos.Usuarios
 				return null;
 			}
 
-			string busqueda = "SELECT Currency, WishlistSort, WishlistOption3, WishlistOption4, WishlistPosition, WishlistData FROM AspNetUsers WHERE Id=@Id";
+			string busqueda = "SELECT Currency, NoOfficial, Marketplace, WishlistSort, WishlistOption3, WishlistOption4, WishlistPosition, WishlistData FROM AspNetUsers WHERE Id=@Id";
 
 			try
 			{
@@ -869,6 +869,30 @@ namespace BaseDatos.Usuarios
 			catch (Exception ex)
 			{
 				BaseDatos.Errores.Insertar.Mensaje("Usuario Opciones Amazon Luna", ex);
+			}
+
+			return null;
+		}
+
+		public static async Task<Usuario> OpcionesFiltro(string usuarioId)
+		{
+			if (string.IsNullOrEmpty(usuarioId) == true)
+			{
+				return null;
+			}
+
+			string busqueda = "SELECT Currency, NoOfficial FROM AspNetUsers WHERE Id=@Id";
+
+			try
+			{
+				return await Herramientas.BaseDatos.Select(async conexion =>
+				{
+					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
+				});
+			}
+			catch (Exception ex)
+			{
+				BaseDatos.Errores.Insertar.Mensaje("Usuario Opciones Filtro", ex);
 			}
 
 			return null;

@@ -50,7 +50,7 @@
                         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 30px; width: 100%;">
                             @foreach (var juegoCurator in curator.JuegosMostrar)
                             {
-                                <CajaJuego idCurator="@curator.Curator.Id" idioma="@idioma" juego="@juegoCurator" juegosUsuarioIndex="@juegosUsuarioIndex" usuarioDeseadosImportados="@usuarioDeseadosImportados" usuarioDeseadosWeb="@usuarioDeseadosWeb" tipo="CajaJuego.Tipo.CuratorJuego" userAgent="@userAgent" />
+                                <CajaJuego idCurator="@curator.Curator.Id" noOficial="@tiendasNoOficial" idioma="@idioma" juego="@juegoCurator" juegosUsuarioIndex="@juegosUsuarioIndex" usuarioDeseadosImportados="@usuarioDeseadosImportados" usuarioDeseadosWeb="@usuarioDeseadosWeb" tipo="CajaJuego.Tipo.CuratorJuego" userAgent="@userAgent" />
                             }
                         </div>
 
@@ -98,6 +98,9 @@
 @code {
 
     #nullable disable
+
+    [Parameter]
+    public bool tiendasNoOficial { get; set; }
 
     [Parameter]
     public TiendaRegion region { get; set; }
@@ -232,7 +235,7 @@
             if (c.Curator.SteamIds?.Count > 0)
             {
                 int cantidad = Math.Min(4, c.Curator.SteamIds.Count);
-                c.JuegosMostrar = await BaseDatos.Juegos.Buscar.MultiplesJuegosSteam2(region, c.Curator.SteamIds.GetRange(c.Posicion, cantidad));
+                c.JuegosMostrar = await BaseDatos.Juegos.Buscar.MultiplesJuegosSteam3(tiendasNoOficial, region, c.Curator.SteamIds.GetRange(c.Posicion, cantidad));
             }
         }
     }
@@ -252,7 +255,7 @@
             curator.Posicion = 0;
         }
 
-        curator.JuegosMostrar = await global::BaseDatos.Juegos.Buscar.MultiplesJuegosSteam2(region, curator.Curator.SteamIds.GetRange(curator.Posicion, 4));
+        curator.JuegosMostrar = await global::BaseDatos.Juegos.Buscar.MultiplesJuegosSteam3(tiendasNoOficial, region, curator.Curator.SteamIds.GetRange(curator.Posicion, 4));
     }
 
     private async Task CuratorAdelante(MouseEventArgs e, global::BaseDatos.Curators.CuratorFicha curator)
@@ -268,6 +271,6 @@
             curator.Posicion = curator.Curator.SteamIds.Count - 4;
         }
 
-        curator.JuegosMostrar = await global::BaseDatos.Juegos.Buscar.MultiplesJuegosSteam2(region, curator.Curator.SteamIds.GetRange(curator.Posicion, 4));
+        curator.JuegosMostrar = await global::BaseDatos.Juegos.Buscar.MultiplesJuegosSteam3(tiendasNoOficial, region, curator.Curator.SteamIds.GetRange(curator.Posicion, 4));
     }
 }

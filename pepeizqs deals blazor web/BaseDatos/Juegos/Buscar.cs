@@ -397,8 +397,8 @@ WHERE id=@id AND j.tipo=0";
 			}
 		}
 
-		public static async Task<List<Juego>> MultiplesJuegos(TiendaRegion region, List<JuegoDeseado> ids)
-        {
+		public static async Task<List<Juego>> MultiplesJuegos(bool noOficial, TiendaRegion region, List<JuegoDeseado> ids)
+		{
 			if (ids?.Count == 0)
 			{
 				return null;
@@ -418,43 +418,74 @@ WHERE id=@id AND j.tipo=0";
 				_ => string.Empty
 			};
 
+			string precioMinimosNoOficial = region switch
+			{
+				TiendaRegion.Europa => "preciosHistoricosNoOficialesEU",
+				TiendaRegion.EstadosUnidos => "preciosHistoricosNoOficialesUS",
+				_ => string.Empty
+			};
+
+			string precioActualesNoOficial = region switch
+			{
+				TiendaRegion.Europa => "preciosActualesNoOficialesEU",
+				TiendaRegion.EstadosUnidos => "preciosActualesNoOficialesUS",
+				_ => string.Empty
+			};
+
 			var idsBaseDatos = ids.Select(j => int.Parse(j.IdBaseDatos)).ToList();
 
-			string sqlBuscar = $@"SELECT 
-        j.id, j.nombre, j.imagenes, j.{precioMinimosHistoricos}, j.{precioActualesTiendas}, j.media,
-        j.tipo, j.analisis, j.idSteam, j.idGog, j.idAmazon,
-        j.exeEpic, j.exeUbisoft, j.freeToPlay,
-		(
-			SELECT b.id, b.bundleTipo
-			FROM bundles b
-			INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
-			WHERE bj.juegoId = j.id
-				AND b.fechaEmpieza <= GETDATE()
-				AND b.fechaTermina >= GETDATE()
-			FOR JSON PATH
-		) AS BundlesActuales,
-        (
-            SELECT g.gratis
-            FROM gratis g
-            WHERE g.juegoId = j.id
-              AND g.fechaEmpieza <= GETDATE()
-              AND g.fechaTermina >= GETDATE()
-            FOR JSON PATH
-        ) AS GratisActuales,
-        (
-            SELECT s.suscripcion
-            FROM suscripciones s
-            WHERE s.juegoId = j.id
-              AND s.FechaEmpieza <= GETDATE()
-              AND s.FechaTermina >= GETDATE()
-            FOR JSON PATH
-        ) AS SuscripcionesActuales
-    FROM juegos j
-    WHERE id IN @Ids
-    ORDER BY CASE
-        WHEN analisis = 'null' OR analisis IS NULL THEN 0 
-        ELSE CONVERT(int, REPLACE(JSON_VALUE(analisis, '$.Cantidad'),',',''))
-    END DESC";
+			string ConstruirBusqueda(bool esOficial)
+			{
+				string columnasPrecio = esOficial
+					? $"j.{precioMinimosHistoricos} AS {precioMinimosHistoricos}, NULL AS {precioMinimosNoOficial}, j.{precioActualesTiendas} AS {precioActualesTiendas}, NULL AS {precioActualesNoOficial},"
+					: $"NULL AS {precioMinimosHistoricos}, j.{precioMinimosNoOficial} AS {precioMinimosNoOficial}, NULL AS {precioActualesTiendas}, j.{precioActualesNoOficial} AS {precioActualesNoOficial},";
+
+				return $@"SELECT
+					j.id, j.nombre, j.imagenes, {columnasPrecio} j.media,
+					j.tipo, j.analisis, j.idSteam, j.idGog, j.idAmazon,
+					j.exeEpic, j.exeUbisoft, j.freeToPlay,
+					(
+						SELECT b.id, b.bundleTipo
+						FROM bundles b
+						INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
+						WHERE bj.juegoId = j.id
+							AND b.fechaEmpieza <= GETDATE()
+							AND b.fechaTermina >= GETDATE()
+						FOR JSON PATH
+					) AS BundlesActuales,
+					(
+						SELECT g.gratis
+						FROM gratis g
+						WHERE g.juegoId = j.id
+						  AND g.fechaEmpieza <= GETDATE()
+						  AND g.fechaTermina >= GETDATE()
+						FOR JSON PATH
+					) AS GratisActuales,
+					(
+						SELECT s.suscripcion
+						FROM suscripciones s
+						WHERE s.juegoId = j.id
+						  AND s.FechaEmpieza <= GETDATE()
+						  AND s.FechaTermina >= GETDATE()
+						FOR JSON PATH
+					) AS SuscripcionesActuales,
+				CASE
+					WHEN j.analisis = 'null' OR j.analisis IS NULL THEN 0
+					ELSE CONVERT(int, REPLACE(JSON_VALUE(j.analisis, '$.Cantidad'),',',''))
+				END AS OrdenReseñas
+				FROM juegos j
+				WHERE id IN @Ids";
+			}
+
+			string sqlBuscar = ConstruirBusqueda(esOficial: true);
+
+			if (noOficial == true)
+			{
+				string busquedaNoOficial = ConstruirBusqueda(esOficial: false);
+				sqlBuscar = $"({sqlBuscar}) UNION ALL ({busquedaNoOficial})";
+			}
+
+			sqlBuscar = sqlBuscar + " ORDER BY OrdenReseñas DESC";
 
 			try
 			{
@@ -467,9 +498,9 @@ WHERE id=@id AND j.tipo=0";
 				BaseDatos.Errores.Insertar.Mensaje("Juego Multiples", ex);
 				return null;
 			}
-        }
+		}
 
-		public static async Task<List<Juego>> MultiplesJuegosSteam2(TiendaRegion region, List<int> ids)
+		public static async Task<List<Juego>> MultiplesJuegosSteam2(bool noOficial, TiendaRegion region, List<int> ids)
 		{
 			if (ids == null || ids?.Count == 0)
 			{
@@ -490,10 +521,152 @@ WHERE id=@id AND j.tipo=0";
 				_ => string.Empty
 			};
 
-			string sqlBuscar = $@"SELECT 
-        j.id, j.nombre, j.imagenes, j.{precioMinimosHistoricos}, j.{precioActualesTiendas}, j.media, j.etiquetas, 
-        j.tipo, j.analisis, j.idSteam, j.idGog, j.idAmazon,
-        j.exeEpic, j.exeUbisoft, j.freeToPlay,
+			string precioMinimosNoOficial = region switch
+			{
+				TiendaRegion.Europa => "preciosHistoricosNoOficialesEU",
+				TiendaRegion.EstadosUnidos => "preciosHistoricosNoOficialesUS",
+				_ => string.Empty
+			};
+
+			string precioActualesNoOficial = region switch
+			{
+				TiendaRegion.Europa => "preciosActualesNoOficialesEU",
+				TiendaRegion.EstadosUnidos => "preciosActualesNoOficialesUS",
+				_ => string.Empty
+			};
+
+			string ConstruirBusqueda(bool esOficial)
+			{
+				string columnasPrecio = esOficial
+						? $"j.{precioMinimosHistoricos} AS {precioMinimosHistoricos}, NULL AS {precioMinimosNoOficial}, j.{precioActualesTiendas} AS {precioActualesTiendas}, NULL AS {precioActualesNoOficial},"
+						: $"NULL AS {precioMinimosHistoricos}, j.{precioMinimosNoOficial} AS {precioMinimosNoOficial}, NULL AS {precioActualesTiendas}, j.{precioActualesNoOficial} AS {precioActualesNoOficial},";
+
+				return $@"SELECT j.id, j.nombre, j.imagenes, {columnasPrecio} j.media, j.etiquetas,
+					j.tipo, j.analisis, j.idSteam, j.idGog, j.idAmazon, j.exeEpic, j.exeUbisoft, j.freeToPlay,
+					(
+						SELECT b.id, b.bundleTipo
+						FROM bundles b
+						INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
+						WHERE bj.juegoId = j.id
+							AND b.fechaEmpieza <= GETDATE()
+							AND b.fechaTermina >= GETDATE()
+						FOR JSON PATH
+					) AS BundlesActuales,
+					(
+						SELECT b.id, b.bundleTipo
+						FROM bundles b
+						INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
+						WHERE bj.juegoId = j.id
+							AND b.fechaTermina < GETDATE()
+						FOR JSON PATH
+					) AS BundlesPasados,
+					(
+						SELECT g.gratis
+						FROM gratis g
+						WHERE g.juegoId = j.id
+							AND g.fechaEmpieza <= GETDATE()
+							AND g.fechaTermina >= GETDATE()
+						FOR JSON PATH
+					) AS GratisActuales,
+					(
+						SELECT g.gratis
+						FROM gratis g
+						WHERE g.juegoId = j.id
+							AND g.fechaTermina < GETDATE()
+						FOR JSON PATH
+					) AS GratisPasados,
+					(
+						SELECT s.suscripcion
+						FROM suscripciones s
+						WHERE s.juegoId = j.id
+							AND s.FechaEmpieza <= GETDATE()
+							AND s.FechaTermina >= GETDATE()
+						FOR JSON PATH
+					) AS SuscripcionesActuales,
+					(
+						SELECT s.suscripcion
+						FROM suscripciones s
+						WHERE s.juegoId = j.id
+							AND s.FechaTermina < GETDATE()
+						FOR JSON PATH
+					) AS SuscripcionesPasados,
+				CASE
+					WHEN j.analisis = 'null' OR j.analisis IS NULL THEN 0
+					ELSE CONVERT(int, REPLACE(JSON_VALUE(j.analisis, '$.Cantidad'),',',''))
+				END AS OrdenReseñas
+				FROM juegos j
+				WHERE idSteam IN @Ids";
+			}
+
+			string sqlBuscar = ConstruirBusqueda(esOficial: true);
+
+			if (noOficial == true)
+			{
+				string busquedaNoOficial = ConstruirBusqueda(esOficial: false);
+				sqlBuscar = $"({sqlBuscar}) UNION ALL ({busquedaNoOficial})";
+			}
+
+			sqlBuscar = sqlBuscar + " ORDER BY OrdenReseñas DESC";
+
+			try
+			{
+				const int loteTamaño = 2000;
+				List<Juego> resultados = new List<Juego>();
+
+				for (int i = 0; i < ids.Count; i += loteTamaño)
+				{
+					List<int> lote = ids.Skip(i).Take(loteTamaño).ToList();
+
+					List<Juego> juegosDeLote = await Herramientas.BaseDatos.Select(async conexion =>
+						(await conexion.QueryAsync<Juego>(sqlBuscar, new { Ids = lote })).ToList()
+					);
+
+					resultados.AddRange(juegosDeLote);
+				}
+
+				return resultados;
+			}
+			catch (Exception ex)
+			{
+				BaseDatos.Errores.Insertar.Mensaje("Juego Multiples Steam", ex);
+				return null;
+			}
+		}
+
+		public static async Task<List<Juego>> MultiplesJuegosSteam3(bool noOficial, TiendaRegion region, List<int> ids)
+		{
+			if (ids == null || ids?.Count == 0)
+			{
+				return null;
+			}
+
+			string columnasPrecio;
+
+			if (region == TiendaRegion.Europa)
+			{
+				columnasPrecio = "j.precioMinimosHistoricos, j.precioActualesTiendas";
+
+				if (noOficial == true)
+				{
+					columnasPrecio += ", j.preciosHistoricosNoOficialesEU, j.preciosActualesNoOficialesEU";
+				}
+			}
+			else if (region == TiendaRegion.EstadosUnidos)
+			{
+				columnasPrecio = "j.precioMinimosHistoricosUS, j.precioActualesTiendasUS";
+
+				if (noOficial == true)
+				{
+					columnasPrecio += ", j.preciosHistoricosNoOficialesUS, j.preciosActualesNoOficialesUS";
+				}
+			}
+			else
+			{
+				columnasPrecio = string.Empty;
+			}
+
+			string sqlBuscar = $@"SELECT j.id, j.nombre, j.imagenes, {columnasPrecio}, j.media, j.etiquetas,
+		j.tipo, j.analisis, j.idSteam, j.idGog, j.idAmazon, j.exeEpic, j.exeUbisoft, j.freeToPlay,
 		(
 			SELECT b.id, b.bundleTipo
 			FROM bundles b
@@ -541,12 +714,12 @@ WHERE id=@id AND j.tipo=0";
 			  AND s.FechaTermina < GETDATE()
 			FOR JSON PATH
 		) AS SuscripcionesPasados
-		FROM juegos j
-		WHERE idSteam IN @Ids
-		ORDER BY CASE
-			WHEN analisis = 'null' OR analisis IS NULL THEN 0 
-			ELSE CONVERT(int, REPLACE(JSON_VALUE(analisis, '$.Cantidad'),',',''))
-		END DESC";
+	FROM juegos j
+	WHERE idSteam IN @Ids
+	ORDER BY CASE
+		WHEN j.analisis = 'null' OR j.analisis IS NULL THEN 0
+		ELSE CONVERT(int, REPLACE(JSON_VALUE(j.analisis, '$.Cantidad'),',',''))
+	END DESC";
 
 			try
 			{
@@ -619,7 +792,7 @@ END DESC";
 			return null;
 		}
 
-		public static async Task<List<Juego>> MultiplesJuegosGOG(TiendaRegion region, List<string> ids)
+		public static async Task<List<Juego>> MultiplesJuegosGOG(bool noOficial, TiendaRegion region, List<string> ids)
 		{
 			if (ids?.Count == 0)
 			{
@@ -640,43 +813,74 @@ END DESC";
 				_ => string.Empty
 			};
 
+			string precioMinimosNoOficial = region switch
+			{
+				TiendaRegion.Europa => "preciosHistoricosNoOficialesEU",
+				TiendaRegion.EstadosUnidos => "preciosHistoricosNoOficialesUS",
+				_ => string.Empty
+			};
+
+			string precioActualesNoOficial = region switch
+			{
+				TiendaRegion.Europa => "preciosActualesNoOficialesEU",
+				TiendaRegion.EstadosUnidos => "preciosActualesNoOficialesUS",
+				_ => string.Empty
+			};
+
 			var idsBaseDatos = ids.Select(j => int.Parse(j)).ToList();
 
-			string sqlBuscar = $@"SELECT 
-        j.id, j.nombre, j.imagenes, j.{precioMinimosHistoricos}, j.{precioActualesTiendas}, j.media,
-        j.tipo, j.analisis, j.idSteam, j.idGog, j.idAmazon,
-        j.exeEpic, j.exeUbisoft, j.freeToPlay,
-		(
-			SELECT b.id, b.bundleTipo
-			FROM bundles b
-			INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
-			WHERE bj.juegoId = j.id
-				AND b.fechaEmpieza <= GETDATE()
-				AND b.fechaTermina >= GETDATE()
-			FOR JSON PATH
-		) AS BundlesActuales,
-        (
-            SELECT g.gratis
-            FROM gratis g
-            WHERE g.juegoId = j.id
-              AND g.fechaEmpieza <= GETDATE()
-              AND g.fechaTermina >= GETDATE()
-            FOR JSON PATH
-        ) AS GratisActuales,
-        (
-            SELECT s.suscripcion
-            FROM suscripciones s
-            WHERE s.juegoId = j.id
-              AND s.FechaEmpieza <= GETDATE()
-              AND s.FechaTermina >= GETDATE()
-            FOR JSON PATH
-        ) AS SuscripcionesActuales
-    FROM juegos j
-    WHERE idGOG IN @Ids
-    ORDER BY CASE
-        WHEN analisis = 'null' OR analisis IS NULL THEN 0 
-        ELSE CONVERT(int, REPLACE(JSON_VALUE(analisis, '$.Cantidad'),',',''))
-    END DESC";
+			string ConstruirBusqueda(bool esOficial)
+			{
+				string columnasPrecio = esOficial
+					? $"j.{precioMinimosHistoricos} AS {precioMinimosHistoricos}, NULL AS {precioMinimosNoOficial}, j.{precioActualesTiendas} AS {precioActualesTiendas}, NULL AS {precioActualesNoOficial},"
+					: $"NULL AS {precioMinimosHistoricos}, j.{precioMinimosNoOficial} AS {precioMinimosNoOficial}, NULL AS {precioActualesTiendas}, j.{precioActualesNoOficial} AS {precioActualesNoOficial},";
+
+				return $@"SELECT
+					j.id, j.nombre, j.imagenes, {columnasPrecio} j.media,
+					j.tipo, j.analisis, j.idSteam, j.idGog, j.idAmazon,
+					j.exeEpic, j.exeUbisoft, j.freeToPlay,
+					(
+						SELECT b.id, b.bundleTipo
+						FROM bundles b
+						INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
+						WHERE bj.juegoId = j.id
+							AND b.fechaEmpieza <= GETDATE()
+							AND b.fechaTermina >= GETDATE()
+						FOR JSON PATH
+					) AS BundlesActuales,
+					(
+						SELECT g.gratis
+						FROM gratis g
+						WHERE g.juegoId = j.id
+						  AND g.fechaEmpieza <= GETDATE()
+						  AND g.fechaTermina >= GETDATE()
+						FOR JSON PATH
+					) AS GratisActuales,
+					(
+						SELECT s.suscripcion
+						FROM suscripciones s
+						WHERE s.juegoId = j.id
+						  AND s.FechaEmpieza <= GETDATE()
+						  AND s.FechaTermina >= GETDATE()
+						FOR JSON PATH
+					) AS SuscripcionesActuales,
+				CASE
+					WHEN j.analisis = 'null' OR j.analisis IS NULL THEN 0
+					ELSE CONVERT(int, REPLACE(JSON_VALUE(j.analisis, '$.Cantidad'),',',''))
+				END AS OrdenReseñas
+				FROM juegos j
+				WHERE idGOG IN @Ids";
+			}
+
+			string sqlBuscar = ConstruirBusqueda(esOficial: true);
+
+			if (noOficial == true)
+			{
+				string busquedaNoOficial = ConstruirBusqueda(esOficial: false);
+				sqlBuscar = $"({sqlBuscar}) UNION ALL ({busquedaNoOficial})";
+			}
+
+			sqlBuscar = sqlBuscar + " ORDER BY OrdenReseñas DESC";
 
 			try
 			{
@@ -2289,7 +2493,7 @@ END DESC";
 			return 0;
 		}
 
-		public static async Task<List<Juego>> Filtro(List<string> ids, int posicion = 0)
+		public static async Task<List<Juego>> Filtro(bool noOficial, TiendaRegion region, List<string> ids, int posicion = 0)
 		{
 			List<string> etiquetas = new List<string>();
 			List<string> categorias = new List<string>();
@@ -2479,7 +2683,32 @@ END DESC";
 				}
 			}
 
-			string busqueda = @"SELECT j.id, j.nombre, j.imagenes, j.precioMinimosHistoricos, j.precioActualesTiendas,
+			string columnasPrecio = string.Empty;
+
+			if (region == TiendaRegion.Europa)
+			{
+				columnasPrecio = "j.precioMinimosHistoricos, j.precioActualesTiendas";
+
+				if (noOficial == true)
+				{
+					columnasPrecio += ", j.preciosHistoricosNoOficialesEU, j.preciosActualesNoOficialesEU";
+				}
+			}
+			else if (region == TiendaRegion.EstadosUnidos)
+			{
+				columnasPrecio = "j.precioMinimosHistoricosUS, j.precioActualesTiendasUS";
+
+				if (noOficial == true)
+				{
+					columnasPrecio += ", j.preciosHistoricosNoOficialesUS, j.preciosActualesNoOficialesUS";
+				}
+			}
+			else
+			{
+				columnasPrecio = string.Empty;
+			}
+
+			string busqueda = $@"SELECT j.id, j.nombre, j.imagenes, {columnasPrecio},
 				j.tipo, j.analisis, j.idSteam, j.idGog, j.media, j.freeToPlay,
 				(
 					SELECT b.id, b.bundleTipo

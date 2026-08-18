@@ -131,7 +131,7 @@ namespace APIs.Fanatical
 
 									var juegosBundle = tier.Productos.Where(p => p.SteamId != null && p.SteamId > 0).ToList();
 									List<int> juegosBundleSteam = juegosBundle.Select(j => j.SteamId ?? 0).ToList();
-									List<Juegos.Juego> juegosBundleWeb = await BaseDatos.Juegos.Buscar.MultiplesJuegosSteam2(TiendaRegion.Europa, juegosBundleSteam);
+									List<Juegos.Juego> juegosBundleWeb = await BaseDatos.Juegos.Buscar.MultiplesJuegosSteam2(false, TiendaRegion.Europa, juegosBundleSteam);
 
 									if (juegosBundleWeb?.Count > 0)
 									{

@@ -3038,7 +3038,7 @@
 
             @if (cargarComponentes == true)
             {
-                <JuegoCurators region="@usuarioRegion" usuarioId="@usuarioId" idioma="@idioma" userAgent="@userAgent" juego="@juego" juegosUsuarioIndex="@juegosUsuarioIndex" usuarioDeseadosImportados="@deseadosImportadosIndex" usuarioDeseadosWeb="@deseadosWebIndex"/>
+                <JuegoCurators tiendasNoOficial="@usuarioTiendasNoOficial" region="@usuarioRegion" usuarioId="@usuarioId" idioma="@idioma" userAgent="@userAgent" juego="@juego" juegosUsuarioIndex="@juegosUsuarioIndex" usuarioDeseadosImportados="@deseadosImportadosIndex" usuarioDeseadosWeb="@deseadosWebIndex"/>
 
                 <JuegoReseñas usuarioId="@usuarioId" idioma="@idioma" userAgent="@userAgent" juego="@juego" usuarioAdmin="@usuarioAdmin" usuarioPatreon="@usuarioPatreon"/>
             }  
@@ -3731,20 +3731,16 @@
             Task<Usuario> tareaDeseados = (deseadosUsuario != null) ? Task.FromResult(deseadosUsuario) : BaseDatos.Usuarios.Buscar.DeseadosTiene(usuarioId);
             Task<DateTime?> tareaPatreon = BaseDatos.Usuarios.Buscar.FechaPatreon(usuarioId);
             Task<bool> tareaAdmin = BaseDatos.Usuarios.Buscar.RolDios(usuarioId);
-            Task<int> tareaRegion = BaseDatos.Usuarios.Buscar.OpcionInt(usuarioId, "Currency");
-            Task<bool> tareaNoOficial = BaseDatos.Usuarios.Buscar.OpcionBool(usuarioId, "NoOfficial");
             Task<string> tareaIdiomaJuego = BaseDatos.Usuarios.Buscar.IdiomaJuegos(usuarioId);
             Task<Usuario> tareaOpciones = (opciones != null) ? Task.FromResult(opciones) : BaseDatos.Usuarios.Buscar.OpcionesJuego(usuarioId);
 
-            await Task.WhenAll(tareaIdioma, tareaJuegos, tareaDeseados, tareaPatreon, tareaAdmin, tareaRegion, tareaNoOficial, tareaIdiomaJuego, tareaOpciones);
+            await Task.WhenAll(tareaIdioma, tareaJuegos, tareaDeseados, tareaPatreon, tareaAdmin, tareaIdiomaJuego, tareaOpciones);
 
             idioma = tareaIdioma.Result;
             juegosUsuario = tareaJuegos.Result;
             deseadosUsuario = tareaDeseados.Result;
             usuarioPatreon = Herramientas.Patreon.VerificarActivo(tareaPatreon.Result);
             usuarioAdmin = tareaAdmin.Result;
-            usuarioRegion = (TiendaRegion)tareaRegion.Result;
-            usuarioTiendasNoOficial = tareaNoOficial.Result;
 
             string idiomaJuegoTemp = tareaIdiomaJuego.Result;
             if (string.IsNullOrEmpty(idiomaJuegoTemp) == false)
@@ -3771,6 +3767,16 @@
 
             if (opciones != null)
             {
+                if (opciones.Currency.HasValue == true)
+				{
+					usuarioRegion = (TiendaRegion)opciones.Currency.Value;
+				}
+
+				if (opciones.NoOfficial.HasValue == true)
+				{
+					usuarioTiendasNoOficial = opciones.NoOfficial.Value;
+				}
+
                 if (opciones.GameOption1.HasValue == true)
                 {
                     enseñarOpcionesSteamDeck = opciones.GameOption1.Value;

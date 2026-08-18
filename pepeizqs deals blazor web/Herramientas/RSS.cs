@@ -313,7 +313,7 @@ namespace Herramientas
 
 			List<SyndicationItem> items = new List<SyndicationItem>();
 
-			List<JuegoDeseadoMostrar> juegos = await Deseados.LeerJuegos(region, usuarioId);
+			List<JuegoDeseadoMostrar> juegos = await Deseados.LeerJuegos(false, region, usuarioId);
 
 			if (juegos?.Count > 0)
 			{
