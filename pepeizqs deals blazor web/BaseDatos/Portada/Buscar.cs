@@ -432,27 +432,29 @@ namespace BaseDatos.Portada
 				busqueda = $"({busqueda}) UNION ALL ({busquedaNoOficial})";
 			}
 
+			busqueda = $"SELECT * FROM ({busqueda}) AS resultado";
+
 			if (tipo == 0)
 			{
-				busqueda = busqueda + " ORDER BY Fecha DESC";
+				busqueda += " ORDER BY Fecha DESC";
 			}
 			else if (tipo == 1)
 			{
-				busqueda = busqueda + @" ORDER BY CASE
-									WHEN jg.analisis = 'null' OR jg.analisis IS NULL THEN 0 ELSE CONVERT(int, REPLACE(JSON_VALUE(jg.analisis, '$.Cantidad'),',',''))
-								 END DESC";
+				busqueda += @" ORDER BY CASE
+						WHEN analisis = 'null' OR analisis IS NULL THEN 0 ELSE CONVERT(int, REPLACE(JSON_VALUE(analisis, '$.Cantidad'),',',''))
+					 END DESC";
 			}
 			else if (tipo == 2)
 			{
-				busqueda = busqueda + " AND CONVERT(datetime2, JSON_VALUE(jg.caracteristicas, '$.FechaLanzamientoSteam')) > DATEADD(DAY,-30,GetDate()) ORDER BY CONVERT(datetime2, JSON_VALUE(jg.caracteristicas, '$.FechaLanzamientoSteam')) DESC";
+				busqueda += " ORDER BY FechaLanzamiento DESC";
 			}
 			else if (tipo == 3)
 			{
-				busqueda = busqueda + $" ORDER BY precioMin.FechaDetectado DESC";
+				busqueda += " ORDER BY Fecha DESC";
 			}
 
-			busqueda = busqueda + @$" OFFSET {posicion} ROWS
-								FETCH NEXT 100 ROWS ONLY";
+			busqueda += @$" OFFSET {posicion} ROWS
+					FETCH NEXT 100 ROWS ONLY";
 
 			try
 			{

@@ -3,6 +3,7 @@
 @implements IAsyncDisposable
 
 @using Microsoft.AspNetCore.Components.Web
+@using Noticias
 @using pepeizqs_deals_blazor_web.Componentes.Interfaz
 @using Tiendas2
 
@@ -305,7 +306,7 @@
 
 		//--------------------------------------------------------------------
 
-		noticiasMostrar ??= await BaseDatos.Noticias.Buscar.Actuales(tipoSeleccionado);
+		noticiasMostrar ??= await BaseDatos.Noticias.Buscar.Actuales(new List<NoticiaTipo> { tipoSeleccionado });
 
 		if (noticiasMostrar?.Count > 0)
 		{
@@ -364,7 +365,7 @@
 		if (esArchivo == false)
 		{
 			tipoSeleccionado = nuevoTipo;
-			noticiasMostrar = await BaseDatos.Noticias.Buscar.Actuales(tipoSeleccionado);
+			noticiasMostrar = await BaseDatos.Noticias.Buscar.Actuales(new List<NoticiaTipo> { tipoSeleccionado });
 		}
 		else
 		{

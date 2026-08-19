@@ -36,3 +36,18 @@
         background-color: var(--fondoBotonPequeñoHover);
         transform: scale(1.01);
     }
+
+.boton-subcabecera {
+    background: transparent;
+    padding: 6px 12px;
+    width: fit-content;
+    box-shadow: none;
+    border: 0;
+    border-radius: 5px;
+    font-size: 16px;
+    color: var(--colorFuente);
+}
+
+    .boton-subcabecera:hover {
+        background: var(--fondoBotonPequeñoHover);
+    }

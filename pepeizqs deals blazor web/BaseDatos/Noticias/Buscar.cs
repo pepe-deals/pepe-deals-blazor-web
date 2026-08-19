@@ -45,7 +45,7 @@ namespace BaseDatos.Noticias
 			return null;
 		}
 
-		public static async Task<List<Noticia>> Actuales(NoticiaTipo tipo = NoticiaTipo.Desconocido, int ultimosDias = 0)
+		public static async Task<List<Noticia>> Actuales(List<NoticiaTipo> tipos = null, int ultimosDias = 0)
 		{
 			string busqueda = "SELECT * FROM noticias WHERE (GETDATE() BETWEEN fechaEmpieza AND fechaTermina)";
 
@@ -54,9 +54,9 @@ namespace BaseDatos.Noticias
 				busqueda = busqueda + " AND (GETDATE()-" + ultimosDias.ToString() + " < fechaEmpieza)";
 			}
 
-			if (tipo != NoticiaTipo.Desconocido)
+			if (tipos?.Count > 0)
 			{
-				busqueda = busqueda + " AND (noticiaTipo=" + (int)tipo + ")";
+				busqueda = busqueda + " AND (noticiaTipo IN (" + string.Join(",", tipos.Select(t => (int)t)) + "))";
 			}
 
 			busqueda = busqueda + " ORDER BY id DESC";

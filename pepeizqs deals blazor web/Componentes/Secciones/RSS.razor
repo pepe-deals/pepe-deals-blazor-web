@@ -5,6 +5,7 @@
 @using Microsoft.AspNetCore.Components.Web
 @using Tiendas2
 @using pepeizqs_deals_blazor_web.Componentes.Interfaz
+@using pepeizqs_deals_web.Data
 
 @inject IHttpContextAccessor Contexto
 @inject IJSRuntime JavaScript
@@ -30,104 +31,190 @@
 	</div>
 }
 
-<div class="caja-rss-contenido cuerpo-ancho" style="margin-top: 40px; margin-bottom: 40px;">
-	<div class="caja-rss-titulo">
-		@Herramientas.Idiomas.BuscarTexto(idioma, "Title", "RSS") (@Herramientas.Idiomas.BuscarTexto(idioma, "String1", "RSS"))
-	</div>
+<div class="subcabecera" style="background: color-mix(in srgb, var(--fondoSubcabecera) 45%, var(--fondoBotonPequeño)); position: sticky; top: var(--alturaCabecera); z-index: 100;">
+	<div class="cuerpo-ancho" style="display: flex; align-items: center; gap: 20px; padding: 10px 0px;">
+		<div style="display: flex; align-items: center; gap: 15px;">
+			<div style="max-width: 24px; max-height: 24px;">
+				<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M0 64C0 46.3 14.3 32 32 32c229.8 0 416 186.2 416 416c0 17.7-14.3 32-32 32s-32-14.3-32-32C384 253.6 226.4 96 32 96C14.3 96 0 81.7 0 64zM0 416a64 64 0 1 1 128 0A64 64 0 1 1 0 416zM32 160c159.1 0 288 128.9 288 288c0 17.7-14.3 32-32 32s-32-14.3-32-32c0-123.7-100.3-224-224-224c-17.7 0-32-14.3-32-32s14.3-32 32-32z" /></svg>
+			</div>
 
-	<div style="padding: 30px; display: flex; flex-direction: column; gap: 20px;">
-		<div>
-			@Herramientas.Idiomas.BuscarTexto(idioma, "String2", "RSS")
-		</div>
-
-		<div style="display: flex; flex-direction: column; gap: 5px;">
-			@Herramientas.Idiomas.BuscarTexto(idioma, "String3", "RSS")
-
-			<div style="display: flex; align-items: center; gap: 20px; background-color: var(--fondoSubcabecera); border: 2px solid var(--fondoBotonPequeño);">
-				<div style="padding: 10px 15px;">
-					<label style="text-decoration: none; cursor: initial;">@enlaceNoticiasEn</label>
-				</div>
-
-				<button @onclick="(e => CopiarAlClipboard(e, enlaceNoticiasEn))" class="juego-boton-pequeño" style="width: fit-content; padding: 10px 15px; display: flex; margin-left: auto;">
-					<div style="width: 24px;">
-						<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-							<path d="M288 64C252.7 64 224 92.7 224 128L224 384C224 419.3 252.7 448 288 448L480 448C515.3 448 544 419.3 544 384L544 183.4C544 166 536.9 149.3 524.3 137.2L466.6 81.8C454.7 70.4 438.8 64 422.3 64L288 64zM160 192C124.7 192 96 220.7 96 256L96 512C96 547.3 124.7 576 160 576L352 576C387.3 576 416 547.3 416 512L416 496L352 496L352 512L160 512L160 256L176 256L176 192L160 192z" />
-						</svg>
-					</div>
-				</button>
+			<div>
+				@Herramientas.Idiomas.BuscarTexto(idioma, "Title", "RSS")
 			</div>
 		</div>
+		
+		@{
+			string scroll1 = "noticias";
+			string scroll2 = "ultimasofertas";
+			string scroll3 = "deseados";
+		}
 
-		<div style="display: flex; flex-direction: column; gap: 5px;">
-			@Herramientas.Idiomas.BuscarTexto(idioma, "String4", "RSS")
+		<button @onclick="(e => ScrollHastaElemento(e, scroll1))" class="boton-subcabecera">
+			@Herramientas.Idiomas.BuscarTexto(idioma, "String1", "RSS")
+		</button>
 
-			<div style="display: flex; align-items: center; gap: 20px; background-color: var(--fondoSubcabecera); border: 2px solid var(--fondoBotonPequeño);">
-				<div style="padding: 10px 15px;">
-					<label style="text-decoration: none; cursor: initial;">@enlaceNoticiasEs</label>
-				</div>
+		<button @onclick="(e => ScrollHastaElemento(e, scroll2))" class="boton-subcabecera">
+			@Herramientas.Idiomas.BuscarTexto(idioma, "String5", "RSS")
+		</button>
 
-				<button @onclick="(e => CopiarAlClipboard(e, enlaceNoticiasEs))" class="juego-boton-pequeño" style="width: fit-content; padding: 10px 15px; display: flex; margin-left: auto;">
-					<div style="width: 24px;">
-						<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-							<path d="M288 64C252.7 64 224 92.7 224 128L224 384C224 419.3 252.7 448 288 448L480 448C515.3 448 544 419.3 544 384L544 183.4C544 166 536.9 149.3 524.3 137.2L466.6 81.8C454.7 70.4 438.8 64 422.3 64L288 64zM160 192C124.7 192 96 220.7 96 256L96 512C96 547.3 124.7 576 160 576L352 576C387.3 576 416 547.3 416 512L416 496L352 496L352 512L160 512L160 256L176 256L176 192L160 192z" />
-						</svg>
-					</div>
-				</button>
-			</div>
-		</div>
+        @if (string.IsNullOrEmpty(usuarioId) == false)
+        {
+            <button @onclick="(e => ScrollHastaElemento(e, scroll3))" class="boton-subcabecera">
+                @Herramientas.Idiomas.BuscarTexto(idioma, "String10", "RSS")
+            </button>
+        }
 	</div>
 </div>
 
-<div class="caja-rss-contenido cuerpo-ancho" style="margin-top: 40px; margin-bottom: 40px;">
-	<div class="caja-rss-titulo">
-		@Herramientas.Idiomas.BuscarTexto(idioma, "Title", "RSS") (@Herramientas.Idiomas.BuscarTexto(idioma, "String5", "RSS"))
-	</div>
-
-	<div style="padding: 30px; display: flex; flex-direction: column; gap: 20px;">
-		<div>
-			@Herramientas.Idiomas.BuscarTexto(idioma, "String6", "RSS")
+<div class="cuerpo-ancho" style="margin-top: 40px; margin-bottom: 40px; display: flex; flex-direction: column; gap: 40px;">
+	<div id="noticias" class="caja-rss-contenido">
+		<div class="caja-rss-titulo">
+			@Herramientas.Idiomas.BuscarTexto(idioma, "String1", "RSS")
 		</div>
 
-		<div style="display: flex; align-items: center; gap: 20px; background-color: var(--fondoSubcabecera); border: 2px solid var(--fondoBotonPequeño);">
-			<div style="padding: 10px 15px;">
-				<label style="text-decoration: none; cursor: initial;">@enlaceOfertas1</label>
+		<div style="padding: 30px; display: flex; flex-direction: column; gap: 20px;">
+			<div>
+				@Herramientas.Idiomas.BuscarTexto(idioma, "String2", "RSS")
 			</div>
 
-			<button @onclick="(e => CopiarAlClipboard(e, enlaceOfertas1))" class="juego-boton-pequeño" style="width: fit-content; padding: 10px 15px; display: flex; margin-left: auto;">
-				<div style="width: 24px;">
-					<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-						<path d="M288 64C252.7 64 224 92.7 224 128L224 384C224 419.3 252.7 448 288 448L480 448C515.3 448 544 419.3 544 384L544 183.4C544 166 536.9 149.3 524.3 137.2L466.6 81.8C454.7 70.4 438.8 64 422.3 64L288 64zM160 192C124.7 192 96 220.7 96 256L96 512C96 547.3 124.7 576 160 576L352 576C387.3 576 416 547.3 416 512L416 496L352 496L352 512L160 512L160 256L176 256L176 192L160 192z" />
-					</svg>
+
+
+			<div style="display: flex; flex-direction: column; gap: 5px;">
+				@Herramientas.Idiomas.BuscarTexto(idioma, "String3", "RSS")
+
+				<div style="display: flex; align-items: center; gap: 20px; background-color: var(--fondoSubcabecera); border: 2px solid var(--fondoBotonPequeño);">
+					<div style="padding: 10px 15px;">
+						<label style="text-decoration: none; cursor: initial;">@enlaceNoticiasEn</label>
+					</div>
+
+					<button @onclick="(e => CopiarAlClipboard(e, enlaceNoticiasEn))" class="juego-boton-pequeño" style="width: fit-content; padding: 10px 15px; display: flex; margin-left: auto;">
+						<div style="width: 24px;">
+							<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+								<path d="M288 64C252.7 64 224 92.7 224 128L224 384C224 419.3 252.7 448 288 448L480 448C515.3 448 544 419.3 544 384L544 183.4C544 166 536.9 149.3 524.3 137.2L466.6 81.8C454.7 70.4 438.8 64 422.3 64L288 64zM160 192C124.7 192 96 220.7 96 256L96 512C96 547.3 124.7 576 160 576L352 576C387.3 576 416 547.3 416 512L416 496L352 496L352 512L160 512L160 256L176 256L176 192L160 192z" />
+							</svg>
+						</div>
+					</button>
 				</div>
-			</button>
-		</div>
-
-		<div>
-			@Herramientas.Idiomas.BuscarTexto(idioma, "String7", "RSS")
-		</div>
-
-		<div style="display: flex; align-items: center; gap: 20px; background-color: var(--fondoSubcabecera); border: 2px solid var(--fondoBotonPequeño);">
-			<div style="padding: 10px 15px;">
-				<label style="text-decoration: none; cursor: initial;">@enlaceOfertas2</label>
 			</div>
 
-			<button @onclick="(e => CopiarAlClipboard(e, enlaceOfertas2))" class="juego-boton-pequeño" style="width: fit-content; padding: 10px 15px; display: flex; margin-left: auto;">
-				<div style="width: 24px;">
-					<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-						<path d="M288 64C252.7 64 224 92.7 224 128L224 384C224 419.3 252.7 448 288 448L480 448C515.3 448 544 419.3 544 384L544 183.4C544 166 536.9 149.3 524.3 137.2L466.6 81.8C454.7 70.4 438.8 64 422.3 64L288 64zM160 192C124.7 192 96 220.7 96 256L96 512C96 547.3 124.7 576 160 576L352 576C387.3 576 416 547.3 416 512L416 496L352 496L352 512L160 512L160 256L176 256L176 192L160 192z" />
-					</svg>
+			<div style="display: flex; flex-direction: column; gap: 5px;">
+				@Herramientas.Idiomas.BuscarTexto(idioma, "String4", "RSS")
+
+				<div style="display: flex; align-items: center; gap: 20px; background-color: var(--fondoSubcabecera); border: 2px solid var(--fondoBotonPequeño);">
+					<div style="padding: 10px 15px;">
+						<label style="text-decoration: none; cursor: initial;">@enlaceNoticiasEs</label>
+					</div>
+
+					<button @onclick="(e => CopiarAlClipboard(e, enlaceNoticiasEs))" class="juego-boton-pequeño" style="width: fit-content; padding: 10px 15px; display: flex; margin-left: auto;">
+						<div style="width: 24px;">
+							<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+								<path d="M288 64C252.7 64 224 92.7 224 128L224 384C224 419.3 252.7 448 288 448L480 448C515.3 448 544 419.3 544 384L544 183.4C544 166 536.9 149.3 524.3 137.2L466.6 81.8C454.7 70.4 438.8 64 422.3 64L288 64zM160 192C124.7 192 96 220.7 96 256L96 512C96 547.3 124.7 576 160 576L352 576C387.3 576 416 547.3 416 512L416 496L352 496L352 512L160 512L160 256L176 256L176 192L160 192z" />
+							</svg>
+						</div>
+					</button>
 				</div>
-			</button>
-		</div>
-
-		<div>
-			@Herramientas.Idiomas.BuscarTexto(idioma, "String8", "RSS")
-		</div>
-
-		<div>
-			@Herramientas.Idiomas.BuscarTexto(idioma, "String9", "RSS")
+			</div>
 		</div>
 	</div>
+
+	<div id="ultimasofertas" class="caja-rss-contenido">
+		<div class="caja-rss-titulo">
+			@Herramientas.Idiomas.BuscarTexto(idioma, "String5", "RSS")
+		</div>
+
+		<div style="padding: 30px; display: flex; flex-direction: column; gap: 20px;">
+			<div>
+				@Herramientas.Idiomas.BuscarTexto(idioma, "String6", "RSS")
+			</div>
+
+			<div style="display: flex; align-items: center; gap: 20px; background-color: var(--fondoSubcabecera); border: 2px solid var(--fondoBotonPequeño);">
+				<div style="padding: 10px 15px;">
+					<label style="text-decoration: none; cursor: initial;">@enlaceOfertas1</label>
+				</div>
+
+				<button @onclick="(e => CopiarAlClipboard(e, enlaceOfertas1))" class="juego-boton-pequeño" style="width: fit-content; padding: 10px 15px; display: flex; margin-left: auto;">
+					<div style="width: 24px;">
+						<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+							<path d="M288 64C252.7 64 224 92.7 224 128L224 384C224 419.3 252.7 448 288 448L480 448C515.3 448 544 419.3 544 384L544 183.4C544 166 536.9 149.3 524.3 137.2L466.6 81.8C454.7 70.4 438.8 64 422.3 64L288 64zM160 192C124.7 192 96 220.7 96 256L96 512C96 547.3 124.7 576 160 576L352 576C387.3 576 416 547.3 416 512L416 496L352 496L352 512L160 512L160 256L176 256L176 192L160 192z" />
+						</svg>
+					</div>
+				</button>
+			</div>
+
+			<div>
+				@Herramientas.Idiomas.BuscarTexto(idioma, "String7", "RSS")
+			</div>
+
+			<div style="display: flex; align-items: center; gap: 20px; background-color: var(--fondoSubcabecera); border: 2px solid var(--fondoBotonPequeño);">
+				<div style="padding: 10px 15px;">
+					<label style="text-decoration: none; cursor: initial;">@enlaceOfertas2</label>
+				</div>
+
+				<button @onclick="(e => CopiarAlClipboard(e, enlaceOfertas2))" class="juego-boton-pequeño" style="width: fit-content; padding: 10px 15px; display: flex; margin-left: auto;">
+					<div style="width: 24px;">
+						<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+							<path d="M288 64C252.7 64 224 92.7 224 128L224 384C224 419.3 252.7 448 288 448L480 448C515.3 448 544 419.3 544 384L544 183.4C544 166 536.9 149.3 524.3 137.2L466.6 81.8C454.7 70.4 438.8 64 422.3 64L288 64zM160 192C124.7 192 96 220.7 96 256L96 512C96 547.3 124.7 576 160 576L352 576C387.3 576 416 547.3 416 512L416 496L352 496L352 512L160 512L160 256L176 256L176 192L160 192z" />
+						</svg>
+					</div>
+				</button>
+			</div>
+
+			<div>
+				@Herramientas.Idiomas.BuscarTexto(idioma, "String8", "RSS")
+			</div>
+
+			<div>
+				@Herramientas.Idiomas.BuscarTexto(idioma, "String9", "RSS")
+			</div>
+		</div>
+	</div>
+
+	@if (string.IsNullOrEmpty(usuarioId) == false)
+	{
+		<div id="deseados" class="caja-rss-contenido">
+			<div class="caja-rss-titulo">
+				@Herramientas.Idiomas.BuscarTexto(idioma, "String10", "RSS")
+			</div>
+
+			<div style="padding: 30px; display: flex; flex-direction: column; gap: 20px;">
+				<div>
+					@Herramientas.Idiomas.BuscarTexto(idioma, "String11", "RSS")
+				</div>
+
+				<div style="display: flex; align-items: center; gap: 20px; background-color: var(--fondoSubcabecera); border: 2px solid var(--fondoBotonPequeño);">
+					<div style="padding: 10px 15px;">
+						<label style="text-decoration: none; cursor: initial;">@enlaceDeseados1</label>
+					</div>
+
+					<button @onclick="(e => CopiarAlClipboard(e, enlaceDeseados1))" class="juego-boton-pequeño" style="width: fit-content; padding: 10px 15px; display: flex; margin-left: auto;">
+						<div style="width: 24px;">
+							<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+								<path d="M288 64C252.7 64 224 92.7 224 128L224 384C224 419.3 252.7 448 288 448L480 448C515.3 448 544 419.3 544 384L544 183.4C544 166 536.9 149.3 524.3 137.2L466.6 81.8C454.7 70.4 438.8 64 422.3 64L288 64zM160 192C124.7 192 96 220.7 96 256L96 512C96 547.3 124.7 576 160 576L352 576C387.3 576 416 547.3 416 512L416 496L352 496L352 512L160 512L160 256L176 256L176 192L160 192z" />
+							</svg>
+						</div>
+					</button>
+				</div>
+
+				<div>
+					@Herramientas.Idiomas.BuscarTexto(idioma, "String12", "RSS")
+				</div>
+
+				<div style="display: flex; align-items: center; gap: 20px; background-color: var(--fondoSubcabecera); border: 2px solid var(--fondoBotonPequeño);">
+					<div style="padding: 10px 15px;">
+						<label style="text-decoration: none; cursor: initial;">@enlaceDeseados2</label>
+					</div>
+
+					<button @onclick="(e => CopiarAlClipboard(e, enlaceDeseados2))" class="juego-boton-pequeño" style="width: fit-content; padding: 10px 15px; display: flex; margin-left: auto;">
+						<div style="width: 24px;">
+							<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+								<path d="M288 64C252.7 64 224 92.7 224 128L224 384C224 419.3 252.7 448 288 448L480 448C515.3 448 544 419.3 544 384L544 183.4C544 166 536.9 149.3 524.3 137.2L466.6 81.8C454.7 70.4 438.8 64 422.3 64L288 64zM160 192C124.7 192 96 220.7 96 256L96 512C96 547.3 124.7 576 160 576L352 576C387.3 576 416 547.3 416 512L416 496L352 496L352 512L160 512L160 256L176 256L176 192L160 192z" />
+							</svg>
+						</div>
+					</button>
+				</div>
+			</div>
+		</div>
+	}
 </div>
 
 @code {
@@ -139,12 +226,17 @@
 	private string dominio = null;
 
 	private TiendaRegion usuarioRegion = TiendaRegion.Europa;
+	private bool usuarioTiendasNoOficial = false;
+	[PersistentState] public Usuario opciones { get; set; }
 
 	private string enlaceNoticiasEn = null;
 	private string enlaceNoticiasEs = null;
 
 	private string enlaceOfertas1 = null;
 	private string enlaceOfertas2 = null;
+
+    private string enlaceDeseados1 = null;
+	private string enlaceDeseados2 = null;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -153,11 +245,30 @@
 		usuarioId = datos.UsuarioId;
 		dominio = datos.Dominio;
 		usuarioRegion = datos.Region;
+		usuarioTiendasNoOficial = datos.NoOficial;
 
 		if (string.IsNullOrEmpty(usuarioId) == false)
 		{
-			idioma = await BaseDatos.Usuarios.Buscar.IdiomaSobreescribir(usuarioId);
-			usuarioRegion = (TiendaRegion)await BaseDatos.Usuarios.Buscar.OpcionInt(usuarioId, "Currency");
+			Task<string> tareaIdioma = BaseDatos.Usuarios.Buscar.IdiomaSobreescribir(usuarioId);
+			Task<Usuario> tareaUsuario = (opciones != null) ? Task.FromResult(opciones) : BaseDatos.Usuarios.Buscar.OpcionesRSS(usuarioId);
+
+            await Task.WhenAll(tareaIdioma, tareaUsuario);
+
+			idioma = tareaIdioma.Result;
+			opciones = tareaUsuario.Result;
+
+			if (opciones != null)
+			{
+				if (opciones.Currency.HasValue == true)
+				{
+					usuarioRegion = (TiendaRegion)opciones.Currency.Value;
+				}
+
+				if (opciones.NoOfficial.HasValue == true)
+				{
+					usuarioTiendasNoOficial = opciones.NoOfficial.Value;
+				}
+			}
 		}
 
 		enlaceNoticiasEn = "https://" + dominio + "/rss-en.xml";
@@ -167,11 +278,17 @@
 		{
 			enlaceOfertas1 = "https://" + dominio + "/rss/eu/steam/1000";
 			enlaceOfertas2 = "https://" + dominio + "/rss/eu/steam,gog/1000";
+
+			enlaceDeseados1 = "https://" + dominio + "/rss2/eu/" + usuarioTiendasNoOficial.ToString().ToLower() + "/false/1/" + usuarioId + ".xml";
+			enlaceDeseados2 = "https://" + dominio + "/rss2/eu/" + usuarioTiendasNoOficial.ToString().ToLower() + "/false/0/" + usuarioId + ".xml";
 		}
 		else if (usuarioRegion == TiendaRegion.EstadosUnidos)
 		{
 			enlaceOfertas1 = "https://" + dominio + "/rss/us/steam/1000";
 			enlaceOfertas2 = "https://" + dominio + "/rss/us/steam,gog/1000";
+
+			enlaceDeseados1 = "https://" + dominio + "/rss2/us/" + usuarioTiendasNoOficial.ToString().ToLower() + "/false/1/" + usuarioId + ".xml";
+            enlaceDeseados2 = "https://" + dominio + "/rss2/us/" + usuarioTiendasNoOficial.ToString().ToLower() + "/false/0/" + usuarioId + ".xml";
 		}
 	}
 
@@ -238,6 +355,24 @@
 		{
 			cronometro.Dispose();
 		}
+	}
+
+	#endregion
+
+	#region Barra superior
+
+	private async Task ScrollHastaElemento(MouseEventArgs e, string div)
+	{
+		await JavaScript.InvokeVoidAsync("eval", @"
+			const element = document.getElementById('" + div + @"');
+			const elementPosition = element.getBoundingClientRect().top;
+			const offsetPosition = elementPosition + window.pageYOffset - 140;
+
+			window.scrollTo({
+				top: offsetPosition,
+				behavior: 'smooth'
+			});
+		");
 	}
 
 	#endregion
