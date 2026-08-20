@@ -2,7 +2,7 @@
   "Title": "RSS",
   "Subtitle": "If you use a feed reader you can configure an RSS to your liking with information from the web.",
   "String1": "News",
-  "String2": "You can follow the latest news through these feeds in several languages:",
+  "String2": "All",
   "String3": "English",
   "String4": "Spanish",
   "String5": "Latest Deals",
@@ -11,6 +11,7 @@
   "String8": "The feed can be configured by editing the field after /rss/ by typing the platforms for which you want the games, such as Steam, GOG, Epic, EA Play or any other platform that comes out in the future, making sure that each platform is separated by a comma and without spaces as in the previous example. The second field in numerical format represents the amount of reviews that the deal has on the website, you can change it between 200 and 10000.",
   "String9": "I also want to point out that there are several restrictions, any deals feed you set up cannot go back more than 2 days in the past and there is also a limit of 50 deals in the feed. I had to put these restrictions in place so as not to stab the server.",
   "String10": "Wishlist",
-  "String11": "I'm presenting your wishlist feed in two formats. This first link shows the games on your wishlist with historically low prices, ordered according to how they were detected by the website:",
-  "String12": "And this second link shows you all the games on your wishlist that have at least a 1% discount, also ordered according to how they were detected by the website:"
+  "String11": "All games with historical lows",
+  "String12": "All games with at least 1% discount",
+  "String13": "Note: The feed is ordered by the date the deals were detected."
 }

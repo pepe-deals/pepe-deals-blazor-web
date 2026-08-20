@@ -1,14 +1,13 @@
 ﻿#nullable disable
 
+using Juegos;
 using Microsoft.AspNetCore.Mvc;
 using Noticias;
 using System.ServiceModel.Syndication;
 using System.Text;
-using System.Xml.Linq;
 using System.Xml;
-using System.Security.Claims;
+using System.Xml.Linq;
 using Tiendas2;
-using Juegos;
 
 namespace Herramientas
 {
@@ -151,6 +150,91 @@ namespace Herramientas
         }
 
 		[ResponseCache(Duration = 300)]
+		[HttpGet("rss2/en/{categorias2}.xml")]
+		public async Task<IActionResult> GenerarEnRSS2(string categorias2)
+		{
+			string dominio = "https://" + HttpContext.Request.Host.Value;
+
+			SyndicationFeed feed = new SyndicationFeed("pepe's deals", "RSS in English of the website", new Uri(dominio), "RSSUrl", DateTime.Now)
+			{
+				Copyright = new TextSyndicationContent($"{DateTime.Now.Year}")
+			};
+
+			List<SyndicationItem> items = new List<SyndicationItem>();
+
+			List<NoticiaTipo> tipos = new List<NoticiaTipo>();
+			int dias = 7;
+
+			if (string.IsNullOrEmpty(categorias2) == false && categorias2 != "all")
+			{
+				dias = 14;
+
+				string[] categorias = categorias2.Split(',');
+				foreach (string categoria in categorias)
+				{
+					NoticiaTipo tipoAñadir = (NoticiaTipo)int.Parse(categoria);
+
+					if (tipoAñadir != NoticiaTipo.Desconocido)
+					{
+						tipos.Add(tipoAñadir);
+					}
+				}
+			}
+
+			List<Noticia> noticias = await global::BaseDatos.Noticias.Buscar.Actuales(tipos, dias);
+
+			if (noticias?.Count > 0)
+			{
+				noticias = noticias.OrderBy(x => x.FechaEmpieza).Reverse().ToList();
+
+				foreach (Noticia noticia in noticias)
+				{
+					string enlace = dominio + "/news/" + noticia.Id.ToString() + "/" + Herramientas.EnlaceAdaptador.Nombre(noticia.TituloEn) + "/";
+
+					string titulo = noticia.TituloEn;
+					string contenido = noticia.ContenidoEn;
+					Uri enlaceUri = null;
+
+					if (enlace != null)
+					{
+						enlaceUri = new Uri(enlace);
+					}
+
+					SyndicationItem item = new SyndicationItem(titulo, contenido, enlaceUri, noticia.Id.ToString(), noticia.FechaEmpieza);
+
+					if (string.IsNullOrEmpty(noticia.Imagen) == false)
+					{
+						item.ElementExtensions.Add(new XElement("image", noticia.Imagen));
+					}
+
+					items.Add(item);
+				}
+
+				feed.Items = items;
+			}
+
+			XmlWriterSettings opciones = new XmlWriterSettings
+			{
+				Encoding = Encoding.UTF8,
+				NewLineHandling = NewLineHandling.Entitize,
+				NewLineOnAttributes = true,
+				Indent = true
+			};
+
+			using (MemoryStream stream = new MemoryStream())
+			{
+				using (XmlWriter xmlEscritor = XmlWriter.Create(stream, opciones))
+				{
+					Rss20FeedFormatter rssFormateador = new Rss20FeedFormatter(feed, false);
+					rssFormateador.WriteTo(xmlEscritor);
+					xmlEscritor.Flush();
+				}
+
+				return File(stream.ToArray(), "application/rss+xml; charset=utf-8");
+			}
+		}
+
+		[ResponseCache(Duration = 300)]
 		[HttpGet("rss2/es/{categorias2}.xml")]
 		public async Task<IActionResult> GenerarEsRSS2(string categorias2)
 		{
@@ -164,20 +248,25 @@ namespace Herramientas
 			List<SyndicationItem> items = new List<SyndicationItem>();
 
             List<NoticiaTipo> tipos = new List<NoticiaTipo>();
+			int dias = 7;
 
-			if (string.IsNullOrEmpty(categorias2) == false)
+			if (string.IsNullOrEmpty(categorias2) == false && categorias2 != "all")
 			{
+				dias = 14;
+
 				string[] categorias = categorias2.Split(',');
 				foreach (string categoria in categorias)
 				{
-					if (Enum.TryParse(categoria, true, out NoticiaTipo tipo) == true)
+					NoticiaTipo tipoAñadir = (NoticiaTipo)int.Parse(categoria);
+
+					if (tipoAñadir != NoticiaTipo.Desconocido)
 					{
-						tipos.Add(tipo);
+						tipos.Add(tipoAñadir);
 					}
 				}
 			}
 
-			List<Noticia> noticias = await global::BaseDatos.Noticias.Buscar.Actuales(tipos, 5);
+			List<Noticia> noticias = await global::BaseDatos.Noticias.Buscar.Actuales(tipos, dias);
 
 			if (noticias?.Count > 0)
 			{
@@ -207,60 +296,28 @@ namespace Herramientas
 				}
 
 				feed.Items = items;
-
-				XmlWriterSettings opciones = new XmlWriterSettings
-				{
-					Encoding = Encoding.UTF8,
-					NewLineHandling = NewLineHandling.Entitize,
-					NewLineOnAttributes = true,
-					Indent = true
-				};
-
-				using (MemoryStream stream = new MemoryStream())
-				{
-					using (XmlWriter xmlEscritor = XmlWriter.Create(stream, opciones))
-					{
-						Rss20FeedFormatter rssFormateador = new Rss20FeedFormatter(feed, false);
-						rssFormateador.WriteTo(xmlEscritor);
-						xmlEscritor.Flush();
-					}
-
-					return File(stream.ToArray(), "application/rss+xml; charset=utf-8");
-				}
 			}
 
-			return null;
+			XmlWriterSettings opciones = new XmlWriterSettings
+			{
+				Encoding = Encoding.UTF8,
+				NewLineHandling = NewLineHandling.Entitize,
+				NewLineOnAttributes = true,
+				Indent = true
+			};
+
+			using (MemoryStream stream = new MemoryStream())
+			{
+				using (XmlWriter xmlEscritor = XmlWriter.Create(stream, opciones))
+				{
+					Rss20FeedFormatter rssFormateador = new Rss20FeedFormatter(feed, false);
+					rssFormateador.WriteTo(xmlEscritor);
+					xmlEscritor.Flush();
+				}
+
+				return File(stream.ToArray(), "application/rss+xml; charset=utf-8");
+			}
 		}
-
-		[ResponseCache(Duration = 300)]
-        [HttpGet("news-rss")]
-        public async Task<IActionResult> CogerNoticiasRSS()
-        {
-            string dominio = "https://" + HttpContext.Request.Host.Value;
-
-            if (User.Identity.IsAuthenticated == true)
-            {
-                if (await global::BaseDatos.Usuarios.Buscar.RolDios(User.FindFirst(ClaimTypes.NameIdentifier).Value) == true)
-                {
-                    List<Noticia> noticias = await global::BaseDatos.Noticias.Buscar.Ultimas(10);
-
-                    if (noticias.Count > 0)
-                    {
-                        foreach (var noticia in noticias)
-                        {
-                            if (noticia.Imagen.Contains("https://") == false)
-                            {
-                                noticia.Imagen = dominio + noticia.Imagen;
-                            }
-                        }
-
-                        return Ok(noticias);
-                    }
-                }
-            }
-
-            return Redirect("~/");
-        }
 
         #endregion
 

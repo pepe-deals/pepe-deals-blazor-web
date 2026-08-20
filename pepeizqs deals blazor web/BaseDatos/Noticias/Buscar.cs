@@ -54,6 +54,8 @@ namespace BaseDatos.Noticias
 				busqueda = busqueda + " AND (GETDATE()-" + ultimosDias.ToString() + " < fechaEmpieza)";
 			}
 
+			tipos?.RemoveAll(t => t == NoticiaTipo.Desconocido);
+
 			if (tipos?.Count > 0)
 			{
 				busqueda = busqueda + " AND (noticiaTipo IN (" + string.Join(",", tipos.Select(t => (int)t)) + "))";

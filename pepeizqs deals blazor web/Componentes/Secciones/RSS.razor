@@ -3,6 +3,7 @@
 @implements IAsyncDisposable
 
 @using Microsoft.AspNetCore.Components.Web
+@using Noticias
 @using Tiendas2
 @using pepeizqs_deals_blazor_web.Componentes.Interfaz
 @using pepeizqs_deals_web.Data
@@ -73,46 +74,80 @@
 		</div>
 
 		<div style="padding: 30px; display: flex; flex-direction: column; gap: 20px;">
-			<div>
-				@Herramientas.Idiomas.BuscarTexto(idioma, "String2", "RSS")
-			</div>
-
-
-
-			<div style="display: flex; flex-direction: column; gap: 5px;">
-				@Herramientas.Idiomas.BuscarTexto(idioma, "String3", "RSS")
-
-				<div style="display: flex; align-items: center; gap: 20px; background-color: var(--fondoSubcabecera); border: 2px solid var(--fondoBotonPequeño);">
-					<div style="padding: 10px 15px;">
-						<label style="text-decoration: none; cursor: initial;">@enlaceNoticiasEn</label>
-					</div>
-
-					<button @onclick="(e => CopiarAlClipboard(e, enlaceNoticiasEn))" class="juego-boton-pequeño" style="width: fit-content; padding: 10px 15px; display: flex; margin-left: auto;">
-						<div style="width: 24px;">
-							<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-								<path d="M288 64C252.7 64 224 92.7 224 128L224 384C224 419.3 252.7 448 288 448L480 448C515.3 448 544 419.3 544 384L544 183.4C544 166 536.9 149.3 524.3 137.2L466.6 81.8C454.7 70.4 438.8 64 422.3 64L288 64zM160 192C124.7 192 96 220.7 96 256L96 512C96 547.3 124.7 576 160 576L352 576C387.3 576 416 547.3 416 512L416 496L352 496L352 512L160 512L160 256L176 256L176 192L160 192z" />
+			<div style="display: flex; align-items: center; gap: 20px;">
+				<button @onclick="@(() => CambiarIdiomaNoticias("en"))" class="boton-rss-opciones @(idiomaNoticias.ToLower() == "en" ? "seleccionado" : "")" style="display: flex; align-items: center; gap: 8px;">
+					@if (idiomaNoticias.ToLower() == "en")
+					{
+						<div style="width: 22px; height: 22px; flex-shrink: 0;">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="fill: none; stroke: var(--colorTexto); stroke-width: 60; stroke-linecap: round; stroke-linejoin: round;">
+								<path d="M128 340 L280 480 L512 160" />
 							</svg>
 						</div>
-					</button>
-				</div>
-			</div>
+					}
 
-			<div style="display: flex; flex-direction: column; gap: 5px;">
-				@Herramientas.Idiomas.BuscarTexto(idioma, "String4", "RSS")
+					<img src="/imagenes/banderas/english.svg" style="display: block; width: 22px; max-height: 22px; flex-shrink: 0;" />
+				</button>
 
-				<div style="display: flex; align-items: center; gap: 20px; background-color: var(--fondoSubcabecera); border: 2px solid var(--fondoBotonPequeño);">
-					<div style="padding: 10px 15px;">
-						<label style="text-decoration: none; cursor: initial;">@enlaceNoticiasEs</label>
-					</div>
-
-					<button @onclick="(e => CopiarAlClipboard(e, enlaceNoticiasEs))" class="juego-boton-pequeño" style="width: fit-content; padding: 10px 15px; display: flex; margin-left: auto;">
-						<div style="width: 24px;">
-							<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-								<path d="M288 64C252.7 64 224 92.7 224 128L224 384C224 419.3 252.7 448 288 448L480 448C515.3 448 544 419.3 544 384L544 183.4C544 166 536.9 149.3 524.3 137.2L466.6 81.8C454.7 70.4 438.8 64 422.3 64L288 64zM160 192C124.7 192 96 220.7 96 256L96 512C96 547.3 124.7 576 160 576L352 576C387.3 576 416 547.3 416 512L416 496L352 496L352 512L160 512L160 256L176 256L176 192L160 192z" />
+				<button @onclick="@(() => CambiarIdiomaNoticias("es"))" class="boton-rss-opciones @(idiomaNoticias.ToLower() == "es" ? "seleccionado" : "")" style="display: flex; align-items: center; gap: 8px;">
+					@if (idiomaNoticias.ToLower() == "es")
+					{
+						<div style="width: 22px; height: 22px; flex-shrink: 0;">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="fill: none; stroke: var(--colorTexto); stroke-width: 60; stroke-linecap: round; stroke-linejoin: round;">
+								<path d="M128 340 L280 480 L512 160" />
 							</svg>
 						</div>
-					</button>
+					}
+
+					<img src="/imagenes/banderas/spanish.svg" style="display: block; width: 22px; max-height: 22px; flex-shrink: 0;" />
+				</button>
+			</div>
+
+			<div style="display: flex; align-items: center; gap: 20px;">
+				<button @onclick="@(() => CambiarCategoriasNoticias("all"))" class="boton-rss-opciones @(categoriasNoticias.Contains("all") ? "seleccionado" : "")" style="display: flex; align-items: center; gap: 8px;">
+					@if (categoriasNoticias.Contains("all"))
+					{
+						<div style="width: 22px; height: 22px;">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="fill: none; stroke: var(--colorTexto); stroke-width: 60; stroke-linecap: round; stroke-linejoin: round;">
+								<path d="M128 340 L280 480 L512 160" />
+							</svg>
+						</div>
+					}
+
+					<div>@Herramientas.Idiomas.BuscarTexto(idioma, "String2", "RSS")</div>
+				</button>
+
+				@foreach (NoticiaMostrar mostrar in NoticiasCargar.CargarNoticiasMostrar())
+				{
+					if (mostrar.Mostrar == true)
+					{
+						<button @onclick="@(() => CambiarCategoriasNoticias(((int)mostrar.Tipo).ToString()))" class="boton-rss-opciones @(categoriasNoticias.Contains(((int)mostrar.Tipo).ToString().ToLower()) ? " seleccionado" : "" )" style="display: flex; align-items: center; gap: 8px;">
+							@if (categoriasNoticias.Contains(((int)mostrar.Tipo).ToString().ToLower()))
+							{
+								<div style="width: 22px; height: 22px;">
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="fill: none; stroke: var(--colorTexto); stroke-width: 60; stroke-linecap: round; stroke-linejoin: round;">
+										<path d="M128 340 L280 480 L512 160" />
+									</svg>
+								</div>
+							}
+
+							<div>@Noticias.NoticiasCargar.Traduccion(mostrar.Tipo, idioma)</div>
+						</button>
+					}
+				}
+			</div>
+			
+			<div style="display: flex; align-items: center; gap: 20px; background-color: var(--fondoSubcabecera); border: 2px solid var(--fondoBotonPequeño);">
+				<div style="padding: 10px 15px;">
+					<label style="text-decoration: none; cursor: initial;">@enlaceNoticiasFinal</label>
 				</div>
+
+				<button @onclick="(e => CopiarAlClipboard(e, enlaceNoticiasFinal))" class="juego-boton-pequeño" style="width: fit-content; padding: 10px 15px; display: flex; margin-left: auto;">
+					<div style="width: 24px;">
+						<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+							<path d="M288 64C252.7 64 224 92.7 224 128L224 384C224 419.3 252.7 448 288 448L480 448C515.3 448 544 419.3 544 384L544 183.4C544 166 536.9 149.3 524.3 137.2L466.6 81.8C454.7 70.4 438.8 64 422.3 64L288 64zM160 192C124.7 192 96 220.7 96 256L96 512C96 547.3 124.7 576 160 576L352 576C387.3 576 416 547.3 416 512L416 496L352 496L352 512L160 512L160 256L176 256L176 192L160 192z" />
+						</svg>
+					</div>
+				</button>
 			</div>
 		</div>
 	</div>
@@ -177,16 +212,40 @@
 			</div>
 
 			<div style="padding: 30px; display: flex; flex-direction: column; gap: 20px;">
-				<div>
-					@Herramientas.Idiomas.BuscarTexto(idioma, "String11", "RSS")
+				<div style="display: flex; align-items: center; gap: 25px;">
+					<button @onclick="@(() => CambiarDeseadosCategoria(1))" class="boton-rss-opciones @(categoriaDeseados == 1 ? "seleccionado" : "")" style="display: flex; align-items: center; gap: 8px;">
+						@if (categoriaDeseados == 1)
+						{
+							<div style="width: 22px; height: 22px;">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="fill: none; stroke: var(--colorTexto); stroke-width: 60; stroke-linecap: round; stroke-linejoin: round;">
+									<path d="M128 340 L280 480 L512 160" />
+								</svg>
+							</div>
+						}
+
+						<div>@Herramientas.Idiomas.BuscarTexto(idioma, "String11", "RSS")</div>
+					</button>
+
+					<button @onclick="@(() => CambiarDeseadosCategoria(0))" class="boton-rss-opciones @(categoriaDeseados == 0 ? "seleccionado" : "")" style="display: flex; align-items: center; gap: 8px;">
+						@if (categoriaDeseados == 0)
+						{
+							<div style="width: 22px; height: 22px;">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="fill: none; stroke: var(--colorTexto); stroke-width: 60; stroke-linecap: round; stroke-linejoin: round;">
+									<path d="M128 340 L280 480 L512 160" />
+								</svg>
+							</div>
+						}
+
+						<div>@Herramientas.Idiomas.BuscarTexto(idioma, "String12", "RSS")</div>
+					</button>
 				</div>
 
 				<div style="display: flex; align-items: center; gap: 20px; background-color: var(--fondoSubcabecera); border: 2px solid var(--fondoBotonPequeño);">
 					<div style="padding: 10px 15px;">
-						<label style="text-decoration: none; cursor: initial;">@enlaceDeseados1</label>
+						<label style="text-decoration: none; cursor: initial;">@enlaceDeseadosFinal</label>
 					</div>
 
-					<button @onclick="(e => CopiarAlClipboard(e, enlaceDeseados1))" class="juego-boton-pequeño" style="width: fit-content; padding: 10px 15px; display: flex; margin-left: auto;">
+					<button @onclick="(e => CopiarAlClipboard(e, enlaceDeseadosFinal))" class="juego-boton-pequeño" style="width: fit-content; padding: 10px 15px; display: flex; margin-left: auto;">
 						<div style="width: 24px;">
 							<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
 								<path d="M288 64C252.7 64 224 92.7 224 128L224 384C224 419.3 252.7 448 288 448L480 448C515.3 448 544 419.3 544 384L544 183.4C544 166 536.9 149.3 524.3 137.2L466.6 81.8C454.7 70.4 438.8 64 422.3 64L288 64zM160 192C124.7 192 96 220.7 96 256L96 512C96 547.3 124.7 576 160 576L352 576C387.3 576 416 547.3 416 512L416 496L352 496L352 512L160 512L160 256L176 256L176 192L160 192z" />
@@ -195,23 +254,7 @@
 					</button>
 				</div>
 
-				<div>
-					@Herramientas.Idiomas.BuscarTexto(idioma, "String12", "RSS")
-				</div>
-
-				<div style="display: flex; align-items: center; gap: 20px; background-color: var(--fondoSubcabecera); border: 2px solid var(--fondoBotonPequeño);">
-					<div style="padding: 10px 15px;">
-						<label style="text-decoration: none; cursor: initial;">@enlaceDeseados2</label>
-					</div>
-
-					<button @onclick="(e => CopiarAlClipboard(e, enlaceDeseados2))" class="juego-boton-pequeño" style="width: fit-content; padding: 10px 15px; display: flex; margin-left: auto;">
-						<div style="width: 24px;">
-							<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-								<path d="M288 64C252.7 64 224 92.7 224 128L224 384C224 419.3 252.7 448 288 448L480 448C515.3 448 544 419.3 544 384L544 183.4C544 166 536.9 149.3 524.3 137.2L466.6 81.8C454.7 70.4 438.8 64 422.3 64L288 64zM160 192C124.7 192 96 220.7 96 256L96 512C96 547.3 124.7 576 160 576L352 576C387.3 576 416 547.3 416 512L416 496L352 496L352 512L160 512L160 256L176 256L176 192L160 192z" />
-							</svg>
-						</div>
-					</button>
-				</div>
+				<div>@Herramientas.Idiomas.BuscarTexto(idioma, "String13", "RSS")</div>
 			</div>
 		</div>
 	}
@@ -229,14 +272,15 @@
 	private bool usuarioTiendasNoOficial = false;
 	[PersistentState] public Usuario opciones { get; set; }
 
-	private string enlaceNoticiasEn = null;
-	private string enlaceNoticiasEs = null;
-
 	private string enlaceOfertas1 = null;
 	private string enlaceOfertas2 = null;
 
-    private string enlaceDeseados1 = null;
-	private string enlaceDeseados2 = null;
+	private string idiomaNoticias = "en";
+	private string categoriasNoticias = "all";
+	private string enlaceNoticiasFinal = null;
+
+	private int categoriaDeseados = 1;
+	private string enlaceDeseadosFinal = null;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -252,7 +296,7 @@
 			Task<string> tareaIdioma = BaseDatos.Usuarios.Buscar.IdiomaSobreescribir(usuarioId);
 			Task<Usuario> tareaUsuario = (opciones != null) ? Task.FromResult(opciones) : BaseDatos.Usuarios.Buscar.OpcionesRSS(usuarioId);
 
-            await Task.WhenAll(tareaIdioma, tareaUsuario);
+			await Task.WhenAll(tareaIdioma, tareaUsuario);
 
 			idioma = tareaIdioma.Result;
 			opciones = tareaUsuario.Result;
@@ -271,24 +315,24 @@
 			}
 		}
 
-		enlaceNoticiasEn = "https://" + dominio + "/rss-en.xml";
-		enlaceNoticiasEs = "https://" + dominio + "/rss-es.xml";
+		if (idioma.ToLower() == "es" || idioma.ToLower() == "es-es")
+		{
+			idiomaNoticias = "es";
+		}
+
+        enlaceNoticiasFinal = GenerarEnlaceNoticias("all");
+		enlaceDeseadosFinal = GenerarEnlaceDeseados(1);
+
 
 		if (usuarioRegion == TiendaRegion.Europa)
 		{
 			enlaceOfertas1 = "https://" + dominio + "/rss/eu/steam/1000";
 			enlaceOfertas2 = "https://" + dominio + "/rss/eu/steam,gog/1000";
-
-			enlaceDeseados1 = "https://" + dominio + "/rss2/eu/" + usuarioTiendasNoOficial.ToString().ToLower() + "/false/1/" + usuarioId + ".xml";
-			enlaceDeseados2 = "https://" + dominio + "/rss2/eu/" + usuarioTiendasNoOficial.ToString().ToLower() + "/false/0/" + usuarioId + ".xml";
 		}
 		else if (usuarioRegion == TiendaRegion.EstadosUnidos)
 		{
 			enlaceOfertas1 = "https://" + dominio + "/rss/us/steam/1000";
 			enlaceOfertas2 = "https://" + dominio + "/rss/us/steam,gog/1000";
-
-			enlaceDeseados1 = "https://" + dominio + "/rss2/us/" + usuarioTiendasNoOficial.ToString().ToLower() + "/false/1/" + usuarioId + ".xml";
-            enlaceDeseados2 = "https://" + dominio + "/rss2/us/" + usuarioTiendasNoOficial.ToString().ToLower() + "/false/0/" + usuarioId + ".xml";
 		}
 	}
 
@@ -356,6 +400,78 @@
 			cronometro.Dispose();
 		}
 	}
+
+	#endregion
+
+	#region Generar Enlaces
+
+	private async Task CambiarIdiomaNoticias(string nuevoIdioma)
+	{
+		idiomaNoticias = nuevoIdioma;
+		enlaceNoticiasFinal = GenerarEnlaceNoticias(categoriasNoticias);
+	}
+
+	private async Task CambiarCategoriasNoticias(string nuevaCategoria)
+	{
+		if (nuevaCategoria == "all")
+		{
+			categoriasNoticias = "all";
+		}
+		else
+		{
+            categoriasNoticias = categoriasNoticias.Replace("all", "").Replace(",,", ",").Trim(',');
+
+			if (string.IsNullOrEmpty(categoriasNoticias) == false && categoriasNoticias.Contains(nuevaCategoria.ToLower()) == false)
+			{
+				categoriasNoticias = categoriasNoticias + "," + nuevaCategoria.ToLower();
+			}
+			else if (string.IsNullOrEmpty(categoriasNoticias) == true && categoriasNoticias.Contains(nuevaCategoria.ToLower()) == false)
+			{
+				categoriasNoticias = nuevaCategoria.ToLower();
+			}
+			else
+			{
+				categoriasNoticias = categoriasNoticias.Replace(nuevaCategoria.ToLower(), "").Replace(",,", ",").Trim(',');
+			}
+		}
+
+        if (string.IsNullOrEmpty(categoriasNoticias) == true || categoriasNoticias.Trim() == ",")
+        {
+            categoriasNoticias = "all";
+        }
+
+		enlaceNoticiasFinal = GenerarEnlaceNoticias(categoriasNoticias); 
+	}
+
+	private string GenerarEnlaceNoticias(string categorias)
+	{
+		string enlace = "https://" + dominio + "/rss2/" + idiomaNoticias + "/" + categorias + ".xml";
+
+		return enlace;
+	}
+
+	private async Task CambiarDeseadosCategoria(int nuevaCategoria)
+	{
+		categoriaDeseados = nuevaCategoria;
+		enlaceDeseadosFinal = GenerarEnlaceDeseados(categoriaDeseados);
+	}
+
+    private string GenerarEnlaceDeseados(int categoria)
+    {
+        string enlace = "https://" + dominio + "/rss2/";
+
+        if (usuarioRegion == TiendaRegion.Europa)
+        {
+            enlace = enlace + "eu/";
+        }
+        else if (usuarioRegion == TiendaRegion.EstadosUnidos)
+        {
+            enlace = enlace + "us/";
+        }
+
+        enlace = enlace + usuarioTiendasNoOficial.ToString().ToLower() + "/false/" + categoria.ToString() + "/" + usuarioId + ".xml";
+        return enlace;
+    }
 
 	#endregion
 

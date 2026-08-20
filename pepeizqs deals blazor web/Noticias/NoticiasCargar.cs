@@ -117,5 +117,23 @@ namespace Noticias
 
 			return null;
 		}
+
+		public static string Traduccion(string tipo, string idioma)
+		{
+			List<NoticiaTipo> tipos = CargarNoticiasTipo();
+
+			int posicion = 1;
+			foreach (var tipo2 in tipos)
+			{
+				if (Herramientas.Idiomas.BuscarTexto(idioma, "Type" + posicion.ToString(), "News") == tipo)
+				{
+					return Herramientas.Idiomas.BuscarTexto("es", "Type" + posicion.ToString(), "News");
+				}
+
+				posicion += 1;
+			}
+
+			return null;
+		}
 	}
 }

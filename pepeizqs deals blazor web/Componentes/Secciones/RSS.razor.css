@@ -51,3 +51,29 @@
     .boton-subcabecera:hover {
         background: var(--fondoBotonPequeñoHover);
     }
+
+.boton-rss-opciones {
+    width: fit-content;
+    padding: 10px;
+    background: transparent;
+    border: none;
+    color: var(--colorTexto);
+    text-align: left;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 0.15s;
+    font-size: 16px;
+}
+
+    .boton-rss-opciones:hover {
+        background: rgba(0,0,0,.3);
+    }
+
+    .boton-rss-opciones.seleccionado {
+        background: rgba(0,0,0,.6);
+    }
+
+        .boton-rss-opciones.seleccionado:hover {
+            background: rgba(0,0,0,.8);
+            filter: brightness(1.2);
+        }

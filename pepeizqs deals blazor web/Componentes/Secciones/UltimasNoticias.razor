@@ -77,7 +77,7 @@
 				{
 					if (tipo != Noticias.NoticiaTipo.Desconocido)
 					{
-						<button @onclick="@(e => CambiarTipo(e, tipo, false))" class="boton-noticias" style="@CambiarEstilo(tipo, false) border: 0px; height: 50px; padding: 15px 25px; display: inline-flex; align-items: center; color: var(--colorTexto); border-radius: inherit;">
+						<button @onclick="@(e => CambiarTipo(e, tipo, false))" class="boton-noticias" style="@CambiarEstilo(tipo, false) border: 0px; font-size: 16px; height: 50px; padding: 15px 25px; display: inline-flex; align-items: center; color: var(--colorTexto); border-radius: inherit;">
 							@Noticias.NoticiasCargar.Traduccion(tipo, idioma)
 						</button>
 					}
