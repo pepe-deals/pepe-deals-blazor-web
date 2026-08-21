@@ -22,8 +22,8 @@ namespace APIs.GamersGate
 				Imagen300x80 = "/imagenes/tiendas/gamersgate_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/gamersgate_icono.ico",
 				Color = "#232A3E",
-				AdminEnseñar = true,
-				AdminInteractuar = true,
+				AdminUso = true,
+				UsuarioUso = true,
 				Regiones = new List<TiendaRegion> { TiendaRegion.Europa, TiendaRegion.EstadosUnidos }
 			};
 

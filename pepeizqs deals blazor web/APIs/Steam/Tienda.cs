@@ -32,8 +32,8 @@ namespace APIs.Steam
 				Imagen300x80 = "/imagenes/tiendas/steam_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/steam_icono.webp",
 				Color = "#2e4460",
-                AdminEnseñar = true,
-				AdminInteractuar = true,
+                AdminUso = true,
+				UsuarioUso = true,
 				Regiones = new List<TiendaRegion> { TiendaRegion.Europa, TiendaRegion.EstadosUnidos }
 			};
 
@@ -50,9 +50,8 @@ namespace APIs.Steam
 				Imagen300x80 = "/imagenes/tiendas/steam_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/steam_icono.webp",
 				Color = "#2e4460",
-				AdminEnseñar = false,
-				AdminInteractuar = false,
-				UsuarioInteractuar = false
+				AdminUso = false,
+				UsuarioUso = false
 			};
 
 			return tienda;

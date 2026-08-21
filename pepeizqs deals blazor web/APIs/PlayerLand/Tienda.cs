@@ -22,8 +22,8 @@ namespace APIs.PlayerLand
 				Imagen300x80 = "/imagenes/tiendas/playerland_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/playerland_icono.webp",
 				Color = "#beb2f1",
-				AdminEnseñar = true,
-				AdminInteractuar = true,
+				AdminUso = false,
+				UsuarioUso = false,
 				Regiones = new List<TiendaRegion> { TiendaRegion.Europa, TiendaRegion.EstadosUnidos }
 			};
 

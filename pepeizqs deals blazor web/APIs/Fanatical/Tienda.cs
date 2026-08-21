@@ -27,8 +27,8 @@ namespace APIs.Fanatical
 				Imagen300x80 = "/imagenes/tiendas/fanatical_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/fanatical_icono.webp",
 				Color = "#ffcf89",
-				AdminEnseñar = true,
-				AdminInteractuar = true,
+				AdminUso = true,
+				UsuarioUso = true,
 				Regiones = new List<TiendaRegion> { TiendaRegion.Europa, TiendaRegion.EstadosUnidos }
 			};
 

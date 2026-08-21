@@ -23,8 +23,8 @@ namespace APIs.Allyouplay
 				Imagen300x80 = "/imagenes/tiendas/allyouplay_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/allyouplay_icono.webp",
 				Color = "#ff4081",
-				AdminEnseñar = true,
-				AdminInteractuar = true
+				AdminUso = false,
+				UsuarioUso = false
 			};
 
 			return tienda;

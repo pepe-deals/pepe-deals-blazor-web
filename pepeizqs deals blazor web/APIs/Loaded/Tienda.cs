@@ -20,8 +20,8 @@ namespace APIs.Loaded
 				Imagen300x80 = "/imagenes/tiendas/loaded_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/loaded_icono.webp",
 				Color = "#558205",
-				AdminEnseñar = true,
-				AdminInteractuar = true,
+				AdminUso = true,
+				UsuarioUso = true,
 				Regiones = new List<TiendaRegion> { TiendaRegion.Europa, TiendaRegion.EstadosUnidos }
 			};
 

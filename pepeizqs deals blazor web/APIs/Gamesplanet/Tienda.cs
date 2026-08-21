@@ -22,8 +22,8 @@ namespace APIs.Gamesplanet
 				Imagen300x80 = "/imagenes/tiendas/gamesplanetuk_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/gamesplanet_icono.webp",
 				Color = "#000",
-				AdminEnseñar = true,
-				AdminInteractuar = true,
+				AdminUso = true,
+				UsuarioUso = true,
 				Regiones = new List<TiendaRegion> { TiendaRegion.Europa, TiendaRegion.EstadosUnidos }
 			};
 
@@ -41,8 +41,8 @@ namespace APIs.Gamesplanet
 				Imagen300x80 = "/imagenes/tiendas/gamesplanetfr_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/gamesplanet_icono.webp",
 				Color = "#000",
-				AdminEnseñar = true,
-				AdminInteractuar = true,
+				AdminUso = true,
+				UsuarioUso = true,
 				Regiones = new List<TiendaRegion> { TiendaRegion.Europa, TiendaRegion.EstadosUnidos }
 			};
 
@@ -60,8 +60,8 @@ namespace APIs.Gamesplanet
 				Imagen300x80 = "/imagenes/tiendas/gamesplanetde_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/gamesplanet_icono.webp",
 				Color = "#000",
-				AdminEnseñar = true,
-				AdminInteractuar = true,
+				AdminUso = true,
+				UsuarioUso = true,
 				Regiones = new List<TiendaRegion> { TiendaRegion.Europa, TiendaRegion.EstadosUnidos }
 			};
 
@@ -79,8 +79,8 @@ namespace APIs.Gamesplanet
 				Imagen300x80 = "/imagenes/tiendas/gamesplanetus_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/gamesplanet_icono.webp",
 				Color = "#000",
-				AdminEnseñar = true,
-				AdminInteractuar = true,
+				AdminUso = true,
+				UsuarioUso = true,
 				Regiones = new List<TiendaRegion> { TiendaRegion.Europa, TiendaRegion.EstadosUnidos }
 			};
 

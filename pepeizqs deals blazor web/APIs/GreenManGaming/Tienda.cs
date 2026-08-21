@@ -25,8 +25,8 @@ namespace APIs.GreenManGaming
 				Imagen300x80 = "/imagenes/tiendas/greenmangaming_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/greenmangaming_icono.webp",
 				Color = "#97ff9a",
-				AdminEnseñar = true,
-				AdminInteractuar = true,
+				AdminUso = true,
+				UsuarioUso = true,
 				Regiones = new List<TiendaRegion> { TiendaRegion.Europa, TiendaRegion.EstadosUnidos }
 			};
 
@@ -68,8 +68,8 @@ namespace APIs.GreenManGaming
 				Imagen300x80 = "/imagenes/tiendas/greenmangaminggold_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/greenmangaming_icono.webp",
 				Color = "#97ff9a",
-				AdminEnseñar = true,
-				AdminInteractuar = true,
+				AdminUso = true,
+				UsuarioUso = true,
 				Regiones = new List<TiendaRegion> { TiendaRegion.Europa, TiendaRegion.EstadosUnidos }
 			};
 

@@ -23,8 +23,8 @@ namespace APIs.Nexus
 				Imagen300x80 = "/imagenes/tiendas/nexus_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/nexus_icono.webp",
 				Color = "#3BB9AC",
-				AdminEnseñar = true,
-				AdminInteractuar = true,
+				AdminUso = true,
+				UsuarioUso = true,
 				Regiones = new List<TiendaRegion> { TiendaRegion.Europa, TiendaRegion.EstadosUnidos }
 			};
 

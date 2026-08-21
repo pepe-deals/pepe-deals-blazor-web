@@ -21,8 +21,8 @@ namespace APIs.JoyBuggy
                 Imagen300x80 = "/imagenes/tiendas/joybuggy_300x80.webp",
                 ImagenIcono = "/imagenes/tiendas/joybuggy_icono.ico",
                 Color = "#39f2d3",
-                AdminEnseñar = true,
-                AdminInteractuar = true,
+                AdminUso = false,
+                UsuarioUso = false,
 				Regiones = new List<TiendaRegion> { TiendaRegion.Europa, TiendaRegion.EstadosUnidos }
 			};
 

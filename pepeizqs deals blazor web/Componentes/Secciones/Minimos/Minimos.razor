@@ -687,7 +687,9 @@ else
 			<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 30px; padding: 30px;">
 				@foreach (var tienda in tiendas)
 				{
-					if (Tiendas2.TiendasCargar.DevolverTienda(tienda.TiendaId).Tipo == TiendaTipo.Oficial)
+					Tienda tiendaUsar = Tiendas2.TiendasCargar.DevolverTienda(tienda.TiendaId);
+
+					if (tiendaUsar.Tipo == TiendaTipo.Oficial && tiendaUsar.UsuarioUso == true)
 					{
 						string iconoTienda = string.Empty;
 						string nombreTienda = string.Empty;
@@ -726,7 +728,9 @@ else
 				<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 30px; padding: 30px;">
 					@foreach (var tienda in tiendas)
 					{
-						if (Tiendas2.TiendasCargar.DevolverTienda(tienda.TiendaId).Tipo == TiendaTipo.NoOficial)
+						Tienda tiendaUsar = Tiendas2.TiendasCargar.DevolverTienda(tienda.TiendaId);
+
+						if (tiendaUsar.Tipo == TiendaTipo.NoOficial && tiendaUsar.UsuarioUso == true)
 						{
 							string iconoTienda = string.Empty;
 							string nombreTienda = string.Empty;
@@ -2447,7 +2451,7 @@ else
 
 		foreach (var tienda in Tiendas2.TiendasCargar.GenerarListado())
 		{
-			if (tienda.UsuarioInteractuar == true)
+			if (tienda.UsuarioUso == true)
 			{
 				MostrarJuegoTienda nuevaTienda = new MostrarJuegoTienda();
 				nuevaTienda.TiendaId = tienda.Id;

@@ -22,8 +22,8 @@ namespace APIs.Yuplay
 				Imagen300x80 = "/imagenes/tiendas/yuplay_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/yuplay_icono.webp",
 				Color = "#558205",
-				AdminEnseñar = true,
-				AdminInteractuar = true,
+				AdminUso = true,
+				UsuarioUso = true,
 				Regiones = new List<TiendaRegion> { TiendaRegion.Europa }
 			};
 

@@ -23,8 +23,8 @@ namespace APIs.Voidu
 				Imagen300x80 = "/imagenes/tiendas/voidu_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/voidu_icono.ico",
 				Color = "#f58331",
-				AdminEnseñar = true,
-				AdminInteractuar = true
+				AdminUso = false,
+				UsuarioUso = false
 			};
 
 			return tienda;

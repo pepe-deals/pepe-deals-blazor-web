@@ -26,8 +26,8 @@ namespace APIs.IndieGala
 				Imagen300x80 = "/imagenes/tiendas/indiegala_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/indiegala_icono.webp",
 				Color = "#ffccd4",
-				AdminEnseñar = true,
-				AdminInteractuar = true,
+				AdminUso = true,
+				UsuarioUso = true,
 				Regiones = new List<TiendaRegion> { TiendaRegion.Europa, TiendaRegion.EstadosUnidos }
 			};
 

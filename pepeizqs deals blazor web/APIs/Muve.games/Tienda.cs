@@ -23,8 +23,8 @@ namespace APIs.Muvegames
 				Imagen300x80 = "/imagenes/tiendas/muvegames_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/muvegames_icono.ico",
 				Color = "#558205",
-				AdminEnseñar = true,
-				AdminInteractuar = true,
+				AdminUso = true,
+				UsuarioUso = true,
 				Regiones = new List<TiendaRegion> { TiendaRegion.Europa }
 			};
 

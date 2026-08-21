@@ -15,9 +15,8 @@ namespace Tiendas2
 		public string ImagenIcono;
 		public string Imagen300x80;
 		public string Color;
-		public bool AdminEnseñar;
-		public bool AdminInteractuar;
-		public bool UsuarioInteractuar = true;
+		public bool AdminUso;
+		public bool UsuarioUso = true;
 		public List<TiendaRegion> Regiones;
 		public TiendaTipo Tipo;
 	}

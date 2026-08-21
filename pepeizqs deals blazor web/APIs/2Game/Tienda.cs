@@ -21,8 +21,8 @@ namespace APIs._2Game
 				Imagen300x80 = "/imagenes/tiendas/2game_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/2game_icono.webp",
 				Color = "#beb2f1",
-				AdminEnseñar = false,
-				AdminInteractuar = true
+				AdminUso = false,
+				UsuarioUso = false
 			};
 
 			return tienda;

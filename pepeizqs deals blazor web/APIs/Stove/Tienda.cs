@@ -22,8 +22,8 @@ namespace APIs.Stove
 				Imagen300x80 = "/imagenes/tiendas/stove_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/stove_icono.ico",
 				Color = "#fc4420",
-				AdminEnseñar = true,
-				AdminInteractuar = true,
+				AdminUso = true,
+				UsuarioUso = true,
 				Regiones = new List<TiendaRegion> { TiendaRegion.Europa }
 			};
 

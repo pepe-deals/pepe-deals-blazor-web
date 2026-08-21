@@ -21,8 +21,8 @@ namespace APIs.Noctre
 				Imagen300x80 = "/imagenes/tiendas/noctre_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/noctre_icono.webp",
 				Color = "#007aff",
-				AdminEnseñar = true,
-				AdminInteractuar = true
+				AdminUso = false,
+				UsuarioUso = false
 			};
 
 			return tienda;

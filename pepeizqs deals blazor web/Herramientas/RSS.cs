@@ -3,6 +3,7 @@
 using Juegos;
 using Microsoft.AspNetCore.Mvc;
 using Noticias;
+using Servicios;
 using System.ServiceModel.Syndication;
 using System.Text;
 using System.Xml;
@@ -150,7 +151,7 @@ namespace Herramientas
         }
 
 		[ResponseCache(Duration = 300)]
-		[HttpGet("rss2/en/{categorias2}.xml")]
+		[HttpGet("rss2/news/en/{categorias2}.xml")]
 		public async Task<IActionResult> GenerarEnRSS2(string categorias2)
 		{
 			string dominio = "https://" + HttpContext.Request.Host.Value;
@@ -235,7 +236,7 @@ namespace Herramientas
 		}
 
 		[ResponseCache(Duration = 300)]
-		[HttpGet("rss2/es/{categorias2}.xml")]
+		[HttpGet("rss2/news/es/{categorias2}.xml")]
 		public async Task<IActionResult> GenerarEsRSS2(string categorias2)
 		{
 			string dominio = "https://" + HttpContext.Request.Host.Value;
@@ -432,7 +433,152 @@ namespace Herramientas
             return null;
         }
 
-        [ResponseCache(Duration = 300)]
+		[ResponseCache(Duration = 300)]
+		[HttpGet("rss2/deals/{region2}/{noOficial2}/{marketplace2}/{drm}/{cantidadReseñas}.xml")]
+		public async Task<IActionResult> GenerarUltimasOfertas2(string region2, bool noOficial2, bool marketplace2, string drm, int cantidadReseñas)
+		{
+			TiendaRegion region = TiendaRegion.Europa;
+
+			if (region2 == "us")
+			{
+				region = TiendaRegion.EstadosUnidos;
+			}
+
+			string dominio = "https://" + HttpContext.Request.Host.Value;
+
+			SyndicationFeed feed = new SyndicationFeed("pepe's deals", "RSS Last Deals", new Uri(dominio), "RSSUrl", DateTime.Now)
+			{
+				Copyright = new TextSyndicationContent($"{DateTime.Now.Year}")
+			};
+
+			List<string> drmsUsar = new List<string>();
+
+			foreach (var drm2 in JuegoDRM2.GenerarListado())
+			{
+				foreach (var acepcion in drm2.Acepciones)
+				{
+					if (drm.ToLower().Contains(acepcion) == true)
+					{
+						int posicion = Array.IndexOf(Enum.GetValues(typeof(JuegoDRM)), drm2.Id);
+
+						drmsUsar.Add(posicion.ToString());
+					}
+				}
+			}
+
+			if (drmsUsar.Count > 0)
+			{
+				if (cantidadReseñas < 1000)
+				{
+					cantidadReseñas = 1000;
+				}
+
+				if (cantidadReseñas > 10000)
+				{
+					cantidadReseñas = 10000;
+				}
+
+				List<SyndicationItem> items = new List<SyndicationItem>();
+
+				List<Juego> juegos = await global::BaseDatos.Portada.Buscar.Minimos(noOficial2, region, 3, 50, null, drmsUsar, cantidadReseñas);
+
+				if (juegos.Count > 0)
+				{
+					foreach (Juego juego in juegos)
+					{
+						string enlace = dominio + "/game/" + juego.Id.ToString() + "/" + Herramientas.EnlaceAdaptador.Nombre(juego.Nombre) + "/";
+
+						string titulo = juego.Nombre;
+						string contenido = string.Empty;
+
+						if (juego.PrecioMinimosHistoricos?.Count > 0)
+						{
+							decimal precio = juego.PrecioMinimosHistoricos[0].Precio;
+
+							if (juego.PrecioMinimosHistoricos[0].PrecioCambiado > 0)
+							{
+								precio = juego.PrecioMinimosHistoricos[0].PrecioCambiado;
+							}
+
+							contenido = juego.PrecioMinimosHistoricos[0].Descuento.ToString() + "% - " + Herramientas.Precios.Euro(precio);
+						}
+						else if (juego.PrecioMinimosHistoricosUS?.Count > 0)
+						{
+							decimal precio = juego.PrecioMinimosHistoricosUS[0].Precio;
+
+							if (juego.PrecioMinimosHistoricosUS[0].PrecioCambiado > 0)
+							{
+								precio = juego.PrecioMinimosHistoricosUS[0].PrecioCambiado;
+							}
+
+							contenido = juego.PrecioMinimosHistoricosUS[0].Descuento.ToString() + "% - " + Herramientas.Precios.Dolar(precio);
+						}
+						else if (juego.PreciosHistoricosNoOficialesEU?.Count > 0)
+						{
+							decimal precio = juego.PreciosHistoricosNoOficialesEU[0].Precio;
+
+							if (juego.PreciosHistoricosNoOficialesEU[0].PrecioCambiado > 0)
+							{
+								precio = juego.PreciosHistoricosNoOficialesEU[0].PrecioCambiado;
+							}
+
+							contenido = juego.PreciosHistoricosNoOficialesEU[0].Descuento.ToString() + "% - " + Herramientas.Precios.Euro(precio);
+						}
+						else if (juego.PreciosHistoricosNoOficialesUS?.Count > 0)
+						{
+							decimal precio = juego.PreciosHistoricosNoOficialesUS[0].Precio;
+
+							if (juego.PreciosHistoricosNoOficialesUS[0].PrecioCambiado > 0)
+							{
+								precio = juego.PreciosHistoricosNoOficialesUS[0].PrecioCambiado;
+							}
+
+							contenido = juego.PreciosHistoricosNoOficialesUS[0].Descuento.ToString() + "% - " + Herramientas.Precios.Dolar(precio);
+						}
+
+						Uri enlaceUri = null;
+
+						if (enlace != null)
+						{
+							enlaceUri = new Uri(enlace);
+						}
+
+						SyndicationItem item = new SyndicationItem(titulo, contenido, enlaceUri);
+
+						if (string.IsNullOrEmpty(juego.Imagenes.Header_460x215) == false)
+						{
+							item.ElementExtensions.Add(new XElement("image", juego.Imagenes.Header_460x215));
+						}
+
+						items.Add(item);
+					}
+
+					feed.Items = items;
+				}
+			}
+
+			XmlWriterSettings opciones = new XmlWriterSettings
+			{
+				Encoding = Encoding.UTF8,
+				NewLineHandling = NewLineHandling.Entitize,
+				NewLineOnAttributes = true,
+				Indent = true
+			};
+
+			using (MemoryStream stream = new MemoryStream())
+			{
+				using (XmlWriter xmlEscritor = XmlWriter.Create(stream, opciones))
+				{
+					Rss20FeedFormatter rssFormateador = new Rss20FeedFormatter(feed, false);
+					rssFormateador.WriteTo(xmlEscritor);
+					xmlEscritor.Flush();
+				}
+
+				return File(stream.ToArray(), "application/rss+xml; charset=utf-8");
+			}
+		}
+
+		[ResponseCache(Duration = 300)]
         [HttpGet("rss/{region2}/{categoria2}/{usuarioId}.xml")]
         public async Task<IActionResult> GenerarDeseados(string region2, string categoria2, string usuarioId)
         {
@@ -539,7 +685,7 @@ namespace Herramientas
 		}
 
 		[ResponseCache(Duration = 300)]
-		[HttpGet("rss2/{region2}/{noOficial2}/{marketplace2}/{categoria2}/{usuarioId}.xml")]
+		[HttpGet("rss2/wishlist/{region2}/{noOficial2}/{marketplace2}/{categoria2}/{usuarioId}.xml")]
 		public async Task<IActionResult> GenerarDeseados2(string region2, bool noOficial2, bool marketplace2, string categoria2, string usuarioId)
 		{
 			TiendaRegion region = TiendaRegion.Europa;

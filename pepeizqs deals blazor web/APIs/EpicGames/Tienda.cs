@@ -25,8 +25,8 @@ namespace APIs.EpicGames
 				Imagen300x80 = "/imagenes/tiendas/epic_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/epic_icono.ico",
 				Color = "#101014",
-				AdminEnseñar = true,
-				AdminInteractuar = true,
+				AdminUso = true,
+				UsuarioUso = true,
 				Regiones = new List<TiendaRegion> { TiendaRegion.Europa }
 			};
 

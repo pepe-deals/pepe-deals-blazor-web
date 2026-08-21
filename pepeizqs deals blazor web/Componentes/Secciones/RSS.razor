@@ -75,79 +75,97 @@
 
 		<div style="padding: 30px; display: flex; flex-direction: column; gap: 20px;">
 			<div style="display: flex; align-items: center; gap: 20px;">
-				<button @onclick="@(() => CambiarIdiomaNoticias("en"))" class="boton-rss-opciones @(idiomaNoticias.ToLower() == "en" ? "seleccionado" : "")" style="display: flex; align-items: center; gap: 8px;">
-					@if (idiomaNoticias.ToLower() == "en")
-					{
-						<div style="width: 22px; height: 22px; flex-shrink: 0;">
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="fill: none; stroke: var(--colorTexto); stroke-width: 60; stroke-linecap: round; stroke-linejoin: round;">
-								<path d="M128 340 L280 480 L512 160" />
-							</svg>
-						</div>
-					}
+				<div style="width: 100px; text-align: right;">
+					@Herramientas.Idiomas.BuscarTexto(idioma, "String6", "RSS")
+				</div>
 
-					<img src="/imagenes/banderas/english.svg" style="display: block; width: 22px; max-height: 22px; flex-shrink: 0;" />
-				</button>
+				<div style="display: flex; align-items: center; gap: 20px; background-color: rgba(0,0,0,.2); padding: 5px; width: fit-content; border: 1px solid rgba(0,0,0,.3);">
+					<button @onclick="@(() => CambiarIdiomaNoticias("en"))" class="boton-rss-opciones @(idiomaNoticias.ToLower() == "en" ? "seleccionado" : "")" style="display: flex; align-items: center; gap: 8px;">
+						@if (idiomaNoticias.ToLower() == "en")
+						{
+							<div style="width: 22px; height: 22px; flex-shrink: 0;">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="fill: none; stroke: var(--colorTexto); stroke-width: 60; stroke-linecap: round; stroke-linejoin: round;">
+									<path d="M128 340 L280 480 L512 160" />
+								</svg>
+							</div>
+						}
 
-				<button @onclick="@(() => CambiarIdiomaNoticias("es"))" class="boton-rss-opciones @(idiomaNoticias.ToLower() == "es" ? "seleccionado" : "")" style="display: flex; align-items: center; gap: 8px;">
-					@if (idiomaNoticias.ToLower() == "es")
-					{
-						<div style="width: 22px; height: 22px; flex-shrink: 0;">
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="fill: none; stroke: var(--colorTexto); stroke-width: 60; stroke-linecap: round; stroke-linejoin: round;">
-								<path d="M128 340 L280 480 L512 160" />
-							</svg>
-						</div>
-					}
+						<img src="/imagenes/banderas/english.svg" style="display: block; width: 22px; max-height: 22px; flex-shrink: 0;" />
+					</button>
 
-					<img src="/imagenes/banderas/spanish.svg" style="display: block; width: 22px; max-height: 22px; flex-shrink: 0;" />
-				</button>
+					<button @onclick="@(() => CambiarIdiomaNoticias("es"))" class="boton-rss-opciones @(idiomaNoticias.ToLower() == "es" ? "seleccionado" : "")" style="display: flex; align-items: center; gap: 8px;">
+						@if (idiomaNoticias.ToLower() == "es")
+						{
+							<div style="width: 22px; height: 22px; flex-shrink: 0;">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="fill: none; stroke: var(--colorTexto); stroke-width: 60; stroke-linecap: round; stroke-linejoin: round;">
+									<path d="M128 340 L280 480 L512 160" />
+								</svg>
+							</div>
+						}
+
+						<img src="/imagenes/banderas/spanish.svg" style="display: block; width: 22px; max-height: 22px; flex-shrink: 0;" />
+					</button>
+				</div>
 			</div>
 
 			<div style="display: flex; align-items: center; gap: 20px;">
-				<button @onclick="@(() => CambiarCategoriasNoticias("all"))" class="boton-rss-opciones @(categoriasNoticias.Contains("all") ? "seleccionado" : "")" style="display: flex; align-items: center; gap: 8px;">
-					@if (categoriasNoticias.Contains("all"))
-					{
-						<div style="width: 22px; height: 22px;">
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="fill: none; stroke: var(--colorTexto); stroke-width: 60; stroke-linecap: round; stroke-linejoin: round;">
-								<path d="M128 340 L280 480 L512 160" />
-							</svg>
-						</div>
-					}
-
-					<div>@Herramientas.Idiomas.BuscarTexto(idioma, "String2", "RSS")</div>
-				</button>
-
-				@foreach (NoticiaMostrar mostrar in NoticiasCargar.CargarNoticiasMostrar())
-				{
-					if (mostrar.Mostrar == true)
-					{
-						<button @onclick="@(() => CambiarCategoriasNoticias(((int)mostrar.Tipo).ToString()))" class="boton-rss-opciones @(categoriasNoticias.Contains(((int)mostrar.Tipo).ToString().ToLower()) ? " seleccionado" : "" )" style="display: flex; align-items: center; gap: 8px;">
-							@if (categoriasNoticias.Contains(((int)mostrar.Tipo).ToString().ToLower()))
-							{
-								<div style="width: 22px; height: 22px;">
-									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="fill: none; stroke: var(--colorTexto); stroke-width: 60; stroke-linecap: round; stroke-linejoin: round;">
-										<path d="M128 340 L280 480 L512 160" />
-									</svg>
-								</div>
-							}
-
-							<div>@Noticias.NoticiasCargar.Traduccion(mostrar.Tipo, idioma)</div>
-						</button>
-					}
-				}
-			</div>
-			
-			<div style="display: flex; align-items: center; gap: 20px; background-color: var(--fondoSubcabecera); border: 2px solid var(--fondoBotonPequeño);">
-				<div style="padding: 10px 15px;">
-					<label style="text-decoration: none; cursor: initial;">@enlaceNoticiasFinal</label>
+				<div style="width: 100px; text-align: right;">
+					@Herramientas.Idiomas.BuscarTexto(idioma, "String7", "RSS")
 				</div>
 
-				<button @onclick="(e => CopiarAlClipboard(e, enlaceNoticiasFinal))" class="juego-boton-pequeño" style="width: fit-content; padding: 10px 15px; display: flex; margin-left: auto;">
-					<div style="width: 24px;">
-						<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-							<path d="M288 64C252.7 64 224 92.7 224 128L224 384C224 419.3 252.7 448 288 448L480 448C515.3 448 544 419.3 544 384L544 183.4C544 166 536.9 149.3 524.3 137.2L466.6 81.8C454.7 70.4 438.8 64 422.3 64L288 64zM160 192C124.7 192 96 220.7 96 256L96 512C96 547.3 124.7 576 160 576L352 576C387.3 576 416 547.3 416 512L416 496L352 496L352 512L160 512L160 256L176 256L176 192L160 192z" />
-						</svg>
+				<div style="display: flex; align-items: center; gap: 20px; background-color: rgba(0,0,0,.2); padding: 5px; width: fit-content; border: 1px solid rgba(0,0,0,.3);">
+					<button @onclick="@(() => CambiarCategoriasNoticias("all"))" class="boton-rss-opciones @(categoriasNoticias.Contains("all") ? "seleccionado" : "")" style="display: flex; align-items: center; gap: 8px;">
+						@if (categoriasNoticias.Contains("all"))
+						{
+							<div style="width: 22px; height: 22px;">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="fill: none; stroke: var(--colorTexto); stroke-width: 60; stroke-linecap: round; stroke-linejoin: round;">
+									<path d="M128 340 L280 480 L512 160" />
+								</svg>
+							</div>
+						}
+
+						<div>@Herramientas.Idiomas.BuscarTexto(idioma, "String2", "RSS")</div>
+					</button>
+
+					@foreach (NoticiaMostrar mostrar in NoticiasCargar.CargarNoticiasMostrar())
+					{
+						if (mostrar.Mostrar == true)
+						{
+							<button @onclick="@(() => CambiarCategoriasNoticias(((int)mostrar.Tipo).ToString()))" class="boton-rss-opciones @(categoriasNoticias.Contains(((int)mostrar.Tipo).ToString().ToLower()) ? " seleccionado" : "")" style="display: flex; align-items: center; gap: 8px;">
+								@if (categoriasNoticias.Contains(((int)mostrar.Tipo).ToString().ToLower()))
+								{
+									<div style="width: 22px; height: 22px;">
+										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="fill: none; stroke: var(--colorTexto); stroke-width: 60; stroke-linecap: round; stroke-linejoin: round;">
+											<path d="M128 340 L280 480 L512 160" />
+										</svg>
+									</div>
+								}
+
+								<div>@Noticias.NoticiasCargar.Traduccion(mostrar.Tipo, idioma)</div>
+							</button>
+						}
+					}
+				</div>
+			</div>
+			
+			<div style="display: flex; align-items: center; gap: 20px;">
+				<div style="width: 100px; text-align: right;">
+					@Herramientas.Idiomas.BuscarTexto(idioma, "String8", "RSS")
+				</div>
+
+				<div style="display: flex; align-items: center; gap: 20px; background-color: rgba(0,0,0,.2); border: 1px solid rgba(0,0,0,.3);">
+					<div style="padding: 10px 15px;">
+						<label style="text-decoration: none; cursor: initial;">@enlaceNoticiasFinal</label>
 					</div>
-				</button>
+
+					<button @onclick="(e => CopiarAlClipboard(e, enlaceNoticiasFinal))" class="juego-boton-pequeño" style="width: fit-content; padding: 10px 12px;">
+						<div style="width: 22px;">
+							<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+								<path d="M288 64C252.7 64 224 92.7 224 128L224 384C224 419.3 252.7 448 288 448L480 448C515.3 448 544 419.3 544 384L544 183.4C544 166 536.9 149.3 524.3 137.2L466.6 81.8C454.7 70.4 438.8 64 422.3 64L288 64zM160 192C124.7 192 96 220.7 96 256L96 512C96 547.3 124.7 576 160 576L352 576C387.3 576 416 547.3 416 512L416 496L352 496L352 512L160 512L160 256L176 256L176 192L160 192z" />
+							</svg>
+						</div>
+					</button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -158,48 +176,140 @@
 		</div>
 
 		<div style="padding: 30px; display: flex; flex-direction: column; gap: 20px;">
-			<div>
-				@Herramientas.Idiomas.BuscarTexto(idioma, "String6", "RSS")
-			</div>
-
-			<div style="display: flex; align-items: center; gap: 20px; background-color: var(--fondoSubcabecera); border: 2px solid var(--fondoBotonPequeño);">
-				<div style="padding: 10px 15px;">
-					<label style="text-decoration: none; cursor: initial;">@enlaceOfertas1</label>
+			<div style="display: flex; align-items: center; gap: 20px;">
+				<div style="width: 100px; text-align: right;">
+					@Herramientas.Idiomas.BuscarTexto(idioma, "String9", "RSS")
 				</div>
 
-				<button @onclick="(e => CopiarAlClipboard(e, enlaceOfertas1))" class="juego-boton-pequeño" style="width: fit-content; padding: 10px 15px; display: flex; margin-left: auto;">
-					<div style="width: 24px;">
-						<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-							<path d="M288 64C252.7 64 224 92.7 224 128L224 384C224 419.3 252.7 448 288 448L480 448C515.3 448 544 419.3 544 384L544 183.4C544 166 536.9 149.3 524.3 137.2L466.6 81.8C454.7 70.4 438.8 64 422.3 64L288 64zM160 192C124.7 192 96 220.7 96 256L96 512C96 547.3 124.7 576 160 576L352 576C387.3 576 416 547.3 416 512L416 496L352 496L352 512L160 512L160 256L176 256L176 192L160 192z" />
-						</svg>
-					</div>
-				</button>
+				<div style="display: flex; align-items: center; gap: 20px; background-color: rgba(0,0,0,.2); padding: 5px; width: fit-content; border: 1px solid rgba(0,0,0,.3);">
+					<button @onclick="@(() => CambiarOfertasRegion(TiendaRegion.Europa))" class="boton-rss-opciones @(regionOfertas == "eu" ? "seleccionado" : "")" style="display: flex; align-items: center; gap: 8px;">
+						@if (regionOfertas == "eu")
+						{
+							<div style="width: 22px; height: 22px; flex-shrink: 0;">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="fill: none; stroke: var(--colorTexto); stroke-width: 60; stroke-linecap: round; stroke-linejoin: round;">
+									<path d="M128 340 L280 480 L512 160" />
+								</svg>
+							</div>
+						}
+
+						<img src="/imagenes/banderas/europe.svg" style="display: block; width: 22px; max-height: 22px; flex-shrink: 0;" />
+					</button>
+
+					<button @onclick="@(() => CambiarOfertasRegion(TiendaRegion.EstadosUnidos))" class="boton-rss-opciones @(regionOfertas == "us" ? "seleccionado" : "")" style="display: flex; align-items: center; gap: 8px;">
+						@if (regionOfertas == "us")
+						{
+							<div style="width: 22px; height: 22px; flex-shrink: 0;">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="fill: none; stroke: var(--colorTexto); stroke-width: 60; stroke-linecap: round; stroke-linejoin: round;">
+									<path d="M128 340 L280 480 L512 160" />
+								</svg>
+							</div>
+						}
+
+						<img src="/imagenes/banderas/english.svg" style="display: block; width: 22px; max-height: 22px; flex-shrink: 0;" />
+					</button>
+				</div>
 			</div>
 
-			<div>
-				@Herramientas.Idiomas.BuscarTexto(idioma, "String7", "RSS")
-			</div>
-
-			<div style="display: flex; align-items: center; gap: 20px; background-color: var(--fondoSubcabecera); border: 2px solid var(--fondoBotonPequeño);">
-				<div style="padding: 10px 15px;">
-					<label style="text-decoration: none; cursor: initial;">@enlaceOfertas2</label>
+			<div style="display: flex; align-items: center; gap: 20px;">
+				<div style="width: 100px; text-align: right;">
+					@Herramientas.Idiomas.BuscarTexto(idioma, "String14", "RSS")
 				</div>
 
-				<button @onclick="(e => CopiarAlClipboard(e, enlaceOfertas2))" class="juego-boton-pequeño" style="width: fit-content; padding: 10px 15px; display: flex; margin-left: auto;">
-					<div style="width: 24px;">
-						<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-							<path d="M288 64C252.7 64 224 92.7 224 128L224 384C224 419.3 252.7 448 288 448L480 448C515.3 448 544 419.3 544 384L544 183.4C544 166 536.9 149.3 524.3 137.2L466.6 81.8C454.7 70.4 438.8 64 422.3 64L288 64zM160 192C124.7 192 96 220.7 96 256L96 512C96 547.3 124.7 576 160 576L352 576C387.3 576 416 547.3 416 512L416 496L352 496L352 512L160 512L160 256L176 256L176 192L160 192z" />
-						</svg>
+				<div style="display: flex; align-items: center; gap: 20px; background-color: rgba(0,0,0,.2); padding: 10px 15px; width: fit-content; border: 1px solid rgba(0,0,0,.3);">
+					<div>
+						@reseñasOfertas
 					</div>
-				</button>
+
+					<div>
+						<input type="range" min="1000" max="10000" step="1000" list="resenas" @bind-value="reseñasOfertas" @bind-value:event="oninput" @bind-value:after="CambiarOfertasReseñas" />
+
+						<datalist id="resenas">
+							<option value="1000" label="1000"></option>
+							<option value="2000" label="2000"></option>
+							<option value="3000" label="3000"></option>
+							<option value="4000" label="4000"></option>
+							<option value="5000" label="5000"></option>
+							<option value="6000" label="6000"></option>
+							<option value="7000" label="7000"></option>
+							<option value="8000" label="8000"></option>
+							<option value="9000" label="9000"></option>
+							<option value="10000" label="10000"></option>
+						</datalist>
+					</div>
+				</div>
 			</div>
 
-			<div>
-				@Herramientas.Idiomas.BuscarTexto(idioma, "String8", "RSS")
+			<div style="display: flex; align-items: center; gap: 20px;">
+				<div style="width: 100px; text-align: right;">
+					@Herramientas.Idiomas.BuscarTexto(idioma, "String15", "RSS")
+				</div>
+
+				<div style="display: flex; align-items: center; gap: 20px; background-color: rgba(0,0,0,.2); padding: 5px; width: fit-content; border: 1px solid rgba(0,0,0,.3);">
+					<button @onclick="@(() => CambiarOfertasDRM(Juegos.JuegoDRM.Steam))" class="boton-rss-opciones @(categoriasOfertas.Contains(Juegos.JuegoDRM.Steam.ToString().ToLower()) ? "seleccionado" : "")" style="display: flex; align-items: center; gap: 8px;">
+						@if (categoriasOfertas.Contains(Juegos.JuegoDRM.Steam.ToString().ToLower()))
+						{
+							<div style="width: 22px; height: 22px;">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="fill: none; stroke: var(--colorTexto); stroke-width: 60; stroke-linecap: round; stroke-linejoin: round;">
+									<path d="M128 340 L280 480 L512 160" />
+								</svg>
+							</div>
+						}
+
+						<img src="@Juegos.JuegoDRM2.SacarImagen(Juegos.JuegoDRM.Steam)" style="display: block; width: 22px; height: 22px;" />
+
+						<div>@Juegos.JuegoDRM2.DevolverDRM(Juegos.JuegoDRM.Steam)</div>
+					</button>
+
+					<button @onclick="@(() => CambiarOfertasDRM(Juegos.JuegoDRM.GOG))" class="boton-rss-opciones @(categoriasOfertas.Contains(Juegos.JuegoDRM.GOG.ToString().ToLower()) ? "seleccionado" : "")" style="display: flex; align-items: center; gap: 8px;">
+						@if (categoriasOfertas.Contains(Juegos.JuegoDRM.GOG.ToString().ToLower()))
+						{
+							<div style="width: 22px; height: 22px;">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="fill: none; stroke: var(--colorTexto); stroke-width: 60; stroke-linecap: round; stroke-linejoin: round;">
+									<path d="M128 340 L280 480 L512 160" />
+								</svg>
+							</div>
+						}
+
+						<img src="@Juegos.JuegoDRM2.SacarImagen(Juegos.JuegoDRM.GOG)" style="display: block; width: 22px; height: 22px;" />
+
+						<div>@Juegos.JuegoDRM2.DevolverDRM(Juegos.JuegoDRM.GOG)</div>
+					</button>
+
+					<button @onclick="@(() => CambiarOfertasDRM(Juegos.JuegoDRM.Epic))" class="boton-rss-opciones @(categoriasOfertas.Contains(Juegos.JuegoDRM.Epic.ToString().ToLower()) ? "seleccionado" : "")" style="display: flex; align-items: center; gap: 8px;">
+						@if (categoriasOfertas.Contains(Juegos.JuegoDRM.Epic.ToString().ToLower()))
+						{
+							<div style="width: 22px; height: 22px;">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="fill: none; stroke: var(--colorTexto); stroke-width: 60; stroke-linecap: round; stroke-linejoin: round;">
+									<path d="M128 340 L280 480 L512 160" />
+								</svg>
+							</div>
+						}
+
+						<img src="@Juegos.JuegoDRM2.SacarImagen(Juegos.JuegoDRM.Epic)" style="display: block; width: 22px; height: 22px;" />
+
+						<div>@Juegos.JuegoDRM2.DevolverDRM(Juegos.JuegoDRM.Epic)</div>
+					</button>
+				</div>
 			</div>
 
-			<div>
-				@Herramientas.Idiomas.BuscarTexto(idioma, "String9", "RSS")
+			<div style="display: flex; align-items: center; gap: 20px;">
+				<div style="width: 100px; text-align: right;">
+					@Herramientas.Idiomas.BuscarTexto(idioma, "String8", "RSS")
+				</div>
+
+				<div style="display: flex; align-items: center; gap: 20px; background-color: rgba(0,0,0,.2); border: 1px solid rgba(0,0,0,.3);">
+					<div style="padding: 10px 15px;">
+						<label style="text-decoration: none; cursor: initial;">@enlaceOfertasFinal</label>
+					</div>
+
+					<button @onclick="(e => CopiarAlClipboard(e, enlaceOfertasFinal))" class="juego-boton-pequeño" style="width: fit-content; padding: 10px 12px;">
+						<div style="width: 22px;">
+							<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+								<path d="M288 64C252.7 64 224 92.7 224 128L224 384C224 419.3 252.7 448 288 448L480 448C515.3 448 544 419.3 544 384L544 183.4C544 166 536.9 149.3 524.3 137.2L466.6 81.8C454.7 70.4 438.8 64 422.3 64L288 64zM160 192C124.7 192 96 220.7 96 256L96 512C96 547.3 124.7 576 160 576L352 576C387.3 576 416 547.3 416 512L416 496L352 496L352 512L160 512L160 256L176 256L176 192L160 192z" />
+							</svg>
+						</div>
+					</button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -212,49 +322,93 @@
 			</div>
 
 			<div style="padding: 30px; display: flex; flex-direction: column; gap: 20px;">
-				<div style="display: flex; align-items: center; gap: 25px;">
-					<button @onclick="@(() => CambiarDeseadosCategoria(1))" class="boton-rss-opciones @(categoriaDeseados == 1 ? "seleccionado" : "")" style="display: flex; align-items: center; gap: 8px;">
-						@if (categoriaDeseados == 1)
-						{
-							<div style="width: 22px; height: 22px;">
-								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="fill: none; stroke: var(--colorTexto); stroke-width: 60; stroke-linecap: round; stroke-linejoin: round;">
-									<path d="M128 340 L280 480 L512 160" />
-								</svg>
-							</div>
-						}
-
-						<div>@Herramientas.Idiomas.BuscarTexto(idioma, "String11", "RSS")</div>
-					</button>
-
-					<button @onclick="@(() => CambiarDeseadosCategoria(0))" class="boton-rss-opciones @(categoriaDeseados == 0 ? "seleccionado" : "")" style="display: flex; align-items: center; gap: 8px;">
-						@if (categoriaDeseados == 0)
-						{
-							<div style="width: 22px; height: 22px;">
-								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="fill: none; stroke: var(--colorTexto); stroke-width: 60; stroke-linecap: round; stroke-linejoin: round;">
-									<path d="M128 340 L280 480 L512 160" />
-								</svg>
-							</div>
-						}
-
-						<div>@Herramientas.Idiomas.BuscarTexto(idioma, "String12", "RSS")</div>
-					</button>
-				</div>
-
-				<div style="display: flex; align-items: center; gap: 20px; background-color: var(--fondoSubcabecera); border: 2px solid var(--fondoBotonPequeño);">
-					<div style="padding: 10px 15px;">
-						<label style="text-decoration: none; cursor: initial;">@enlaceDeseadosFinal</label>
+				<div style="display: flex; align-items: center; gap: 20px;">
+					<div style="width: 100px; text-align: right;">
+						@Herramientas.Idiomas.BuscarTexto(idioma, "String9", "RSS")
 					</div>
 
-					<button @onclick="(e => CopiarAlClipboard(e, enlaceDeseadosFinal))" class="juego-boton-pequeño" style="width: fit-content; padding: 10px 15px; display: flex; margin-left: auto;">
-						<div style="width: 24px;">
-							<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-								<path d="M288 64C252.7 64 224 92.7 224 128L224 384C224 419.3 252.7 448 288 448L480 448C515.3 448 544 419.3 544 384L544 183.4C544 166 536.9 149.3 524.3 137.2L466.6 81.8C454.7 70.4 438.8 64 422.3 64L288 64zM160 192C124.7 192 96 220.7 96 256L96 512C96 547.3 124.7 576 160 576L352 576C387.3 576 416 547.3 416 512L416 496L352 496L352 512L160 512L160 256L176 256L176 192L160 192z" />
-							</svg>
-						</div>
-					</button>
+					<div style="display: flex; align-items: center; gap: 20px; background-color: rgba(0,0,0,.2); padding: 5px; width: fit-content; border: 1px solid rgba(0,0,0,.3);">
+						<button @onclick="@(() => CambiarDeseadosRegion(TiendaRegion.Europa))" class="boton-rss-opciones @(regionDeseados == "eu" ? "seleccionado" : "")" style="display: flex; align-items: center; gap: 8px;">
+							@if (regionDeseados == "eu")
+							{
+								<div style="width: 22px; height: 22px; flex-shrink: 0;">
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="fill: none; stroke: var(--colorTexto); stroke-width: 60; stroke-linecap: round; stroke-linejoin: round;">
+										<path d="M128 340 L280 480 L512 160" />
+									</svg>
+								</div>
+							}
+
+							<img src="/imagenes/banderas/europe.svg" style="display: block; width: 22px; max-height: 22px; flex-shrink: 0;" />
+						</button>
+
+						<button @onclick="@(() => CambiarDeseadosRegion(TiendaRegion.EstadosUnidos))" class="boton-rss-opciones @(regionDeseados == "us" ? "seleccionado" : "")" style="display: flex; align-items: center; gap: 8px;">
+							@if (regionDeseados == "us")
+							{
+								<div style="width: 22px; height: 22px; flex-shrink: 0;">
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="fill: none; stroke: var(--colorTexto); stroke-width: 60; stroke-linecap: round; stroke-linejoin: round;">
+										<path d="M128 340 L280 480 L512 160" />
+									</svg>
+								</div>
+							}
+
+							<img src="/imagenes/banderas/english.svg" style="display: block; width: 22px; max-height: 22px; flex-shrink: 0;" />
+						</button>
+					</div>
 				</div>
 
-				<div>@Herramientas.Idiomas.BuscarTexto(idioma, "String13", "RSS")</div>
+				<div style="display: flex; align-items: center; gap: 20px;">
+					<div style="width: 100px; text-align: right;">
+						@Herramientas.Idiomas.BuscarTexto(idioma, "String13", "RSS")
+					</div>
+
+					<div style="display: flex; align-items: center; gap: 20px; background-color: rgba(0,0,0,.2); padding: 5px; width: fit-content; border: 1px solid rgba(0,0,0,.3);">
+						<button @onclick="@(() => CambiarDeseadosCategoria(1))" class="boton-rss-opciones @(categoriaDeseados == 1 ? "seleccionado" : "")" style="display: flex; align-items: center; gap: 8px;">
+							@if (categoriaDeseados == 1)
+							{
+								<div style="width: 22px; height: 22px;">
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="fill: none; stroke: var(--colorTexto); stroke-width: 60; stroke-linecap: round; stroke-linejoin: round;">
+										<path d="M128 340 L280 480 L512 160" />
+									</svg>
+								</div>
+							}
+
+							<div>@Herramientas.Idiomas.BuscarTexto(idioma, "String11", "RSS")</div>
+						</button>
+
+						<button @onclick="@(() => CambiarDeseadosCategoria(0))" class="boton-rss-opciones @(categoriaDeseados == 0 ? "seleccionado" : "")" style="display: flex; align-items: center; gap: 8px;">
+							@if (categoriaDeseados == 0)
+							{
+								<div style="width: 22px; height: 22px;">
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="fill: none; stroke: var(--colorTexto); stroke-width: 60; stroke-linecap: round; stroke-linejoin: round;">
+										<path d="M128 340 L280 480 L512 160" />
+									</svg>
+								</div>
+							}
+
+							<div>@Herramientas.Idiomas.BuscarTexto(idioma, "String12", "RSS")</div>
+						</button>
+					</div>
+				</div>
+				
+				<div style="display: flex; align-items: center; gap: 20px;">
+					<div style="width: 100px; text-align: right;">
+						@Herramientas.Idiomas.BuscarTexto(idioma, "String8", "RSS")
+					</div>
+
+					<div style="display: flex; align-items: center; gap: 20px; background-color: rgba(0,0,0,.2); border: 1px solid rgba(0,0,0,.3);">
+						<div style="padding: 10px 15px;">
+							<label style="text-decoration: none; cursor: initial;">@enlaceDeseadosFinal</label>
+						</div>
+
+						<button @onclick="(e => CopiarAlClipboard(e, enlaceDeseadosFinal))" class="juego-boton-pequeño" style="width: fit-content; padding: 10px 12px;">
+							<div style="width: 22px;">
+								<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+									<path d="M288 64C252.7 64 224 92.7 224 128L224 384C224 419.3 252.7 448 288 448L480 448C515.3 448 544 419.3 544 384L544 183.4C544 166 536.9 149.3 524.3 137.2L466.6 81.8C454.7 70.4 438.8 64 422.3 64L288 64zM160 192C124.7 192 96 220.7 96 256L96 512C96 547.3 124.7 576 160 576L352 576C387.3 576 416 547.3 416 512L416 496L352 496L352 512L160 512L160 256L176 256L176 192L160 192z" />
+								</svg>
+							</div>
+						</button>
+					</div>
+				</div>
 			</div>
 		</div>
 	}
@@ -272,13 +426,16 @@
 	private bool usuarioTiendasNoOficial = false;
 	[PersistentState] public Usuario opciones { get; set; }
 
-	private string enlaceOfertas1 = null;
-	private string enlaceOfertas2 = null;
-
 	private string idiomaNoticias = "en";
 	private string categoriasNoticias = "all";
 	private string enlaceNoticiasFinal = null;
 
+	private string regionOfertas = "eu";
+	private int reseñasOfertas = 1000;
+	private string categoriasOfertas = "steam";
+	private string enlaceOfertasFinal = null;
+
+	private string regionDeseados = "eu";
 	private int categoriaDeseados = 1;
 	private string enlaceDeseadosFinal = null;
 
@@ -320,20 +477,15 @@
 			idiomaNoticias = "es";
 		}
 
-        enlaceNoticiasFinal = GenerarEnlaceNoticias("all");
+		if (usuarioRegion == TiendaRegion.EstadosUnidos)
+		{
+			regionOfertas = "us";
+			regionDeseados = "us";
+		}
+
+		enlaceNoticiasFinal = GenerarEnlaceNoticias("all");
+		enlaceOfertasFinal = GenerarEnlaceOfertas("steam");
 		enlaceDeseadosFinal = GenerarEnlaceDeseados(1);
-
-
-		if (usuarioRegion == TiendaRegion.Europa)
-		{
-			enlaceOfertas1 = "https://" + dominio + "/rss/eu/steam/1000";
-			enlaceOfertas2 = "https://" + dominio + "/rss/eu/steam,gog/1000";
-		}
-		else if (usuarioRegion == TiendaRegion.EstadosUnidos)
-		{
-			enlaceOfertas1 = "https://" + dominio + "/rss/us/steam/1000";
-			enlaceOfertas2 = "https://" + dominio + "/rss/us/steam,gog/1000";
-		}
 	}
 
 	private IJSObjectReference moduloJs;
@@ -419,7 +571,7 @@
 		}
 		else
 		{
-            categoriasNoticias = categoriasNoticias.Replace("all", "").Replace(",,", ",").Trim(',');
+			categoriasNoticias = categoriasNoticias.Replace("all", "").Replace(",,", ",").Trim(',');
 
 			if (string.IsNullOrEmpty(categoriasNoticias) == false && categoriasNoticias.Contains(nuevaCategoria.ToLower()) == false)
 			{
@@ -435,19 +587,81 @@
 			}
 		}
 
-        if (string.IsNullOrEmpty(categoriasNoticias) == true || categoriasNoticias.Trim() == ",")
-        {
-            categoriasNoticias = "all";
-        }
+		if (string.IsNullOrEmpty(categoriasNoticias) == true || categoriasNoticias.Trim() == ",")
+		{
+			categoriasNoticias = "all";
+		}
 
 		enlaceNoticiasFinal = GenerarEnlaceNoticias(categoriasNoticias); 
 	}
 
 	private string GenerarEnlaceNoticias(string categorias)
 	{
-		string enlace = "https://" + dominio + "/rss2/" + idiomaNoticias + "/" + categorias + ".xml";
+		string enlace = "https://" + dominio + "/rss2/news/" + idiomaNoticias + "/" + categorias + ".xml";
 
 		return enlace;
+	}
+
+	private async Task CambiarOfertasRegion(TiendaRegion nuevaRegion)
+	{
+		if (nuevaRegion == TiendaRegion.Europa)
+		{ 
+			regionOfertas = "eu";
+		}
+		else if (nuevaRegion == TiendaRegion.EstadosUnidos)
+		{
+			regionOfertas = "us";
+		}
+
+		enlaceOfertasFinal = GenerarEnlaceOfertas(categoriasOfertas);
+	}
+
+	private async Task CambiarOfertasReseñas()
+	{
+		enlaceOfertasFinal = GenerarEnlaceOfertas(categoriasOfertas);
+	}
+
+	private async Task CambiarOfertasDRM(Juegos.JuegoDRM nuevoDRM)
+	{
+		if (string.IsNullOrEmpty(categoriasOfertas) == false)
+		{
+			if (categoriasOfertas.Contains(nuevoDRM.ToString().ToLower()))
+			{
+				categoriasOfertas = categoriasOfertas.Replace(nuevoDRM.ToString().ToLower(), "").Replace(",,", ",").Trim(',');
+			}
+			else
+			{
+				categoriasOfertas = categoriasOfertas + "," + nuevoDRM.ToString().ToLower();
+			}
+		}
+
+		if (string.IsNullOrEmpty(categoriasOfertas) == true)
+		{
+			categoriasOfertas = "steam";
+		}
+
+		enlaceOfertasFinal = GenerarEnlaceOfertas(categoriasOfertas);
+	}
+
+	private string GenerarEnlaceOfertas(string categorias)
+	{
+		string enlace = "https://" + dominio + "/rss2/deals/" + regionOfertas + "/" + usuarioTiendasNoOficial.ToString().ToLower() + "/false/" + categorias + "/" + reseñasOfertas + ".xml";
+
+		return enlace;
+	}
+
+	private async Task CambiarDeseadosRegion(TiendaRegion nuevaRegion)
+	{
+		if (nuevaRegion == TiendaRegion.Europa)
+		{
+			regionDeseados = "eu";
+		}
+		else if (nuevaRegion == TiendaRegion.EstadosUnidos)
+		{
+			regionDeseados = "us";
+		}
+
+		enlaceDeseadosFinal = GenerarEnlaceDeseados(categoriaDeseados);
 	}
 
 	private async Task CambiarDeseadosCategoria(int nuevaCategoria)
@@ -458,19 +672,9 @@
 
     private string GenerarEnlaceDeseados(int categoria)
     {
-        string enlace = "https://" + dominio + "/rss2/";
-
-        if (usuarioRegion == TiendaRegion.Europa)
-        {
-            enlace = enlace + "eu/";
-        }
-        else if (usuarioRegion == TiendaRegion.EstadosUnidos)
-        {
-            enlace = enlace + "us/";
-        }
-
-        enlace = enlace + usuarioTiendasNoOficial.ToString().ToLower() + "/false/" + categoria.ToString() + "/" + usuarioId + ".xml";
-        return enlace;
+        string enlace = "https://" + dominio + "/rss2/wishlist/" + regionDeseados + "/" + usuarioTiendasNoOficial.ToString().ToLower() + "/false/" + categoria.ToString() + "/" + usuarioId + ".xml";
+        
+		return enlace;
     }
 
 	#endregion

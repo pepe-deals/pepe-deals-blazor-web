@@ -22,8 +22,8 @@ namespace APIs.PlanetPlay
 				Imagen300x80 = "/imagenes/tiendas/planetplay_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/planetplay_icono.webp",
 				Color = "#00CC7E",
-				AdminEnseñar = true,
-				AdminInteractuar = true,
+				AdminUso = true,
+				UsuarioUso = true,
 				Regiones = new List<TiendaRegion> { TiendaRegion.Europa, TiendaRegion.EstadosUnidos }
 			};
 

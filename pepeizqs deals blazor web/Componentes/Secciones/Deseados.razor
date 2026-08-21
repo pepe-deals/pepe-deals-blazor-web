@@ -149,7 +149,7 @@
 						 @onmouseleave="@(() => DesactivarTooltip("trigger-wishlist-rss"))">
 						@{
 							string regionRss = usuarioRegion == TiendaRegion.Europa ? "eu" : "us";
-							string enlaceRss = "/rss2/" + regionRss + "/" + usuarioTiendasNoOficial.ToString().ToLower() + "/false/" + pestañaMostrar.ToString() + "/" + usuarioId + ".xml";
+							string enlaceRss = "/rss2/wishlist/" + regionRss + "/" + usuarioTiendasNoOficial.ToString().ToLower() + "/false/" + pestañaMostrar.ToString() + "/" + usuarioId + ".xml";
 						}
 
 						<a href="@enlaceRss" target="_blank" style="background: transparent; border: 0px;">

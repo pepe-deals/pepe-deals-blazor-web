@@ -28,8 +28,8 @@ namespace APIs.DLGamer
 				Imagen300x80 = "/imagenes/tiendas/dlgamer_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/dlgamer_icono.webp",
 				Color = "#b9aa21",
-				AdminEnseñar = true,
-				AdminInteractuar = true,
+				AdminUso = true,
+				UsuarioUso = true,
 				Regiones = new List<TiendaRegion> { TiendaRegion.Europa, TiendaRegion.EstadosUnidos }
 			};
 

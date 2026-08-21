@@ -241,15 +241,15 @@ namespace Tareas
 								siguienteComprobacion = TimeSpan.FromHours(3);
 							}
 						}
-						else if (tienda.Id == APIs.JoyBuggy.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(3);
+						//else if (tienda.Id == APIs.JoyBuggy.Tienda.Generar().Id)
+						//{
+						//	siguienteComprobacion = TimeSpan.FromHours(3);
 
-							if (DateTime.Now.Hour == 19)
-							{
-								siguienteComprobacion = TimeSpan.FromHours(4);
-							}
-						}
+						//	if (DateTime.Now.Hour == 19)
+						//	{
+						//		siguienteComprobacion = TimeSpan.FromHours(4);
+						//	}
+						//}
 						else if (tienda.Id == APIs.Muvegames.Tienda.Generar().Id)
 						{
 							siguienteComprobacion = TimeSpan.FromHours(3);
@@ -597,10 +597,10 @@ namespace Tareas
 						//{
 						//	siguienteComprobacion = TimeSpan.FromHours(6);
 						//}
-						else if (tienda.Id == APIs.JoyBuggy.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(6);
-						}
+						//else if (tienda.Id == APIs.JoyBuggy.Tienda.Generar().Id)
+						//{
+						//	siguienteComprobacion = TimeSpan.FromHours(6);
+						//}
 						else if (tienda.Id == APIs.Battlenet.Tienda.Generar().Id)
 						{
 							siguienteComprobacion = TimeSpan.FromHours(6);

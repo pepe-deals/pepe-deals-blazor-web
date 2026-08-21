@@ -6,12 +6,14 @@
   "String3": "Inglés",
   "String4": "Español",
   "String5": "Últimas Ofertas",
-  "String6": "También podéis seguir las últimas ofertas y configurar el feed según tu gusto. Digamos que por ejemplo solo quieres saber los últimos precios mínimos históricos de juegos para Steam con al menos 1000 reseñas, a través de este feed puedes consultar los juegos:",
-  "String7": "Si quieres añadir al anterior feed los juegos para GOG basta con usar este feed:",
-  "String8": "El feed se puede configurar editando el campo después de /rss/ escribiendo las plataformas donde quieras los juegos, como Steam, GOG, Epic, EA Play o cualquier otra plataforma que salga en el futuro, procurar que cada plataforma este separada por una coma y sin espacios como en el ejemplo anterior. El segundo campo en formato numérico representa la cantidad de reseñas que tiene la oferta en la web, podéis cambiarlo entre 200 y 10000.",
-  "String9": "También quiero señalar que hay varias restricciones, todo feed de ofertas que configuréis no puede retroceder más de 2 días en el pasado y ademas hay un limite de 50 ofertas en el feed. He tenido que poner estas restricciones para no apuñalar el servidor.",
+  "String6": "Idioma",
+  "String7": "Categorías",
+  "String8": "Enlace",
+  "String9": "Región",
   "String10": "Deseados",
-  "String11": "Todos los juegos con precios mínimos históricos",
-  "String12": "Todos los juegos con al menos 1% de descuento",
-  "String13": "Nota: El feed esta ordenado por la fecha de detección de las ofertas."
+  "String11": "Mínimos históricos",
+  "String12": "1% de descuento",
+  "String13": "Filtro",
+  "String14": "Reseñas",
+  "String15": "DRMs"
 }

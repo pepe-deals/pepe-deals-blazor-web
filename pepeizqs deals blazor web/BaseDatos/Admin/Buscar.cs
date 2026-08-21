@@ -122,7 +122,7 @@ namespace BaseDatos.Admin
 				{
 					foreach (Tienda tienda2 in TiendasCargar.GenerarListado())
 					{
-						if (tienda2.Id == t.Id && tienda2.AdminInteractuar == false)
+						if (tienda2.Id == t.Id && tienda2.AdminUso == false)
 						{
 							return false;
 						}
@@ -215,7 +215,7 @@ namespace BaseDatos.Admin
 
 				foreach (Tienda tienda in TiendasCargar.GenerarListado())
 				{
-					if (tienda.AdminEnseñar == true)
+					if (tienda.AdminUso == true)
 					{
 						if (string.IsNullOrEmpty(sql) == true)
 						{
@@ -253,7 +253,7 @@ namespace BaseDatos.Admin
 
 				foreach (Tienda tienda in TiendasCargar.GenerarListado())
 				{
-					if (tienda.AdminEnseñar == true)
+					if (tienda.AdminUso == true)
 					{
 						if (string.IsNullOrEmpty(sql) == true)
 						{

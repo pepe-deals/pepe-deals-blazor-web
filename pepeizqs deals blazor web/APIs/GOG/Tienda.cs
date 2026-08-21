@@ -23,8 +23,8 @@ namespace APIs.GOG
 				Imagen300x80 = "/imagenes/tiendas/gog_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/gog_icono.ico",
 				Color = "#7f3694",
-				AdminEnseñar = true,
-				AdminInteractuar = true,
+				AdminUso = true,
+				UsuarioUso = true,
 				Regiones = new List<TiendaRegion> { TiendaRegion.Europa, TiendaRegion.EstadosUnidos }
 			};
 
