@@ -576,6 +576,25 @@ app.MapAdditionalIdentityEndpoints();
 
 #region Extension
 
+app.MapGet("extension/steam4/{id}/{region}/{noOficial}/{marketplace}/{clave}/", async (int id, string region, string clave) =>
+{
+#nullable disable
+
+	string claveExtension = builder.Configuration.GetValue<string>("Extension:Clave");
+
+	if (clave == claveExtension)
+	{
+		BaseDatos.Extension.Extension juego = await BaseDatos.Extension.Buscar.Steam3(region, id.ToString());
+
+		if (juego?.Id > 0)
+		{
+			return Results.Json(juego);
+		}
+	}
+
+	return Results.NotFound();
+});
+
 app.MapGet("extension/steam3/{id}/{region}/{clave}/", async (int id, string region, string clave) =>
 {
 	#nullable disable
