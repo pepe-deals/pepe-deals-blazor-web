@@ -378,6 +378,7 @@ namespace Juegos
 					"apple",
 					"asmjs",
 					"audio-download",
+					"call of duty beta",
 					"desura",
 					"developer website",
 					"download",
