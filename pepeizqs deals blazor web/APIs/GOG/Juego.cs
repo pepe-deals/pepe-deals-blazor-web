@@ -311,7 +311,10 @@ namespace APIs.GOG
 								galaxy = new JuegoGalaxyGOG();
 							}
 
-							galaxy.FechaLanzamiento = DateTime.Parse(datos.Caracteristicas.Producto.FechaLanzamiento);
+							if (string.IsNullOrEmpty(datos.Caracteristicas.Producto.FechaLanzamiento) == false)
+							{
+								galaxy.FechaLanzamiento = DateTime.Parse(datos.Caracteristicas.Producto.FechaLanzamiento);
+							}
 						}
 
 						foreach (var caracteristica in datos.Caracteristicas.Datos)

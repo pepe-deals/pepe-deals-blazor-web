@@ -24,6 +24,26 @@ namespace BaseDatos.Extension
 		public string SlugEpic { get; set; }
 	}
 
+	public class Extension2
+	{
+		public int Id { get; set; }
+		public string Nombre { get; set; }
+		public List<ExtensionPrecio> MinimosHistoricosOficial { get; set; }
+		public List<ExtensionPrecio> PreciosActualesOficial { get; set; }
+		public List<ExtensionPrecio> MinimosHistoricosNoOficial { get; set; }
+		public List<ExtensionPrecio> PreciosActualesNoOficial { get; set; }
+		public List<ExtensionPrecio> MinimosHistoricosMarketplace { get; set; }
+		public List<ExtensionPrecio> PreciosActualesMarketplace { get; set; }
+		public List<ExtensionBundle> Bundles { get; set; }
+		public int BundlesPasados { get; set; }
+		public List<ExtensionGratis> Gratis { get; set; }
+		public List<ExtensionSuscripcion> Suscripciones { get; set; }
+		public int IdSteam { get; set; }
+		public int IdGOG { get; set; }
+		public string SlugGOG { get; set; }
+		public string SlugEpic { get; set; }
+	}
+
 	public class ExtensionPrecio
 	{
 		public JuegoPrecio Datos { get; set; }
@@ -257,6 +277,153 @@ namespace BaseDatos.Extension
 					);
 				}
 				
+				string jsonBundles = CogerString("bundles2");
+				if (string.IsNullOrEmpty(jsonBundles) == false)
+				{
+					JsonSerializerOptions opciones = new JsonSerializerOptions
+					{
+						PropertyNameCaseInsensitive = true,
+						UnknownTypeHandling = JsonUnknownTypeHandling.JsonElement
+					};
+
+					extension.Bundles = JsonSerializer.Deserialize<List<ExtensionBundle>>(jsonBundles, opciones);
+				}
+
+				extension.BundlesPasados = CogerInt("bundlesPasados");
+
+				string jsonGratis = CogerString("gratis2");
+				if (string.IsNullOrEmpty(jsonGratis) == false)
+				{
+					List<JuegoGratisJson> lista = JsonSerializer.Deserialize<List<JuegoGratisJson>>(jsonGratis);
+
+					if (lista?.Count > 0)
+					{
+						extension.Gratis = new List<ExtensionGratis>();
+
+						foreach (var gratis in lista)
+						{
+							gratis.Enlace = Herramientas.EnlaceAcortador.Generar(gratis.Enlace, gratis.Tipo, false, false);
+
+							extension.Gratis.Add(new ExtensionGratis
+							{
+								Datos = gratis,
+								NombreGratis = Gratis2.GratisCargar.DevolverGratis(gratis.Tipo).Nombre,
+								IconoGratis = Gratis2.GratisCargar.DevolverGratis(gratis.Tipo).ImagenIcono
+							});
+						}
+					}
+				}
+
+				var jsonSuscripciones = CogerString("suscripciones2");
+				if (string.IsNullOrEmpty(jsonSuscripciones) == false)
+				{
+					var lista = JsonSerializer.Deserialize<List<JuegoSuscripcionJson>>(jsonSuscripciones);
+
+					if (lista?.Count > 0)
+					{
+						extension.Suscripciones = new List<ExtensionSuscripcion>();
+
+						foreach (var suscripcion in lista)
+						{
+							suscripcion.Enlace = Herramientas.EnlaceAcortador.Generar(suscripcion.Enlace, suscripcion.Tipo, false, false);
+
+							extension.Suscripciones.Add(new ExtensionSuscripcion
+							{
+								Datos = suscripcion,
+								NombreSuscripcion = Suscripciones2.SuscripcionesCargar.DevolverSuscripcion(suscripcion.Tipo).Nombre,
+								IconoSuscripcion = Suscripciones2.SuscripcionesCargar.DevolverSuscripcion(suscripcion.Tipo).ImagenIcono
+							});
+						}
+					}
+				}
+
+				return extension;
+			}
+			catch (Exception ex)
+			{
+				BaseDatos.Errores.Insertar.Mensaje("Extension Generar " + id, ex, false);
+			}
+
+			return null;
+		}
+
+		private static async Task<Extension> GenerarDatos2(string region, string sentenciaSql, bool noOficial, bool marketplace, string id)
+		{
+			if (sentenciaSql == null)
+			{
+				return null;
+			}
+
+			try
+			{
+				var fila2 = await Herramientas.BaseDatos.Select(async conexion =>
+				{
+					return await conexion.QueryFirstOrDefaultAsync<dynamic>(sentenciaSql);
+				});
+
+				IDictionary<string, object> fila = (IDictionary<string, object>)fila2;
+
+				Extension2 extension = new Extension2
+				{
+					MinimosHistoricosOficial = new List<ExtensionPrecio>(),
+					PreciosActualesOficial = new List<ExtensionPrecio>(),
+					Bundles = new List<ExtensionBundle>(),
+					Gratis = new List<ExtensionGratis>(),
+					Suscripciones = new List<ExtensionSuscripcion>()
+				};
+
+				if (noOficial == true)
+				{
+					extension.MinimosHistoricosNoOficial = new List<ExtensionPrecio>();
+					extension.PreciosActualesNoOficial = new List<ExtensionPrecio>();
+				}
+
+
+
+				if (fila == null)
+				{
+					return null;
+				}
+
+				string CogerString(string columna)
+				{
+					return fila.TryGetValue(columna, out var v) && v != null ? v.ToString() : null;
+				}
+
+				int CogerInt(string columna)
+				{
+					return fila.TryGetValue(columna, out var v) && v != null ? Convert.ToInt32(v) : 0;
+				}
+
+				extension.Id = CogerInt("id");
+				extension.Nombre = CogerString("nombre");
+				extension.IdSteam = CogerInt("idSteam");
+				extension.IdGOG = CogerInt("idGOG");
+				extension.SlugGOG = CogerString("slugGOG");
+				extension.SlugEpic = CogerString("slugEpic");
+
+
+				if (region == "eu")
+				{
+					CargarPrecios(
+						CogerString("precioMinimosHistoricos"), extension.MinimosHistoricos
+					);
+
+					CargarPrecios(
+						CogerString("precioActualesTiendas"), extension.PreciosActuales
+					);
+				}
+				else if (region == "us")
+				{
+					CargarPrecios(
+						CogerString("precioMinimosHistoricosUS"), extension.MinimosHistoricos
+					);
+
+					CargarPrecios(
+						CogerString("precioActualesTiendasUS"), extension.PreciosActuales
+					);
+				}
+
 				string jsonBundles = CogerString("bundles2");
 				if (string.IsNullOrEmpty(jsonBundles) == false)
 				{

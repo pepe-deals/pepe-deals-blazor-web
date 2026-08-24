@@ -589,6 +589,11 @@
 
 		if (curator == null)
 		{
+			if (Contexto.HttpContext != null && Contexto.HttpContext.Response.HasStarted == false)
+			{
+				Contexto.HttpContext.Response.StatusCode = 404;
+			}
+
 			Navegacion.NavigateTo("/", true);			
 		}
 
