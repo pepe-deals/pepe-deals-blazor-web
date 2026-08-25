@@ -39,24 +39,31 @@ namespace APIs.Humble
 
 		public static string Referido(string enlace)
 		{
-			var slug = new Uri(enlace).AbsolutePath.Trim('/').Split('/').Last();
-			var palabras = slug.Split('-', StringSplitOptions.RemoveEmptyEntries);
-
-			string prodsku;
-			if (palabras.Length > 1)
+			if (string.IsNullOrEmpty(enlace) == false)
 			{
-				var titulo = string.Join(" ", palabras.Take(palabras.Length - 1).Select(Capitalizar));
-				prodsku = $"{titulo} - {palabras[^1].ToUpperInvariant()}";
+				var slug = new Uri(enlace).AbsolutePath.Trim('/').Split('/').Last();
+				var palabras = slug.Split('-', StringSplitOptions.RemoveEmptyEntries);
+
+				string prodsku;
+				if (palabras.Length > 1)
+				{
+					var titulo = string.Join(" ", palabras.Take(palabras.Length - 1).Select(Capitalizar));
+					prodsku = $"{titulo} - {palabras[^1].ToUpperInvariant()}";
+				}
+				else
+				{
+					prodsku = Capitalizar(palabras[0]);
+				}
+
+				return "https://humblebundleinc.sjv.io/c/1382810/2087718/25796"
+					+ "?prodsku=" + Uri.EscapeDataString(prodsku)
+					+ "&u=" + Uri.EscapeDataString(enlace)
+					+ "&intsrc=CATF_18045";
 			}
 			else
 			{
-				prodsku = Capitalizar(palabras[0]);
+				return enlace;
 			}
-
-			return "https://humblebundleinc.sjv.io/c/1382810/2087718/25796"
-				+ "?prodsku=" + Uri.EscapeDataString(prodsku)
-				+ "&u=" + Uri.EscapeDataString(enlace)
-				+ "&intsrc=CATF_18045";
 		}
 
 		private static string Capitalizar(string palabra) => palabra.Length == 0 ? palabra : char.ToUpperInvariant(palabra[0]) + palabra[1..];

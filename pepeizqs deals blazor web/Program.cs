@@ -576,7 +576,7 @@ app.MapAdditionalIdentityEndpoints();
 
 #region Extension
 
-app.MapGet("extension/steam4/{id}/{region}/{noOficial}/{marketplace}/{clave}/", async (int id, string region, string clave) =>
+app.MapGet("extension/steam4/{id}/{region}/{noOficial}/{marketplace}/{clave}/", async (int id, string region, bool noOficial, bool marketplace, string clave) =>
 {
 #nullable disable
 
@@ -584,7 +584,7 @@ app.MapGet("extension/steam4/{id}/{region}/{noOficial}/{marketplace}/{clave}/", 
 
 	if (clave == claveExtension)
 	{
-		BaseDatos.Extension.Extension juego = await BaseDatos.Extension.Buscar.Steam3(region, id.ToString());
+		BaseDatos.Extension.Extension2 juego = await BaseDatos.Extension.Buscar.Steam4(region, noOficial, marketplace, id.ToString());
 
 		if (juego?.Id > 0)
 		{

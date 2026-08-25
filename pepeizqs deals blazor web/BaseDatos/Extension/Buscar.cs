@@ -32,8 +32,8 @@ namespace BaseDatos.Extension
 		public List<ExtensionPrecio> PreciosActualesOficial { get; set; }
 		public List<ExtensionPrecio> MinimosHistoricosNoOficial { get; set; }
 		public List<ExtensionPrecio> PreciosActualesNoOficial { get; set; }
-		public List<ExtensionPrecio> MinimosHistoricosMarketplace { get; set; }
-		public List<ExtensionPrecio> PreciosActualesMarketplace { get; set; }
+		public List<ExtensionPrecio> MinimosHistoricosMarketplaces { get; set; }
+		public List<ExtensionPrecio> PreciosActualesMarketplaces { get; set; }
 		public List<ExtensionBundle> Bundles { get; set; }
 		public int BundlesPasados { get; set; }
 		public List<ExtensionGratis> Gratis { get; set; }
@@ -75,6 +75,77 @@ namespace BaseDatos.Extension
 
 	public static class Buscar
 	{
+		public static async Task<Extension2> Steam4(string region, bool noOficial, bool marketplace, string id)
+		{
+			string precioMinimosHistoricos = string.Empty;
+			string precioActualesTiendas = string.Empty;
+
+			if (region == "eu")
+			{
+				precioMinimosHistoricos = "precioMinimosHistoricos";
+				precioActualesTiendas = "precioActualesTiendas";
+			}
+			else if (region == "us")
+			{
+				precioMinimosHistoricos = "precioMinimosHistoricosUS";
+				precioActualesTiendas = "precioActualesTiendasUS";
+			}
+
+			string textoNoOficial = string.Empty;
+
+			if (noOficial == true && region == "eu")
+			{
+				textoNoOficial = "j.preciosHistoricosNoOficialesEU, j.preciosActualesNoOficialesEU,";
+			}
+			else if (noOficial == true && region == "us")
+			{
+				textoNoOficial = "j.preciosHistoricosNoOficialesUS, j.preciosActualesNoOficialesUS,";
+			}
+
+			string textoMarketplace = string.Empty;
+
+			if (marketplace == true && region == "eu")
+			{
+				textoMarketplace = "j.preciosHistoricosMarketplacesEU, j.preciosActualesMarketplacesEU,";
+			}
+			else if (marketplace == true && region == "us")
+			{
+				textoMarketplace = "j.preciosHistoricosMarketplacesUS, j.preciosActualesMarketplacesUS,";
+			}
+
+			string buscar = $@"SELECT j.id, j.nombre, j.{precioMinimosHistoricos}, j.{precioActualesTiendas}, {textoNoOficial} {textoMarketplace}
+(
+	SELECT b.tienda, b.nombre, b.enlace
+	FROM bundles b
+	INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
+	WHERE bj.juegoId = j.id
+		AND b.fechaEmpieza <= GETDATE()
+		AND b.fechaTermina >= GETDATE()
+	FOR JSON PATH
+) AS bundles2,
+(
+	SELECT COUNT(*)
+	FROM bundles b
+	INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
+	WHERE bj.juegoId = j.id
+		AND b.fechaTermina < GETDATE()
+) AS bundlesPasados,
+(
+    SELECT g.*, g.gratis AS Tipo
+    FROM gratis g
+    WHERE g.juegoId = j.id
+    FOR JSON PATH
+) as gratis2, 
+(
+    SELECT s.*, s.suscripcion AS Tipo
+    FROM suscripciones s
+    WHERE s.juegoId = j.id
+    FOR JSON PATH
+) as suscripciones2, j.idSteam, j.idGOG, j.slugGOG, j.slugEpic FROM juegos j WHERE idSteam='" + id + "'";
+
+			return await GenerarDatos2(region, buscar, noOficial, marketplace, "Steam " + id);
+		}
+
 		public static async Task<Extension> Steam3(string region, string id)
 		{
 			string precioMinimosHistoricos = string.Empty;
@@ -347,7 +418,7 @@ namespace BaseDatos.Extension
 			return null;
 		}
 
-		private static async Task<Extension> GenerarDatos2(string region, string sentenciaSql, bool noOficial, bool marketplace, string id)
+		private static async Task<Extension2> GenerarDatos2(string region, string sentenciaSql, bool noOficial, bool marketplace, string id)
 		{
 			if (sentenciaSql == null)
 			{
@@ -378,7 +449,11 @@ namespace BaseDatos.Extension
 					extension.PreciosActualesNoOficial = new List<ExtensionPrecio>();
 				}
 
-
+				if (marketplace == true)
+				{
+					extension.MinimosHistoricosMarketplaces = new List<ExtensionPrecio>();
+					extension.PreciosActualesMarketplaces = new List<ExtensionPrecio>();
+				}
 
 				if (fila == null)
 				{
@@ -402,26 +477,69 @@ namespace BaseDatos.Extension
 				extension.SlugGOG = CogerString("slugGOG");
 				extension.SlugEpic = CogerString("slugEpic");
 
-
 				if (region == "eu")
 				{
 					CargarPrecios(
-						CogerString("precioMinimosHistoricos"), extension.MinimosHistoricos
+						CogerString("precioMinimosHistoricos"), extension.MinimosHistoricosOficial
 					);
 
 					CargarPrecios(
-						CogerString("precioActualesTiendas"), extension.PreciosActuales
+						CogerString("precioActualesTiendas"), extension.PreciosActualesOficial
 					);
+
+					if (noOficial == true)
+					{
+						CargarPrecios(
+							CogerString("preciosHistoricosNoOficialesEU"), extension.MinimosHistoricosNoOficial
+						);
+
+						CargarPrecios(
+							CogerString("preciosActualesNoOficialesEU"), extension.PreciosActualesNoOficial
+						);
+					}
+
+					if (marketplace == true)
+					{
+						CargarPrecios(
+							CogerString("preciosHistoricosMarketplacesEU"), extension.MinimosHistoricosMarketplaces
+						);
+
+						CargarPrecios(
+							CogerString("preciosActualesMarketplacesEU"), extension.PreciosActualesMarketplaces
+						);
+					}
 				}
 				else if (region == "us")
 				{
 					CargarPrecios(
-						CogerString("precioMinimosHistoricosUS"), extension.MinimosHistoricos
+						CogerString("precioMinimosHistoricosUS"), extension.MinimosHistoricosOficial
 					);
 
 					CargarPrecios(
-						CogerString("precioActualesTiendasUS"), extension.PreciosActuales
+						CogerString("precioActualesTiendasUS"), extension.PreciosActualesOficial
 					);
+
+					if (noOficial == true)
+					{
+						CargarPrecios(
+							CogerString("preciosHistoricosNoOficialesUS"), extension.MinimosHistoricosNoOficial
+						);
+
+						CargarPrecios(
+							CogerString("preciosActualesNoOficialesUS"), extension.PreciosActualesNoOficial
+						);
+					}
+
+					if (marketplace == true)
+					{
+						CargarPrecios(
+							CogerString("preciosHistoricosMarketplacesUS"), extension.MinimosHistoricosMarketplaces
+						);
+
+						CargarPrecios(
+							CogerString("preciosActualesMarketplacesUS"), extension.PreciosActualesMarketplaces
+						);
+					}
 				}
 
 				string jsonBundles = CogerString("bundles2");
