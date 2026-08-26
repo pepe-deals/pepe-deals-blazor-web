@@ -38,6 +38,8 @@ namespace APIs.Playsum
 
 		public static async Task BuscarOfertas(TiendaRegion region)
 		{
+			BaseDatos.Cupones.Cupon cupon = await BaseDatos.Cupones.Buscar.Activos(Generar().Id);
+
 			await BaseDatos.Admin.Actualizar.Tiendas(region, Generar().Id, DateTime.Now, 0);
 
 			string html = await Decompiladores.Estandar("https://cdn.playsum.live/rss/shop/products.xml");
@@ -175,10 +177,25 @@ namespace APIs.Playsum
 											Tienda = Generar().Id,
 											DRM = drm,
 											FechaDetectado = DateTime.Now,
-											FechaActualizacion = DateTime.Now,
-											CodigoDescuento = 10,
-											CodigoTexto = "PEPEIZQDEALS"
+											FechaActualizacion = DateTime.Now
 										};
+
+										if (cupon != null)
+										{
+											if (cupon.PrecioRebaja != null && cupon.PrecioRebaja > 0 && cupon.PrecioMinimo != null && cupon.PrecioMinimo > 0)
+											{
+												if (oferta.Precio > cupon.PrecioMinimo)
+												{
+													oferta.CodigoTexto = cupon.Codigo;
+													oferta.Precio = oferta.Precio - (decimal)cupon.PrecioRebaja;
+												}
+											}
+											else if (cupon.Porcentaje > 0)
+											{
+												oferta.CodigoTexto = cupon.Codigo;
+												oferta.Precio = oferta.Precio - (oferta.Precio * ((decimal)cupon.Porcentaje / 100));
+											}
+										}
 
 										ofertas.Add(oferta);
 									}

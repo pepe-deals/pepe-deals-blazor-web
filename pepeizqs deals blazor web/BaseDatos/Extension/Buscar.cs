@@ -114,34 +114,34 @@ namespace BaseDatos.Extension
 			}
 
 			string buscar = $@"SELECT j.id, j.nombre, j.{precioMinimosHistoricos}, j.{precioActualesTiendas}, {textoNoOficial} {textoMarketplace}
-(
-	SELECT b.tienda, b.nombre, b.enlace
-	FROM bundles b
-	INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
-	WHERE bj.juegoId = j.id
-		AND b.fechaEmpieza <= GETDATE()
-		AND b.fechaTermina >= GETDATE()
-	FOR JSON PATH
-) AS bundles2,
-(
-	SELECT COUNT(*)
-	FROM bundles b
-	INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
-	WHERE bj.juegoId = j.id
-		AND b.fechaTermina < GETDATE()
-) AS bundlesPasados,
-(
-    SELECT g.*, g.gratis AS Tipo
-    FROM gratis g
-    WHERE g.juegoId = j.id
-    FOR JSON PATH
-) as gratis2, 
-(
-    SELECT s.*, s.suscripcion AS Tipo
-    FROM suscripciones s
-    WHERE s.juegoId = j.id
-    FOR JSON PATH
-) as suscripciones2, j.idSteam, j.idGOG, j.slugGOG, j.slugEpic FROM juegos j WHERE idSteam='" + id + "'";
+			(
+				SELECT b.tienda, b.nombre, b.enlace
+				FROM bundles b
+				INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
+				WHERE bj.juegoId = j.id
+					AND b.fechaEmpieza <= GETDATE()
+					AND b.fechaTermina >= GETDATE()
+				FOR JSON PATH
+			) AS bundles2,
+			(
+				SELECT COUNT(*)
+				FROM bundles b
+				INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
+				WHERE bj.juegoId = j.id
+					AND b.fechaTermina < GETDATE()
+			) AS bundlesPasados,
+			(
+				SELECT g.*, g.gratis AS Tipo
+				FROM gratis g
+				WHERE g.juegoId = j.id
+				FOR JSON PATH
+			) as gratis2, 
+			(
+				SELECT s.*, s.suscripcion AS Tipo
+				FROM suscripciones s
+				WHERE s.juegoId = j.id
+				FOR JSON PATH
+			) as suscripciones2, j.idSteam, j.idGOG, j.slugGOG, j.slugEpic FROM juegos j WHERE idSteam='" + id + "'";
 
 			return await GenerarDatos2(region, buscar, noOficial, marketplace, "Steam " + id);
 		}
@@ -195,6 +195,77 @@ namespace BaseDatos.Extension
 			return await GenerarDatos(region, buscar, "Steam " + id);
 		}
 
+		public static async Task<Extension2> Gog4(string region, bool noOficial, bool marketplace, string slug)
+		{
+			string precioMinimosHistoricos = string.Empty;
+			string precioActualesTiendas = string.Empty;
+
+			if (region == "eu")
+			{
+				precioMinimosHistoricos = "precioMinimosHistoricos";
+				precioActualesTiendas = "precioActualesTiendas";
+			}
+			else if (region == "us")
+			{
+				precioMinimosHistoricos = "precioMinimosHistoricosUS";
+				precioActualesTiendas = "precioActualesTiendasUS";
+			}
+
+			string textoNoOficial = string.Empty;
+
+			if (noOficial == true && region == "eu")
+			{
+				textoNoOficial = "j.preciosHistoricosNoOficialesEU, j.preciosActualesNoOficialesEU,";
+			}
+			else if (noOficial == true && region == "us")
+			{
+				textoNoOficial = "j.preciosHistoricosNoOficialesUS, j.preciosActualesNoOficialesUS,";
+			}
+
+			string textoMarketplace = string.Empty;
+
+			if (marketplace == true && region == "eu")
+			{
+				textoMarketplace = "j.preciosHistoricosMarketplacesEU, j.preciosActualesMarketplacesEU,";
+			}
+			else if (marketplace == true && region == "us")
+			{
+				textoMarketplace = "j.preciosHistoricosMarketplacesUS, j.preciosActualesMarketplacesUS,";
+			}
+
+			string buscar = $@"SELECT j.id, j.nombre, j.{precioMinimosHistoricos}, j.{precioActualesTiendas}, {textoNoOficial} {textoMarketplace}
+			(
+				SELECT b.tienda, b.nombre, b.enlace
+				FROM bundles b
+				INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
+				WHERE bj.juegoId = j.id
+					AND b.fechaEmpieza <= GETDATE()
+					AND b.fechaTermina >= GETDATE()
+				FOR JSON PATH
+			) AS bundles2,
+			(
+				SELECT COUNT(*)
+				FROM bundles b
+				INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
+				WHERE bj.juegoId = j.id
+					AND b.fechaTermina < GETDATE()
+			) AS bundlesPasados,
+			(
+				SELECT g.*, g.gratis AS Tipo
+				FROM gratis g
+				WHERE g.juegoId = j.id
+				FOR JSON PATH
+			) as gratis2, 
+			(
+				SELECT s.*, s.suscripcion AS Tipo
+				FROM suscripciones s
+				WHERE s.juegoId = j.id
+				FOR JSON PATH
+			) as suscripciones2, j.idSteam, j.idGOG, j.slugGOG, j.slugEpic FROM juegos j WHERE slugGOG='" + slug + "'";
+
+			return await GenerarDatos2(region, buscar, noOficial, marketplace, "GOG " + slug);
+		}
+
 		public static async Task<Extension> Gog3(string region, string slug)
 		{
 			string precioMinimosHistoricos = string.Empty;
@@ -235,6 +306,77 @@ namespace BaseDatos.Extension
 ) as suscripciones2, j.idSteam, j.idGOG, j.slugGOG, j.slugEpic FROM juegos j WHERE slugGOG='" + slug + "'";
 
 			return await GenerarDatos(region, buscar, "GOG " + slug);
+		}
+
+		public static async Task<Extension2> EpicGames4(string region, bool noOficial, bool marketplace, string slug)
+		{
+			string precioMinimosHistoricos = string.Empty;
+			string precioActualesTiendas = string.Empty;
+
+			if (region == "eu")
+			{
+				precioMinimosHistoricos = "precioMinimosHistoricos";
+				precioActualesTiendas = "precioActualesTiendas";
+			}
+			else if (region == "us")
+			{
+				precioMinimosHistoricos = "precioMinimosHistoricosUS";
+				precioActualesTiendas = "precioActualesTiendasUS";
+			}
+
+			string textoNoOficial = string.Empty;
+
+			if (noOficial == true && region == "eu")
+			{
+				textoNoOficial = "j.preciosHistoricosNoOficialesEU, j.preciosActualesNoOficialesEU,";
+			}
+			else if (noOficial == true && region == "us")
+			{
+				textoNoOficial = "j.preciosHistoricosNoOficialesUS, j.preciosActualesNoOficialesUS,";
+			}
+
+			string textoMarketplace = string.Empty;
+
+			if (marketplace == true && region == "eu")
+			{
+				textoMarketplace = "j.preciosHistoricosMarketplacesEU, j.preciosActualesMarketplacesEU,";
+			}
+			else if (marketplace == true && region == "us")
+			{
+				textoMarketplace = "j.preciosHistoricosMarketplacesUS, j.preciosActualesMarketplacesUS,";
+			}
+
+			string buscar = $@"SELECT j.id, j.nombre, j.{precioMinimosHistoricos}, j.{precioActualesTiendas}, {textoNoOficial} {textoMarketplace}
+			(
+				SELECT b.tienda, b.nombre, b.enlace
+				FROM bundles b
+				INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
+				WHERE bj.juegoId = j.id
+					AND b.fechaEmpieza <= GETDATE()
+					AND b.fechaTermina >= GETDATE()
+				FOR JSON PATH
+			) AS bundles2,
+			(
+				SELECT COUNT(*)
+				FROM bundles b
+				INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
+				WHERE bj.juegoId = j.id
+					AND b.fechaTermina < GETDATE()
+			) AS bundlesPasados,
+			(
+				SELECT g.*, g.gratis AS Tipo
+				FROM gratis g
+				WHERE g.juegoId = j.id
+				FOR JSON PATH
+			) as gratis2, 
+			(
+				SELECT s.*, s.suscripcion AS Tipo
+				FROM suscripciones s
+				WHERE s.juegoId = j.id
+				FOR JSON PATH
+			) as suscripciones2, j.idSteam, j.idGOG, j.slugGOG, j.slugEpic FROM juegos j WHERE slugEpic='" + slug + "'";
+
+			return await GenerarDatos2(region, buscar, noOficial, marketplace, "Epic " + slug);
 		}
 
 		public static async Task<Extension> EpicGames3(string region, string slug)

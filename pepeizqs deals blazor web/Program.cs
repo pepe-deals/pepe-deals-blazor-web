@@ -578,13 +578,51 @@ app.MapAdditionalIdentityEndpoints();
 
 app.MapGet("extension/steam4/{id}/{region}/{noOficial}/{marketplace}/{clave}/", async (int id, string region, bool noOficial, bool marketplace, string clave) =>
 {
-#nullable disable
+	#nullable disable
 
 	string claveExtension = builder.Configuration.GetValue<string>("Extension:Clave");
 
 	if (clave == claveExtension)
 	{
 		BaseDatos.Extension.Extension2 juego = await BaseDatos.Extension.Buscar.Steam4(region, noOficial, marketplace, id.ToString());
+
+		if (juego?.Id > 0)
+		{
+			return Results.Json(juego);
+		}
+	}
+
+	return Results.NotFound();
+});
+
+app.MapGet("extension/gog4/{slug}/{region}/{noOficial}/{marketplace}/{clave}/", async (string slug, string region, bool noOficial, bool marketplace, string clave) =>
+{
+	#nullable disable
+
+	string claveExtension = builder.Configuration.GetValue<string>("Extension:Clave");
+
+	if (clave == claveExtension)
+	{
+		BaseDatos.Extension.Extension2 juego = await BaseDatos.Extension.Buscar.Gog4(region, noOficial, marketplace, slug);
+
+		if (juego?.Id > 0)
+		{
+			return Results.Json(juego);
+		}
+	}
+
+	return Results.NotFound();
+});
+
+app.MapGet("extension/epic4/{slug}/{region}/{noOficial}/{marketplace}/{clave}/", async (string slug, string region, bool noOficial, bool marketplace, string clave) =>
+{
+	#nullable disable
+
+	string claveExtension = builder.Configuration.GetValue<string>("Extension:Clave");
+
+	if (clave == claveExtension)
+	{
+		BaseDatos.Extension.Extension2 juego = await BaseDatos.Extension.Buscar.EpicGames4(region, noOficial, marketplace, slug);
 
 		if (juego?.Id > 0)
 		{

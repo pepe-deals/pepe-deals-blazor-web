@@ -41,6 +41,11 @@ namespace APIs.Humble
 		{
 			if (string.IsNullOrEmpty(enlace) == false)
 			{
+				if (Uri.TryCreate(enlace, UriKind.Absolute, out var uri) == false)
+				{
+					return enlace;
+				}
+
 				var slug = new Uri(enlace).AbsolutePath.Trim('/').Split('/').Last();
 				var palabras = slug.Split('-', StringSplitOptions.RemoveEmptyEntries);
 
