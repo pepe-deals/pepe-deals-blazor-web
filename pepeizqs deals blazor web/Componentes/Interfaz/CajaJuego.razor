@@ -546,7 +546,7 @@
 						{
 							foreach (var suscripcion in juego.Suscripciones)
 							{
-								if (suscripcion.DRM == drmBundle)
+								if (suscripcion.DRM == drmBundle && suscripcion.Tipo == Suscripciones2.SuscripcionTipo.HumbleChoice)
 								{
 									añadirNuevo = false;
 									break;

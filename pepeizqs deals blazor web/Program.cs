@@ -344,13 +344,21 @@ app.Use(async (contexto, siguiente) =>
 
 	HashSet<string> extensiones = new()
 	{
-		"/.svg", "/.png", "/.jpg", "/.webp", "/.gif", "/ads.txt", ".php", "/en/", "/es/", "/game", "/.env"
+		"/.svg", "/.png", "/.jpg", "/.webp", "/.gif", "/ads.txt", ".php", "/game", "/.env"
 	};
 
 	if (extensiones.Any(ext => ruta.EndsWith(ext)) == true || ruta.Contains("./") == true || ruta.Contains("/wp-admin/") == true)
 	{
 		contexto.Response.StatusCode = StatusCodes.Status301MovedPermanently;
 		contexto.Response.Headers.Location = "/";
+		return;
+	}
+
+	HashSet<string> extensionesGone = new() { "/en/", "/es/" };
+
+	if (extensionesGone.Any(ext => ruta.EndsWith(ext)) == true)
+	{
+		contexto.Response.StatusCode = StatusCodes.Status410Gone;
 		return;
 	}
 

@@ -18,7 +18,7 @@
             }
             else
             {
-                foreach (var precio in preciosMostrar.Take(3))
+                foreach (var precio in preciosMostrar.Take(5))
                 {
                     <JuegoTiendasEnlace @key="(precio.Enlace + precio.Tienda)" noOficial="@noOficial" region="@region" precio="@precio" usuarioId="@usuarioId" idioma="@idioma" userAgent="@userAgent"
                                         usuarioPatreon="@usuarioPatreon" juegosUsuario="@juegosUsuario" juegoNombre="@juegoNombre"
