@@ -1368,64 +1368,82 @@ namespace BaseDatos.Usuarios
 			return 0;
 		}
 
-		public static async Task<List<string>> ListaUsuariosTienenDeseado(int juegoId, JuegoDRM drm)
+		public static async Task<List<string>> ListaUsuariosTienenDeseado(int juegoId, JuegoDRM drm, TiendaTipo tiendaTipo)
 		{
+			string noOficial = string.Empty;
+
+			if (tiendaTipo == TiendaTipo.NoOficial)
+			{
+				noOficial = "AND (NoOfficial = 0 OR NoOfficial IS NULL)";
+			}
+
+			string marketplace = string.Empty;
+
+			if (tiendaTipo == TiendaTipo.Marketplace)
+			{
+				marketplace = "AND (Marketplace = 0 OR Marketplace IS NULL)";
+			}
+
+			string filtro = noOficial + marketplace;
+
 			string busqueda = string.Empty;
 
 			if (drm == JuegoDRM.Steam)
 			{
 				busqueda = @"DECLARE @idSteam nvarchar(256);
-SET @idSteam = CONCAT('""IdBaseDatos"":""',@juegoId,'"",""DRM"":0}');
+					SET @idSteam = CONCAT('""IdBaseDatos"":""',@juegoId,'"",""DRM"":0}');
 
-SELECT id FROM AspNetUsers WHERE CHARINDEX(@idSteam, Wishlist) > 0
-UNION
-SELECT id FROM AspNetUsers WHERE EXISTS(SELECT * FROM STRING_SPLIT(SteamWishlist, ',') WHERE VALUE IN (SELECT idSteam FROM juegos WHERE id=@juegoId))";
+					SELECT id FROM AspNetUsers WHERE CHARINDEX(@idSteam, Wishlist) > 0 {FILTRO}
+					UNION
+					SELECT id FROM AspNetUsers WHERE EXISTS(SELECT * FROM STRING_SPLIT(SteamWishlist, ',') WHERE VALUE IN (SELECT idSteam FROM juegos WHERE id=@juegoId)) {FILTRO}";
 			}
 
 			if (drm == JuegoDRM.GOG)
 			{
 				busqueda = @"DECLARE @idGOG nvarchar(256);
-SET @idGOG = CONCAT('""IdBaseDatos"":""',@juegoId,'"",""DRM"":8}');
+					SET @idGOG = CONCAT('""IdBaseDatos"":""',@juegoId,'"",""DRM"":8}');
 
-SELECT id FROM AspNetUsers WHERE CHARINDEX(@idGOG, Wishlist) > 0
-UNION
-SELECT id FROM AspNetUsers WHERE EXISTS(SELECT * FROM STRING_SPLIT(GogWishlist, ',') WHERE VALUE IN (SELECT idGOG FROM juegos WHERE id=@juegoId))";
+					SELECT id FROM AspNetUsers WHERE CHARINDEX(@idGOG, Wishlist) > 0 {FILTRO}
+					UNION
+					SELECT id FROM AspNetUsers WHERE EXISTS(SELECT * FROM STRING_SPLIT(GogWishlist, ',') WHERE VALUE IN (SELECT idGOG FROM juegos WHERE id=@juegoId)) {FILTRO}";
 			}
 
 			if (drm == JuegoDRM.Amazon)
 			{
 				busqueda = @"DECLARE @idAmazon nvarchar(256);
-SET @idAmazon = CONCAT('""IdBaseDatos"":""',@juegoId,'"",""DRM"":9}');
+					SET @idAmazon = CONCAT('""IdBaseDatos"":""',@juegoId,'"",""DRM"":9}');
 
-SELECT id FROM AspNetUsers WHERE CHARINDEX(@idAmazon, Wishlist) > 0";
+					SELECT id FROM AspNetUsers WHERE CHARINDEX(@idAmazon, Wishlist) > 0 {FILTRO}";
 			}
 
 			if (drm == JuegoDRM.Epic)
 			{
 				busqueda = @"DECLARE @idEpic nvarchar(256);
-SET @idEpic = CONCAT('""IdBaseDatos"":""',@juegoId,'"",""DRM"":6}');
+					SET @idEpic = CONCAT('""IdBaseDatos"":""',@juegoId,'"",""DRM"":6}');
 
-SELECT id FROM AspNetUsers WHERE CHARINDEX(@idEpic, Wishlist) > 0";
+					SELECT id FROM AspNetUsers WHERE CHARINDEX(@idEpic, Wishlist) > 0 {FILTRO}";
 			}
 
 			if (drm == JuegoDRM.Ubisoft)
 			{
 				busqueda = @"DECLARE @idUbisoft nvarchar(256);
-SET @idUbisoft = CONCAT('""IdBaseDatos"":""',@juegoId,'"",""DRM"":2}');
+					SET @idUbisoft = CONCAT('""IdBaseDatos"":""',@juegoId,'"",""DRM"":2}');
 
-SELECT id FROM AspNetUsers WHERE CHARINDEX(@idUbisoft, Wishlist) > 0";
+					SELECT id FROM AspNetUsers WHERE CHARINDEX(@idUbisoft, Wishlist) > 0 {FILTRO}";
 			}
 
 			if (drm == JuegoDRM.EA)
 			{
 				busqueda = @"DECLARE @idEA nvarchar(256);
-SET @idEA = CONCAT('""IdBaseDatos"":""',@juegoId,'"",""DRM"":3}');
+					SET @idEA = CONCAT('""IdBaseDatos"":""',@juegoId,'"",""DRM"":3}');
 
-SELECT id FROM AspNetUsers WHERE CHARINDEX(@idEA, Wishlist) > 0";
+					SELECT id FROM AspNetUsers WHERE CHARINDEX(@idEA, Wishlist) > 0 {FILTRO}";
 			}
 
 			if (string.IsNullOrEmpty(busqueda) == false)
 			{
+				busqueda = busqueda.Replace("{FILTRO}", filtro);
+
 				try
 				{
 					return await Herramientas.BaseDatos.Select(async conexion =>
@@ -1439,7 +1457,7 @@ SELECT id FROM AspNetUsers WHERE CHARINDEX(@idEA, Wishlist) > 0";
 				}
 			}
 
-			return new List<string>();
+			return null;
 		}
 
 		public static async Task<string> OpcionString(string usuarioId, string valor)

@@ -168,41 +168,6 @@ namespace Tareas
 											await BaseDatos.JuegosActualizar.Limpiar.Una(ficha);
 										}
 									}
-
-									if (ficha.Metodo == "SteamCMD")
-									{
-										Juegos.Juego juego = await BaseDatos.Juegos.Buscar.UnJuego(ficha.IdJuego);
-
-										bool inteligenciaArtificial = false;
-										DateTime? fechaSteam = null;
-
-										if (juego.IdSteam > 0)
-										{
-											SteamCMDDatos datosCmd = await APIs.Steam.Juego.UltimaActualizacioneInteligenciaArtificial(juego.IdSteam);
-
-											if (datosCmd != null)
-											{
-												if (datosCmd.UltimaActualizacion != null)
-												{
-													fechaSteam = datosCmd.UltimaActualizacion;
-												}
-
-												if (datosCmd.InteligenciaArtificial == true)
-												{
-													inteligenciaArtificial = true;
-												}
-											}
-										}
-
-										DateTime? fechaGOG = null;
-
-										if (juego.IdGog > 0)
-										{
-											fechaGOG = await APIs.GOG.Juego.UltimaActualizacion(juego.IdGog.ToString());
-										}
-
-										global::BaseDatos.Juegos.Actualizar.UltimasActualizacioneseInteligenciaArticial(juego.Id, fechaSteam, fechaGOG, inteligenciaArtificial);
-									}
 								}
 							}
 

@@ -558,7 +558,7 @@
 
             foreach (var juego in bundle.Juegos)
             {
-                List<string> usuariosInteresados = await BaseDatos.Usuarios.Buscar.ListaUsuariosTienenDeseado(int.Parse(juego.JuegoId), juego.DRM);
+                List<string> usuariosInteresados = await BaseDatos.Usuarios.Buscar.ListaUsuariosTienenDeseado(int.Parse(juego.JuegoId), juego.DRM, TiendaTipo.Oficial);
 
                 if (usuariosInteresados?.Count > 0)
                 {

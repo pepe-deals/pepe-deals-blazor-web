@@ -800,46 +800,5 @@ namespace BaseDatos.Juegos
 				BaseDatos.Errores.Insertar.Mensaje("Actualizar Cantidad Jugadores " + juego.Id.ToString(), ex);
 			}
 		}
-
-		public static async void UltimasActualizacioneseInteligenciaArticial(int idJuego, DateTime? fechaSteam, DateTime? fechaGOG, bool inteligenciaArtificial = false, SqlConnection conexion = null)
-		{
-			var sql = new StringBuilder();
-			sql.Append("UPDATE juegos SET ");
-			sql.Append("inteligenciaArtificial = @inteligenciaArtificial, ");
-			sql.Append("ultimaActualizacion = @ultimaActualizacion ");
-
-			if (fechaSteam != null)
-			{
-				sql.Append(", ultimaActualizacionSteam = @ultimaActualizacionSteam ");
-			}
-
-			if (fechaGOG != null)
-			{
-				sql.Append(", ultimaActualizacionGOG = @ultimaActualizacionGOG ");
-			}
-
-			sql.Append("WHERE id = @id;");
-
-			var parametros = new
-			{
-				id = idJuego,
-				inteligenciaArtificial,
-				ultimaActualizacion = DateTime.Now,
-				ultimaActualizacionSteam = fechaSteam,
-				ultimaActualizacionGOG = fechaGOG
-			};
-
-			try
-			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
-				{
-					return await conexion.ExecuteAsync(sql.ToString(), parametros, transaction: sentencia);
-				});
-			}
-			catch (Exception ex)
-			{
-				BaseDatos.Errores.Insertar.Mensaje("Actualizar SteamCMD " + idJuego.ToString(), ex);
-			}
-		}
 	}
 }

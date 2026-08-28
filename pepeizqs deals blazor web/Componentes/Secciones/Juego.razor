@@ -4282,9 +4282,8 @@
                 Task gogComprobarTarea = ComprobareYActualizarGOG();
                 Task epicComprobarTarea = ComprobareYActualizarEpic();
                 Task xboxComprobarTarea = ComprobareYActualizarXbox();
-                Task steamCmdComprobarTarea = ComprobareYActualizarSteamCMD();
 
-                await Task.WhenAll(steamComprobarTarea, gogComprobarTarea, epicComprobarTarea, xboxComprobarTarea, steamCmdComprobarTarea);
+                await Task.WhenAll(steamComprobarTarea, gogComprobarTarea, epicComprobarTarea, xboxComprobarTarea);
             }
 
             await base.OnAfterRenderAsync(primerRender);
@@ -4388,33 +4387,6 @@
             {
                 await BaseDatos.JuegosActualizar.Insertar.Ejecutar(juego.Id, 0, "XboxAPI");
             }
-        }
-    }
-
-    private async Task ComprobareYActualizarSteamCMD()
-    {
-        if (juego.Tipo != JuegoTipo.Game)
-        {
-            return;
-        }
-
-        bool actualizarUltimaActualizacion = false;
-
-        if (juego.UltimaActualizacion == null)
-        {
-            actualizarUltimaActualizacion = true;
-        }
-        else
-        {
-            if (((DateTime)juego.UltimaActualizacion).AddDays(30) < DateTime.Now)
-            {
-                actualizarUltimaActualizacion = true;
-            }
-        }
-
-        if (actualizarUltimaActualizacion == true)
-        {
-            await BaseDatos.JuegosActualizar.Insertar.Ejecutar(juego.Id, 0, "SteamCMD");
         }
     }
 

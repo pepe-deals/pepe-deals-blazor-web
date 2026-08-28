@@ -21,8 +21,8 @@ namespace APIs.JoyBuggy
                 Imagen300x80 = "/imagenes/tiendas/joybuggy_300x80.webp",
                 ImagenIcono = "/imagenes/tiendas/joybuggy_icono.ico",
                 Color = "#39f2d3",
-                AdminUso = false,
-                UsuarioUso = false,
+                AdminUso = true,
+                UsuarioUso = true,
 				Regiones = new List<TiendaRegion> { TiendaRegion.Europa, TiendaRegion.EstadosUnidos }
 			};
 
@@ -76,7 +76,7 @@ namespace APIs.JoyBuggy
 
 					foreach (JoyBuggyJuego juego in listaJuegos.Datos.Juegos)
 					{
-						if (string.IsNullOrEmpty(juego.Disponibilidad) == false && juego.Disponibilidad == "in stock")
+						if (string.IsNullOrEmpty(juego.Disponibilidad) == false && (juego.Disponibilidad == "in stock" || juego.Disponibilidad == "on demand"))
 						{
 							if (string.IsNullOrEmpty(juego.PrecioBase) == false && string.IsNullOrEmpty(juego.PrecioRebajado) == false)
 							{

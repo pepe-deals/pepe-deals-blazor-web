@@ -904,7 +904,7 @@ WHERE t.enlace = @Enlace
 									return await conexion.ExecuteAsync(sqlMergear, new
 									{
 										oferta.Enlace,
-										oferta.Nombre,
+										Nombre = oferta.Nombre?.Length > 255 ? oferta.Nombre[..255] : oferta.Nombre,
 										oferta.Imagen,
 										NombreCodigo = Herramientas.Buscador.LimpiarNombre(oferta.Nombre)
 									}, transaction: sentencia);

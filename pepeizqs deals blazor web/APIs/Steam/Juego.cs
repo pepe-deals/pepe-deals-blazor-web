@@ -886,51 +886,6 @@ namespace APIs.Steam
 			return null;
 		}
 
-		public static async Task<SteamCMDDatos> UltimaActualizacioneInteligenciaArtificial(int id)
-		{
-			if (id > 0)
-			{
-				string html = await Decompiladores.Estandar("https://api.steamcmd.net/v1/info/" + id.ToString());
-
-				if (string.IsNullOrEmpty(html) == false)
-				{
-					SteamCMDAPI api = JsonSerializer.Deserialize<SteamCMDAPI>(html);
-
-					if (api?.Datos?.Count > 0)
-					{
-						foreach (var dato in api.Datos)
-						{
-							SteamCMDDatos datos = new SteamCMDDatos();
-
-							if (string.IsNullOrEmpty(dato.Value.Common?.InteligenciaArtificial) == false)
-							{
-								if (dato.Value.Common?.InteligenciaArtificial == "1")
-								{
-									datos.InteligenciaArtificial = true;
-								}
-								else
-								{
-									datos.InteligenciaArtificial = false;
-								}
-							}
-
-							if (dato.Value.Depots?.Branches?.Publico?.Ticks != null)
-							{
-								DateTimeOffset fecha = DateTimeOffset.FromUnixTimeSeconds(long.Parse(dato.Value.Depots?.Branches?.Publico?.Ticks));
-								DateTime fechaCreado = fecha.UtcDateTime;
-
-								datos.UltimaActualizacion = fechaCreado;
-							}
-
-							return datos;
-						}
-					}
-				}
-			}
-
-			return null;
-		}
-
 		public static bool Detectar(string enlace)
 		{
 			bool resultado = false;
@@ -1703,55 +1658,6 @@ namespace APIs.Steam
 
 		[JsonPropertyName("count")]
 		public int Count { get; set; }
-	}
-
-	#endregion
-
-	#region Clases CMD Ultima Actualizacion e IA
-
-	public class SteamCMDDatos
-	{
-		public bool InteligenciaArtificial { get; set; }
-		public DateTime? UltimaActualizacion { get; set; }
-	}
-
-	public class SteamCMDAPI
-	{
-		[JsonPropertyName("data")]
-		public Dictionary<string, SteamCMDAPIDatos> Datos { get; set; }
-	}
-
-	public class SteamCMDAPIDatos
-	{
-		[JsonPropertyName("common")]
-		public SteamCMDAPICommon Common { get; set; }
-
-		[JsonPropertyName("depots")]
-		public SteamCMDAPIDepots Depots { get; set; }
-	}
-
-	public class SteamCMDAPICommon
-	{
-		[JsonPropertyName("aicontenttype")]
-		public string InteligenciaArtificial { get; set; }
-	}
-
-	public class SteamCMDAPIDepots
-	{
-		[JsonPropertyName("branches")]
-		public SteamCMDAPIBranches Branches { get; set; }
-	}
-
-	public class SteamCMDAPIBranches
-	{
-		[JsonPropertyName("public")]
-		public SteamCMDAPIBranchesPublic Publico { get; set; }
-	}
-
-	public class SteamCMDAPIBranchesPublic
-	{
-		[JsonPropertyName("timeupdated")]
-		public string Ticks { get; set; }
 	}
 
 	#endregion

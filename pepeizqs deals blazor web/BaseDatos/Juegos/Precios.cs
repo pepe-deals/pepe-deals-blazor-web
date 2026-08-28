@@ -210,7 +210,7 @@ namespace BaseDatos.Juegos
 
 							if (notificar == true)
 							{
-								List<string> usuariosInteresados = await BaseDatos.Usuarios.Buscar.ListaUsuariosTienenDeseado(id, nuevaOferta.DRM);
+								List<string> usuariosInteresados = await BaseDatos.Usuarios.Buscar.ListaUsuariosTienenDeseado(id, nuevaOferta.DRM, tiendaTipo);
 
 								if (usuariosInteresados?.Count > 0)
 								{
@@ -676,7 +676,7 @@ namespace BaseDatos.Juegos
 
 							if (notificar == true)
 							{
-								List<string> usuariosInteresados = await BaseDatos.Usuarios.Buscar.ListaUsuariosTienenDeseado(id, nuevaOferta.DRM);
+								List<string> usuariosInteresados = await BaseDatos.Usuarios.Buscar.ListaUsuariosTienenDeseado(id, nuevaOferta.DRM, tiendaTipo);
 
 								if (usuariosInteresados?.Count > 0)
 								{

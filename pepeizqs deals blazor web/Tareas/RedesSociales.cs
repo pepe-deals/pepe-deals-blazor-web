@@ -76,6 +76,8 @@ namespace Tareas
 						}
 					}
 
+					await Task.Delay(10000);
+
 					if (await BaseDatos.Admin.Buscar.TareaPosibleUsar("redditUS", tiempoSiguiente) == true)
 					{
 						try
