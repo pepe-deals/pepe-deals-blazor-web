@@ -1374,14 +1374,14 @@ namespace BaseDatos.Usuarios
 
 			if (tiendaTipo == TiendaTipo.NoOficial)
 			{
-				noOficial = "AND (NoOfficial = 0 OR NoOfficial IS NULL)";
+				noOficial = "AND NoOfficial = 1";
 			}
 
 			string marketplace = string.Empty;
 
 			if (tiendaTipo == TiendaTipo.Marketplace)
 			{
-				marketplace = "AND (Marketplace = 0 OR Marketplace IS NULL)";
+				marketplace = "AND Marketplace = 1";
 			}
 
 			string filtro = noOficial + marketplace;

@@ -55,9 +55,13 @@ namespace APIs.Humble
 					var titulo = string.Join(" ", palabras.Take(palabras.Length - 1).Select(Capitalizar));
 					prodsku = $"{titulo} - {palabras[^1].ToUpperInvariant()}";
 				}
-				else
+				else if (palabras.Length == 1)
 				{
 					prodsku = Capitalizar(palabras[0]);
+				}
+				else
+				{
+					prodsku = string.Empty; 
 				}
 
 				return "https://humblebundleinc.sjv.io/c/1382810/2087718/25796"
