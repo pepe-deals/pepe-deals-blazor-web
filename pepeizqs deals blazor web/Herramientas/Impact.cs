@@ -113,7 +113,7 @@ namespace Herramientas
 			cliente.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", credenciales);
 
 			var serializador = new XmlSerializer(typeof(ImpactRadiusResponse));
-
+	
 			while (string.IsNullOrEmpty(siguienteUri) == false)
 			{
 				var respuesta = await cliente.GetAsync($"https://api.impact.com{siguienteUri}");

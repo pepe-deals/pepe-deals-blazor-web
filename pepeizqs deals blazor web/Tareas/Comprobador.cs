@@ -368,6 +368,10 @@ namespace Tareas
 						{
 							siguienteComprobacion = TimeSpan.FromHours(2);
 						}
+						else if (tienda.Id == APIs.Gameseal.Tienda.Generar().Id)
+						{
+							siguienteComprobacion = TimeSpan.FromHours(2);
+						}
 
 						if (siguienteComprobacion > TimeSpan.Zero)
 						{
