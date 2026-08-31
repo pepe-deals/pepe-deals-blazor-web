@@ -129,9 +129,12 @@
                         @Herramientas.Calculadora.DiferenciaTiempo(precio.FechaDetectado, idioma, 0)
                     </div>
 
-                    <div class="juego-descuento" style="width: 75px; text-align: center;">
-                        @precio.Descuento.ToString()%
-                    </div>
+                    @if (precio.Descuento > 0)
+                    {
+                        <div class="juego-descuento" style="width: 75px; text-align: center;">
+                            @precio.Descuento.ToString()%
+                        </div>
+                    }
 
                     <div class="juego-precio">
                         @if (region == TiendaRegion.Europa)

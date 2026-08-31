@@ -29,7 +29,7 @@ namespace Herramientas
 						drmCorrecto = true;
 					}
 
-					if (drmCorrecto == true && precio.Descuento > 0)
+					if (drmCorrecto == true)
 					{
 						bool verificarActivo2 = true;
 

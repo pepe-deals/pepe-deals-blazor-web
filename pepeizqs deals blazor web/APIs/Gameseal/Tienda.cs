@@ -16,9 +16,9 @@ namespace APIs.Gameseal
 				Id = "gameseal",
 				Nombre = "Gameseal",
 				Tipo = TiendaTipo.NoOficial,
-				ImagenLogo = "/imagenes/tiendas/loaded_logo.webp",
-				Imagen300x80 = "/imagenes/tiendas/loaded_300x80.webp",
-				ImagenIcono = "/imagenes/tiendas/loaded_icono.webp",
+				ImagenLogo = "/imagenes/tiendas/gameseal_logo.webp",
+				Imagen300x80 = "/imagenes/tiendas/gameseal_300x80.webp",
+				ImagenIcono = "/imagenes/tiendas/gameseal_icono.webp",
 				Color = "#558205",
 				AdminUso = true,
 				UsuarioUso = true,
@@ -64,7 +64,12 @@ namespace APIs.Gameseal
 							{
 								string nombre = WebUtility.HtmlDecode(resultado.Nombre);
 								nombre = nombre.Replace("Steam Key - EU", null);
+								nombre = nombre.Replace("Steam Key - EU/US", null);
+								nombre = nombre.Replace("Steam Key - EU/NA", null);
 								nombre = nombre.Replace("Steam Key - GLOBAL", null);
+								nombre = nombre.Replace("(PC)", null);
+								nombre = nombre.Replace("(MAC)", null);
+								nombre = nombre.Replace("(DLC)", null);
 								nombre = nombre.Trim();
 
 								string enlaceJuego = resultado.Url;

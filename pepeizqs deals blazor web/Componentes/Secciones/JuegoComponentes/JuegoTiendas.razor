@@ -157,7 +157,8 @@ else
             }
 
             if (precio.Descuento >= umbralDescuento ||
-                precio.Tienda == APIs.Steam.Tienda.GenerarBundles().Id)
+                precio.Tienda == APIs.Steam.Tienda.GenerarBundles().Id ||
+                (precio.Descuento == 0 && Tiendas2.TiendasCargar.DevolverTienda(precio.Tienda).Tipo == TiendaTipo.NoOficial))
             {
                 preciosMostrar.Add(precio);
             }
