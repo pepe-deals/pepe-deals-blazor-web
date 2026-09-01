@@ -8,36 +8,26 @@ namespace BaseDatos.Pendientes
 	{
         public static async void AñadirId(string nombre, string ids)
         {
-            string busqueda = "SELECT ids FROM juegosIDs WHERE nombre=@nombre";
+			string insertar = "INSERT INTO juegosIDs (nombre, ids, nombreCodigo) " +
+					   "SELECT @nombre, @ids, @nombreCodigo " +
+					   "WHERE NOT EXISTS (SELECT 1 FROM juegosIDs WHERE nombre = @nombre)";
 
-            try
-            {
-				string resultado = await Herramientas.BaseDatos.Select(async conexion =>
+			try
+			{
+				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
 				{
-					return await conexion.ExecuteScalarAsync<string>(busqueda, new { nombre });
-				});
-
-                if (string.IsNullOrEmpty(resultado) == true)
-                {
-					string insertar = "INSERT INTO juegosIDs " +
-						   "(nombre, ids, nombreCodigo) VALUES " +
-						   "(@nombre, @ids, @nombreCodigo) ";
-
-					await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+					return await conexion.ExecuteAsync(insertar, new
 					{
-						return await conexion.ExecuteAsync(insertar, new 
-						{ 
-							nombre, 
-							ids,
-							nombreCodigo = Herramientas.Buscador.LimpiarNombre(nombre, true)
-						}, transaction: sentencia);
-					});
-				}
+						nombre,
+						ids,
+						nombreCodigo = Herramientas.Buscador.LimpiarNombre(nombre, true)
+					}, transaction: sentencia);
+				});
 			}
-            catch (Exception ex)
-            {
+			catch (Exception ex)
+			{
 				BaseDatos.Errores.Insertar.Mensaje("Pendientes Insertar", ex);
 			}
-        }
+		}
     }
 }

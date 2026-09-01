@@ -10,14 +10,6 @@ namespace BaseDatos.Pendientes
 		{
 			try
 			{
-				nombre = (nombre.EndsWith("PC", StringComparison.OrdinalIgnoreCase) ? nombre[..^2] : nombre).TrimEnd();
-				nombre = (nombre.EndsWith("(PC)", StringComparison.OrdinalIgnoreCase) ? nombre[..^2] : nombre).TrimEnd();
-
-				nombre = System.Text.RegularExpressions.Regex.Replace(
-					nombre, @"\s*PC\s*[-–—]\s*DLC$", "",
-					System.Text.RegularExpressions.RegexOptions.IgnoreCase
-				).TrimEnd();
-
 				string busqueda1 = "SELECT id FROM juegos WHERE nombre=@nombre OR REPLACE(nombreCodigo, ' ', '')=@nombreLimpio";
 
 				var id = await Herramientas.BaseDatos.Select(async conexion =>
@@ -142,7 +134,7 @@ namespace BaseDatos.Pendientes
 				BaseDatos.Errores.Insertar.Mensaje("Pendientes Tienda " + tiendaId, ex);
 			}
 
-			return new List<Pendiente>();
+			return null;
 		}
 
         public static async Task<List<Pendiente>> Suscripcion(Suscripciones2.SuscripcionTipo id)
@@ -162,7 +154,7 @@ namespace BaseDatos.Pendientes
 				BaseDatos.Errores.Insertar.Mensaje("Pendientes Suscripcion " + id.ToString(), ex);
 			}
 
-			return new List<Pendiente>();
+			return null;
 		}
 
         public static async Task<List<Pendiente>> Streaming(Streaming2.StreamingTipo id)
@@ -200,7 +192,7 @@ namespace BaseDatos.Pendientes
 				BaseDatos.Errores.Insertar.Mensaje("Pendientes Streaming " + id.ToString(), ex);
 			}
 
-			return new List<Pendiente>();			
+			return null;			
 		}
 
         public static async Task<List<Pendiente>> Plataforma(Plataformas2.PlataformaTipo id)
@@ -220,7 +212,7 @@ namespace BaseDatos.Pendientes
 				BaseDatos.Errores.Insertar.Mensaje("Pendientes Plataforma " + id.ToString(), ex);
 			}
 
-			return new List<Pendiente>();
+			return null;
 		}
 
         public static async Task<Pendiente> PrimerJuegoTienda(string tiendaId)

@@ -8,26 +8,23 @@ namespace BaseDatos.Pendientes
 	{
 		public static async Task Tienda(string idTienda, string enlace, string idJuegos)
 		{
-            if (string.IsNullOrEmpty(idJuegos) == false)
+            if (string.IsNullOrEmpty(idJuegos) == false && idJuegos != "0")
             {
-                if (idJuegos != "0")
-                {
-                    string sqlActualizar = "UPDATE tienda" + idTienda + " " +
-                    "SET idJuegos=@idJuegos WHERE enlace=@enlace";
+				string sqlActualizar = "UPDATE tienda" + idTienda + " " +
+						"SET idJuegos=@idJuegos WHERE enlace=@enlace";
 
-					try
+				try
+				{
+					await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
 					{
-						await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
-						{
-							return await conexion.ExecuteAsync(sqlActualizar, new { idJuegos, enlace }, transaction: sentencia);
-						});
-					}
-					catch (Exception ex)
-					{
-						BaseDatos.Errores.Insertar.Mensaje("Pendientes Actualizar Tienda", ex);
-					}
+						return await conexion.ExecuteAsync(sqlActualizar, new { idJuegos, enlace }, transaction: sentencia);
+					});
 				}
-            }
+				catch (Exception ex)
+				{
+					BaseDatos.Errores.Insertar.Mensaje("Pendientes Actualizar Tienda", ex);
+				}
+			}
 		}
 
         public static async Task Suscripcion(string tablaInsertar, string tablaBorrar, string enlace, string nombreJuego, string imagen, List<string> idJuegos)

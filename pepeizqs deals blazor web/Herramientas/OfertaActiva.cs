@@ -8,7 +8,9 @@ namespace Herramientas
 	{
 		public static bool Verificar(JuegoPrecio precio)
 		{
-			if (precio.FechaTermina > DateTime.MinValue)
+			Tiendas2.Tienda tienda = Tiendas2.TiendasCargar.DevolverTienda(precio.Tienda);
+
+			if (tienda != null && tienda.Tipo == Tiendas2.TiendaTipo.Oficial && precio.FechaTermina > DateTime.MinValue)
 			{
 				if (precio.FechaTermina > DateTime.Now)
 				{

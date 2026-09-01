@@ -200,7 +200,7 @@
 
     <input type="text" @bind-value="textoBuscador" @bind-value:event="oninput" @bind-value:after="TextoCambiaBuscador" class="entrada-texto" />
 
-    @if (buscadorBuscando)
+    @if (buscadorBuscando == true)
     {
         <div style="margin-top: 20px;">
             Buscando...
@@ -319,6 +319,11 @@
             enlacePendiente = pendientesTiendas[0].Pendientes[0].Enlace;
 
             idsPendiente = await BaseDatos.Pendientes.Buscar.IDs(pendientesTiendas[0].Pendientes[0].Nombre);
+
+            if (idsPendiente == "0")
+            {
+                await CuandoIdPendientesSeaCero(nombrePendiente);
+            }
         }
 
         #endregion
@@ -430,7 +435,7 @@
         ocupado = false;
     }
 
-    private async Task ClickearTiendaPendientes(string id, bool limpiar)
+    private async Task ClickearTiendaPendientes(string id, bool limpiar, Pendiente juegoConocido = null)
     {
         ocupado = true;
 
@@ -442,7 +447,7 @@
 
         if (string.IsNullOrEmpty(id) == false)
         {
-            BaseDatos.Pendientes.Pendiente juego = await BaseDatos.Pendientes.Buscar.PrimerJuegoTienda(id);
+            BaseDatos.Pendientes.Pendiente juego = juegoConocido ?? await BaseDatos.Pendientes.Buscar.PrimerJuegoTienda(id);
 
             if (juego != null)
             {
@@ -460,7 +465,15 @@
                 enlacePendiente = juego.Enlace;
 
                 idsPendiente = await BaseDatos.Pendientes.Buscar.IDs(nombrePendiente);
-                await AñadirResultados();
+
+                if (idsPendiente == "0")
+                {
+                    await CuandoIdPendientesSeaCero(nombrePendiente);
+                }
+                else
+                {
+                    await AñadirResultados();
+                }
             }
         }
 
@@ -725,15 +738,19 @@
                 }
             }
 
+            BaseDatos.Pendientes.Pendiente siguienteTienda = null;
+
             foreach (var pendiente in pendientesTiendas)
             {
                 if (pendiente.Tienda.Id == idTiendaPendiente)
                 {
                     pendiente.Pendientes = await BaseDatos.Pendientes.Buscar.Tienda(idTiendaPendiente);
+                    siguienteTienda = pendiente.Pendientes.FirstOrDefault();
+                    break;
                 }
             }
 
-            await ClickearTiendaPendientes(idTiendaPendiente, true);
+            await ClickearTiendaPendientes(idTiendaPendiente, true, siguienteTienda);
         }
 
         if (string.IsNullOrEmpty(idSuscripcionPendiente) == false)
@@ -948,12 +965,18 @@
                 return;
             }
 
+            if (resultados.Count == 1 && idsPendiente == "0")
+            {
+                idsPendiente = resultados[0].Id.ToString();
+                await AñadirResultados();
+            }
+
             ActualizarResultados(resultados);
             ActivarPrimeraPestañaDisponible();
         }
         catch (TaskCanceledException)
         {
-
+            // BaseDatos.Errores.Insertar.Mensaje("Debug Buscador", $"texto='{_textoBuscador}' CANCELADO por Task.Delay");
         }
         finally
         {
@@ -979,7 +1002,6 @@
                 if (resultadosPorTipo.TryGetValue(tipo, out var nuevosResultados))
                 {
                     var resultadosNuevos = nuevosResultados.Where(x => !pestaña.resultados.Any(y => y.Nombre == x.Nombre)).ToList();
-
                     pestaña.resultados.AddRange(resultadosNuevos);
                     pestaña.visible = pestaña.resultados.Count > 0;
                 }
@@ -1026,13 +1048,35 @@
     {
         idsPendientes.Add(juego.Id);
 
-        idsPendiente = ObtenerIdsPendientesComoString();
-        seleccionados.Add(juego);
-    }
+        if (idsPendientes.Count > 0)
+        {
+            idsPendiente = string.Join(",", idsPendientes);
+        }
+        else
+        {
+            idsPendiente = "0";
+        }
 
-    private string ObtenerIdsPendientesComoString()
-    {
-        return idsPendientes.Count > 0 ? string.Join(",", idsPendientes) : "0";
+        seleccionados.RemoveAll(s => idsPendientes.Contains(s.Id) == false);
+
+        bool añadirSeleccionados = true;
+
+        if (seleccionados?.Count > 0)
+        {
+            foreach (var seleccionado in seleccionados)
+            {
+                if (seleccionado.Id == juego.Id)
+                {
+                    añadirSeleccionados = false;
+                    break;
+                }
+            }
+        }
+
+        if (añadirSeleccionados == true)
+        {
+            seleccionados.Add(juego);
+        }
     }
 
     private async Task ClickearIdPendientes(MouseEventArgs e, global::Juegos.Juego juego)
@@ -1060,13 +1104,13 @@
         {
             return;
         }
-    
+
         buscadorBuscando = true;
 
         try
         {
             await BaseDatos.Juegos.Borrar.Ejecutar(id);
-        
+
             var resultados = await BaseDatos.Juegos.Buscar.Nombre2(TiendaRegion.Europa, _textoBuscador, 250, true);
 
             ActualizarResultados(resultados);
@@ -1086,6 +1130,35 @@
             (JuegoTipo.Music, (2, "Bandas Sonoras", 180)),
             (JuegoTipo.Software, (3, "Software", 130))
         };
+    }
+
+    private async Task CuandoIdPendientesSeaCero(string nombreBuscar2)
+    {
+        string nombreBuscar = nombreBuscar2;
+        nombreBuscar = (nombreBuscar.EndsWith("Deluxe Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Deluxe Edition", null) : nombreBuscar).TrimEnd();
+        nombreBuscar = (nombreBuscar.EndsWith("Ultimate Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Ultimate Edition", null) : nombreBuscar).TrimEnd();
+
+        InicializarPestañasBuscador();
+        await BuscarConReintentos(nombreBuscar);
+    }
+
+    private async Task BuscarConReintentos(string nombreBuscar)
+    {
+        _textoBuscador = nombreBuscar;
+        await TextoCambiaBuscador();
+        
+        bool sinResultados = pestañasBuscador.Values.All(p => p.resultados.Count == 0);
+    
+        if (sinResultados == true)
+        {
+            string[] palabras = nombreBuscar.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            if (palabras.Length > 1)
+            {
+                string nombreRecortado = string.Join(' ', palabras[..^1]);
+                await BuscarConReintentos(nombreRecortado);
+            }
+        }
     }
 
     #endregion

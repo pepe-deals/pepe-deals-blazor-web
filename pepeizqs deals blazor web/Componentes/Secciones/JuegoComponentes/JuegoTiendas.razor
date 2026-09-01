@@ -127,6 +127,7 @@ else
 
     private bool mostrarDescuentosBajos = false;
 
+    [PersistentState] public List<JuegoPrecio> preciosActivos { get; set; }
     [PersistentState] public List<JuegoPrecio> preciosMostrar { get; set; }
     [PersistentState] public List<JuegoPrecio> preciosBajos { get; set; }
 
@@ -135,9 +136,13 @@ else
         preciosMostrar = new List<JuegoPrecio>();
         preciosBajos = new List<JuegoPrecio>();
 
-        List<JuegoPrecio> preciosActivos = preciosActualesOficialesDRM.Where(p => Herramientas.OfertaActiva.Verificar(p))
-            .Concat(noOficial == true ? preciosActualesNoOficialesDRM.Where(p => Herramientas.OfertaActiva.Verificar(p)) : Enumerable.Empty<JuegoPrecio>())
-            .ToList();
+        if (preciosActivos == null)
+        {
+            preciosActivos = new List<JuegoPrecio>();
+            preciosActivos = preciosActualesOficialesDRM.Where(p => Herramientas.OfertaActiva.Verificar(p))
+                .Concat(noOficial == true ? preciosActualesNoOficialesDRM.Where(p => Herramientas.OfertaActiva.Verificar(p)) : Enumerable.Empty<JuegoPrecio>())
+                .ToList();
+        }
 
         if (preciosActivos.Any() == false)
         {

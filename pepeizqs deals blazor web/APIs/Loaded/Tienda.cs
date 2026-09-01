@@ -55,6 +55,38 @@ namespace APIs.Loaded
 						{
 							string nombre = WebUtility.HtmlDecode(resultado.Nombre);
 
+							string[] sufijosAEliminar =
+							{
+								"PC - DLC (Europe & UK)",
+								"PC - DLC (EU)",
+								"PC - DLC",
+								"PC DLC (Steam)",
+								"DLC (Global)",
+								"PC (Europe & UK)",
+								"PC (EU & UK)",
+								"PC (EU)",
+								"PC (EN)",
+								"PC (WW)",
+								"(PC)",
+								"PC",
+								"(EN)"
+							};
+
+							bool cambiado;
+							do
+							{
+								cambiado = false;
+								foreach (var sufijo in sufijosAEliminar)
+								{
+									if (nombre.EndsWith(sufijo, StringComparison.OrdinalIgnoreCase))
+									{
+										nombre = nombre[..^sufijo.Length].TrimEnd();
+										cambiado = true;
+										break;
+									}
+								}
+							} while (cambiado);
+
 							string enlaceJuego = resultado.Url;
 
 							string imagen = resultado.ImagenUrl;
