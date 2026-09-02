@@ -63,9 +63,9 @@ namespace APIs.Gameseal
 							if (string.IsNullOrEmpty(resultado.Disponibilidad) == false && resultado.Disponibilidad == "InStock")
 							{
 								string nombre = WebUtility.HtmlDecode(resultado.Nombre);
-								nombre = nombre.Replace("Steam Key - EU", null);
 								nombre = nombre.Replace("Steam Key - EU/US", null);
 								nombre = nombre.Replace("Steam Key - EU/NA", null);
+								nombre = nombre.Replace("Steam Key - EU", null);
 								nombre = nombre.Replace("Steam Key - GLOBAL", null);
 								nombre = nombre.Replace("(PC)", null);
 								nombre = nombre.Replace("(MAC)", null);

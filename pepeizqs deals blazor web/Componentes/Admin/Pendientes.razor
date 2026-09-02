@@ -936,11 +936,16 @@
         set
         {
             _textoBuscador = value;
-            _ = TextoCambiaBuscador();
+            _ = TextoCambiaBuscador(50);
         }
     }
 
     private async Task TextoCambiaBuscador()
+    {
+        await TextoCambiaBuscador(200);
+    }
+
+    private async Task TextoCambiaBuscador(int cantidadBuscar)
     {
         buscadorBuscando = true;
 
@@ -958,7 +963,7 @@
 
             await Task.Delay(100, token);
 
-            var resultados = await BaseDatos.Juegos.Buscar.Nombre2(TiendaRegion.Europa, _textoBuscador, 250, true);
+            var resultados = await BaseDatos.Juegos.Buscar.Nombre2(TiendaRegion.Europa, _textoBuscador, cantidadBuscar, true);
 
             if (token.IsCancellationRequested == true)
             {
@@ -1145,7 +1150,7 @@
     private async Task BuscarConReintentos(string nombreBuscar)
     {
         _textoBuscador = nombreBuscar;
-        await TextoCambiaBuscador();
+        await TextoCambiaBuscador(10);
         
         bool sinResultados = pestañasBuscador.Values.All(p => p.resultados.Count == 0);
     

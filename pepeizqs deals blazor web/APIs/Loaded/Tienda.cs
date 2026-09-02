@@ -57,6 +57,7 @@ namespace APIs.Loaded
 
 							string[] sufijosAEliminar =
 							{
+								"PC - DLC STEAM (EU)",
 								"PC - DLC (Europe & UK)",
 								"PC - DLC (EU)",
 								"PC - DLC",

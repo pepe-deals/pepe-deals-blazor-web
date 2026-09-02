@@ -260,10 +260,13 @@
                                                     </div>
 
                                                     <div style="text-align: center; display: flex; align-items: center;">
-                                                        <div style="background-color: var(--fondoBien); padding: 5px 10px;">
-                                                            @juego.Descuento%
-                                                        </div>
-
+                                                        @if (juego.Descuento != "0")
+                                                        {
+                                                            <div style="background-color: var(--fondoBien); padding: 5px 10px;">
+                                                                @juego.Descuento%
+                                                            </div>
+                                                        }
+  
                                                         <div style="background-color: var(--fondoBotonPequeño); padding: 5px 10px;">
                                                             @juego.Precio
                                                         </div>
