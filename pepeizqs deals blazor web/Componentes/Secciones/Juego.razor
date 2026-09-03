@@ -2951,18 +2951,6 @@
                         <div style="padding: 30px; display: flex; align-items: center; gap: 10px;">
                             @if (juego.IdSteam > 0)
                             {
-                                string enlaceSteamDB = "https://steamdb.info/app/" + juego.IdSteam.ToString();
-                                string imagenSteamDB = "/imagenes/webs/steamdb.webp";
-                                string imagenSteamDB1 = imagenSteamDB.Replace(".webp", "-sm.webp");
-                                string imagenSteamDB2 = imagenSteamDB.Replace(".webp", "-md.webp");
-                        
-                                <a class="boton-pequeño" title="SteamDB" href="@enlaceSteamDB" target="_blank" style="width: fit-content; padding: 10px;">
-                                    <picture>
-                                        <source srcset="@imagenSteamDB1 1x, @imagenSteamDB2 2x" type="image/webp">
-                                        <img src="@imagenSteamDB" style="width: 30px; height: 30px; display: block;" loading="lazy" alt="SteamDB">
-                                    </picture>
-                                </a>
-
                                 string enlaceProtonDB = "https://protondb.com/app/" + juego.IdSteam.ToString();
                                 string imagenProtonDB = "/imagenes/webs/protondb.webp";
                                 string imagenProtonDB1 = imagenProtonDB.Replace(".webp", "-sm.webp");

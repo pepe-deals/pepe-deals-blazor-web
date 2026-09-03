@@ -141,8 +141,15 @@
                     </button>
                 </div>
 
-                <div>
-                    <a href="@enlacePendiente" target="_blank" style="text-decoration: none;">@nombrePendiente</a>
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <a href="@enlacePendiente" target="_blank" style="text-decoration: none; width: fit-content;">@nombrePendiente</a>
+
+                    @if (string.IsNullOrEmpty(nombrePendienteSeleccionado) == false)
+                    {
+                        <div style="font-size: 14px;">
+                            @nombrePendienteSeleccionado
+                        </div>
+                    }
                 </div>
 
                 <div>
@@ -286,6 +293,8 @@
     private string nombrePendiente = null;
     private string enlacePendiente = null;
     private string idsPendiente = null;
+
+    private string nombrePendienteSeleccionado = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -715,12 +724,14 @@
             await ClickearPlataformaPendientes(idPlataformaPendiente, true);
         }
 
+        nombrePendienteSeleccionado = null;
         ocupado = false;
     }
 
     private async Task ClickearActualizarPendientes(MouseEventArgs e, string enlace)
     {
         ocupado = true;
+        nombrePendienteSeleccionado = null;
 
         if (string.IsNullOrEmpty(idTiendaPendiente) == false)
         {
@@ -862,6 +873,15 @@
             {
                 seleccionados.Add(juego);
             }
+        }
+
+        if (seleccionados.Count == 1)
+        {
+            nombrePendienteSeleccionado = seleccionados[0].Nombre;
+        }
+        else
+        {
+            nombrePendienteSeleccionado = null;
         }
     }
 
@@ -1101,6 +1121,8 @@
         {
             buscadorBuscando = false;
         }
+
+        nombrePendienteSeleccionado = null;
     }
 
     private async Task ClickearBorrarPendientes(MouseEventArgs e, string id)
