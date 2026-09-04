@@ -877,7 +877,14 @@
 
         if (seleccionados.Count == 1)
         {
-            nombrePendienteSeleccionado = seleccionados[0].Nombre;
+            if (Herramientas.Buscador.LimpiarNombre(seleccionados[0].Nombre) != Herramientas.Buscador.LimpiarNombre(nombrePendiente))
+            {
+                nombrePendienteSeleccionado = seleccionados[0].Nombre;
+            }
+            else
+            {
+                nombrePendienteSeleccionado = null;
+            }
         }
         else
         {

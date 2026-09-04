@@ -379,6 +379,7 @@ namespace Juegos
 					"asmjs",
 					"audio-download",
 					"call of duty beta",
+					"crunchyroll",
 					"desura",
 					"developer website",
 					"download",

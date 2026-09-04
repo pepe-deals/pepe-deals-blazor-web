@@ -502,9 +502,15 @@
 
 					<div style="display: flex; flex-direction: column; gap: 10px; flex-shrink: 0;">
 						<div style="display: flex; align-items: center; justify-content: right;">
-							<div style="text-align: center; padding: 10px 15px; margin: 0px; min-width: 65px; @fondoDescuento">
-								@descuento
-							</div>
+							@if (string.IsNullOrEmpty(descuento) == false)
+							{
+								if (descuento != "0%" && descuento != "00%")
+								{
+									<div style="text-align: center; padding: 10px 15px; margin: 0px; min-width: 65px; @fondoDescuento">
+										@descuento
+									</div>
+								}
+							}
 
 							<div style="padding: 5px 15px; min-width: 110px; text-align: center; font-size: 18px;">
 								@precio

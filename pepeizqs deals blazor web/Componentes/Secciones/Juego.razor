@@ -2951,6 +2951,18 @@
                         <div style="padding: 30px; display: flex; align-items: center; gap: 10px;">
                             @if (juego.IdSteam > 0)
                             {
+                                string enlaceSteamCharts = "https://steamcharts.com/app/" + juego.IdSteam.ToString();
+                                string imagenSteamCharts = "/imagenes/webs/steamcharts.webp";
+                                string imagenSteamCharts1 = imagenSteamCharts.Replace(".webp", "-sm.webp");
+                                string imagenSteamCharts2 = imagenSteamCharts.Replace(".webp", "-md.webp");
+
+                                <a class="boton-pequeño" title="SteamCharts" href="@enlaceSteamCharts" target="_blank" style="width: fit-content; padding: 10px;">
+                                    <picture>
+                                        <source srcset="@imagenSteamCharts1 1x, @imagenSteamCharts2 2x" type="image/webp">
+                                        <img src="@imagenSteamCharts" style="width: 30px; height: 30px; display: block;" loading="lazy" alt="SteamCharts"/>
+                                    </picture>
+                                </a>
+
                                 string enlaceProtonDB = "https://protondb.com/app/" + juego.IdSteam.ToString();
                                 string imagenProtonDB = "/imagenes/webs/protondb.webp";
                                 string imagenProtonDB1 = imagenProtonDB.Replace(".webp", "-sm.webp");

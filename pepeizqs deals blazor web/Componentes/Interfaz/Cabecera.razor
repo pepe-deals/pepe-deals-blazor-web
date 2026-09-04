@@ -1077,7 +1077,7 @@
 
                 try
                 {
-                    var resultados = await BaseDatos.Juegos.Buscar.Nombre3(usuarioTiendasNoOficial, usuarioRegion, textoBuscador, resultadosMaximos, 10, 10, excluirJuegosIds);
+                    var resultados = await BaseDatos.Juegos.Buscar.Nombre3(usuarioTiendasNoOficial, usuarioMarketplace, usuarioRegion, textoBuscador, resultadosMaximos, 10, 10, excluirJuegosIds);
 
                     if (resultados.juegos?.Count > 0)
                     {
@@ -1465,7 +1465,7 @@
 
             await Task.Delay(retraso, token);
 
-            var resultados = await BaseDatos.Juegos.Buscar.Nombre3(usuarioTiendasNoOficial, usuarioRegion, texto, resultadosMaximos, 10, 10, excluirJuegosIds);
+            var resultados = await BaseDatos.Juegos.Buscar.Nombre3(usuarioTiendasNoOficial, usuarioMarketplace, usuarioRegion, texto, resultadosMaximos, 10, 10, excluirJuegosIds);
 
             if (busquedaId == busquedaActualId && token.IsCancellationRequested == false)
             {

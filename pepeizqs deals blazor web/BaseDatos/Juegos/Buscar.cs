@@ -1210,7 +1210,7 @@ END DESC";
 			return null;
 		}
 
-		public static async Task<(List<Juego> juegos, int excluidos)> Nombre3(bool noOficiales, TiendaRegion region, string nombre, int cantidadJuegos = 10,
+		public static async Task<(List<Juego> juegos, int excluidos)> Nombre3(bool noOficiales, bool marketplaces, TiendaRegion region, string nombre, int cantidadJuegos = 10,
 			int cantidadCurators = 10, int cantidadBundles = 10, List<int> excluirJuegosIds = null)
 		{
 			string precioMinimosHistoricos = region switch
@@ -1247,8 +1247,28 @@ END DESC";
 				};
 			}
 
+			string marketplacesSelect = string.Empty;
+			string marketplacesSelectNull = string.Empty;
+
+			if (marketplaces == true)
+			{
+				marketplacesSelect = region switch
+				{
+					TiendaRegion.Europa => "j.preciosHistoricosMarketplacesEU, j.preciosActualesMarketplacesEU,",
+					TiendaRegion.EstadosUnidos => "j.preciosHistoricosMarketplacesUS, j.preciosActualesMarketplacesUS,",
+					_ => string.Empty
+				};
+
+				marketplacesSelectNull = region switch
+				{
+					TiendaRegion.Europa => "NULL AS preciosHistoricosMarketplacesEU, NULL AS preciosActualesMarketplacesEU,",
+					TiendaRegion.EstadosUnidos => "NULL AS preciosHistoricosMarketplacesUS, NULL AS preciosActualesMarketplacesUS,",
+					_ => string.Empty
+				};
+			}
+
 			string busquedaJuegos = $@"SELECT TOP (@cantidadJuegos) 
-				j.id, j.nombre, j.imagenes, j.{precioMinimosHistoricos}, j.{precioActualesTiendas}, {noOficialesSelect}
+				j.id, j.nombre, j.imagenes, j.{precioMinimosHistoricos}, j.{precioActualesTiendas}, {noOficialesSelect} {marketplacesSelect}
 				j.tipo, j.analisis, j.idSteam, j.idGog, j.idAmazon,
 				j.exeEpic, j.exeUbisoft, j.freeToPlay,
 				(
@@ -1284,7 +1304,7 @@ END DESC";
 									JSON_QUERY(CONCAT('{{""Header_460x215"":""', c.imagen, '""}}')) AS imagenes,
                                     NULL AS {precioMinimosHistoricos}, 
                                     NULL AS {precioActualesTiendas},
-									{noOficialesSelectNull}
+									{noOficialesSelectNull} {marketplacesSelectNull}
                                     5 AS tipo, NULL AS analisis, 
                                     NULL AS idSteam, NULL AS idGog, NULL AS idAmazon,
                                     c.slug AS exeEpic, NULL AS exeUbisoft, NULL AS freeToPlay,
@@ -1299,7 +1319,7 @@ END DESC";
 									JSON_QUERY(CONCAT('{{""Header_460x215"":""', b.imagenNoticia, '""}}')) AS imagenes,
                                     NULL AS {precioMinimosHistoricos}, 
                                     NULL AS {precioActualesTiendas},
-									{noOficialesSelectNull}
+									{noOficialesSelectNull} {marketplacesSelectNull}
                                     2 AS tipo, NULL AS analisis, 
                                     b.bundleTipo AS idSteam, NULL AS idGog, NULL AS idAmazon,
                                     NULL AS exeEpic, NULL AS exeUbisoft, NULL AS freeToPlay,
