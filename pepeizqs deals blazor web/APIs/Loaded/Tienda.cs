@@ -70,6 +70,7 @@ namespace APIs.Loaded
 								"PC (EU)",
 								"PC (EN)",
 								"PC (WW)",
+								"PC (EMEA)",
 								"(PC)",
 								"PC",
 								"(EN)"

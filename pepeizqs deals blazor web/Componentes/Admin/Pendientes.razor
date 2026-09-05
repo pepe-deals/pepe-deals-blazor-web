@@ -660,7 +660,8 @@
             {
                 if (pendiente.Tienda.Id == idTiendaPendiente)
                 {
-                    pendiente.Pendientes = await BaseDatos.Pendientes.Buscar.Tienda(idTiendaPendiente);
+                    pendiente.Pendientes.RemoveAll(p => p.Enlace == enlace);
+                    break;
                 }
             }
 
@@ -755,7 +756,7 @@
             {
                 if (pendiente.Tienda.Id == idTiendaPendiente)
                 {
-                    pendiente.Pendientes = await BaseDatos.Pendientes.Buscar.Tienda(idTiendaPendiente);
+                    pendiente.Pendientes.RemoveAll(p => p.Enlace == enlace);
                     siguienteTienda = pendiente.Pendientes.FirstOrDefault();
                     break;
                 }
@@ -997,7 +998,7 @@
                 return;
             }
 
-            if (resultados.Count == 1 && idsPendiente == "0")
+            if (resultados.Count == 1 && idsPendiente == "0" && PorcentajeCoincidenciaCaracteres(resultados[0].Nombre, nombrePendiente) >= 0.5)
             {
                 idsPendiente = resultados[0].Id.ToString();
                 await AñadirResultados();
@@ -1014,6 +1015,34 @@
         {
             buscadorBuscando = false;
         }
+    }
+
+    private static double PorcentajeCoincidenciaCaracteres(string a, string b)
+    {
+        if (string.IsNullOrEmpty(a) == true || string.IsNullOrEmpty(b) == true)
+        {
+            return 0;
+        }
+
+        List<char> caracteresA = a.ToLowerInvariant().Where(c => char.IsLetterOrDigit(c)).ToList();
+        List<char> caracteresB = b.ToLowerInvariant().Where(c => char.IsLetterOrDigit(c)).ToList();
+
+        List<char> restantesB = new List<char>(caracteresB);
+        int coincidencias = 0;
+
+        foreach (char c in caracteresA)
+        {
+            int indice = restantesB.IndexOf(c);
+
+            if (indice >= 0)
+            {
+                coincidencias += 1;
+                restantesB.RemoveAt(indice);
+            }
+        }
+
+        int longitudMayor = Math.Max(caracteresA.Count, caracteresB.Count);
+        return longitudMayor == 0 ? 0 : (double)coincidencias / longitudMayor;
     }
 
     private void ActualizarResultados(List<global::Juegos.Juego> resultados)
@@ -1169,6 +1198,7 @@
     private async Task CuandoIdPendientesSeaCero(string nombreBuscar2)
     {
         string nombreBuscar = nombreBuscar2;
+        nombreBuscar = (nombreBuscar.EndsWith("Standard Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Standard Edition", null) : nombreBuscar).TrimEnd();
         nombreBuscar = (nombreBuscar.EndsWith("Deluxe Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Deluxe Edition", null) : nombreBuscar).TrimEnd();
         nombreBuscar = (nombreBuscar.EndsWith("Ultimate Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Ultimate Edition", null) : nombreBuscar).TrimEnd();
 
@@ -1181,18 +1211,18 @@
         _textoBuscador = nombreBuscar;
         await TextoCambiaBuscador(10);
         
-        bool sinResultados = pestañasBuscador.Values.All(p => p.resultados.Count == 0);
+        // bool sinResultados = pestañasBuscador.Values.All(p => p.resultados.Count == 0);
     
-        if (sinResultados == true)
-        {
-            string[] palabras = nombreBuscar.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        // if (sinResultados == true)
+        // {
+        //     string[] palabras = nombreBuscar.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-            if (palabras.Length > 1)
-            {
-                string nombreRecortado = string.Join(' ', palabras[..^1]);
-                await BuscarConReintentos(nombreRecortado);
-            }
-        }
+        //     if (palabras.Length > 1)
+        //     {
+        //         string nombreRecortado = string.Join(' ', palabras[..^1]);
+        //         await BuscarConReintentos(nombreRecortado);
+        //     }
+        // }
     }
 
     #endregion

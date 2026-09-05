@@ -61,8 +61,6 @@ namespace Juegos
 		public bool OcultarPortada { get; set; }
 		public DateTime? UltimaActualizacionSteam { get; set; }
 		public DateTime? UltimaActualizacionGOG { get; set; }
-		public DateTime? UltimaActualizacion { get; set; }
-		public bool InteligenciaArtificial { get; set; }
 		public List<JuegoBundlesActuales> BundlesActuales { get; set; }
 		public List<JuegoBundlesPasados> BundlesPasados { get; set; }
 		public List<JuegoGratisActuales> GratisActuales { get; set; }
@@ -167,6 +165,8 @@ namespace Juegos
 		public int DemoIdSteam { get; set; }
 		public string CuentaNecesaria { get; set; }
 		public string DRMExterno { get; set; }
+		public string Anticheat { get; set; }
+		public string InteligenciaArtificial { get; set; }
 	}
 
 	public class JuegoCaracteristicasCurator

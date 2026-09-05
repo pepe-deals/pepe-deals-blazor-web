@@ -202,6 +202,16 @@ namespace APIs.Steam
 								caracteristicas.DRMExterno = juegoApi.Extra.DRMExterno;
 							}
 
+							if (string.IsNullOrEmpty(juegoApi?.Extra?.Antichetos?.Nombre) == false)
+							{
+								caracteristicas.Anticheat = juegoApi.Extra.Antichetos.Nombre;
+							}
+
+							if (string.IsNullOrEmpty(juegoApi?.Extra?.IA) == false)
+							{
+								caracteristicas.InteligenciaArtificial = juegoApi.Extra.IA;
+							}
+
 							#endregion
 
 							#region Imagenes
@@ -1421,12 +1431,18 @@ namespace APIs.Steam
 
 		[JsonPropertyName("anticheat")]
 		public SteamJuegoAPI2JuegoExtraAntichetos Antichetos { get; set; }
+
+		[JsonPropertyName("content_survey_ai_notes")]
+		public string IA { get; set; }
 	}
 
 	public class SteamJuegoAPI2JuegoExtraAntichetos
 	{
 		[JsonPropertyName("kernel_mode")]
 		public bool Kernel { get; set; }
+
+		[JsonPropertyName("name")]
+		public string Nombre { get; set; }
 	}
 
 	#endregion

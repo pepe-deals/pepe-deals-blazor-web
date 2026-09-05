@@ -389,7 +389,7 @@
                                         }
                                     }
 
-                                    @if (juego.InteligenciaArtificial == true)
+                                    @if (string.IsNullOrEmpty(juego.Caracteristicas?.InteligenciaArtificial) == false)
                                     {
                                         <div class="tooltip-juego" id="trigger-ai"
                                              @onmouseenter="@(() => ActivarTooltip("trigger-ai", "tooltip-ai"))"
@@ -1912,6 +1912,11 @@
                                                     añadirDiv3 = true;
                                                 }
 
+                                                if (drm.Id == JuegoDRM.Steam && string.IsNullOrEmpty(juego.Caracteristicas?.Anticheat) == false)
+                                                {
+                                                    añadirDiv3 = true;
+                                                }
+
                                                 if (añadirDiv3 == true)
                                                 {
                                                     <div style="display: flex; flex-direction: column; gap: 10px;">
@@ -1926,6 +1931,13 @@
                                                         {
                                                             <div style="background-color: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 5px 10px; font-size: 14px; width: fit-content;">
                                                                  @string.Format(Herramientas.Idiomas.BuscarTexto(idioma, "String145", "Game"), juego.Caracteristicas.DRMExterno)
+                                                            </div>
+                                                        }
+
+                                                        @if (drm.Id == JuegoDRM.Steam && string.IsNullOrEmpty(juego.Caracteristicas?.Anticheat) == false)
+                                                        {
+                                                            <div style="background-color: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); padding: 5px 10px; font-size: 14px; width: fit-content;">
+                                                                 @string.Format(Herramientas.Idiomas.BuscarTexto(idioma, "String146", "Game"), juego.Caracteristicas.Anticheat)
                                                             </div>
                                                         }
                                                     </div>

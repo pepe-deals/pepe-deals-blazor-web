@@ -109,11 +109,6 @@ namespace BaseDatos.Juegos
 				{
 					AñadirSi("steamOS", "@steamOS", juego.SteamOS);
 				}
-
-				if (juego.InteligenciaArtificial == true)
-				{
-					AñadirSi("inteligenciaArtificial", "@inteligenciaArtificial", true);
-				}
 			}
 
 			if (tabla == "seccionMinimos")
