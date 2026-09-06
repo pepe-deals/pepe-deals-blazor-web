@@ -1198,6 +1198,7 @@
     private async Task CuandoIdPendientesSeaCero(string nombreBuscar2)
     {
         string nombreBuscar = nombreBuscar2;
+        nombreBuscar = (nombreBuscar.EndsWith("Complete Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Complete Edition", null) : nombreBuscar).TrimEnd();
         nombreBuscar = (nombreBuscar.EndsWith("Standard Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Standard Edition", null) : nombreBuscar).TrimEnd();
         nombreBuscar = (nombreBuscar.EndsWith("Deluxe Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Deluxe Edition", null) : nombreBuscar).TrimEnd();
         nombreBuscar = (nombreBuscar.EndsWith("Ultimate Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Ultimate Edition", null) : nombreBuscar).TrimEnd();
