@@ -1202,6 +1202,7 @@
         nombreBuscar = (nombreBuscar.EndsWith("Standard Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Standard Edition", null) : nombreBuscar).TrimEnd();
         nombreBuscar = (nombreBuscar.EndsWith("Deluxe Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Deluxe Edition", null) : nombreBuscar).TrimEnd();
         nombreBuscar = (nombreBuscar.EndsWith("Ultimate Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Ultimate Edition", null) : nombreBuscar).TrimEnd();
+        nombreBuscar = (nombreBuscar.EndsWith("Gold Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Gold Edition", null) : nombreBuscar).TrimEnd();
 
         InicializarPestañasBuscador();
         await BuscarConReintentos(nombreBuscar);
