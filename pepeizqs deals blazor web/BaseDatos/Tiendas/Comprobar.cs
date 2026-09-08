@@ -313,23 +313,23 @@ namespace BaseDatos.Tiendas
 
 			string esquema = $"tienda{oferta.Tienda}";
 			string sqlBuscar = $@"
-SELECT j.id,
-       j.{precioMinimosHistoricos},
-       j.{precioActualesTiendas},
-       j.idSteam,
-       j.historicos,
-       j.analisis
-FROM {esquema} t
-CROSS APPLY (
-    SELECT TRY_CAST(value AS INT) AS numero
-    FROM STRING_SPLIT(t.idJuegos, ',')
-) ids
-JOIN juegos j ON j.id = ids.numero
-WHERE t.enlace = @Enlace
-  AND (t.descartado = 'no' OR t.descartado IS NULL)
-  AND ids.numero IS NOT NULL
-  AND ids.numero != 0;
-";
+				SELECT j.id,
+					   j.{precioMinimosHistoricos},
+					   j.{precioActualesTiendas},
+					   j.idSteam,
+					   j.historicos,
+					   j.analisis
+				FROM {esquema} t
+				CROSS APPLY (
+					SELECT TRY_CAST(value AS INT) AS numero
+					FROM STRING_SPLIT(t.idJuegos, ',')
+				) ids
+				JOIN juegos j ON j.id = ids.numero
+				WHERE t.enlace = @Enlace
+				  AND (t.descartado = 0 OR t.descartado IS NULL)
+				  AND ids.numero IS NOT NULL
+				  AND ids.numero != 0;
+				";
 
 			List<dynamic> resultados = new List<dynamic>();
 
@@ -475,7 +475,7 @@ WHERE t.enlace = @Enlace
 						IF @nuevaId IS NULL SET @nuevaId = 0;
 
 						INSERT INTO {esquema} (enlace, nombre, imagen, idJuegos, descartado)
-						VALUES (@Enlace, @Nombre, @Imagen, @nuevaId, 'no');
+						VALUES (@Enlace, @Nombre, @Imagen, @nuevaId, false);
 					END;
 					";
 
@@ -576,24 +576,24 @@ WHERE t.enlace = @Enlace
 						string placeholders = string.Join(",", chunkEnlaces.Select((_, i) => $"@enlace{i}"));
 
 						string sqlBuscar = $@"
-						SELECT j.id,
-							   j.{precioMinimosHistoricos},
-							   j.{precioActualesTiendas},
-							   j.idSteam,
-							   j.historicos,
-							   j.analisis,
-							   t.enlace
-						FROM {esquema} t
-						CROSS APPLY (
-							SELECT TRY_CAST(value AS INT) AS numero
-							FROM STRING_SPLIT(t.idJuegos, ',')
-						) ids
-						JOIN juegos j ON j.id = ids.numero
-						WHERE t.enlace IN ({placeholders})
-						    AND (t.descartado = 'no' OR t.descartado IS NULL)
-							AND ids.numero IS NOT NULL
-							AND ids.numero != 0
-						";
+							SELECT j.id,
+								   j.{precioMinimosHistoricos},
+								   j.{precioActualesTiendas},
+								   j.idSteam,
+								   j.historicos,
+								   j.analisis,
+								   t.enlace
+							FROM {esquema} t
+							CROSS APPLY (
+								SELECT TRY_CAST(value AS INT) AS numero
+								FROM STRING_SPLIT(t.idJuegos, ',')
+							) ids
+							JOIN juegos j ON j.id = ids.numero
+							WHERE t.enlace IN ({placeholders})
+								AND (t.descartado = 0 OR t.descartado IS NULL)
+								AND ids.numero IS NOT NULL
+								AND ids.numero != 0
+							";
 
 						DynamicParameters parametros = new DynamicParameters();
 						for (int i = 0; i < chunkEnlaces.Length; i++)

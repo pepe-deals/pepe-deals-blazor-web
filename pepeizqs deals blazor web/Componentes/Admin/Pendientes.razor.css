@@ -1,8 +1,6 @@
 .caja-admin-pendientes {
     background-color: var(--fondoSubsubcabecera);
     border: 2px solid var(--fondoSubcabecera);
-    padding: 30px;
-    box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.28),0px 0px 2px 0px rgba(0, 0, 0, 0.24);
 }
 
 .admin-busqueda-juego-derecha {

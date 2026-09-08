@@ -3,8 +3,8 @@
 @using Tiendas2
 @using global::Juegos
 
-<div class="caja-admin-pendientes" style="display: flex; justify-content: space-between; flex-direction: row; gap: 40px;">
-    <div style="min-width: 300px; margin: -10px 0px;">
+<div style="display: flex; justify-content: space-between; flex-direction: row; gap: 40px;">
+    <div class="caja-admin-pendientes" style="min-width: 300px; display: flex; flex-direction: column; gap: 10px; height: fit-content;">
         @foreach (var pendiente in pendientesTiendas)
         {
             if (pendiente.Pendientes.Count > 0)
@@ -23,7 +23,7 @@
                     }
                 }
 
-                <button @onclick="@(e => ClickearTiendaPendientes(e, pendiente.Tienda.Id, pendiente.Tienda.Nombre))" class="boton-pequeño" style="margin: 10px 0px; display: block; box-shadow: none; padding: 6px 12px; @fondo">
+                <button @onclick="@(e => ClickearTiendaPendientes(e, pendiente.Tienda.Id, pendiente.Tienda.Nombre))" class="boton-pequeño" style="display: block; box-shadow: none; padding: 6px 12px; @fondo">
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <img src="@pendiente.Tienda.ImagenIcono" style="height: 16px; width: 16px; display: block;" />
 
@@ -35,7 +35,7 @@
             }
         }
 
-        @foreach (var pendiente in pendientesSuscripcion)
+        @foreach (var pendiente in pendientesSuscripciones)
         {
             if (pendiente.Pendientes.Count > 0)
             {
@@ -53,7 +53,7 @@
                     }
                 }
 
-                <button @onclick="@(e => ClickearSuscripcionPendientes(e, pendiente.Suscripcion.Id.ToString(), pendiente.Suscripcion.Nombre))" class="boton-pequeño" style="margin: 10px 0px; display: block; padding: 6px 12px; box-shadow: none; @fondo">
+                <button @onclick="@(e => ClickearSuscripcionPendientes(e, pendiente.Suscripcion.Id.ToString(), pendiente.Suscripcion.Nombre))" class="boton-pequeño" style="display: block; padding: 6px 12px; box-shadow: none; @fondo">
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <img src="@pendiente.Suscripcion.ImagenIcono" style="height: 16px; width: 16px; display: block;" />
 
@@ -65,7 +65,7 @@
             }
         }
 
-        @foreach (var pendiente in pendientesStreaming)
+        @foreach (var pendiente in pendientesStreamings)
         {
             if (pendiente.Pendientes.Count > 0)
             {
@@ -83,7 +83,7 @@
                     }
                 }
 
-                <button @onclick="@(e => ClickearStreamingPendientes(e, pendiente.Streaming.Id.ToString(), pendiente.Streaming.Nombre))" class="boton-pequeño" style="margin: 10px 0px; display: block; padding: 6px 12px; box-shadow: none; @fondo">
+                <button @onclick="@(e => ClickearStreamingPendientes(e, pendiente.Streaming.Id.ToString(), pendiente.Streaming.Nombre))" class="boton-pequeño" style="display: block; padding: 6px 12px; box-shadow: none; @fondo">
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <img src="@pendiente.Streaming.ImagenIcono" style="height: 16px; width: 16px; display: block;" />
                         
@@ -95,7 +95,7 @@
             }
         }
 
-        @foreach (var pendiente in pendientesPlataforma)
+        @foreach (var pendiente in pendientesPlataformas)
         {
             if (pendiente.Pendientes.Count > 0)
             {
@@ -113,7 +113,7 @@
                     }
                 }
 
-                <button @onclick="@(e => ClickearPlataformaPendientes(e, pendiente.Plataforma.Id.ToString(), pendiente.Plataforma.Nombre))" class="boton-pequeño" style="margin: 10px 0px; display: block; padding: 6px 12px; box-shadow: none; @fondo">
+                <button @onclick="@(e => ClickearPlataformaPendientes(e, pendiente.Plataforma.Id.ToString(), pendiente.Plataforma.Nombre))" class="boton-pequeño" style="display: block; padding: 6px 12px; box-shadow: none; @fondo">
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <img src="@pendiente.Plataforma.ImagenIcono" style="height: 16px; width: 16px; display: block;" />
 
@@ -126,21 +126,23 @@
         }
     </div>
 
-    @if (string.IsNullOrEmpty(idTiendaPendiente) == false || string.IsNullOrEmpty(idSuscripcionPendiente) == false || string.IsNullOrEmpty(idStreamingPendiente) == false || string.IsNullOrEmpty(idPlataformaPendiente) == false)
+    @if (pendientesTiendas.Count > 0 || pendientesSuscripciones.Count > 0 || pendientesStreamings.Count > 0 || pendientesPlataformas.Count > 0)
     {
         <div style="width: 100%;">
-            <div style="display: flex; flex-direction: column; gap: 20px;">
-                <div style="display: flex; align-items: center; gap: 30px;">
-                    @if (idsPendiente != "0" && ocupado == false)
-                    {
-                        <button @onclick="@(e => ClickearActualizarPendientes(e, enlacePendiente))" class="boton-pequeño" style="width: 130px; text-align: center;">Actualizar</button>
-                    }
-
-                    <button @onclick="@(e => ClickearDescartarPendientes(e, enlacePendiente))" class="boton-pequeño" style="width: 130px; text-align: center; margin-left: auto; background-color: var(--fondoPeligro);">
-                        Descartar
+            <div style="display: flex; align-items: center; gap: 30px;">
+                @if (idsPendiente != "0" && ocupado == false)
+                {
+                    <button @onclick="@(e => ClickearActualizarPendientes(e, enlacePendiente))" class="boton-pequeño" style="width: 130px; text-align: center; box-shadow: none;">
+                        Actualizar
                     </button>
-                </div>
+                }
 
+                <button @onclick="@(e => ClickearDescartarPendientes(e, enlacePendiente))" class="boton-pequeño" style="width: 130px; text-align: center; margin-left: auto; background-color: var(--fondoPeligro); box-shadow: none;">
+                    Descartar
+                </button>
+            </div>
+
+            <div class="caja-admin-pendientes" style="padding: 10px; display: flex; flex-direction: column; gap: 20px;">
                 <div style="display: flex; flex-direction: column; gap: 5px;">
                     <a href="@enlacePendiente" target="_blank" style="text-decoration: none; width: fit-content;">@nombrePendiente</a>
 
@@ -156,10 +158,10 @@
                     <textarea @oninput="TextoCambiaPendientes" class="entrada-texto" style="width: 100%;" value="@idsPendiente" rows="1" />
                 </div>
 
-                <div style="display: flex; align-items: start; gap: 20px;">
+                <div style="display: flex; align-items: start; gap: 30px;">
                     @{
                         string ancho = "max-width: 200px;";
-                        
+
                         if (string.IsNullOrEmpty(idsPendiente) == false)
                         {
                             if (idsPendiente.Split(',').Length > 1)
@@ -175,9 +177,7 @@
                         </a>
                     </div>
 
-                    <div style="border: 3px solid var(--fondoBotonPequeño); height: 70px;" />
-
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; background-color: rgba(0,0,0,.1); padding: 10px;">
                         @if (string.IsNullOrEmpty(idsPendiente) == false)
                         {
                             if (seleccionados?.Count > 0)
@@ -200,76 +200,85 @@
     }  
 </div>
 
-<div class="caja-admin-pendientes" style="margin-top: 30px;">
-    <div style="margin-bottom: 10px;">
-        Buscador:
+<div style="margin-top: 30px;">
+    <div style="width: 100%; display: flex; align-items: center; gap: 10px;">
+        <div style="width: 20px;">
+            <svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                <path d="M480 272C480 317.9 465.1 360.3 440 394.7L566.6 521.4C579.1 533.9 579.1 554.2 566.6 566.7C554.1 579.2 533.8 579.2 521.3 566.7L394.7 440C360.3 465.1 317.9 480 272 480C157.1 480 64 386.9 64 272C64 157.1 157.1 64 272 64C386.9 64 480 157.1 480 272zM272 416C351.5 416 416 351.5 416 272C416 192.5 351.5 128 272 128C192.5 128 128 192.5 128 272C128 351.5 192.5 416 272 416z" />
+            </svg>
+        </div>
+
+        <input type="text" @bind-value="textoBuscador" @bind-value:event="oninput" @bind-value:after="TextoCambiaBuscador" class="entrada-texto" style="min-width: auto;" />
     </div>
 
-    <input type="text" @bind-value="textoBuscador" @bind-value:event="oninput" @bind-value:after="TextoCambiaBuscador" class="entrada-texto" />
-
-    @if (buscadorBuscando == true)
+    @if (buscadorBuscando == false && string.IsNullOrEmpty(textoBuscador) == false)
     {
-        <div style="margin-top: 20px;">
-            Buscando...
-        </div>
-    }
-    else if (string.IsNullOrEmpty(textoBuscador) == false)
-    {
-        @if (pestañasBuscador.Values.All(p => p.resultados.Count == 0))
-        {
-            <div style="margin-top: 20px;">
-                No hay resultados
-            </div>
-        }
-        else
-        {
-            <div style="display: flex; align-items: center; gap: 20px; margin: 20px 0px;">
-                @foreach (var (tipo, info) in ObtenerInfoPestañas())
-                {
-                    var pestaña = pestañasBuscador[tipo];
-                    <button @onclick="@(e => CambiarPestañas(e, info.Indice))" class="boton-pequeño" style="width: @(info.Ancho)px; text-align: center; box-shadow: none; @pestaña.ObtenerEstilo()">
-                        @info.Titulo (@pestaña.resultados.Count)
-                    </button>
-                }
-            </div>
-
-            foreach (var pestaña in pestañasBuscador.Values.Where(p => p.activa && p.resultados.Count > 0))
+        <div class="caja-admin-pendientes" style="padding: 10px; margin-top: 10px;">
+            @if (buscadorBuscando == true)
             {
                 <div>
-                    @foreach (var item in pestaña.resultados)
-                    {
-                        <hr />
-                        <div class="perfil-flexible-centrado" style="flex-wrap: wrap;">
-                            <div style="width: 150px; min-width: 150px;">
-                                <button @onclick="@(e => ClickearIdPendientes(e, item))" class="boton-pequeño" style="text-align: center;">
-                                    Añadir ID
-
-                                    <div style="font-size: 13px;">
-                                        @item.Id
-                                    </div>
-                                </button>
-                            </div>
-
-                            <div style="padding-left: 15px;">
-                                <a href="/game/@item.Id" target="_blank">
-                                    <img src="@item.Imagenes.Header_460x215" style="width: 230px; height: 112px; display: block;" />
-                                </a>
-                            </div>
-
-                            <div style="width: 100%; padding: 5px 10px; flex: 1;">
-                                @item.Nombre
-                            </div>
-
-                            <div class="admin-busqueda-juego-derecha">
-                                <button @onclick="@(e => ClickearBorrarPendientes(e, item.Id.ToString()))" class="boton-pequeño" style="background-color: var(--fondoPeligro); text-align: center;">
-                                    Borrar
-                                </button>
-                            </div>
-                        </div>
-                    }
+                    Buscando...
                 </div>
             }
-        }
+            else if (string.IsNullOrEmpty(textoBuscador) == false)
+            {
+                if (pestañasBuscador.Values.All(p => p.resultados.Count == 0))
+                {
+                    <div>
+                        No hay resultados
+                    </div>
+                }
+                else
+                {
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        @foreach (var (tipo, info) in ObtenerInfoPestañas())
+                        {
+                            var pestaña = pestañasBuscador[tipo];
+                            <button @onclick="@(e => CambiarPestañas(e, info.Indice))" class="boton-pequeño" style="width: @(info.Ancho)px; text-align: center; box-shadow: none; @pestaña.ObtenerEstilo()">
+                                @info.Titulo (@pestaña.resultados.Count)
+                            </button>
+                        }
+                    </div>
+
+                    foreach (var pestaña in pestañasBuscador.Values.Where(p => p.activa && p.resultados.Count > 0))
+                    {
+                        <div>
+                            @foreach (var item in pestaña.resultados)
+                            {
+                                <hr />
+                                <div class="perfil-flexible-centrado" style="flex-wrap: wrap;">
+                                    <div style="width: 150px; min-width: 150px;">
+                                        <button @onclick="@(e => ClickearIdPendientes(e, item))" class="boton-pequeño" style="text-align: center;">
+                                            Añadir ID
+
+                                            <div style="font-size: 13px;">
+                                                @item.Id
+                                            </div>
+                                        </button>
+                                    </div>
+
+                                    <div style="padding-left: 15px;">
+                                        <a href="/game/@item.Id" target="_blank">
+                                            <img src="@item.Imagenes.Header_460x215" style="width: 230px; height: 112px; display: block;" />
+                                        </a>
+                                    </div>
+
+                                    <div style="width: 100%; padding: 5px 10px; flex: 1;">
+                                        @item.Nombre
+                                    </div>
+
+                                    <div class="admin-busqueda-juego-derecha">
+                                        <button @onclick="@(e => ClickearBorrarPendientes(e, item.Id.ToString()))" class="boton-pequeño" style="background-color: var(--fondoPeligro); text-align: center;">
+                                            Borrar
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+            }
+        </div>
     }
 </div>
 
@@ -280,9 +289,9 @@
     private bool ocupado = false;
 
     private List<PendientesTienda> pendientesTiendas = new List<PendientesTienda>();
-    private List<PendientesSuscripcion> pendientesSuscripcion = new List<PendientesSuscripcion>();
-    private List<PendientesStreaming> pendientesStreaming = new List<PendientesStreaming>();
-    private List<PendientesPlataforma> pendientesPlataforma = new List<PendientesPlataforma>();
+    private List<PendientesSuscripcion> pendientesSuscripciones = new List<PendientesSuscripcion>();
+    private List<PendientesStreaming> pendientesStreamings = new List<PendientesStreaming>();
+    private List<PendientesPlataforma> pendientesPlataformas = new List<PendientesPlataforma>();
 
     private string idTiendaPendiente = null;
     private string idSuscripcionPendiente = null;
@@ -339,7 +348,7 @@
 
         #region Suscripciones
 
-        pendientesSuscripcion.Clear();
+        pendientesSuscripciones.Clear();
 
         foreach (var suscripcion in Suscripciones2.SuscripcionesCargar.GenerarListado())
         {
@@ -351,24 +360,24 @@
 
                 if (pendienteSuscripcion.Pendientes.Count > 0)
                 {
-                    pendientesSuscripcion.Add(pendienteSuscripcion);
+                    pendientesSuscripciones.Add(pendienteSuscripcion);
                 }
             }
         }
 
-        if (string.IsNullOrEmpty(idsPendiente) == true && pendientesSuscripcion?.Count > 0)
+        if (string.IsNullOrEmpty(idsPendiente) == true && pendientesSuscripciones?.Count > 0)
         {
-            nombrePendiente = pendientesSuscripcion[0].Pendientes[0].Nombre;
-            imagenPendiente = pendientesSuscripcion[0].Pendientes[0].Imagen;
-            enlacePendiente = pendientesSuscripcion[0].Pendientes[0].Enlace;
-            idsPendiente = await BaseDatos.Pendientes.Buscar.IDs(pendientesSuscripcion[0].Pendientes[0].Nombre);
+            nombrePendiente = pendientesSuscripciones[0].Pendientes[0].Nombre;
+            imagenPendiente = pendientesSuscripciones[0].Pendientes[0].Imagen;
+            enlacePendiente = pendientesSuscripciones[0].Pendientes[0].Enlace;
+            idsPendiente = await BaseDatos.Pendientes.Buscar.IDs(pendientesSuscripciones[0].Pendientes[0].Nombre);
         }
 
         #endregion
 
         #region Streaming
 
-        pendientesStreaming.Clear();
+        pendientesStreamings.Clear();
 
         foreach (var streaming in Streaming2.StreamingCargar.GenerarListado())
         {
@@ -378,23 +387,23 @@
 
             if (pendienteStreaming.Pendientes.Count > 0)
             {
-                pendientesStreaming.Add(pendienteStreaming);
+                pendientesStreamings.Add(pendienteStreaming);
             }
         }
 
-        if (string.IsNullOrEmpty(idsPendiente) == true && pendientesStreaming?.Count > 0)
+        if (string.IsNullOrEmpty(idsPendiente) == true && pendientesStreamings?.Count > 0)
         {
-            nombrePendiente = pendientesStreaming[0].Pendientes[0].Nombre;
-            imagenPendiente = pendientesStreaming[0].Pendientes[0].Imagen;
-            enlacePendiente = pendientesStreaming[0].Pendientes[0].Enlace;
-            idsPendiente = await BaseDatos.Pendientes.Buscar.IDs(pendientesStreaming[0].Pendientes[0].Nombre);
+            nombrePendiente = pendientesStreamings[0].Pendientes[0].Nombre;
+            imagenPendiente = pendientesStreamings[0].Pendientes[0].Imagen;
+            enlacePendiente = pendientesStreamings[0].Pendientes[0].Enlace;
+            idsPendiente = await BaseDatos.Pendientes.Buscar.IDs(pendientesStreamings[0].Pendientes[0].Nombre);
         }
 
         #endregion
 
         #region Plataformas
 
-        pendientesPlataforma.Clear();
+        pendientesPlataformas.Clear();
 
         foreach (var plataforma in Plataformas2.PlataformasCargar.GenerarListado())
         {
@@ -404,16 +413,16 @@
 
             if (pendientePlataforma.Pendientes.Count > 0)
             {
-                pendientesPlataforma.Add(pendientePlataforma);
+                pendientesPlataformas.Add(pendientePlataforma);
             }
         }
 
-        if (string.IsNullOrEmpty(idsPendiente) == true && pendientesPlataforma?.Count > 0)
+        if (string.IsNullOrEmpty(idsPendiente) == true && pendientesPlataformas?.Count > 0)
         {
-            nombrePendiente = pendientesPlataforma[0].Pendientes[0].Nombre;
-            imagenPendiente = pendientesPlataforma[0].Pendientes[0].Imagen;
-            enlacePendiente = pendientesPlataforma[0].Pendientes[0].Enlace;
-            idsPendiente = await BaseDatos.Pendientes.Buscar.IDs(pendientesPlataforma[0].Pendientes[0].Nombre);
+            nombrePendiente = pendientesPlataformas[0].Pendientes[0].Nombre;
+            imagenPendiente = pendientesPlataformas[0].Pendientes[0].Imagen;
+            enlacePendiente = pendientesPlataformas[0].Pendientes[0].Enlace;
+            idsPendiente = await BaseDatos.Pendientes.Buscar.IDs(pendientesPlataformas[0].Pendientes[0].Nombre);
         }
 
         #endregion
@@ -670,7 +679,7 @@
 
         if (string.IsNullOrEmpty(idSuscripcionPendiente) == false)
         {
-            foreach (var pendiente in pendientesSuscripcion)
+            foreach (var pendiente in pendientesSuscripciones)
             {
                 if (pendiente.Suscripcion.Id.ToString() == idSuscripcionPendiente)
                 {
@@ -697,7 +706,7 @@
         {
             await BaseDatos.Pendientes.Actualizar.DescartarStreaming(idStreamingPendiente, enlace);
 
-            foreach (var pendiente in pendientesStreaming)
+            foreach (var pendiente in pendientesStreamings)
             {
                 if (pendiente.Streaming.Id.ToString() == idStreamingPendiente)
                 {
@@ -714,7 +723,7 @@
 
             await BaseDatos.Pendientes.Actualizar.DescartarPlataforma(idPlataformaPendiente, enlace);
 
-            foreach (var pendiente in pendientesPlataforma)
+            foreach (var pendiente in pendientesPlataformas)
             {
                 if (pendiente.Plataforma.Id.ToString() == idPlataformaPendiente)
                 {
@@ -769,7 +778,7 @@
         {
             await BaseDatos.Pendientes.Actualizar.Suscripcion(Suscripciones2.SuscripcionesCargar.DevolverSuscripcion(idSuscripcionPendiente).TablaPendientes, "temporal" + idSuscripcionPendiente, enlace, nombrePendiente, imagenPendiente, Herramientas.Listados.Generar(idsPendiente));
 
-            foreach (var pendiente in pendientesSuscripcion)
+            foreach (var pendiente in pendientesSuscripciones)
             {
                 if (pendiente.Suscripcion.Id.ToString() == idSuscripcionPendiente)
                 {
@@ -784,7 +793,7 @@
         {
             await BaseDatos.Pendientes.Actualizar.Streaming(idStreamingPendiente, enlace, int.Parse(idsPendiente));
 
-            foreach (var pendiente in pendientesStreaming)
+            foreach (var pendiente in pendientesStreamings)
             {
                 if (pendiente.Streaming.Id.ToString() == idStreamingPendiente)
                 {
@@ -819,7 +828,7 @@
                 await BaseDatos.Pendientes.Actualizar.PlataformaEA(enlace, int.Parse(idsPendiente));
             }
 
-            foreach (var pendiente in pendientesPlataforma)
+            foreach (var pendiente in pendientesPlataformas)
             {
                 if (pendiente.Plataforma.Id.ToString() == idPlataformaPendiente)
                 {

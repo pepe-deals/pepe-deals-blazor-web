@@ -323,7 +323,7 @@ namespace BaseDatos.Pendientes
 				{
 					return await conexion.ExecuteAsync(sqlActualizar, new
 					{
-						descartado = "si",
+						descartado = true,
 						enlace
 					}, transaction: sentencia);
 				});

@@ -360,9 +360,10 @@ namespace APIs.EA
 								{
 									string idJuegosTexto = fila.IdJuegos;
 									string descartado = fila.Descartado;
+
 									bool encontrado = false;
 
-									if (string.IsNullOrEmpty(idJuegosTexto) == false && idJuegosTexto != "0" && descartado == "no")
+									if (string.IsNullOrEmpty(idJuegosTexto) == false && idJuegosTexto != "0" && (string.IsNullOrEmpty(descartado) == true || descartado.ToLower() == "false"))
 									{
 										encontrado = true;
 
@@ -411,7 +412,7 @@ namespace APIs.EA
 										}
 									}
 
-									if (descartado == "si")
+									if (descartado == "True")
 									{
 										encontrado = true;
 									}

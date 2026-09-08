@@ -64,10 +64,11 @@ namespace BaseDatos.Pendientes
 			// Tiendas
 			foreach (var tienda in Tiendas2.TiendasCargar.GenerarListado())
 			{
-				if (tienda.Id != APIs.Steam.Tienda.Generar().Id &&
+				if (tienda.AdminUso == true &&
+					tienda.Id != APIs.Steam.Tienda.Generar().Id &&
 					tienda.Id != APIs.Steam.Tienda.GenerarBundles().Id)
 				{
-					sentencias.Add($"SELECT COUNT(*) FROM tienda{tienda.Id} WHERE (idJuegos = '0' AND descartado = 'no') OR (idJuegos IS NULL AND descartado IS NULL)");
+					sentencias.Add($"SELECT COUNT(*) FROM tienda{tienda.Id} WHERE (idJuegos = '0' AND descartado = 0) OR (idJuegos = '0' AND descartado IS NULL) OR (idJuegos IS NULL AND descartado IS NULL)");
 				}
 			}
 
@@ -111,7 +112,7 @@ namespace BaseDatos.Pendientes
 			}
 			catch (Exception ex)
 			{
-				BaseDatos.Errores.Insertar.Mensaje("Pendientes Total Cantidad", ex);
+				BaseDatos.Errores.Insertar.Mensaje("Pendientes Total Cantidad", ex, false);
 			}
 
 			return 0;
@@ -120,7 +121,7 @@ namespace BaseDatos.Pendientes
 		public static async Task<List<Pendiente>> Tienda(string tiendaId)
         {
 			string tabla = $"tienda{tiendaId}";
-			string sql = $@"SELECT enlace, nombre, imagen FROM {tabla} WHERE (idJuegos = '0' AND descartado = 'no') OR (idJuegos IS NULL AND descartado IS NULL)";
+			string sql = $@"SELECT enlace, nombre, imagen FROM {tabla} WHERE (idJuegos = '0' AND descartado = 0) OR (idJuegos = '0' AND descartado IS NULL) OR (idJuegos IS NULL AND descartado IS NULL)";
 
 			try
 			{
@@ -221,7 +222,7 @@ namespace BaseDatos.Pendientes
 			{
 				return await Herramientas.BaseDatos.Select(async conexion =>
 				{
-					return await conexion.QueryFirstOrDefaultAsync<Pendiente>($"SELECT TOP 1 * FROM tienda{tiendaId} WHERE (idJuegos='0' AND descartado='no') OR (idJuegos IS NULL AND descartado IS NULL)");
+					return await conexion.QueryFirstOrDefaultAsync<Pendiente>($"SELECT TOP 1 * FROM tienda{tiendaId} WHERE (idJuegos = '0' AND descartado = 0) OR (idJuegos = '0' AND descartado IS NULL) OR (idJuegos IS NULL AND descartado IS NULL)");
 				});
 			}
 			catch (Exception ex)

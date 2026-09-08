@@ -38,10 +38,10 @@ namespace APIs.Gameseal
 			{
 				resultados = await Herramientas.Impact.ObtenerCatalogo("18613");
 			}
-			//else if (region == TiendaRegion.EstadosUnidos)
-			//{
-			//	resultados = await Herramientas.Impact.ObtenerCatalogo("12134");
-			//}
+			else if (region == TiendaRegion.EstadosUnidos)
+			{
+				resultados = await Herramientas.Impact.ObtenerCatalogo("24509");
+			}
 
 			if (resultados?.Count > 0)
 			{
@@ -53,7 +53,11 @@ namespace APIs.Gameseal
 					{
 						JuegoDRM drmJuego = JuegoDRM.NoEspecificado;
 
-						if (resultado.Nombre.Contains("Steam Key - EU") == true || resultado.Nombre.Contains("Steam Key - GLOBAL") == true)
+						if (region == TiendaRegion.Europa && resultado.Nombre.Contains("Steam Key - EU") == true || resultado.Nombre.Contains("Steam Key - GLOBAL") == true)
+						{
+							drmJuego = JuegoDRM.Steam;
+						}
+						else if (region == TiendaRegion.EstadosUnidos && resultado.Nombre.Contains("Steam Key - NA") == true || resultado.Nombre.Contains("Steam Key - GLOBAL") == true)
 						{
 							drmJuego = JuegoDRM.Steam;
 						}
@@ -67,12 +71,18 @@ namespace APIs.Gameseal
 								nombre = nombre.Replace("Steam Key - EU/NA", null);
 								nombre = nombre.Replace("Steam Key - EU", null);
 								nombre = nombre.Replace("Steam Key - GLOBAL", null);
+								nombre = nombre.Replace("Steam Key - NA/LATIN AMERICA", null);
+								nombre = nombre.Replace("Steam Key - NA", null);
 								nombre = nombre.Replace("(PC)", null);
 								nombre = nombre.Replace("(MAC)", null);
 								nombre = nombre.Replace("(DLC)", null);
 								nombre = nombre.Trim();
 
 								string enlaceJuego = resultado.Url;
+								enlaceJuego = enlaceJuego.Replace("%3Fcurrency%3DUSD&intsrc=APIG_24509", null);
+								enlaceJuego = enlaceJuego.Replace("%3Fcurrency%3DEUR&intsrc=APIG_18613", null);
+								enlaceJuego = enlaceJuego.Replace("&intsrc=APIG_24509", null);
+								enlaceJuego = enlaceJuego.Replace("&intsrc=APIG_18613", null);
 
 								string imagen = resultado.ImagenUrl;
 

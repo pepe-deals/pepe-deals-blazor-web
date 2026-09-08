@@ -485,11 +485,7 @@ namespace Tareas
 					{
 						TimeSpan siguienteComprobacion = TimeSpan.Zero;
 
-						if (streaming.Id == APIs.GOG.Streaming.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(5);
-						}
-						else if (streaming.Id == APIs.Boosteroid.Streaming.Generar().Id)
+						if (streaming.Id == APIs.Boosteroid.Streaming.Generar().Id)
 						{
 							siguienteComprobacion = TimeSpan.FromHours(4);
 						}
@@ -506,11 +502,7 @@ namespace Tareas
 							{
 								try
 								{
-									if (streaming.Id == APIs.GOG.Streaming.Generar().Id)
-									{
-										await APIs.GOG.Streaming.Buscar();
-									}
-									else if (streaming.Id == APIs.Boosteroid.Streaming.Generar().Id)
+									if (streaming.Id == APIs.Boosteroid.Streaming.Generar().Id)
 									{
 										await APIs.Boosteroid.Streaming.Buscar();
 									}
@@ -614,6 +606,10 @@ namespace Tareas
 							siguienteComprobacion = TimeSpan.FromHours(6);
 						}
 						else if (tienda.Id == APIs.Loaded.Tienda.Generar().Id)
+						{
+							siguienteComprobacion = TimeSpan.FromHours(6);
+						}
+						else if (tienda.Id == APIs.Gameseal.Tienda.Generar().Id)
 						{
 							siguienteComprobacion = TimeSpan.FromHours(6);
 						}
