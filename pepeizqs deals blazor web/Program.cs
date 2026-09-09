@@ -466,7 +466,11 @@ app.UseStaticFiles(new StaticFileOptions
 
 		if (ruta.EndsWith(".js") || ruta.EndsWith(".css"))
 		{
-			contexto.Context.Response.Headers.CacheControl = "public, max-age=31536000, immutable";
+			bool esLibreriaTerceros = contexto.File.PhysicalPath?.Contains($"{Path.DirectorySeparatorChar}lib{Path.DirectorySeparatorChar}") == true;
+
+			contexto.Context.Response.Headers.CacheControl = esLibreriaTerceros
+				? "public, max-age=31536000, immutable"
+				: "public, max-age=0, must-revalidate";
 		}
 		else if (ruta.EndsWith(".woff2") || ruta.EndsWith(".woff") || ruta.EndsWith(".ttf"))
 		{
@@ -631,63 +635,6 @@ app.MapGet("extension/epic4/{slug}/{region}/{noOficial}/{marketplace}/{clave}/",
 	if (clave == claveExtension)
 	{
 		BaseDatos.Extension.Extension2 juego = await BaseDatos.Extension.Buscar.EpicGames4(region, noOficial, marketplace, slug);
-
-		if (juego?.Id > 0)
-		{
-			return Results.Json(juego);
-		}
-	}
-
-	return Results.NotFound();
-});
-
-app.MapGet("extension/steam3/{id}/{region}/{clave}/", async (int id, string region, string clave) =>
-{
-	#nullable disable
-
-	string claveExtension = builder.Configuration.GetValue<string>("Extension:Clave");
-
-	if (clave == claveExtension)
-	{
-		BaseDatos.Extension.Extension juego = await BaseDatos.Extension.Buscar.Steam3(region, id.ToString());
-
-		if (juego?.Id > 0)
-		{
-			return Results.Json(juego);
-		}
-	}
-
-	return Results.NotFound();
-});
-
-app.MapGet("extension/gog3/{slug}/{region}/{clave}/", async (string slug, string region, string clave) =>
-{
-	#nullable disable
-
-	string claveExtension = builder.Configuration.GetValue<string>("Extension:Clave");
-
-	if (clave == claveExtension)
-	{
-		BaseDatos.Extension.Extension juego = await BaseDatos.Extension.Buscar.Gog3(region, slug);
-
-		if (juego?.Id > 0)
-		{
-			return Results.Json(juego);
-		}
-	}
-
-	return Results.NotFound();
-});
-
-app.MapGet("extension/epic3/{slug}/{region}/{clave}/", async (string slug, string region, string clave) =>
-{
-	#nullable disable
-
-	string claveExtension = builder.Configuration.GetValue<string>("Extension:Clave");
-
-	if (clave == claveExtension)
-	{
-		BaseDatos.Extension.Extension juego = await BaseDatos.Extension.Buscar.EpicGames3(region, slug);
 
 		if (juego?.Id > 0)
 		{

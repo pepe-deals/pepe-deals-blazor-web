@@ -9,7 +9,7 @@
 	 @onmouseleave="@(() => DesactivarTooltip($"trigger-{idTooltip}"))" style="width: 100%; display: flex; align-items: center; flex: 0 0 400px;">
 	<a href="/news/@noticia.Id/@Herramientas.EnlaceAdaptador.Nombre(titulo)/" style="cursor: pointer; text-decoration: none; color: var(--colorTexto); height: 100%;">
 		<div class="cnoticia-expandir" title="@titulo">
-			<div style="display: flex; align-items: center; gap: 15px; background-color: var(--fondoBotonPequeño); padding: 15px 20px; width: 100%; box-sizing: border-box;">
+			<div style="display: flex; align-items: center; gap: 15px; background-color: rgba(0,0,0,.5); padding: 15px 20px; width: 100%; box-sizing: border-box;">
 				@{
 					string icono = string.Empty;
 					string etiqueta = string.Empty;

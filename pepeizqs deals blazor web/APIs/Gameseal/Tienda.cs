@@ -22,10 +22,56 @@ namespace APIs.Gameseal
 				Color = "#558205",
 				AdminUso = true,
 				UsuarioUso = true,
-				Regiones = new List<TiendaRegion> { TiendaRegion.Europa }
+				Regiones = new List<TiendaRegion> { TiendaRegion.Europa, TiendaRegion.EstadosUnidos }
 			};
 
 			return tienda;
+		}
+
+		public static string LimpiarEnlace(string enlace)
+		{
+			if (string.IsNullOrEmpty(enlace) == true)
+			{
+				return enlace;
+			}
+
+			int posicionU = enlace.IndexOf("&u=", StringComparison.OrdinalIgnoreCase);
+
+			if (posicionU == -1)
+			{
+				return enlace;
+			}
+
+			string despuesDeU = enlace[(posicionU + 3)..];
+			int posicionAmpersand = despuesDeU.IndexOf('&');
+			string urlCodificada = posicionAmpersand >= 0 ? despuesDeU[..posicionAmpersand] : despuesDeU;
+			string urlDecodificada = WebUtility.UrlDecode(urlCodificada);
+
+			int posicionInterrogacion = urlDecodificada.IndexOf('?');
+
+			if (posicionInterrogacion >= 0)
+			{
+				urlDecodificada = urlDecodificada[..posicionInterrogacion];
+			}
+
+			return urlDecodificada;
+		}
+
+		public static string Referido(TiendaRegion region, string enlace)
+		{
+			if (string.IsNullOrEmpty(enlace) == true)
+			{
+				return enlace;
+			}
+
+			string campaignId = region == TiendaRegion.EstadosUnidos ? "2121715" : "3035464";
+			string moneda = region == TiendaRegion.EstadosUnidos ? "usd" : "eur";
+			string intsrc = region == TiendaRegion.EstadosUnidos ? "APIG_18613" : "APIG_24509";
+
+			string destino = $"{enlace}?__currency={moneda}";
+			string destinoCodificado = WebUtility.UrlEncode(destino);
+
+			return $"https://impact.gameseal.com/c/1382810/{campaignId}/25825?u={destinoCodificado}&intsrc={intsrc}";
 		}
 
 		public static async Task BuscarOfertas(TiendaRegion region)
@@ -78,11 +124,7 @@ namespace APIs.Gameseal
 								nombre = nombre.Replace("(DLC)", null);
 								nombre = nombre.Trim();
 
-								string enlaceJuego = resultado.Url;
-								enlaceJuego = enlaceJuego.Replace("%3Fcurrency%3DUSD&intsrc=APIG_24509", null);
-								enlaceJuego = enlaceJuego.Replace("%3Fcurrency%3DEUR&intsrc=APIG_18613", null);
-								enlaceJuego = enlaceJuego.Replace("&intsrc=APIG_24509", null);
-								enlaceJuego = enlaceJuego.Replace("&intsrc=APIG_18613", null);
+								string enlaceJuego = LimpiarEnlace(resultado.Url);
 
 								string imagen = resultado.ImagenUrl;
 

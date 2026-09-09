@@ -146,55 +146,6 @@ namespace BaseDatos.Extension
 			return await GenerarDatos2(region, buscar, noOficial, marketplace, "Steam " + id);
 		}
 
-		public static async Task<Extension> Steam3(string region, string id)
-		{
-			string precioMinimosHistoricos = string.Empty;
-			string precioActualesTiendas = string.Empty;
-
-			if (region == "eu")
-			{
-				precioMinimosHistoricos = "precioMinimosHistoricos";
-				precioActualesTiendas = "precioActualesTiendas";
-			}
-			else if (region == "us")
-			{
-				precioMinimosHistoricos = "precioMinimosHistoricosUS";
-				precioActualesTiendas = "precioActualesTiendasUS";
-			}
-
-			string buscar = $@"SELECT j.id, j.nombre, j.{precioMinimosHistoricos}, j.{precioActualesTiendas}, 
-(
-	SELECT b.tienda, b.nombre, b.enlace
-	FROM bundles b
-	INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
-	WHERE bj.juegoId = j.id
-		AND b.fechaEmpieza <= GETDATE()
-		AND b.fechaTermina >= GETDATE()
-	FOR JSON PATH
-) AS bundles2,
-(
-	SELECT COUNT(*)
-	FROM bundles b
-	INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
-	WHERE bj.juegoId = j.id
-		AND b.fechaTermina < GETDATE()
-) AS bundlesPasados,
-(
-    SELECT g.*, g.gratis AS Tipo
-    FROM gratis g
-    WHERE g.juegoId = j.id
-    FOR JSON PATH
-) as gratis2, 
-(
-    SELECT s.*, s.suscripcion AS Tipo
-    FROM suscripciones s
-    WHERE s.juegoId = j.id
-    FOR JSON PATH
-) as suscripciones2, j.idSteam, j.idGOG, j.slugGOG, j.slugEpic FROM juegos j WHERE idSteam='" + id + "'";
-
-			return await GenerarDatos(region, buscar, "Steam " + id);
-		}
-
 		public static async Task<Extension2> Gog4(string region, bool noOficial, bool marketplace, string slug)
 		{
 			string precioMinimosHistoricos = string.Empty;
@@ -264,48 +215,6 @@ namespace BaseDatos.Extension
 			) as suscripciones2, j.idSteam, j.idGOG, j.slugGOG, j.slugEpic FROM juegos j WHERE slugGOG='" + slug + "'";
 
 			return await GenerarDatos2(region, buscar, noOficial, marketplace, "GOG " + slug);
-		}
-
-		public static async Task<Extension> Gog3(string region, string slug)
-		{
-			string precioMinimosHistoricos = string.Empty;
-			string precioActualesTiendas = string.Empty;
-
-			if (region == "eu")
-			{
-				precioMinimosHistoricos = "precioMinimosHistoricos";
-				precioActualesTiendas = "precioActualesTiendas";
-			}
-			else if (region == "us")
-			{
-				precioMinimosHistoricos = "precioMinimosHistoricosUS";
-				precioActualesTiendas = "precioActualesTiendasUS";
-			}
-
-			string buscar = $@"SELECT j.id, j.nombre, j.{precioMinimosHistoricos}, j.{precioActualesTiendas},
-(
-	SELECT b.tienda, b.nombre, b.enlace
-	FROM bundles b
-	INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
-	WHERE bj.juegoId = j.id
-		AND b.fechaEmpieza <= GETDATE()
-		AND b.fechaTermina >= GETDATE()
-	FOR JSON PATH
-) AS bundles2,
-(
-    SELECT g.*, g.gratis AS Tipo
-    FROM gratis g
-    WHERE g.juegoId = j.id
-    FOR JSON PATH
-) as gratis2, 
-(
-    SELECT s.*, s.suscripcion AS Tipo
-    FROM suscripciones s
-    WHERE s.juegoId = j.id
-    FOR JSON PATH
-) as suscripciones2, j.idSteam, j.idGOG, j.slugGOG, j.slugEpic FROM juegos j WHERE slugGOG='" + slug + "'";
-
-			return await GenerarDatos(region, buscar, "GOG " + slug);
 		}
 
 		public static async Task<Extension2> EpicGames4(string region, bool noOficial, bool marketplace, string slug)
@@ -379,187 +288,6 @@ namespace BaseDatos.Extension
 			return await GenerarDatos2(region, buscar, noOficial, marketplace, "Epic " + slug);
 		}
 
-		public static async Task<Extension> EpicGames3(string region, string slug)
-		{
-			string precioMinimosHistoricos = string.Empty;
-			string precioActualesTiendas = string.Empty;
-
-			if (region == "eu")
-			{
-				precioMinimosHistoricos = "precioMinimosHistoricos";
-				precioActualesTiendas = "precioActualesTiendas";
-			}
-			else if (region == "us")
-			{
-				precioMinimosHistoricos = "precioMinimosHistoricosUS";
-				precioActualesTiendas = "precioActualesTiendasUS";
-			}
-
-			string buscar = $@"SELECT j.id, j.nombre, j.{precioMinimosHistoricos}, j.{precioActualesTiendas},
-(
-	SELECT b.tienda, b.nombre, b.enlace
-	FROM bundles b
-	INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
-	WHERE bj.juegoId = j.id
-		AND b.fechaEmpieza <= GETDATE()
-		AND b.fechaTermina >= GETDATE()
-	FOR JSON PATH
-) AS bundles2,
-(
-    SELECT g.*, g.gratis AS Tipo
-    FROM gratis g
-    WHERE g.juegoId = j.id
-    FOR JSON PATH
-) as gratis2, 
-(
-    SELECT s.*, s.suscripcion AS Tipo
-    FROM suscripciones s
-    WHERE s.juegoId = j.id
-    FOR JSON PATH
-) as suscripciones2, j.idSteam, j.idGOG, j.slugGOG, j.slugEpic FROM juegos j WHERE slugEpic='" + slug + "'";
-
-			return await GenerarDatos(region, buscar, "Epic " + slug);
-		}
-
-		private static async Task<Extension> GenerarDatos(string region, string buscar, string id)
-		{
-			if (buscar == null)
-			{
-				return null;
-			}
-
-			try
-			{
-				var fila2 = await Herramientas.BaseDatos.Select(async conexion =>
-				{
-					return await conexion.QueryFirstOrDefaultAsync<dynamic>(buscar);
-				});
-
-				IDictionary<string, object> fila = (IDictionary<string, object>)fila2;
-
-				Extension extension = new Extension
-				{
-					MinimosHistoricos = new List<ExtensionPrecio>(),
-					PreciosActuales = new List<ExtensionPrecio>(),
-					Bundles = new List<ExtensionBundle>(),
-					Gratis = new List<ExtensionGratis>(),
-					Suscripciones = new List<ExtensionSuscripcion>()
-				};
-
-				if (fila == null)
-				{
-					return null;
-				}
-
-				string CogerString(string columna)
-				{
-					return fila.TryGetValue(columna, out var v) && v != null ? v.ToString() : null;
-				}
-
-				int CogerInt(string columna)
-				{
-					return fila.TryGetValue(columna, out var v) && v != null ? Convert.ToInt32(v) : 0;
-				}
-
-				extension.Id = CogerInt("id");
-				extension.Nombre = CogerString("nombre");
-				extension.IdSteam = CogerInt("idSteam");
-				extension.IdGOG = CogerInt("idGOG");
-				extension.SlugGOG = CogerString("slugGOG");
-				extension.SlugEpic = CogerString("slugEpic");
-
-
-				if (region == "eu")
-				{
-					CargarPrecios(
-						CogerString("precioMinimosHistoricos"), extension.MinimosHistoricos
-					);
-
-					CargarPrecios(
-						CogerString("precioActualesTiendas"), extension.PreciosActuales
-					);
-				}
-				else if (region == "us")
-				{
-					CargarPrecios(
-						CogerString("precioMinimosHistoricosUS"), extension.MinimosHistoricos
-					);
-
-					CargarPrecios(
-						CogerString("precioActualesTiendasUS"), extension.PreciosActuales
-					);
-				}
-				
-				string jsonBundles = CogerString("bundles2");
-				if (string.IsNullOrEmpty(jsonBundles) == false)
-				{
-					JsonSerializerOptions opciones = new JsonSerializerOptions
-					{
-						PropertyNameCaseInsensitive = true,
-						UnknownTypeHandling = JsonUnknownTypeHandling.JsonElement
-					};
-
-					extension.Bundles = JsonSerializer.Deserialize<List<ExtensionBundle>>(jsonBundles, opciones);
-				}
-
-				extension.BundlesPasados = CogerInt("bundlesPasados");
-
-				string jsonGratis = CogerString("gratis2");
-				if (string.IsNullOrEmpty(jsonGratis) == false)
-				{
-					List<JuegoGratisJson> lista = JsonSerializer.Deserialize<List<JuegoGratisJson>>(jsonGratis);
-
-					if (lista?.Count > 0)
-					{
-						extension.Gratis = new List<ExtensionGratis>();
-
-						foreach (var gratis in lista)
-						{
-							gratis.Enlace = Herramientas.EnlaceAcortador.Generar(gratis.Enlace, gratis.Tipo, false, false);
-
-							extension.Gratis.Add(new ExtensionGratis
-							{
-								Datos = gratis,
-								NombreGratis = Gratis2.GratisCargar.DevolverGratis(gratis.Tipo).Nombre,
-								IconoGratis = Gratis2.GratisCargar.DevolverGratis(gratis.Tipo).ImagenIcono
-							});
-						}
-					}
-				}
-
-				var jsonSuscripciones = CogerString("suscripciones2");
-				if (string.IsNullOrEmpty(jsonSuscripciones) == false)
-				{
-					var lista = JsonSerializer.Deserialize<List<JuegoSuscripcionJson>>(jsonSuscripciones);
-
-					if (lista?.Count > 0)
-					{
-						extension.Suscripciones = new List<ExtensionSuscripcion>();
-
-						foreach (var suscripcion in lista)
-						{
-							suscripcion.Enlace = Herramientas.EnlaceAcortador.Generar(suscripcion.Enlace, suscripcion.Tipo, false, false);
-
-							extension.Suscripciones.Add(new ExtensionSuscripcion
-							{
-								Datos = suscripcion,
-								NombreSuscripcion = Suscripciones2.SuscripcionesCargar.DevolverSuscripcion(suscripcion.Tipo).Nombre,
-								IconoSuscripcion = Suscripciones2.SuscripcionesCargar.DevolverSuscripcion(suscripcion.Tipo).ImagenIcono
-							});
-						}
-					}
-				}
-
-				return extension;
-			}
-			catch (Exception ex)
-			{
-				BaseDatos.Errores.Insertar.Mensaje("Extension Generar " + id, ex, false);
-			}
-
-			return null;
-		}
-
 		private static async Task<Extension2> GenerarDatos2(string region, string sentenciaSql, bool noOficial, bool marketplace, string id)
 		{
 			if (sentenciaSql == null)
@@ -622,64 +350,64 @@ namespace BaseDatos.Extension
 				if (region == "eu")
 				{
 					CargarPrecios(
-						CogerString("precioMinimosHistoricos"), extension.MinimosHistoricosOficial
+						TiendaRegion.Europa, CogerString("precioMinimosHistoricos"), extension.MinimosHistoricosOficial
 					);
 
 					CargarPrecios(
-						CogerString("precioActualesTiendas"), extension.PreciosActualesOficial
+						TiendaRegion.Europa, CogerString("precioActualesTiendas"), extension.PreciosActualesOficial
 					);
 
 					if (noOficial == true)
 					{
 						CargarPrecios(
-							CogerString("preciosHistoricosNoOficialesEU"), extension.MinimosHistoricosNoOficial
+							TiendaRegion.Europa, CogerString("preciosHistoricosNoOficialesEU"), extension.MinimosHistoricosNoOficial
 						);
 
 						CargarPrecios(
-							CogerString("preciosActualesNoOficialesEU"), extension.PreciosActualesNoOficial
+							TiendaRegion.Europa, CogerString("preciosActualesNoOficialesEU"), extension.PreciosActualesNoOficial
 						);
 					}
 
 					if (marketplace == true)
 					{
 						CargarPrecios(
-							CogerString("preciosHistoricosMarketplacesEU"), extension.MinimosHistoricosMarketplaces
+							TiendaRegion.Europa, CogerString("preciosHistoricosMarketplacesEU"), extension.MinimosHistoricosMarketplaces
 						);
 
 						CargarPrecios(
-							CogerString("preciosActualesMarketplacesEU"), extension.PreciosActualesMarketplaces
+							TiendaRegion.Europa, CogerString("preciosActualesMarketplacesEU"), extension.PreciosActualesMarketplaces
 						);
 					}
 				}
 				else if (region == "us")
 				{
 					CargarPrecios(
-						CogerString("precioMinimosHistoricosUS"), extension.MinimosHistoricosOficial
+						TiendaRegion.EstadosUnidos, CogerString("precioMinimosHistoricosUS"), extension.MinimosHistoricosOficial
 					);
 
 					CargarPrecios(
-						CogerString("precioActualesTiendasUS"), extension.PreciosActualesOficial
+						TiendaRegion.EstadosUnidos, CogerString("precioActualesTiendasUS"), extension.PreciosActualesOficial
 					);
 
 					if (noOficial == true)
 					{
 						CargarPrecios(
-							CogerString("preciosHistoricosNoOficialesUS"), extension.MinimosHistoricosNoOficial
+							TiendaRegion.EstadosUnidos, CogerString("preciosHistoricosNoOficialesUS"), extension.MinimosHistoricosNoOficial
 						);
 
 						CargarPrecios(
-							CogerString("preciosActualesNoOficialesUS"), extension.PreciosActualesNoOficial
+							TiendaRegion.EstadosUnidos, CogerString("preciosActualesNoOficialesUS"), extension.PreciosActualesNoOficial
 						);
 					}
 
 					if (marketplace == true)
 					{
 						CargarPrecios(
-							CogerString("preciosHistoricosMarketplacesUS"), extension.MinimosHistoricosMarketplaces
+							TiendaRegion.EstadosUnidos, CogerString("preciosHistoricosMarketplacesUS"), extension.MinimosHistoricosMarketplaces
 						);
 
 						CargarPrecios(
-							CogerString("preciosActualesMarketplacesUS"), extension.PreciosActualesMarketplaces
+							TiendaRegion.EstadosUnidos, CogerString("preciosActualesMarketplacesUS"), extension.PreciosActualesMarketplaces
 						);
 					}
 				}
@@ -754,7 +482,7 @@ namespace BaseDatos.Extension
 			return null;
 		}
 
-		private static void CargarPrecios(string json, List<ExtensionPrecio> destino)
+		private static void CargarPrecios(TiendaRegion region,string json, List<ExtensionPrecio> destino)
 		{
 			if (string.IsNullOrEmpty(json) == true)
 			{
@@ -789,7 +517,7 @@ namespace BaseDatos.Extension
 					continue;
 				}
 
-				precio.Enlace = Herramientas.EnlaceAcortador.Generar(TiendaRegion.Europa, precio.Enlace, precio.Tienda, false, false);
+				precio.Enlace = Herramientas.EnlaceAcortador.Generar(region, precio.Enlace, precio.Tienda, false, false);
 
 				destino.Add(new ExtensionPrecio
 				{

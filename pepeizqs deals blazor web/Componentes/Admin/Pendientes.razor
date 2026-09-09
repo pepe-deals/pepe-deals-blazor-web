@@ -177,23 +177,20 @@
                         </a>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; background-color: rgba(0,0,0,.1); padding: 10px;">
-                        @if (string.IsNullOrEmpty(idsPendiente) == false)
-                        {
-                            if (seleccionados?.Count > 0)
+                    @if (string.IsNullOrEmpty(idsPendiente) == false && seleccionados?.Count > 0)
+                    {
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; background-color: rgba(0,0,0,.2); padding: 10px;">
+                            @foreach (var resultado in seleccionados)
                             {
-                                foreach (var resultado in seleccionados)
+                                if (resultado != null)
                                 {
-                                    if (resultado != null)
-                                    {
-                                        <a href="/game/@resultado.Id" target="_blank" style="text-decoration: none;">
-                                            <img src="@resultado.Imagenes.Header_460x215" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
-                                        </a>
-                                    }
+                                    <a href="/game/@resultado.Id" target="_blank" style="text-decoration: none;">
+                                        <img src="@resultado.Imagenes.Header_460x215" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+                                    </a>
                                 }
                             }
-                        }
-                    </div>
+                        </div>
+                    }  
                 </div>
             </div>
         </div>

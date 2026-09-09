@@ -475,7 +475,7 @@ namespace BaseDatos.Tiendas
 						IF @nuevaId IS NULL SET @nuevaId = 0;
 
 						INSERT INTO {esquema} (enlace, nombre, imagen, idJuegos, descartado)
-						VALUES (@Enlace, @Nombre, @Imagen, @nuevaId, false);
+						VALUES (@Enlace, @Nombre, @Imagen, @nuevaId, 0);
 					END;
 					";
 

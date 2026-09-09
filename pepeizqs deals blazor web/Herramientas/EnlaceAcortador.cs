@@ -140,6 +140,18 @@ namespace Herramientas
 					{
 						enlace = APIs.Gamesporium.Tienda.Referido(enlace);
 					}
+					else if (tienda == APIs.Yuplay.Tienda.Generar().Id)
+					{
+						enlace = APIs.Yuplay.Tienda.Referido(enlace);
+					}
+					else if (tienda == APIs.Loaded.Tienda.Generar().Id)
+					{
+						enlace = APIs.Loaded.Tienda.Referido(region,enlace);
+					}
+					else if (tienda == APIs.Gameseal.Tienda.Generar().Id)
+					{
+						enlace = APIs.Gameseal.Tienda.Referido(region, enlace);
+					}
 				}
 			}
 			

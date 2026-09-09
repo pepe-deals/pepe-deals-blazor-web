@@ -28,6 +28,52 @@ namespace APIs.Loaded
 			return tienda;
 		}
 
+		public static string LimpiarEnlace(string enlace)
+		{
+			if (string.IsNullOrEmpty(enlace) == true)
+			{
+				return enlace;
+			}
+
+			int posicionU = enlace.IndexOf("&u=", StringComparison.OrdinalIgnoreCase);
+
+			if (posicionU == -1)
+			{
+				return enlace;
+			}
+
+			string despuesDeU = enlace[(posicionU + 3)..];
+			int posicionAmpersand = despuesDeU.IndexOf('&');
+			string urlCodificada = posicionAmpersand >= 0 ? despuesDeU[..posicionAmpersand] : despuesDeU;
+			string urlDecodificada = WebUtility.UrlDecode(urlCodificada);
+
+			int posicionInterrogacion = urlDecodificada.IndexOf('?');
+
+			if (posicionInterrogacion >= 0)
+			{
+				urlDecodificada = urlDecodificada[..posicionInterrogacion];
+			}
+
+			return urlDecodificada;
+		}
+
+		public static string Referido(TiendaRegion region, string enlace)
+		{
+			if (string.IsNullOrEmpty(enlace) == true)
+			{
+				return enlace;
+			}
+
+			string campaignId = region == TiendaRegion.EstadosUnidos ? "1625317" : "1625375";
+			string moneda = region == TiendaRegion.EstadosUnidos ? "usd" : "eur";
+			string intsrc = region == TiendaRegion.EstadosUnidos ? "APIG_12134" : "APIG_12138";
+
+			string destino = $"{enlace}?__currency={moneda}";
+			string destinoCodificado = WebUtility.UrlEncode(destino);
+
+			return $"https://go.loaded.com/c/1382810/{campaignId}/18216?u={destinoCodificado}&intsrc={intsrc}";
+		}
+
 		public static async Task BuscarOfertas(TiendaRegion region)
 		{
 			await BaseDatos.Admin.Actualizar.Tiendas(region, Generar().Id, DateTime.Now, 0);
@@ -64,8 +110,10 @@ namespace APIs.Loaded
 								"PC - DLC",
 								"PC DLC (Steam)",
 								"DLC (Global)",
+								"PC (Steam) (EU & UK)",
 								"PC (North America)",
 								"PC (Europe & UK)",
+								"PC (EU & UK) (Steam)",
 								"PC (EU & UK)",
 								"PC (EU)",
 								"PC (EN)",
@@ -100,7 +148,7 @@ namespace APIs.Loaded
 							JuegoPrecio oferta = new JuegoPrecio
 							{
 								Nombre = nombre,
-								Enlace = enlaceJuego,
+								Enlace = LimpiarEnlace(enlaceJuego),
 								Imagen = imagen,
 								Moneda = JuegoMoneda.Euro,
 								Precio = resultado.PrecioActual.Value,

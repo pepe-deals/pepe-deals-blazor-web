@@ -30,6 +30,11 @@ namespace APIs.Yuplay
 			return tienda;
 		}
 
+		public static string Referido(string enlace)
+		{
+			return enlace + "?partner=19b1d908fe49e597";
+		}
+
 		public static async Task BuscarOfertas(TiendaRegion region)
 		{
 			await BaseDatos.Admin.Actualizar.Tiendas(region, Generar().Id, DateTime.Now, 0);
@@ -63,7 +68,7 @@ namespace APIs.Yuplay
 								if (producto.Descuento != null && string.IsNullOrEmpty(producto.Descuento.Valor) == false && int.Parse(producto.Descuento.Valor) > 0)
 								{
 									string nombre = WebUtility.HtmlDecode(producto.Nombre);
-									string enlaceJuego = "https://www.yuplay.com" + producto.Enlace + "?partner=19b1d908fe49e597";
+									string enlaceJuego = "https://www.yuplay.com" + producto.Enlace;
 									string imagen = producto.Imagenes?.Width616 ?? producto.Imagenes?.Width267 ?? "";
 
 									JuegoPrecio oferta = new JuegoPrecio

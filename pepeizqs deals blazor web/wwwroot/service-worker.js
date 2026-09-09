@@ -46,9 +46,7 @@ self.addEventListener('fetch', event => {
         return;
     }
 
-    if (request.destination === 'image' ||
-        request.destination === 'style' ||
-        request.destination === 'script') {
+    if (request.destination === 'image') {
         event.respondWith(
             caches.match(request).then(response => {
                 return response || fetch(request).then(fetchResponse => {
