@@ -67,6 +67,12 @@ namespace Herramientas
 		[XmlElement("Currency")]
 		public string Moneda { get; set; }
 
+		[XmlElement("Bundle")]
+		public string Bundle { get; set; }
+
+		[XmlElement("Shipping Region")]
+		public string Region { get; set; }
+
 		[XmlElement("StockAvailability")]
 		public string Disponibilidad { get; set; }
 

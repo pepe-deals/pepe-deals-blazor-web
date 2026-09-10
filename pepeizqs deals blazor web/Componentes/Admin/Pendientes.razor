@@ -126,7 +126,7 @@
         }
     </div>
 
-    @if (pendientesTiendas.Count > 0 || pendientesSuscripciones.Count > 0 || pendientesStreamings.Count > 0 || pendientesPlataformas.Count > 0)
+    @if (pendientesTiendas.Any(p => p.Pendientes.Count > 0) || pendientesSuscripciones.Any(p => p.Pendientes.Count > 0) || pendientesStreamings.Any(p => p.Pendientes.Count > 0) || pendientesPlataformas.Any(p => p.Pendientes.Count > 0))
     {
         <div style="width: 100%;">
             <div style="display: flex; align-items: center; gap: 30px;">
@@ -142,7 +142,7 @@
                 </button>
             </div>
 
-            <div class="caja-admin-pendientes" style="padding: 10px; display: flex; flex-direction: column; gap: 20px;">
+            <div class="caja-admin-pendientes" style="padding: 10px; display: flex; flex-direction: column; gap: 10px;">
                 <div style="display: flex; flex-direction: column; gap: 5px;">
                     <a href="@enlacePendiente" target="_blank" style="text-decoration: none; width: fit-content;">@nombrePendiente</a>
 
@@ -179,13 +179,13 @@
 
                     @if (string.IsNullOrEmpty(idsPendiente) == false && seleccionados?.Count > 0)
                     {
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; background-color: rgba(0,0,0,.2); padding: 10px;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; background-color: rgba(0,0,0,.2); padding: 10px; width: 100%;">
                             @foreach (var resultado in seleccionados)
                             {
                                 if (resultado != null)
                                 {
                                     <a href="/game/@resultado.Id" target="_blank" style="text-decoration: none;">
-                                        <img src="@resultado.Imagenes.Header_460x215" style="width: 100%; height: 100%; object-fit: cover; display: block;" />
+                                        <img src="@resultado.Imagenes.Header_460x215" style="object-fit: contain; display: block; max-height: 120px; width: 100%;" />
                                     </a>
                                 }
                             }

@@ -362,15 +362,19 @@ namespace Tareas
 						}
 						else if (tienda.Id == APIs.Loaded.Tienda.Generar().Id)
 						{
-							siguienteComprobacion = TimeSpan.FromHours(2);
+							siguienteComprobacion = TimeSpan.FromHours(3);
 						}
 						else if (tienda.Id == APIs.Yuplay.Tienda.Generar().Id)
 						{
-							siguienteComprobacion = TimeSpan.FromHours(2);
+							siguienteComprobacion = TimeSpan.FromHours(3);
 						}
 						else if (tienda.Id == APIs.Gameseal.Tienda.Generar().Id)
 						{
-							siguienteComprobacion = TimeSpan.FromHours(2);
+							siguienteComprobacion = TimeSpan.FromHours(3);
+						}
+						else if (tienda.Id == APIs.Kinguin.Tienda.Generar().Id)
+						{
+							siguienteComprobacion = TimeSpan.FromHours(3);
 						}
 
 						if (siguienteComprobacion > TimeSpan.Zero)

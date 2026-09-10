@@ -54,6 +54,18 @@ namespace BaseDatos.Pendientes
 					descartado = "si";
 				}
 
+				if (tablaInsertar.StartsWith("tienda") == true)
+				{
+					if (descartado == "no")
+					{
+						descartado = "0";
+					}
+					else if (descartado == "si")
+					{
+						descartado = "1";
+					}
+				}
+
 				string sqlInsertar = $@"
 					INSERT INTO {tablaInsertar}
 					(enlace, nombre, imagen, idJuegos, descartado)

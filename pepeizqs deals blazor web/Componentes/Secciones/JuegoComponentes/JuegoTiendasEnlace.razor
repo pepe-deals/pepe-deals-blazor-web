@@ -40,14 +40,14 @@
     <a class="boton-pequeño" title="@Tiendas2.TiendasCargar.DevolverTienda(precio.Tienda).Nombre" href="@enlace" target="_blank" style="padding: 0px;">
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; border: 1px solid rgba(255,255,255,0.2); padding: 5px;">
             <div class="juego-caja-boton" style="align-self: stretch; display: flex; align-items: center;">
-                <div style="display: flex; align-items: center; flex-direction: column; gap: 10px;">
+                <div style="display: flex; align-items: center; flex-direction: column; gap: 5px;">
                     <img src="@SacarImagenTienda(precio.Tienda)" class="juego-imagen-boton" alt="@precio.Tienda" style="contain: layout; aspect-ratio: 300/80; display: block;" loading="lazy" />
             
                     @if (noOficial == true)
                     {
                         TiendaTipo tipo = SacarTipoTienda(precio.Tienda);
 
-                        <div style="font-size: 13px; line-height: 13px;">
+                        <div style="font-size: 13px; line-height: 13px; padding: 8px 10px; background: rgba(255,255,255,0.1);">
                             @if (tipo == TiendaTipo.Oficial)
                             {
                                 @Herramientas.Idiomas.BuscarTexto(idioma, "String141", "Game")

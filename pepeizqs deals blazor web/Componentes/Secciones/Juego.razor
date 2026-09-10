@@ -622,6 +622,7 @@
                     {
                         string mensajeMinimoOficialDRM = string.Empty;
                         string mensajeMinimoNoOficialDRM = string.Empty;
+                        string mensajeMinimoMarketplaceDRM = string.Empty;
 
                         foreach (var drmEnseñar in drmsEnseñar)
                         {
@@ -630,9 +631,14 @@
                                 mensajeMinimoOficialDRM = drmEnseñar.Mensaje;
                             }
 
-                            if (drmEnseñar.DRM == drm.Id && drmEnseñar.TipoTienda == TiendaTipo.NoOficial)
+                            if (usuarioTiendasNoOficial == true && drmEnseñar.DRM == drm.Id && drmEnseñar.TipoTienda == TiendaTipo.NoOficial)
                             {
                                 mensajeMinimoNoOficialDRM = drmEnseñar.Mensaje;
+                            }
+
+                            if (usuarioTiendasMarketplace == true && drmEnseñar.DRM == drm.Id && drmEnseñar.TipoTienda == TiendaTipo.Marketplace)
+                            {
+                                mensajeMinimoMarketplaceDRM = drmEnseñar.Mensaje;
                             }
                         }
 
@@ -678,7 +684,8 @@
 
                         List<JuegoPrecio> preciosActualesOficialesDRM = new List<JuegoPrecio>();
                         List<JuegoPrecio> preciosActualesNoOficialesDRM = new List<JuegoPrecio>();
-                            
+                        List<JuegoPrecio> preciosActualesMarketplaceDRM = new List<JuegoPrecio>();
+
                         if (usuarioRegion == TiendaRegion.Europa)
                         {
                             preciosActualesOficialesDRM = Herramientas.Minimos.OrdenarPrecios(usuarioRegion, juego.PrecioActualesTiendas, drm.Id);
@@ -700,8 +707,20 @@
                             }
                         }
 
+                        if (usuarioTiendasMarketplace == true)
+                        {
+                            if (usuarioRegion == TiendaRegion.Europa)
+                            {
+                                preciosActualesMarketplaceDRM = Herramientas.Minimos.OrdenarPrecios(usuarioRegion, juego.PreciosActualesMarketplacesEU, drm.Id);
+                            }
+                            else if (usuarioRegion == TiendaRegion.EstadosUnidos)
+                            {
+                                preciosActualesMarketplaceDRM = Herramientas.Minimos.OrdenarPrecios(usuarioRegion, juego.PreciosActualesMarketplacesUS, drm.Id);  
+                            }
+                        }
+
                         <div id="@drm.Id">
-                            @if (string.IsNullOrEmpty(mensajeMinimoOficialDRM) == false || string.IsNullOrEmpty(mensajeMinimoNoOficialDRM) == false)
+                            @if (string.IsNullOrEmpty(mensajeMinimoOficialDRM) == false || string.IsNullOrEmpty(mensajeMinimoNoOficialDRM) == false || string.IsNullOrEmpty(mensajeMinimoMarketplaceDRM) == false)
                             {
                                 if (string.IsNullOrEmpty(usuarioId) == false)
                                 {
@@ -878,7 +897,7 @@
                                     </Authorized>
                                 </AuthorizeView>
 
-                                @if (string.IsNullOrEmpty(mensajeMinimoOficialDRM) == false || (usuarioTiendasNoOficial == true && string.IsNullOrEmpty(mensajeMinimoNoOficialDRM) == false) || BundlesComprobar(juego.Bundles, drm.Id) != null || GratisComprobar(juego.Gratis, drm.Id) != null || SuscripcionesComprobar(juego.Suscripciones, drm.Id) != null)
+                                @if (string.IsNullOrEmpty(mensajeMinimoOficialDRM) == false || (usuarioTiendasNoOficial == true && string.IsNullOrEmpty(mensajeMinimoNoOficialDRM) == false) || (usuarioTiendasMarketplace == true && string.IsNullOrEmpty(mensajeMinimoMarketplaceDRM) == false) || BundlesComprobar(juego.Bundles, drm.Id) != null || GratisComprobar(juego.Gratis, drm.Id) != null || SuscripcionesComprobar(juego.Suscripciones, drm.Id) != null)
                                 {
                                     <div class="caja-drm" style="text-align: left; padding: 20px; align-items: center; gap: 30px; background: rgba(0, 0, 0, .2); box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.5),0px 0px 1px 0px rgba(0, 0, 0, 0.5);">
                                         @if (drm.Id == JuegoDRM.DRMFree)
@@ -905,7 +924,7 @@
                                                 <div>
                                                     <div>@Herramientas.Idiomas.BuscarTexto(idioma, "String10", "Game") @JuegoDRM2.DevolverDRM(drm.Id):</div>
 
-                                                    @if (usuarioTiendasNoOficial == false)
+                                                    @if (usuarioTiendasNoOficial == false && usuarioTiendasMarketplace == false)
                                                     {
                                                         if (usuarioRegion == TiendaRegion.Europa && juego.PrecioMinimosHistoricos?.Count > 0 || (usuarioRegion == TiendaRegion.EstadosUnidos && juego.PrecioMinimosHistoricosUS?.Count > 0))
                                                         {
@@ -1224,9 +1243,130 @@
                                                                     </div>
                                                                 }
                                                             }
+
+                                                            @if ((usuarioRegion == TiendaRegion.Europa && juego.PreciosHistoricosMarketplacesEU?.Count > 0) || (usuarioRegion == TiendaRegion.EstadosUnidos && juego.PreciosHistoricosMarketplacesUS?.Count > 0))
+                                                            {
+                                                                bool mostrarAlertaHistoricoMarketplace = false;
+                                                                decimal precioMinimoValorMarketplace = 100000;
+
+                                                                if (usuarioRegion == TiendaRegion.Europa && juego.PreciosHistoricosMarketplacesEU?.Count > 0)
+                                                                {
+                                                                    JuegoPrecio? historicoMostrar = null;
+
+                                                                    foreach (var historico in juego.PreciosHistoricosMarketplacesEU)
+                                                                    {
+                                                                        if (historico.DRM == drm.Id)
+                                                                        {
+                                                                            if (historico.Moneda != Herramientas.JuegoMoneda.Euro && historico.PrecioCambiado > 0 && historico.PrecioCambiado < precioMinimoValorMarketplace)
+                                                                            {
+                                                                                historicoMostrar = historico;
+                                                                                precioMinimoValorMarketplace = historico.PrecioCambiado;
+                                                                            }
+                                                                            else if (historico.Moneda != Herramientas.JuegoMoneda.Euro && historico.PrecioCambiado == 0 && historico.Precio < precioMinimoValorMarketplace)
+                                                                            {
+                                                                                historicoMostrar = historico;
+                                                                                precioMinimoValorMarketplace = historico.Precio;
+                                                                            }
+                                                                            else if (historico.Moneda == Herramientas.JuegoMoneda.Euro && historico.Precio >= 0 && historico.Precio < precioMinimoValorMarketplace)
+                                                                            {
+                                                                                historicoMostrar = historico;
+                                                                                precioMinimoValorMarketplace = historico.Precio;
+                                                                            }
+                                                                        }
+                                                                    }
+
+                                                                    if (historicoMostrar != null)
+                                                                    {
+                                                                        mostrarAlertaHistoricoMarketplace = Herramientas.Minimos.ExisteEnActuales(historicoMostrar, juego.PreciosHistoricosMarketplacesEU, drm.Id);
+                                                                            
+                                                                        if (mostrarAlertaHistoricoMarketplace == true && Herramientas.OfertaActiva.Verificar(historicoMostrar) == true)
+                                                                        {
+                                                                            mostrarAlertaHistoricoMarketplace = true;
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            mostrarAlertaHistoricoMarketplace = false;
+                                                                        }
+                                                                    }
+                                                                }
+                                                                else if (usuarioRegion == TiendaRegion.EstadosUnidos && juego.PreciosHistoricosMarketplacesUS?.Count > 0)
+                                                                {
+                                                                    JuegoPrecio? historicoMostrar = null;
+
+                                                                    foreach (var historico in juego.PreciosHistoricosMarketplacesUS)
+                                                                    {
+                                                                        if (historico.DRM == drm.Id)
+                                                                        {
+                                                                            if (historico.Moneda != Herramientas.JuegoMoneda.Dolar && historico.PrecioCambiado > 0 && historico.PrecioCambiado < precioMinimoValorMarketplace)
+                                                                            {
+                                                                                historicoMostrar = historico;
+                                                                                precioMinimoValorMarketplace = historico.PrecioCambiado;
+                                                                            }
+                                                                            else if (historico.Moneda != Herramientas.JuegoMoneda.Dolar && historico.PrecioCambiado == 0 && historico.Precio < precioMinimoValorMarketplace)
+                                                                            {
+                                                                                historicoMostrar = historico;
+                                                                                precioMinimoValorMarketplace = historico.Precio;
+                                                                            }
+                                                                            else if (historico.Moneda == Herramientas.JuegoMoneda.Dolar && historico.Precio >= 0 && historico.Precio < precioMinimoValorMarketplace)
+                                                                            {
+                                                                                historicoMostrar = historico;
+                                                                                precioMinimoValorMarketplace = historico.Precio;
+                                                                            }
+                                                                        }
+                                                                    } 
+                                                                            
+                                                                    if (historicoMostrar != null)
+                                                                    {
+                                                                        mostrarAlertaHistoricoMarketplace = Herramientas.Minimos.ExisteEnActuales(historicoMostrar, juego.PreciosHistoricosMarketplacesUS, drm.Id);
+                                                                            
+                                                                        if (mostrarAlertaHistoricoMarketplace == true && Herramientas.OfertaActiva.Verificar(historicoMostrar) == true)
+                                                                        {
+                                                                            mostrarAlertaHistoricoMarketplace = true;
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            mostrarAlertaHistoricoMarketplace = false;
+                                                                        }
+                                                                    }
+                                                                }
+
+                                                                if (precioMinimoValorMarketplace < 100000)
+                                                                {
+                                                                    string precioMinimoTexto = string.Empty;
+
+                                                                    if (usuarioRegion == TiendaRegion.Europa)
+                                                                    {
+                                                                        precioMinimoTexto = Herramientas.Precios.Euro(precioMinimoValorMarketplace);
+                                                                    }
+                                                                    else if (usuarioRegion == TiendaRegion.EstadosUnidos)
+                                                                    {
+                                                                        precioMinimoTexto = Herramientas.Precios.Dolar(precioMinimoValorMarketplace);
+                                                                    }
+
+                                                                    <div class="tooltip-juego" id="trigger-historicallowmarketplace-@drm.Id"
+                                                                        @onmouseenter="@(() => ActivarTooltip("trigger-historicallowmarketplace-" + drm.Id, "tooltip-historicallowmarketplace-" + drm.Id))"
+                                                                        @onmouseleave="@(() => DesactivarTooltip("trigger-historicallowmarketplace-" + drm.Id))">
+        
+                                                                        <div style="box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.5),0px 0px 1px 0px rgba(0, 0, 0, 0.5); @(mostrarAlertaHistoricoMarketplace == true ? "background-color: color-mix(in srgb, var(--fondoAlerta) 50%, transparent);" : "background: rgba(0,0,0,.15);")">
+                                                                            <div style="padding: 10px 20px; background: rgba(0,0,0,.4); text-align: center;">
+                                                                                @Herramientas.Idiomas.BuscarTexto(idioma, "String143", "Game")
+                                                                            </div>
+
+                                                                            <div style="padding: 10px; text-align: center;">
+                                                                                <div>@precioMinimoTexto</div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div id="tooltip-historicallowmarketplace-@drm.Id" class="tooltip-relleno">
+                                                                            <div style="margin: 8px; max-width: 300px; font-size: 14px;">
+                                                                                @mensajeMinimoMarketplaceDRM
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                }
+                                                            }
                                                         </div>
                                                     }
-                                                                                                   
                                                 </div>
                                             }
 
@@ -3698,6 +3838,7 @@
     private bool usuarioAdmin = false;
     private TiendaRegion usuarioRegion = TiendaRegion.Europa;
     private bool usuarioTiendasNoOficial = false;
+    private bool usuarioTiendasMarketplace = false;
 
     [PersistentState] public Usuario opciones { get; set; }
 
@@ -3731,6 +3872,7 @@
         dominio = datos.Dominio;
         usuarioRegion = datos.Region;
         usuarioTiendasNoOficial = datos.NoOficial;
+        usuarioTiendasMarketplace = datos.Marketplace;
 
         idiomaJuego = idioma;
 

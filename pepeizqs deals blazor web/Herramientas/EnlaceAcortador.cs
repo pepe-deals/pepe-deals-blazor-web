@@ -152,6 +152,10 @@ namespace Herramientas
 					{
 						enlace = APIs.Gameseal.Tienda.Referido(region, enlace);
 					}
+					else if (tienda == APIs.Kinguin.Tienda.Generar().Id)
+					{
+						enlace = APIs.Kinguin.Tienda.Referido(region, enlace);
+					}
 				}
 			}
 			

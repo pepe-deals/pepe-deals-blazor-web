@@ -41,7 +41,8 @@ namespace Tiendas2
 				APIs.PlayerLand.Tienda.Generar(),
 				APIs.Loaded.Tienda.Generar(),
 				APIs.Yuplay.Tienda.Generar(),
-				APIs.Gameseal.Tienda.Generar()
+				APIs.Gameseal.Tienda.Generar(),
+				APIs.Kinguin.Tienda.Generar()
 			};
 
 			return tiendas;
@@ -168,6 +169,10 @@ namespace Tiendas2
 			else if (id == APIs.Gameseal.Tienda.Generar().Id)
 			{
 				await APIs.Gameseal.Tienda.BuscarOfertas(region);
+			}
+			else if (id == APIs.Kinguin.Tienda.Generar().Id)
+			{
+				await APIs.Kinguin.Tienda.BuscarOfertas(region);
 			}
 		}
 
