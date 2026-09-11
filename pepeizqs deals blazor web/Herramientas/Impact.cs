@@ -46,8 +46,8 @@ namespace Herramientas
 		[XmlElement("Name")]
 		public string Nombre { get; set; }
 
-		[XmlElement("Description")]
-		public string Descripcion { get; set; }
+		//[XmlElement("Description")]
+		//public string Descripcion { get; set; }
 
 		[XmlElement("Url")]
 		public string Url { get; set; }
@@ -124,6 +124,8 @@ namespace Herramientas
 			{
 				var respuesta = await cliente.GetAsync($"https://api.impact.com{siguienteUri}");
 				respuesta.EnsureSuccessStatusCode();
+
+				string texto = await respuesta.Content.ReadAsStringAsync();	
 
 				using var stream = await respuesta.Content.ReadAsStreamAsync();
 				var contenido = (ImpactRadiusResponse)serializador.Deserialize(stream);

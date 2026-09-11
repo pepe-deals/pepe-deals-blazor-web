@@ -117,13 +117,17 @@ namespace APIs.Ubisoft
 													if (oferta.Precio > cupon.PrecioMinimo)
 													{
 														oferta.CodigoTexto = cupon.Codigo;
-														oferta.Precio = oferta.Precio - (decimal)cupon.PrecioRebaja;
+														oferta.CodigoDescuento = cupon.Porcentaje.Value;
+														oferta.Precio = oferta.Precio - (oferta.Precio * ((decimal)cupon.Porcentaje / 100));
+														oferta.Precio = Math.Floor(oferta.Precio * 100) / 100;
 													}
 												}
 												else if (cupon.Porcentaje > 0)
 												{
 													oferta.CodigoTexto = cupon.Codigo;
+													oferta.CodigoDescuento = cupon.Porcentaje.Value;
 													oferta.Precio = oferta.Precio - (oferta.Precio * ((decimal)cupon.Porcentaje / 100));
+													oferta.Precio = Math.Floor(oferta.Precio * 100) / 100;
 												}
 											}
 

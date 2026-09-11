@@ -20,35 +20,35 @@ namespace BaseDatos.Juegos
 			bool añadir = true;
 			bool huboCambioReal = false;
 
-			#region Aplicar Codigo Descuento
+			//#region Aplicar Codigo Descuento
 
-			decimal RedondearHaciaAbajo(decimal valor)
-			{
-				return Math.Floor(valor * 100) / 100;
-			}
+			//decimal RedondearHaciaAbajo(decimal valor)
+			//{
+			//	return Math.Floor(valor * 100) / 100;
+			//}
 
-			if (nuevaOferta.Moneda != JuegoMoneda.Euro && nuevaOferta.PrecioCambiado == 0)
-			{
-				nuevaOferta.PrecioCambiado = Herramientas.Divisas.CambioEuro(nuevaOferta.Precio, nuevaOferta.Moneda);
+			//if (nuevaOferta.Moneda != JuegoMoneda.Euro && nuevaOferta.PrecioCambiado == 0)
+			//{
+			//	nuevaOferta.PrecioCambiado = Herramientas.Divisas.CambioEuro(nuevaOferta.Precio, nuevaOferta.Moneda);
 
-				if (string.IsNullOrEmpty(nuevaOferta.CodigoTexto) == false && nuevaOferta.CodigoDescuento > 0)
-				{
-					decimal descuento = (decimal)nuevaOferta.CodigoDescuento / 100;
-					nuevaOferta.PrecioCambiado = nuevaOferta.PrecioCambiado - (nuevaOferta.PrecioCambiado * descuento);
-					nuevaOferta.PrecioCambiado = RedondearHaciaAbajo(nuevaOferta.PrecioCambiado);
-				}
-			}
-			else
-			{
-				if (string.IsNullOrEmpty(nuevaOferta.CodigoTexto) == false && nuevaOferta.CodigoDescuento > 0)
-				{
-					decimal descuento = (decimal)nuevaOferta.CodigoDescuento / 100;
-					nuevaOferta.Precio = nuevaOferta.Precio - (nuevaOferta.Precio * descuento);
-					nuevaOferta.Precio = RedondearHaciaAbajo(nuevaOferta.Precio);
-				}
-			}
+			//	if (string.IsNullOrEmpty(nuevaOferta.CodigoTexto) == false && nuevaOferta.CodigoDescuento > 0)
+			//	{
+			//		decimal descuento = (decimal)nuevaOferta.CodigoDescuento / 100;
+			//		nuevaOferta.PrecioCambiado = nuevaOferta.PrecioCambiado - (nuevaOferta.PrecioCambiado * descuento);
+			//		nuevaOferta.PrecioCambiado = RedondearHaciaAbajo(nuevaOferta.PrecioCambiado);
+			//	}
+			//}
+			//else
+			//{
+			//	if (string.IsNullOrEmpty(nuevaOferta.CodigoTexto) == false && nuevaOferta.CodigoDescuento > 0)
+			//	{
+			//		decimal descuento = (decimal)nuevaOferta.CodigoDescuento / 100;
+			//		nuevaOferta.Precio = nuevaOferta.Precio - (nuevaOferta.Precio * descuento);
+			//		nuevaOferta.Precio = RedondearHaciaAbajo(nuevaOferta.Precio);
+			//	}
+			//}
 
-			#endregion
+			//#endregion
 
 			if (ofertasActuales?.Count > 0)
 			{
@@ -494,35 +494,35 @@ namespace BaseDatos.Juegos
 			bool añadir = true;
 			bool huboCambioReal = false;
 
-			#region Aplicar Codigo Descuento
+			//#region Aplicar Codigo Descuento
 
-			decimal RedondearHaciaAbajo(decimal valor)
-			{
-				return Math.Floor(valor * 100) / 100;
-			}
+			//decimal RedondearHaciaAbajo(decimal valor)
+			//{
+			//	return Math.Floor(valor * 100) / 100;
+			//}
 
-			if (nuevaOferta.Moneda != JuegoMoneda.Dolar && nuevaOferta.PrecioCambiado == 0)
-			{
-				nuevaOferta.PrecioCambiado = Herramientas.Divisas.CambioDolar(nuevaOferta.Precio, nuevaOferta.Moneda);
+			//if (nuevaOferta.Moneda != JuegoMoneda.Dolar && nuevaOferta.PrecioCambiado == 0)
+			//{
+			//	nuevaOferta.PrecioCambiado = Herramientas.Divisas.CambioDolar(nuevaOferta.Precio, nuevaOferta.Moneda);
 
-				if (string.IsNullOrEmpty(nuevaOferta.CodigoTexto) == false && nuevaOferta.CodigoDescuento > 0)
-				{
-					decimal descuento = (decimal)nuevaOferta.CodigoDescuento / 100;
-					nuevaOferta.PrecioCambiado = nuevaOferta.PrecioCambiado - (nuevaOferta.PrecioCambiado * descuento);
-					nuevaOferta.PrecioCambiado = RedondearHaciaAbajo(nuevaOferta.PrecioCambiado);
-				}
-			}
-			else
-			{
-				if (string.IsNullOrEmpty(nuevaOferta.CodigoTexto) == false && nuevaOferta.CodigoDescuento > 0)
-				{
-					decimal descuento = (decimal)nuevaOferta.CodigoDescuento / 100;
-					nuevaOferta.Precio = nuevaOferta.Precio - (nuevaOferta.Precio * descuento);
-					nuevaOferta.Precio = RedondearHaciaAbajo(nuevaOferta.Precio);
-				}
-			}
+			//	if (string.IsNullOrEmpty(nuevaOferta.CodigoTexto) == false && nuevaOferta.CodigoDescuento > 0)
+			//	{
+			//		decimal descuento = (decimal)nuevaOferta.CodigoDescuento / 100;
+			//		nuevaOferta.PrecioCambiado = nuevaOferta.PrecioCambiado - (nuevaOferta.PrecioCambiado * descuento);
+			//		nuevaOferta.PrecioCambiado = RedondearHaciaAbajo(nuevaOferta.PrecioCambiado);
+			//	}
+			//}
+			//else
+			//{
+			//	if (string.IsNullOrEmpty(nuevaOferta.CodigoTexto) == false && nuevaOferta.CodigoDescuento > 0)
+			//	{
+			//		decimal descuento = (decimal)nuevaOferta.CodigoDescuento / 100;
+			//		nuevaOferta.Precio = nuevaOferta.Precio - (nuevaOferta.Precio * descuento);
+			//		nuevaOferta.Precio = RedondearHaciaAbajo(nuevaOferta.Precio);
+			//	}
+			//}
 
-			#endregion
+			//#endregion
 
 			if (ofertasActualesUS?.Count > 0)
 			{

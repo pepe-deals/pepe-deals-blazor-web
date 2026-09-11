@@ -362,7 +362,7 @@ namespace Tareas
 						}
 						else if (tienda.Id == APIs.Loaded.Tienda.Generar().Id)
 						{
-							siguienteComprobacion = TimeSpan.FromHours(3);
+							siguienteComprobacion = TimeSpan.FromHours(4);
 						}
 						else if (tienda.Id == APIs.Yuplay.Tienda.Generar().Id)
 						{
@@ -370,11 +370,11 @@ namespace Tareas
 						}
 						else if (tienda.Id == APIs.Gameseal.Tienda.Generar().Id)
 						{
-							siguienteComprobacion = TimeSpan.FromHours(3);
+							siguienteComprobacion = TimeSpan.FromHours(4);
 						}
 						else if (tienda.Id == APIs.Kinguin.Tienda.Generar().Id)
 						{
-							siguienteComprobacion = TimeSpan.FromHours(3);
+							siguienteComprobacion = TimeSpan.FromHours(4);
 						}
 
 						if (siguienteComprobacion > TimeSpan.Zero)

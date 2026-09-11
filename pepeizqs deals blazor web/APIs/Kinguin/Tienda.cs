@@ -18,7 +18,7 @@ namespace APIs.Kinguin
 				Tipo = TiendaTipo.Marketplace,
 				ImagenLogo = "/imagenes/tiendas/kinguin_logo.webp",
 				Imagen300x80 = "/imagenes/tiendas/kinguin_300x80.webp",
-				ImagenIcono = "/imagenes/tiendas/kinguin_icono.webp",
+				ImagenIcono = "/imagenes/tiendas/kinguin_icono.ico",
 				Color = "#558205",
 				AdminUso = true,
 				UsuarioUso = true,
@@ -112,18 +112,23 @@ namespace APIs.Kinguin
 					{
 						JuegoDRM drmJuego = JuegoDRM.NoEspecificado;
 
-						if (resultado.Nombre.Contains("Steam CD Key") == true)
+						if (region == TiendaRegion.Europa && resultado.Nombre.Contains("EU Steam CD Key") == true)
+						{
+							drmJuego = JuegoDRM.Steam;
+						}
+						else if (region == TiendaRegion.EstadosUnidos && resultado.Nombre.Contains("US Steam CD Key") == true)
 						{
 							drmJuego = JuegoDRM.Steam;
 						}
 
 						if (drmJuego != JuegoDRM.NoEspecificado)
 						{
-							if (string.IsNullOrEmpty(resultado.Disponibilidad) == false && resultado.Disponibilidad == "InStock")
+							if (string.IsNullOrEmpty(resultado.Disponibilidad) == false && resultado.Disponibilidad == "InStock" && resultado.Nombre.Contains("EN Language Only") == false)
 							{
 								string nombre = WebUtility.HtmlDecode(resultado.Nombre);
 
-								nombre = nombre.Replace("PC Steam CD Key", null);
+								nombre = nombre.Replace("EU Steam CD Key", null);
+								nombre = nombre.Replace("US Steam CD Key", null);
 								nombre = nombre.Trim();
 
 								string enlaceJuego = LimpiarEnlace(resultado.Url);
@@ -154,53 +159,47 @@ namespace APIs.Kinguin
 
 								if (drm == JuegoDRM.Steam)
 								{
-									ofertas.Add(oferta);
-
-									if (nombre.Contains("Mourningwood Lodge"))
-									{
-										BaseDatos.Errores.Insertar.Mensaje("test", System.Text.Json.JsonSerializer.Serialize(resultado));
-										break;
-									}			
+									ofertas.Add(oferta);		
 								}
 							}
 						}
 					}
 				}
 
-				//if (ofertas?.Count > 0)
-				//{
-				//	int juegos2 = 0;
+				if (ofertas?.Count > 0)
+				{
+					int juegos2 = 0;
 
-				//	int tamaño = 500;
-				//	var lotes = ofertas
-				//		.Select((oferta, indice) => new { oferta, indice })
-				//		.GroupBy(x => x.indice / tamaño)
-				//		.Select(g => g.Select(x => x.oferta).ToList())
-				//		.ToList();
+					int tamaño = 500;
+					var lotes = ofertas
+						.Select((oferta, indice) => new { oferta, indice })
+						.GroupBy(x => x.indice / tamaño)
+						.Select(g => g.Select(x => x.oferta).ToList())
+						.ToList();
 
-				//	foreach (var lote in lotes)
-				//	{
-				//		try
-				//		{
-				//			await BaseDatos.Tiendas.Comprobar.Resto(region, lote);
-				//		}
-				//		catch (Exception ex)
-				//		{
-				//			BaseDatos.Errores.Insertar.Mensaje(Generar().Id, ex);
-				//		}
+					foreach (var lote in lotes)
+					{
+						try
+						{
+							await BaseDatos.Tiendas.Comprobar.Resto(region, lote);
+						}
+						catch (Exception ex)
+						{
+							BaseDatos.Errores.Insertar.Mensaje(Generar().Id, ex);
+						}
 
-				//		juegos2 += lote.Count;
+						juegos2 += lote.Count;
 
-				//		try
-				//		{
-				//			await BaseDatos.Admin.Actualizar.Tiendas(region, Generar().Id, DateTime.Now, juegos2);
-				//		}
-				//		catch (Exception ex)
-				//		{
-				//			BaseDatos.Errores.Insertar.Mensaje(Generar().Id, ex);
-				//		}
-				//	}
-				//}
+						try
+						{
+							await BaseDatos.Admin.Actualizar.Tiendas(region, Generar().Id, DateTime.Now, juegos2);
+						}
+						catch (Exception ex)
+						{
+							BaseDatos.Errores.Insertar.Mensaje(Generar().Id, ex);
+						}
+					}
+				}
 			}
 		}
 	}

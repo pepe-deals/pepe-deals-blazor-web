@@ -4,7 +4,7 @@
 @using global::Juegos
 
 <div style="display: flex; justify-content: space-between; flex-direction: row; gap: 40px;">
-    <div class="caja-admin-pendientes" style="min-width: 300px; display: flex; flex-direction: column; gap: 10px; height: fit-content;">
+    <div class="caja-admin-pendientes" style="min-width: 300px; display: flex; flex-direction: column; gap: 5px; height: fit-content;">
         @foreach (var pendiente in pendientesTiendas)
         {
             if (pendiente.Pendientes.Count > 0)
@@ -1209,6 +1209,7 @@
         nombreBuscar = (nombreBuscar.EndsWith("Deluxe Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Deluxe Edition", null) : nombreBuscar).TrimEnd();
         nombreBuscar = (nombreBuscar.EndsWith("Ultimate Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Ultimate Edition", null) : nombreBuscar).TrimEnd();
         nombreBuscar = (nombreBuscar.EndsWith("Gold Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Gold Edition", null) : nombreBuscar).TrimEnd();
+        nombreBuscar = (nombreBuscar.EndsWith("DLC", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("DLC", null) : nombreBuscar).TrimEnd();
 
         InicializarPestañasBuscador();
         await BuscarConReintentos(nombreBuscar);

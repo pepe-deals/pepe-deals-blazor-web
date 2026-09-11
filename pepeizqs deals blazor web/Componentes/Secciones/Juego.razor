@@ -684,7 +684,7 @@
 
                         List<JuegoPrecio> preciosActualesOficialesDRM = new List<JuegoPrecio>();
                         List<JuegoPrecio> preciosActualesNoOficialesDRM = new List<JuegoPrecio>();
-                        List<JuegoPrecio> preciosActualesMarketplaceDRM = new List<JuegoPrecio>();
+                        List<JuegoPrecio> preciosActualesMarketplacesDRM = new List<JuegoPrecio>();
 
                         if (usuarioRegion == TiendaRegion.Europa)
                         {
@@ -711,11 +711,11 @@
                         {
                             if (usuarioRegion == TiendaRegion.Europa)
                             {
-                                preciosActualesMarketplaceDRM = Herramientas.Minimos.OrdenarPrecios(usuarioRegion, juego.PreciosActualesMarketplacesEU, drm.Id);
+                                preciosActualesMarketplacesDRM = Herramientas.Minimos.OrdenarPrecios(usuarioRegion, juego.PreciosActualesMarketplacesEU, drm.Id);
                             }
                             else if (usuarioRegion == TiendaRegion.EstadosUnidos)
                             {
-                                preciosActualesMarketplaceDRM = Herramientas.Minimos.OrdenarPrecios(usuarioRegion, juego.PreciosActualesMarketplacesUS, drm.Id);  
+                                preciosActualesMarketplacesDRM = Herramientas.Minimos.OrdenarPrecios(usuarioRegion, juego.PreciosActualesMarketplacesUS, drm.Id);  
                             }
                         }
 
@@ -919,85 +919,14 @@
                                         }
                                         
                                         <div style="display: flex; flex-direction: column; gap: 15px;">
-                                            @if (string.IsNullOrEmpty(mensajeMinimoOficialDRM) == false || (usuarioTiendasNoOficial == true && string.IsNullOrEmpty(mensajeMinimoNoOficialDRM) == false))
+                                            @if (string.IsNullOrEmpty(mensajeMinimoOficialDRM) == false || 
+                                                (usuarioTiendasNoOficial == true && string.IsNullOrEmpty(mensajeMinimoNoOficialDRM) == false) ||
+                                                (usuarioTiendasMarketplace == true && string.IsNullOrEmpty(mensajeMinimoMarketplaceDRM) == false))
                                             {
                                                 <div>
                                                     <div>@Herramientas.Idiomas.BuscarTexto(idioma, "String10", "Game") @JuegoDRM2.DevolverDRM(drm.Id):</div>
 
-                                                    @if (usuarioTiendasNoOficial == false && usuarioTiendasMarketplace == false)
-                                                    {
-                                                        if (usuarioRegion == TiendaRegion.Europa && juego.PrecioMinimosHistoricos?.Count > 0 || (usuarioRegion == TiendaRegion.EstadosUnidos && juego.PrecioMinimosHistoricosUS?.Count > 0))
-                                                        {
-                                                            <div style="margin-top: 10px; background: rgba(0,0,0,.15); width: fit-content;">
-                                                                <div style="display: flex; align-items: center; gap: 8px; width: fit-content; @(usuarioTiendasNoOficial == true ? "padding: 10px;" : "padding: 5px;") ">
-                                                                    @{
-                                                                        decimal precioMinimoValor = 100000;
-
-                                                                        if (usuarioRegion == TiendaRegion.Europa && juego.PrecioMinimosHistoricos?.Count > 0)
-                                                                        {
-                                                                            foreach (var historico in juego.PrecioMinimosHistoricos)
-                                                                            {
-                                                                                if (historico.DRM == drm.Id)
-                                                                                {
-                                                                                    if (historico.Moneda != Herramientas.JuegoMoneda.Euro && historico.PrecioCambiado > 0 && historico.PrecioCambiado < precioMinimoValor)
-                                                                                    {
-                                                                                        precioMinimoValor = historico.PrecioCambiado;
-                                                                                    }
-                                                                                    else if (historico.Moneda != Herramientas.JuegoMoneda.Euro && historico.PrecioCambiado == 0 && historico.Precio < precioMinimoValor)
-                                                                                    {
-                                                                                        precioMinimoValor = historico.Precio;
-                                                                                    }
-                                                                                    else if (historico.Moneda == Herramientas.JuegoMoneda.Euro && historico.Precio >= 0 && historico.Precio < precioMinimoValor)
-                                                                                    {
-                                                                                        precioMinimoValor = historico.Precio;
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                        else if (usuarioRegion == TiendaRegion.EstadosUnidos && juego.PrecioMinimosHistoricosUS?.Count > 0)
-                                                                        {
-                                                                            foreach (var historico in juego.PrecioMinimosHistoricosUS)
-                                                                            {
-                                                                                if (historico.DRM == drm.Id)
-                                                                                {
-                                                                                    if (historico.Moneda != Herramientas.JuegoMoneda.Dolar && historico.PrecioCambiado > 0 && historico.PrecioCambiado < precioMinimoValor)
-                                                                                    {
-                                                                                        precioMinimoValor = historico.PrecioCambiado;
-                                                                                    }
-                                                                                    else if (historico.Moneda != Herramientas.JuegoMoneda.Dolar && historico.PrecioCambiado == 0 && historico.Precio < precioMinimoValor)
-                                                                                    {
-                                                                                        precioMinimoValor = historico.Precio;
-                                                                                    }
-                                                                                    else if (historico.Moneda == Herramientas.JuegoMoneda.Dolar && historico.Precio >= 0 && historico.Precio < precioMinimoValor)
-                                                                                    {
-                                                                                        precioMinimoValor = historico.Precio;
-                                                                                    }
-                                                                                }
-                                                                            } 
-                                                                        }
-
-                                                                        if (precioMinimoValor < 100000)
-                                                                        {
-                                                                            string precioMinimoTexto = string.Empty;
-
-                                                                            if (usuarioRegion == TiendaRegion.Europa)
-                                                                            {
-                                                                                precioMinimoTexto = Herramientas.Precios.Euro(precioMinimoValor);
-                                                                            }
-                                                                            else if (usuarioRegion == TiendaRegion.EstadosUnidos)
-                                                                            {
-                                                                                precioMinimoTexto = Herramientas.Precios.Dolar(precioMinimoValor);
-                                                                            }
-
-                                                                            <div style="background-color: rgba(0,0,0,.3); padding: 5px 10px">@precioMinimoTexto</div>
-                                                                            <label style="font-size: 14px; margin-right: 5px;">@mensajeMinimoOficialDRM</label>          
-                                                                        }
-                                                                    }
-                                                                </div>
-                                                            </div>  
-                                                        }
-                                                    }
-                                                    else
+                                                    @if (usuarioTiendasNoOficial == true || usuarioTiendasMarketplace == true)
                                                     {
                                                         <div style="margin-top: 10px; display: flex; gap: 20px; width: fit-content;">
                                                             @if (usuarioRegion == TiendaRegion.Europa && juego.PrecioMinimosHistoricos?.Count > 0 || (usuarioRegion == TiendaRegion.EstadosUnidos && juego.PrecioMinimosHistoricosUS?.Count > 0))
@@ -1017,11 +946,6 @@
                                                                             {
                                                                                 historicoMostrar = historico;
                                                                                 precioMinimoValor = historico.PrecioCambiado;
-                                                                            }
-                                                                            else if (historico.Moneda != Herramientas.JuegoMoneda.Euro && historico.PrecioCambiado == 0 && historico.Precio < precioMinimoValor)
-                                                                            {
-                                                                                historicoMostrar = historico;
-                                                                                precioMinimoValor = historico.Precio;
                                                                             }
                                                                             else if (historico.Moneda == Herramientas.JuegoMoneda.Euro && historico.Precio >= 0 && historico.Precio < precioMinimoValor)
                                                                             {
@@ -1122,7 +1046,7 @@
                                                                 }
                                                             }
 
-                                                            @if ((usuarioRegion == TiendaRegion.Europa && juego.PreciosHistoricosNoOficialesEU?.Count > 0) || (usuarioRegion == TiendaRegion.EstadosUnidos && juego.PreciosHistoricosNoOficialesUS?.Count > 0))
+                                                            @if (usuarioTiendasNoOficial == true && ((usuarioRegion == TiendaRegion.Europa && juego.PreciosHistoricosNoOficialesEU?.Count > 0) || (usuarioRegion == TiendaRegion.EstadosUnidos && juego.PreciosHistoricosNoOficialesUS?.Count > 0)))
                                                             {
                                                                 bool mostrarAlertaHistoricoNoOficial = false;
                                                                 decimal precioMinimoValorNoOficial = 100000;
@@ -1244,7 +1168,7 @@
                                                                 }
                                                             }
 
-                                                            @if ((usuarioRegion == TiendaRegion.Europa && juego.PreciosHistoricosMarketplacesEU?.Count > 0) || (usuarioRegion == TiendaRegion.EstadosUnidos && juego.PreciosHistoricosMarketplacesUS?.Count > 0))
+                                                            @if (usuarioTiendasMarketplace == true && ((usuarioRegion == TiendaRegion.Europa && juego.PreciosHistoricosMarketplacesEU?.Count > 0) || (usuarioRegion == TiendaRegion.EstadosUnidos && juego.PreciosHistoricosMarketplacesUS?.Count > 0)))
                                                             {
                                                                 bool mostrarAlertaHistoricoMarketplace = false;
                                                                 decimal precioMinimoValorMarketplace = 100000;
@@ -1366,6 +1290,79 @@
                                                                 }
                                                             }
                                                         </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        if (usuarioRegion == TiendaRegion.Europa && juego.PrecioMinimosHistoricos?.Count > 0 || (usuarioRegion == TiendaRegion.EstadosUnidos && juego.PrecioMinimosHistoricosUS?.Count > 0))
+                                                        {
+                                                            <div style="margin-top: 10px; background: rgba(0,0,0,.15); width: fit-content;">
+                                                                <div style="display: flex; align-items: center; gap: 8px; width: fit-content; @(usuarioTiendasNoOficial == true ? "padding: 10px;" : "padding: 5px;") ">
+                                                                    @{
+                                                                        decimal precioMinimoValor = 100000;
+
+                                                                        if (usuarioRegion == TiendaRegion.Europa && juego.PrecioMinimosHistoricos?.Count > 0)
+                                                                        {
+                                                                            foreach (var historico in juego.PrecioMinimosHistoricos)
+                                                                            {
+                                                                                if (historico.DRM == drm.Id)
+                                                                                {
+                                                                                    if (historico.Moneda != Herramientas.JuegoMoneda.Euro && historico.PrecioCambiado > 0 && historico.PrecioCambiado < precioMinimoValor)
+                                                                                    {
+                                                                                        precioMinimoValor = historico.PrecioCambiado;
+                                                                                    }
+                                                                                    else if (historico.Moneda != Herramientas.JuegoMoneda.Euro && historico.PrecioCambiado == 0 && historico.Precio < precioMinimoValor)
+                                                                                    {
+                                                                                        precioMinimoValor = historico.Precio;
+                                                                                    }
+                                                                                    else if (historico.Moneda == Herramientas.JuegoMoneda.Euro && historico.Precio >= 0 && historico.Precio < precioMinimoValor)
+                                                                                    {
+                                                                                        precioMinimoValor = historico.Precio;
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        else if (usuarioRegion == TiendaRegion.EstadosUnidos && juego.PrecioMinimosHistoricosUS?.Count > 0)
+                                                                        {
+                                                                            foreach (var historico in juego.PrecioMinimosHistoricosUS)
+                                                                            {
+                                                                                if (historico.DRM == drm.Id)
+                                                                                {
+                                                                                    if (historico.Moneda != Herramientas.JuegoMoneda.Dolar && historico.PrecioCambiado > 0 && historico.PrecioCambiado < precioMinimoValor)
+                                                                                    {
+                                                                                        precioMinimoValor = historico.PrecioCambiado;
+                                                                                    }
+                                                                                    else if (historico.Moneda != Herramientas.JuegoMoneda.Dolar && historico.PrecioCambiado == 0 && historico.Precio < precioMinimoValor)
+                                                                                    {
+                                                                                        precioMinimoValor = historico.Precio;
+                                                                                    }
+                                                                                    else if (historico.Moneda == Herramientas.JuegoMoneda.Dolar && historico.Precio >= 0 && historico.Precio < precioMinimoValor)
+                                                                                    {
+                                                                                        precioMinimoValor = historico.Precio;
+                                                                                    }
+                                                                                }
+                                                                            } 
+                                                                        }
+
+                                                                        if (precioMinimoValor < 100000)
+                                                                        {
+                                                                            string precioMinimoTexto = string.Empty;
+
+                                                                            if (usuarioRegion == TiendaRegion.Europa)
+                                                                            {
+                                                                                precioMinimoTexto = Herramientas.Precios.Euro(precioMinimoValor);
+                                                                            }
+                                                                            else if (usuarioRegion == TiendaRegion.EstadosUnidos)
+                                                                            {
+                                                                                precioMinimoTexto = Herramientas.Precios.Dolar(precioMinimoValor);
+                                                                            }
+
+                                                                            <div style="background-color: rgba(0,0,0,.3); padding: 5px 10px">@precioMinimoTexto</div>
+                                                                            <label style="font-size: 14px; margin-right: 5px;">@mensajeMinimoOficialDRM</label>          
+                                                                        }
+                                                                    }
+                                                                </div>
+                                                            </div>  
+                                                        }                                                        
                                                     }
                                                 </div>
                                             }
@@ -2145,7 +2142,8 @@
                                     </div>
                                 }
         
-                                <JuegoTiendas noOficial="@usuarioTiendasNoOficial" region="@usuarioRegion" preciosActualesOficialesDRM="@preciosActualesOficialesDRM" preciosActualesNoOficialesDRM="@preciosActualesNoOficialesDRM" mensajeMinimoDRM=@mensajeMinimoOficialDRM usuarioId="@usuarioId" idioma="@idioma" userAgent="@userAgent"
+                                <JuegoTiendas noOficial="@usuarioTiendasNoOficial" marketplace="@usuarioTiendasMarketplace" region="@usuarioRegion" preciosActualesOficialesDRM="@preciosActualesOficialesDRM" preciosActualesNoOficialesDRM="@preciosActualesNoOficialesDRM" preciosActualesMarketplacesDRM="@preciosActualesMarketplacesDRM" 
+                                        mensajeMinimoDRM=@mensajeMinimoOficialDRM usuarioId="@usuarioId" idioma="@idioma" userAgent="@userAgent"
                                         usuarioPatreon="@usuarioPatreon" juegosUsuario="@juegosUsuario" juegoNombre="@juego.Nombre"/>
                             </div>
                         </div>
@@ -3929,6 +3927,11 @@
 					usuarioTiendasNoOficial = opciones.NoOfficial.Value;
 				}
 
+                if (opciones.Marketplace.HasValue == true)
+				{
+					usuarioTiendasMarketplace = opciones.Marketplace.Value;
+				}
+
                 if (opciones.GameOption1.HasValue == true)
                 {
                     enseñarOpcionesSteamDeck = opciones.GameOption1.Value;
@@ -4211,6 +4214,34 @@
         }
 
         cargadoDRMsMinimosNoOficiales = true;
+    }
+
+    [PersistentState] public bool cargadoDRMsMinimosMarketplaces { get; set; }
+
+    private async Task CargarDRMsMinimosMarketplaces()
+    {
+        cargadoDRMsMinimosMarketplaces = false;
+
+        if (drmsEnseñar == null)
+        {
+            drmsEnseñar = new List<DRMEnseñar>();
+        }
+
+        foreach (DRM drm in JuegoDRM2.GenerarListado())
+        {
+            if (usuarioRegion == TiendaRegion.Europa)
+            {
+                string mensajeMinimoDRM = Herramientas.Minimos.CogerMinimoDRM(usuarioRegion, idioma, drm.Id, juego.Id, juego.Nombre, juego.PreciosHistoricosMarketplacesEU, juego.PreciosActualesMarketplacesEU, null);
+                drmsEnseñar.Add(new DRMEnseñar { DRM = drm.Id, Mensaje = mensajeMinimoDRM, TipoTienda = TiendaTipo.Marketplace });    
+            }
+            else if (usuarioRegion == TiendaRegion.EstadosUnidos)
+            {
+                string mensajeMinimoDRM = Herramientas.Minimos.CogerMinimoDRM(usuarioRegion, idioma, drm.Id, juego.Id, juego.Nombre, juego.PreciosHistoricosMarketplacesUS, juego.PreciosActualesMarketplacesUS, null);
+                drmsEnseñar.Add(new DRMEnseñar { DRM = drm.Id, Mensaje = mensajeMinimoDRM, TipoTienda = TiendaTipo.Marketplace });                        
+            }           
+        }
+
+        cargadoDRMsMinimosMarketplaces = true;
     }
 
     [PersistentState] public bool cargadoSuscripciones { get; set; }

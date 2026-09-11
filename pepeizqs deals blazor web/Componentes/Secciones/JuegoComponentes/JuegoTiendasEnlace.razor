@@ -28,7 +28,7 @@
     @if (string.IsNullOrEmpty(precio.CodigoTexto) == false)
     {
         <div style="width: 100%; display: flex; justify-content: right;">
-            <button @onclick="(e => CopiarAlClipboard(e, precio.CodigoTexto))" class="juego-boton-pequeño" style="width: fit-content; padding: 10px 15px; display: flex; justify-content: right;">
+            <button @onclick="(e => CopiarAlClipboard(e, precio.CodigoTexto))" class="juego-boton-pequeño" style="width: fit-content; padding: 10px 15px; display: flex; justify-content: right; border: 1px solid rgba(255,255,255,0.2);">
                 <div style="display: flex; align-items: center; gap: 5px;">
                     <div>@Herramientas.Idiomas.BuscarTexto(idioma, "String90", "Game")</div>
                     <div>@precio.CodigoTexto</div>
@@ -40,7 +40,7 @@
     <a class="boton-pequeño" title="@Tiendas2.TiendasCargar.DevolverTienda(precio.Tienda).Nombre" href="@enlace" target="_blank" style="padding: 0px;">
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; border: 1px solid rgba(255,255,255,0.2); padding: 5px;">
             <div class="juego-caja-boton" style="align-self: stretch; display: flex; align-items: center;">
-                <div style="display: flex; align-items: center; flex-direction: column; gap: 5px;">
+                <div style="display: flex; align-items: center; flex-direction: column; gap: 10px;">
                     <img src="@SacarImagenTienda(precio.Tienda)" class="juego-imagen-boton" alt="@precio.Tienda" style="contain: layout; aspect-ratio: 300/80; display: block;" loading="lazy" />
             
                     @if (noOficial == true)
