@@ -376,7 +376,7 @@
                                             <div class="tooltip-juego" id="trigger-sex"
                                                  @onmouseenter="@(() => ActivarTooltip("trigger-sex", "tooltip-sex"))"
                                                  @onmouseleave="@(() => DesactivarTooltip("trigger-sex"))">
-                                                <div style="font-size: 14px; padding: 5px 10px; background-color: var(--fondoAlerta); border: 1px solid rgba(0,0,0,.3);">
+                                                <div style="font-size: 14px; padding: 5px 10px; background-color: var(--fondoAlerta); border: 1px solid rgba(255,255,255,.2);">
                                                     @Herramientas.Idiomas.BuscarTexto(idioma, "String105", "Game")
                                                 </div>   
 
@@ -4377,7 +4377,11 @@
     {
         if (primerRender == true)
         {
-            moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/secciones/Juego.razor.js");
+            try
+            {
+                moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/secciones/Juego.razor.js");
+            }
+            catch { }
 
             if (juego != null && Herramientas.Bots.UserAgentEsBot(userAgent) == false)
             {	
@@ -4387,7 +4391,11 @@
                 {
                     if (string.IsNullOrEmpty(juegoNombre) == true || juegoNombre.Equals(nombreParaEnlace, StringComparison.OrdinalIgnoreCase) == false)
                     {
-                        await moduloJs.InvokeVoidAsync("cambiarEnlace", $"/game/{juego.Id}/{nombreParaEnlace}/");
+                        try
+                        {
+                            await moduloJs.InvokeVoidAsync("cambiarEnlace", $"/game/{juego.Id}/{nombreParaEnlace}/");
+                        }
+                        catch { }
                     }
                 }
             }
@@ -5417,7 +5425,11 @@
             comando = "_self";
         }
 
-        await JavaScript.InvokeVoidAsync("open", enlace, comando);
+        try
+        {
+            await JavaScript.InvokeVoidAsync("open", enlace, comando);
+        }
+        catch { }
     }
 
     #endregion
@@ -5720,7 +5732,11 @@
 	{
 		if (moduloJs != null)
 		{
-			await moduloJs.InvokeVoidAsync("moverScroll", id);
+            try
+            {
+                await moduloJs.InvokeVoidAsync("moverScroll", id);
+            }
+            catch { }
 		}
 	}
 
@@ -5728,7 +5744,11 @@
 	{
 		if (moduloJs != null)
 		{
-			await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
+			try
+            {
+                await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
+            }
+            catch { }
 		}
 	}
 
@@ -5736,7 +5756,11 @@
 	{
 		if (moduloJs != null)
 		{
-			await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
+            try
+            {
+                await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
+            }
+            catch { }
 		}
 	}
 }

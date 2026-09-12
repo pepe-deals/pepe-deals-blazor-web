@@ -286,18 +286,30 @@
     {
         if (primerRender == true)
         {
-            moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/cuenta/cuenta/Indice.razor.js");
+            try
+            {
+                moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/cuenta/cuenta/Indice.razor.js");
+            }
+            catch {}
         }
 
         if (moduloJs != null)
         {
             if (string.IsNullOrEmpty(seccion) == true)
             {
-                await moduloJs.InvokeVoidAsync("cambiarEnlace", "/account/");
+                try
+                {
+                    await moduloJs.InvokeVoidAsync("cambiarEnlace", "/account/");
+                }
+                catch { }
             }
             else
             {
-                await moduloJs.InvokeVoidAsync("cambiarEnlace", "/account/" + seccion + "/");
+                try
+                {
+                    await moduloJs.InvokeVoidAsync("cambiarEnlace", "/account/" + seccion + "/");
+                }
+                catch { }
             }
         }     
     }
@@ -354,8 +366,6 @@
             case "excluded-games": MostrarJuegosExcluir(); break;
             case "authenticator": MostrarDobleAutentificacion(); break;
         }
-
-        StateHasChanged();
     }
 
     private async void ClickearCerrarPestaña()

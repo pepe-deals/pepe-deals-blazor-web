@@ -1498,25 +1498,45 @@
 	{
 		if (primerRender == true)
 		{
-			moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/secciones/Comparador.razor.js");
+			try
+			{
+				moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/secciones/Comparador.razor.js");
+			}
+			catch {} 
 
 			if (moduloJs != null)
 			{
 				if (id1 > 0 && id2 == 0 && id3 == 0 && id4 == 0)
 				{
-					await moduloJs.InvokeVoidAsync("cambiarEnlace", "/compare/" + id1.ToString() + "/");
+					try
+					{
+						await moduloJs.InvokeVoidAsync("cambiarEnlace", "/compare/" + id1.ToString() + "/");
+					}
+					catch { }	
 				}
 				else if (id1 > 0 && id2 > 0 && id3 == 0 && id4 == 0)
 				{
-					await moduloJs.InvokeVoidAsync("cambiarEnlace", "/compare/" + id1.ToString() + "," + id2.ToString() + "/");
+					try
+					{
+						await moduloJs.InvokeVoidAsync("cambiarEnlace", "/compare/" + id1.ToString() + "," + id2.ToString() + "/");
+					}
+					catch { }
 				}
 				else if (id1 > 0 && id2 > 0 && id3 > 0 && id4 == 0)
 				{
-					await moduloJs.InvokeVoidAsync("cambiarEnlace", "/compare/" + id1.ToString() + "," + id2.ToString() + "," + id3.ToString() + "/");
+					try
+					{
+						await moduloJs.InvokeVoidAsync("cambiarEnlace", "/compare/" + id1.ToString() + "," + id2.ToString() + "," + id3.ToString() + "/");
+					}
+					catch { }
 				}
 				else if (id1 > 0 && id2 > 0 && id3 > 0 && id4 > 0)
 				{
-					await moduloJs.InvokeVoidAsync("cambiarEnlace", "/compare/" + id1.ToString() + "," + id2.ToString() + "," + id3.ToString() + "," + id4.ToString() + "/");
+					try
+					{
+						await moduloJs.InvokeVoidAsync("cambiarEnlace", "/compare/" + id1.ToString() + "," + id2.ToString() + "," + id3.ToString() + "," + id4.ToString() + "/");
+					}
+					catch { }
 				}
 			}
 		}
@@ -1791,19 +1811,35 @@
 		{
 			if (id1 > 0 && id2 == 0 && id3 == 0 && id4 == 0)
 			{
-				await moduloJs.InvokeVoidAsync("cambiarEnlace", "/compare/" + id1.ToString() + "/");
+				try
+				{
+					await moduloJs.InvokeVoidAsync("cambiarEnlace", "/compare/" + id1.ToString() + "/");
+				}
+				catch { }
 			}
 			else if (id1 > 0 && id2 > 0 && id3 == 0 && id4 == 0)
 			{
-				await moduloJs.InvokeVoidAsync("cambiarEnlace", "/compare/" + id1.ToString() + "," + id2.ToString() + "/");
+				try
+				{
+					await moduloJs.InvokeVoidAsync("cambiarEnlace", "/compare/" + id1.ToString() + "," + id2.ToString() + "/");
+				}
+				catch { }
 			}
 			else if (id1 > 0 && id2 > 0 && id3 > 0 && id4 == 0)
 			{
-				await moduloJs.InvokeVoidAsync("cambiarEnlace", "/compare/" + id1.ToString() + "," + id2.ToString() + "," + id3.ToString() + "/");
+				try
+				{
+					await moduloJs.InvokeVoidAsync("cambiarEnlace", "/compare/" + id1.ToString() + "," + id2.ToString() + "," + id3.ToString() + "/");
+				}
+				catch { }
 			}
 			else if (id1 > 0 && id2 > 0 && id3 > 0 && id4 > 0)
 			{
-				await moduloJs.InvokeVoidAsync("cambiarEnlace", "/compare/" + id1.ToString() + "," + id2.ToString() + "," + id3.ToString() + "," + id4.ToString() + "/");
+				try
+				{
+					await moduloJs.InvokeVoidAsync("cambiarEnlace", "/compare/" + id1.ToString() + "," + id2.ToString() + "," + id3.ToString() + "," + id4.ToString() + "/");
+				}
+				catch { }
 			}
 		}
 	}
@@ -1829,6 +1865,10 @@
 		suscripcionesActuales = new List<Suscripciones2.SuscripcionTipo>();
         suscripcionesAntiguas = new List<Suscripciones2.SuscripcionTipo>();
 
-		await moduloJs.InvokeVoidAsync("cambiarEnlace", "/compare/");
+		try
+		{
+			await moduloJs.InvokeVoidAsync("cambiarEnlace", "/compare/");
+		}
+		catch {}
 	}
 }

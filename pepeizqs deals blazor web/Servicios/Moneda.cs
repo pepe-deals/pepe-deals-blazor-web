@@ -23,7 +23,14 @@ namespace Servicios
 		{
 			region = nuevaRegion;
 			OnChange?.Invoke();
-			await _js.InvokeVoidAsync("setCookie", "user_currency", region, 365);
+
+			try
+			{
+				await _js.InvokeVoidAsync("setCookie", "user_currency", region, 365);
+			}
+			catch (Exception)
+			{
+			}
 		}
 	}
 }

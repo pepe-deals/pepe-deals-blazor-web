@@ -1493,8 +1493,12 @@ else
 	{
 		if (primerRender == true)
 		{
-			moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/secciones/minimos/Minimos.razor.js");
-
+			try
+			{
+				moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/secciones/minimos/Minimos.razor.js");
+			}
+			catch { }
+			
 			await CambiarEnlace();
 
 			cargado = false;
@@ -2217,7 +2221,11 @@ else
 
 		if (moduloJs != null)
 		{
-			await moduloJs.InvokeVoidAsync("cambiarEnlace", "/historical-lows?" + drmsTexto + tiendasTexto + tiposTexto + minimoDescuentoTexto + maximoPrecioTexto + minimoReseñasTexto + deckTexto + lanzamientoTexto + categoriasTexto + etiquetasTexto);
+			try
+			{
+				await moduloJs.InvokeVoidAsync("cambiarEnlace", "/historical-lows?" + drmsTexto + tiendasTexto + tiposTexto + minimoDescuentoTexto + maximoPrecioTexto + minimoReseñasTexto + deckTexto + lanzamientoTexto + categoriasTexto + etiquetasTexto);
+			}
+			catch { }
 		}
 	}
 
@@ -3224,7 +3232,11 @@ else
 	{
 		if (moduloJs != null)
 		{
-			await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
+			try
+			{
+				await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
+			}
+			catch { }
 		}
 	}
 
@@ -3232,7 +3244,11 @@ else
 	{
 		if (moduloJs != null)
 		{
-			await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
+			try
+			{
+				await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
+			}
+			catch { }
 		}
 	}
 

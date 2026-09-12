@@ -494,7 +494,11 @@
 	{
 		if (primerRender == true)
 		{
-			moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/secciones/RSS.razor.js");
+			try
+			{
+				moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/secciones/RSS.razor.js");
+			}
+			catch { }
 		}
 	}
 
@@ -523,7 +527,11 @@
 
 		if (moduloJs != null)
 		{
-			await moduloJs.InvokeVoidAsync("copiarTexto", texto);
+			try
+			{
+				await moduloJs.InvokeVoidAsync("copiarTexto", texto);
+			}
+			catch { }
 		}
 
 		cronometroContador = 0;
@@ -683,16 +691,20 @@
 
 	private async Task ScrollHastaElemento(MouseEventArgs e, string div)
 	{
-		await JavaScript.InvokeVoidAsync("eval", @"
-			const element = document.getElementById('" + div + @"');
-			const elementPosition = element.getBoundingClientRect().top;
-			const offsetPosition = elementPosition + window.pageYOffset - 140;
+		try
+		{
+			await JavaScript.InvokeVoidAsync("eval", @"
+				const element = document.getElementById('" + div + @"');
+				const elementPosition = element.getBoundingClientRect().top;
+				const offsetPosition = elementPosition + window.pageYOffset - 140;
 
-			window.scrollTo({
-				top: offsetPosition,
-				behavior: 'smooth'
-			});
-		");
+				window.scrollTo({
+					top: offsetPosition,
+					behavior: 'smooth'
+				});
+			");
+		}
+		catch { }
 	}
 
 	#endregion

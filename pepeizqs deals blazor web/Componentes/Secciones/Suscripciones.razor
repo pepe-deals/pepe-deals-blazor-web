@@ -707,7 +707,11 @@ else
     {
         if (primerRender == true)
         {
-            moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/secciones/Suscripciones.razor.js");
+            try
+            {
+                moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/secciones/Suscripciones.razor.js");
+            }
+            catch { }
 
             if (suscripcionSeleccionada != Suscripciones2.SuscripcionTipo.Desconocido)
             {
@@ -749,7 +753,11 @@ else
 
             if (moduloJs != null)
             {
-                await moduloJs.InvokeVoidAsync("cambiarEnlace", "/subscriptions/");
+                try
+                {
+                    await moduloJs.InvokeVoidAsync("cambiarEnlace", "/subscriptions/");
+                }
+                catch { }
             }
         }
     }
@@ -775,7 +783,11 @@ else
     {
         if (moduloJs != null)
         {
-            await moduloJs.InvokeVoidAsync("cambiarEnlace", $"/subscriptions/{Herramientas.EnlaceAdaptador.Nombre(suscripcion.ToString().ToLower())}/");
+            try
+            {
+                await moduloJs.InvokeVoidAsync("cambiarEnlace", $"/subscriptions/{Herramientas.EnlaceAdaptador.Nombre(suscripcion.ToString().ToLower())}/");
+            }
+            catch { }
         }
     }
 
@@ -812,7 +824,11 @@ else
 
         if (moduloJs != null)
         {
-            await moduloJs.InvokeVoidAsync("cambiarEnlace", "/subscriptions/archive/");
+            try
+            {
+                await moduloJs.InvokeVoidAsync("cambiarEnlace", "/subscriptions/archive/");
+            }
+            catch { }
         }
 
         await GenerarArchivo();
@@ -824,7 +840,11 @@ else
 
         if (moduloJs != null)
         {
-            await moduloJs.InvokeVoidAsync("cambiarEnlace", "/subscriptions/last-added/");
+            try
+            {
+                await moduloJs.InvokeVoidAsync("cambiarEnlace", "/subscriptions/last-added/");
+            }
+            catch { }
         }
 
         suscripcionesUltimas = await BaseDatos.Suscripciones.Buscar.UltimasAñadidas();
@@ -935,7 +955,11 @@ else
     {
         if (moduloJs != null)
         {
-            await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
+            try
+            {
+                await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
+            }
+            catch { }
         }
     }
 
@@ -943,7 +967,11 @@ else
     {
         if (moduloJs != null)
         {
-            await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
+            try
+            {
+                await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
+            }
+            catch { }
         }
     }
 }

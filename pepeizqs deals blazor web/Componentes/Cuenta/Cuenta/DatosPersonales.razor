@@ -96,7 +96,11 @@
     {
         if (primerRender == true)
         {
-            moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/cuenta/cuenta/DatosPersonales.razor.js");
+            try
+            {
+                moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/cuenta/cuenta/DatosPersonales.razor.js");
+            }
+            catch { } 
         }
     }
 
@@ -128,7 +132,11 @@
 
             if (moduloJs != null)
             {
-                await moduloJs.InvokeVoidAsync("downloadFileFromStream", ficheroNombre, streamRef);
+                try
+                {
+                    await moduloJs.InvokeVoidAsync("downloadFileFromStream", ficheroNombre, streamRef);
+                }
+                catch { }
             }            
         }
     }

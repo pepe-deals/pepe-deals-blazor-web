@@ -15,7 +15,14 @@ namespace Servicios
 		{
 			valor = nuevoValor;
 			OnChange?.Invoke();
-			await _js.InvokeVoidAsync("setCookie", "marketplace", valor, 365);
+
+			try
+			{
+				await _js.InvokeVoidAsync("setCookie", "marketplace", valor, 365);
+			}
+			catch (Exception)
+			{
+			}
 		}
 	}
 }

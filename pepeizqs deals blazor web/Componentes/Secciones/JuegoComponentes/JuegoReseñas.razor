@@ -355,7 +355,11 @@
 
             cargado = false;
 
-            moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/secciones/juegocomponentes/JuegoReseñas.razor.js");
+            try
+            {
+                moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/secciones/juegocomponentes/JuegoReseñas.razor.js");
+            }
+            catch {}
 
             string idiomaSteam = ObtenerIdiomaSteam(idioma);
             idiomaReseñas = idiomaSteam;
@@ -461,7 +465,7 @@
         if (await BaseDatos.Reseñas.Buscar.DebeModificarse(juego.Id, idiomaSteam) == true)
         {
             APIs.Steam.SteamReseñasApi reseñas = await APIs.Steam.Juego.CargarDatosReseñas(juego.IdSteam, idiomaSteam);
-      
+
             if (reseñas?.Reseñas != null)
             {
                 await BaseDatos.Reseñas.Insertar.Ejecutar(juego.Id, reseñas.Sumario.TotalPositivos, reseñas.Sumario.TotalNegativos, idiomaSteam, JsonSerializer.Serialize(reseñas.Reseñas));
@@ -481,7 +485,11 @@
     {
         if (moduloJs != null)
         {
-            await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
+            try
+            {
+                await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
+            }
+            catch {}
         }
     }
 
@@ -489,7 +497,11 @@
     {
         if (moduloJs != null)
         {
-            await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
+            try
+            {
+                await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
+            }
+            catch { }
         }
     }
 }

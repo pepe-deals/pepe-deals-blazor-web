@@ -781,8 +781,6 @@
 				await CargarSuscripciones(suscripcionesActuales ?? new List<JuegoSuscripcion>(), deseadosGestor);
 
 				ServicioOpciones.OnMostrarOpcionesChanged += StateHasChanged;
-
-				StateHasChanged();
 			}
 
 			cargado = true;
@@ -800,7 +798,11 @@
 	{
 		if (primerRender == true)
 		{
-			moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/secciones/Deseados.razor.js");
+			try
+			{
+				moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/secciones/Deseados.razor.js");
+			}
+			catch { }
 		}
 	}
 
@@ -1497,7 +1499,12 @@
 			if (moduloJs != null)
 			{
 				using var streamRef = new DotNetStreamReference(stream: ficheroStream);
-				await moduloJs.InvokeVoidAsync("downloadFileFromStream", ficheroNombre, streamRef);
+
+				try
+				{
+					await moduloJs.InvokeVoidAsync("downloadFileFromStream", ficheroNombre, streamRef);
+				}
+				catch {}
 			}
 		}
 	}
@@ -1572,7 +1579,11 @@
 	{
 		if (moduloJs != null)
 		{
-			await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
+			try
+			{
+				await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
+			}
+			catch { }
 		}
 	}
 
@@ -1580,7 +1591,11 @@
 	{
 		if (moduloJs != null)
 		{
-			await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
+			try
+			{
+				await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
+			}
+			catch { }
 		}
 	}
 }

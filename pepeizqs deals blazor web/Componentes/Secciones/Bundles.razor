@@ -637,7 +637,11 @@ else
 	{
 		if (primerRender == true)
 		{
-			moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/secciones/Bundles.razor.js");
+			try
+			{
+				moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/secciones/Bundles.razor.js");
+			}
+			catch { }		
 
 			if (string.IsNullOrEmpty(añoSeleccionado) == true)
 			{
@@ -765,11 +769,19 @@ else
 			{
 				if (nuevoTipo != Bundles2.BundleTipo.Desconocido)
 				{
-					await moduloJs.InvokeVoidAsync("cambiarEnlace", "/bundles/" + nuevoTipo.ToString().ToLower() + "/");
+					try
+					{
+						await moduloJs.InvokeVoidAsync("cambiarEnlace", "/bundles/" + nuevoTipo.ToString().ToLower() + "/");
+					}
+					catch { }
 				}
 				else
 				{
-					await moduloJs.InvokeVoidAsync("cambiarEnlace", "/bundles/");
+					try
+					{
+						await moduloJs.InvokeVoidAsync("cambiarEnlace", "/bundles/");
+					}
+					catch { }
 				}
 			}
 		}
@@ -786,7 +798,11 @@ else
 
 			if (moduloJs != null)
 			{
-				await moduloJs.InvokeVoidAsync("cambiarEnlace", "/bundles/archive/" + añoSeleccionado + "/");
+				try
+				{
+					await moduloJs.InvokeVoidAsync("cambiarEnlace", "/bundles/archive/" + añoSeleccionado + "/");
+				}
+				catch { }
 			}
 		}
 
@@ -829,7 +845,11 @@ else
 
 		if (moduloJs != null)
 		{
-			await moduloJs.InvokeVoidAsync("cambiarEnlace", "/bundles/archive/" + añoSeleccionado + "/");
+			try
+			{
+				await moduloJs.InvokeVoidAsync("cambiarEnlace", "/bundles/archive/" + añoSeleccionado + "/");
+			}
+			catch {}
 		}
 	}
 
@@ -874,8 +894,12 @@ else
 
 		if (moduloJs != null)
 		{
-			await moduloJs.InvokeVoidAsync("moverScroll", "cuerpazo");
-			await moduloJs.InvokeVoidAsync("cambiarEnlace", "/bundle/" + bundleSeleccionado.Id.ToString() + "/" + Herramientas.EnlaceAdaptador.Nombre(bundleSeleccionado.Nombre) + "/");
+			try
+			{
+				await moduloJs.InvokeVoidAsync("moverScroll", "cuerpazo");
+				await moduloJs.InvokeVoidAsync("cambiarEnlace", "/bundle/" + bundleSeleccionado.Id.ToString() + "/" + Herramientas.EnlaceAdaptador.Nombre(bundleSeleccionado.Nombre) + "/");
+			}
+			catch { }
 		}
 	}
 
@@ -885,21 +909,33 @@ else
 
 		if (moduloJs != null)
 		{
-			await moduloJs.InvokeVoidAsync("moverScroll", "cuerpazo");
-			await moduloJs.InvokeVoidAsync("cambiarEnlace", "/bundles/");
+			try
+			{
+				await moduloJs.InvokeVoidAsync("moverScroll", "cuerpazo");
+				await moduloJs.InvokeVoidAsync("cambiarEnlace", "/bundles/");
+			}
+			catch { }
 		}
 	}
 
 	private async void AbrirBundle(MouseEventArgs e, string enlace)
 	{
-		await JavaScript.InvokeVoidAsync("open", enlace, "_blank");
+		try
+		{
+			await JavaScript.InvokeVoidAsync("open", enlace, "_blank");
+		}
+		catch { }
 	}
 
 	private async Task MoverScrollJs(MouseEventArgs e, string id)
 	{
 		if (moduloJs != null)
 		{
-			await moduloJs.InvokeVoidAsync("moverScroll", id);
+			try
+			{
+				await moduloJs.InvokeVoidAsync("moverScroll", id);
+			}
+			catch { }
 		}
 	}
 
@@ -907,7 +943,11 @@ else
 	{
 		if (moduloJs != null)
 		{
-			await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
+			try
+			{
+				await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
+			}
+			catch { }
 		}
 	}
 
@@ -915,7 +955,11 @@ else
 	{
 		if (moduloJs != null)
 		{
-			await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
+			try
+			{
+				await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
+			}
+			catch { }
 		}
 	}
 }

@@ -722,7 +722,11 @@
 	{
 		if (primerRender == true)
 		{
-			moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/secciones/Bundle.razor.js");
+			try
+			{
+				moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/secciones/Bundle.razor.js");
+			}
+			catch { }
 
 			if (bundle == null)
 			{
@@ -737,7 +741,11 @@
 
 					if (moduloJs != null && string.IsNullOrEmpty(bundleNombre) == false && bundleNombre.Length > 0)
 					{
-						await moduloJs.InvokeVoidAsync("cambiarEnlace", "/bundle/" + bundle.Id.ToString() + "/" + bundleNombre + "/");
+						try
+						{
+							await moduloJs.InvokeVoidAsync("cambiarEnlace", "/bundle/" + bundle.Id.ToString() + "/" + bundleNombre + "/");
+						}
+						catch {}
 					}
 				}
 			}	
@@ -781,7 +789,11 @@
 
 	private async void AbrirBundle(MouseEventArgs e, string enlace)
 	{
-		await JavaScript.InvokeVoidAsync("open", enlace, "_blank");
+		try
+		{
+			await JavaScript.InvokeVoidAsync("open", enlace, "_blank");
+		}
+		catch { }
 	}
 
 	private string MostrarFecha(DateTime fechaEmpieza, DateTime fechaTermina)

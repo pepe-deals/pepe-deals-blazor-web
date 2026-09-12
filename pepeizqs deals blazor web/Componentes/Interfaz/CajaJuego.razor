@@ -1047,7 +1047,11 @@
 	{
         if (primerRender == true)
         {
-			moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/interfaz/CajaJuego.razor.js");
+			try
+			{
+				moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/interfaz/CajaJuego.razor.js");
+			}
+			catch {}
         }
 	}
 
@@ -1096,11 +1100,19 @@
 	{
 		if (nuevaVentana == false)
 		{
-			await JavaScript.InvokeVoidAsync("open", enlace, "_self");
+			try
+			{
+				await JavaScript.InvokeVoidAsync("open", enlace, "_self");
+			}
+			catch { }
 		}
 		else
 		{
-			await JavaScript.InvokeVoidAsync("open", enlace, "_blank");
+			try
+			{
+				await JavaScript.InvokeVoidAsync("open", enlace, "_blank");
+			}
+			catch { }
 		}
 	}
 
@@ -1119,7 +1131,11 @@
 
 		if (moduloJs != null)
 		{
-			await moduloJs.InvokeVoidAsync("copiarTexto", textoEnlace);
+			try
+			{
+				await moduloJs.InvokeVoidAsync("copiarTexto", textoEnlace);
+			}
+			catch { }
 		}
 
 		cronometroContador = 0;
@@ -1163,8 +1179,12 @@
 		}
 
 		if (moduloJs != null)
-		{
-			await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
+		{		
+			try
+			{
+				await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
+			}
+			catch { }
 		}
 	}
 
@@ -1172,7 +1192,11 @@
 	{
 		if (moduloJs != null)
 		{
-			await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
+			try
+			{
+				await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
+			}
+			catch { }
 		}
 	}
 

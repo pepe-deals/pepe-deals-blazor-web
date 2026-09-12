@@ -517,7 +517,11 @@
 	{
 		if (primerRender == true)
 		{
-			moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/secciones/minimos/GeforceNOW.razor.js");
+			try
+			{
+				moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/secciones/minimos/GeforceNOW.razor.js");
+			}
+			catch { }
 		}
 	}
 
@@ -916,7 +920,11 @@
 	{
 		if (moduloJs != null)
 		{
-			await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
+			try
+			{
+				await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
+			}
+			catch { }
 		}
 	}
 
@@ -924,7 +932,11 @@
 	{
 		if (moduloJs != null)
 		{
-			await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
+			try
+			{
+				await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
+			}
+			catch { }
 		}
 	}
 }

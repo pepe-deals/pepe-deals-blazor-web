@@ -185,18 +185,30 @@
 	{
 		if (primerRender == true)
 		{
-			moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/cuenta/juegos/Sincronizar.razor.js");
+			try
+			{
+				moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/cuenta/juegos/Sincronizar.razor.js");
+			}
+			catch { }
 		}
 
 		if (moduloJs != null)
 		{
 			if (string.IsNullOrEmpty(plataforma) == true)
 			{
-				await moduloJs.InvokeVoidAsync("cambiarEnlace", "/account/sync/");
+				try
+				{
+					await moduloJs.InvokeVoidAsync("cambiarEnlace", "/account/sync/");
+				}
+				catch { }
 			}
 			else
 			{
-				await moduloJs.InvokeVoidAsync("cambiarEnlace", "/account/sync/" + plataforma.ToLower() + "/");
+				try
+				{
+					await moduloJs.InvokeVoidAsync("cambiarEnlace", "/account/sync/" + plataforma.ToLower() + "/");
+				}
+				catch { }
 			}
 		}
 	}

@@ -45,6 +45,14 @@ builder.Services.Configure<BrotliCompressionProviderOptions>(opciones =>
 	opciones.Level = CompressionLevel.Optimal;
 });
 
+builder.Services.Configure<ZstandardCompressionProviderOptions>(opciones =>
+{
+	opciones.CompressionOptions = new ZstandardCompressionOptions
+	{
+		Quality = 6  
+	};
+});
+
 #endregion
 
 #region Optimizador

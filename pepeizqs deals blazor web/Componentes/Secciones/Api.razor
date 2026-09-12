@@ -652,7 +652,12 @@
 	private async void CopiarAlClipboard(MouseEventArgs e, string texto)
 	{
 		enseñarAlerta = true;
-		await JavaScript.InvokeVoidAsync("clipboardCopy.copyText", texto);
+
+		try
+		{
+			await JavaScript.InvokeVoidAsync("clipboardCopy.copyText", texto);
+		}
+		catch { }		
 
 		cronometroContador = 0;
 		cronometro = new PeriodicTimer(TimeSpan.FromSeconds(1));

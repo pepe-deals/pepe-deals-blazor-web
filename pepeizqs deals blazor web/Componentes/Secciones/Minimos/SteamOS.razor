@@ -447,7 +447,7 @@
 			{
 				deseadosWebIndex = Herramientas.Deseados.CrearWebIndex(deseadosUsuario);
 			}
-			
+
 			if (opciones != null)
 			{
 				if (opciones.Currency.HasValue == true)
@@ -497,7 +497,11 @@
 	{
 		if (primerRender == true)
 		{
-			moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/secciones/minimos/SteamOS.razor.js");
+			try
+			{
+				moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/secciones/minimos/SteamOS.razor.js");
+			}
+			catch {}
 		}
 	}
 
@@ -878,7 +882,11 @@
 	{
 		if (moduloJs != null)
 		{
-			await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
+			try
+			{
+				await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
+			}
+			catch { }		
 		}
 	}
 
@@ -886,7 +894,11 @@
 	{
 		if (moduloJs != null)
 		{
-			await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
+			try
+			{
+				await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
+			}
+			catch { }	
 		}
 	}
 }

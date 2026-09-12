@@ -767,7 +767,11 @@ else
 	{
 		if (primerRender == true)
 		{
-			moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/secciones/Filtro.razor.js");
+			try
+			{
+				moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/secciones/Filtro.razor.js");
+			}
+			catch {}
 		}
 	}
 
@@ -842,11 +846,19 @@ else
 		{
 			if (string.IsNullOrEmpty(ids) == false)
 			{
-				await moduloJs.InvokeVoidAsync("cambiarEnlace", "/filter/" + ids + "/");
+				try
+				{
+					await moduloJs.InvokeVoidAsync("cambiarEnlace", "/filter/" + ids + "/");
+				}
+				catch { }
 			}
 			else
 			{
-				await moduloJs.InvokeVoidAsync("cambiarEnlace", "/filter/");
+				try
+				{
+					await moduloJs.InvokeVoidAsync("cambiarEnlace", "/filter/");
+				}
+				catch { }
 			}
 		}
 

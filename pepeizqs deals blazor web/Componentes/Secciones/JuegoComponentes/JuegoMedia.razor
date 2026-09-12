@@ -273,8 +273,12 @@
         {
             javascriptListo = true;
 
-            moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/secciones/juegocomponentes/JuegoMedia.razor.js");
-        
+            try
+            {
+                moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/secciones/juegocomponentes/JuegoMedia.razor.js");
+            }
+            catch { }
+
             if (mediaMostrarPosicion == 99999 && string.IsNullOrEmpty(mediaMostrar) == false)
             {
                 await Cargar(mediaMostrar);
@@ -408,7 +412,11 @@
     {
         if (moduloJs != null)
         {
-            await moduloJs.InvokeVoidAsync("loadStream", url, DotNetObjectReference.Create(this));
+            try
+            {
+                await moduloJs.InvokeVoidAsync("loadStream", url, DotNetObjectReference.Create(this));
+            }
+            catch {}
         }
     }
 
@@ -416,7 +424,11 @@
     {
         if (moduloJs != null)
         {
-            await moduloJs.InvokeVoidAsync("playVideo");
+            try
+            {
+                await moduloJs.InvokeVoidAsync("playVideo");
+            }
+            catch { }
         }
     }
 
@@ -424,7 +436,11 @@
     {
         if (moduloJs != null)
         {
-            estaReproduciendo = await moduloJs.InvokeAsync<bool>("togglePlay");
+            try
+            {
+                estaReproduciendo = await moduloJs.InvokeAsync<bool>("togglePlay");
+            }
+            catch { }
         }
     }
 
@@ -432,7 +448,11 @@
     {
         if (moduloJs != null)
         {
-            estaMuteado = await moduloJs.InvokeAsync<bool>("toggleMute");
+            try
+            {
+                estaMuteado = await moduloJs.InvokeAsync<bool>("toggleMute");
+            }
+            catch { }
         }
     }
 
@@ -441,7 +461,12 @@
         if (moduloJs != null)
         {
             volumen = Convert.ToDouble(e.Value);
-            await moduloJs.InvokeVoidAsync("setVolume", volumen);
+
+            try
+            {
+                await moduloJs.InvokeVoidAsync("setVolume", volumen);
+            }
+            catch { }
         }
     }
 
@@ -449,7 +474,11 @@
     {
         if (moduloJs != null)
         {
-            await moduloJs.InvokeVoidAsync("toggleFullScreen");
+            try
+            {
+                await moduloJs.InvokeVoidAsync("toggleFullScreen");
+            }
+            catch { }
         }
     }
 
@@ -457,7 +486,11 @@
     {
         if (moduloJs != null)
         {
-            await moduloJs.InvokeVoidAsync("seek", e.ClientX);
+            try
+            {
+                await moduloJs.InvokeVoidAsync("seek", e.ClientX);
+            }
+            catch { }
         }
     }
 

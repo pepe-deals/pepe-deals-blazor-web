@@ -2,8 +2,6 @@
 @using pepeizqs_deals_blazor_web.Componentes.Interfaz
 @using pepeizqs_deals_web.Data
 
-@inject AuthenticationStateProvider AuthenticationStateProvider
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -141,17 +139,18 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-        usuarioId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
         if (contexto != null)
         {
+            usuarioId = contexto?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             idioma = contexto?.Request?.Headers["Accept-Language"].ToString().Split(";").FirstOrDefault()?.Split(",").FirstOrDefault();
             userAgent = contexto?.Request?.Headers.UserAgent.ToString();
             dominio = contexto?.Request?.Host.Value;
-            usuarioPatreon = Herramientas.Patreon.VerificarActivo(await BaseDatos.Usuarios.Buscar.FechaPatreon(usuarioId));
 
+            if (string.IsNullOrEmpty(usuarioId) == false)
+            {
+                usuarioPatreon = Herramientas.Patreon.VerificarActivo(await BaseDatos.Usuarios.Buscar.FechaPatreon(usuarioId));
+            }
+            
             string ruta = contexto?.Request?.Path.ToString();
             enlace = "https://" + dominio + ruta;
 

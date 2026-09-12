@@ -367,10 +367,14 @@
 	private IJSObjectReference moduloJs;
 
 	protected override async Task OnAfterRenderAsync(bool primerRender)
-    {
-        if (primerRender == true)
-        {
-            moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/cuenta/cuenta/NotificacionesCorreo.razor.js");
+	{
+		if (primerRender == true)
+		{
+			try
+			{
+				moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/cuenta/cuenta/NotificacionesCorreo.razor.js");
+			}
+			catch { }
 		}
 	}
 
@@ -555,7 +559,11 @@
 	{
 		if (moduloJs != null)
 		{
-			await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
+			try
+			{
+				await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
+			}
+			catch { }
 		}
 	}
 
@@ -563,7 +571,11 @@
 	{
 		if (moduloJs != null)
 		{
-			await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
+			try
+			{
+				await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
+			}
+			catch { }
 		}
 	}
 }

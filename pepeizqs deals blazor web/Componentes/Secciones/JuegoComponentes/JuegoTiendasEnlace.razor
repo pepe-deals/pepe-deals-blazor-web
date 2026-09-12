@@ -336,7 +336,11 @@
     {
         if (primerRender == true)
         {
-            moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/interfaz/CajaJuego.razor.js");
+            try
+            {
+                moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/interfaz/CajaJuego.razor.js");
+            }
+            catch { }
         }
     }
 
@@ -481,7 +485,11 @@
 
             if (moduloJs != null)
             {
-                await moduloJs.InvokeVoidAsync("copiarTexto", texto);
+                try
+                {
+                    await moduloJs.InvokeVoidAsync("copiarTexto", texto);
+                }
+                catch { }
             }
 
             cronometroContador = 0;

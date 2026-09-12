@@ -777,7 +777,11 @@ else if (categoriaId > 0 && postId > 0)
         categorias = BaseDatos.Foro.Buscar.CategoriasIdiomas(idiomaId);
         postsUltimosTodoForo = BaseDatos.Foro.Buscar.UltimosPostsTodoForo(idiomaId, 10);
 
-        await JavaScript.InvokeVoidAsync("ChangeUrl", "/forum/");
+        try
+        {
+            await JavaScript.InvokeVoidAsync("ChangeUrl", "/forum/");
+        }
+        catch { }
     }
 
     private async void NavegacionCategoria(MouseEventArgs e, int nuevaCategoriaId)
@@ -789,7 +793,11 @@ else if (categoriaId > 0 && postId > 0)
         postsFijos = BaseDatos.Foro.Buscar.UltimosPosts(nuevaCategoriaId, 5, true);
         postsUltimos = BaseDatos.Foro.Buscar.UltimosPosts(nuevaCategoriaId, 30, false);
 
-        await JavaScript.InvokeVoidAsync("ChangeUrl", "/forum/" + categoriaId.ToString() + "/");
+        try
+        {
+            await JavaScript.InvokeVoidAsync("ChangeUrl", "/forum/" + categoriaId.ToString() + "/");
+        }
+        catch { }
     }
 
     private async void NavegacionCategoriaVolver(MouseEventArgs e)
@@ -801,7 +809,11 @@ else if (categoriaId > 0 && postId > 0)
         postsFijos = BaseDatos.Foro.Buscar.UltimosPosts(categoriaId, 5, true);
         postsUltimos = BaseDatos.Foro.Buscar.UltimosPosts(categoriaId, 30, false);
 
-        await JavaScript.InvokeVoidAsync("ChangeUrl", "/forum/" + categoriaId.ToString() + "/");
+        try
+        {
+            await JavaScript.InvokeVoidAsync("ChangeUrl", "/forum/" + categoriaId.ToString() + "/");
+        }
+        catch { }
     }
 
     private async void NavegacionPost(MouseEventArgs e, int nuevoPostId)
@@ -818,7 +830,11 @@ else if (categoriaId > 0 && postId > 0)
 
             respuestasPost = BaseDatos.Foro.Buscar.RespuestasPost(postAbierto.Id);
 
-            await JavaScript.InvokeVoidAsync("ChangeUrl", "/forum/" + categoriaId.ToString() + "/" + postAbierto.Id.ToString() + "/" + Herramientas.EnlaceAdaptador.Nombre(postAbierto.Titulo) + "/");
+            try
+            {
+                await JavaScript.InvokeVoidAsync("ChangeUrl", "/forum/" + categoriaId.ToString() + "/" + postAbierto.Id.ToString() + "/" + Herramientas.EnlaceAdaptador.Nombre(postAbierto.Titulo) + "/");
+            }
+            catch { }
         }
     }
 
@@ -1020,7 +1036,11 @@ else if (categoriaId > 0 && postId > 0)
             postsFijos = BaseDatos.Foro.Buscar.UltimosPosts(categoriaId, 5, true);
             postsUltimos = BaseDatos.Foro.Buscar.UltimosPosts(categoriaId, 30, false);
 
-            await JavaScript.InvokeVoidAsync("ChangeUrl", "/forum/" + categoriaId.ToString() + "/");
+            try
+            {
+                await JavaScript.InvokeVoidAsync("ChangeUrl", "/forum/" + categoriaId.ToString() + "/");
+            }
+            catch { }
         }
     }
 

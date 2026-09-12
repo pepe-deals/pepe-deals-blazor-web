@@ -98,7 +98,7 @@
 
 	private string titulo = string.Empty;
 	private string mensajeTiempo = string.Empty;
-    private string idTooltip => $"news-{noticia?.Id.ToString()}";
+	private string idTooltip => $"news-{noticia?.Id.ToString()}";
 
 	private IJSObjectReference moduloJs;
 
@@ -106,7 +106,11 @@
 	{
 		if (primerRender == true)
 		{
-			moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/interfaz/CajaNoticia.razor.js");
+			try
+			{
+				moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/interfaz/CajaNoticia.razor.js");
+			}
+			catch {}
 		}
 
 		titulo = Herramientas.Idiomas.ElegirTexto(idioma, noticia.TituloEn, noticia.TituloEs);
@@ -129,7 +133,11 @@
 	{
 		if (moduloJs != null)
 		{
-			await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
+			try
+			{
+				await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
+			}
+			catch { }
 		}
 	}
 
@@ -137,7 +145,11 @@
 	{
 		if (moduloJs != null)
 		{
-			await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
+			try
+			{
+				await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
+			}
+			catch { }
 		}
 	}
 }

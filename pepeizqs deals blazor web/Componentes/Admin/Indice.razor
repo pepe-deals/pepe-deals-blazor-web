@@ -246,8 +246,12 @@
     {
         if (primerRender == true)
         {
-            moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/cuenta/cuenta/Indice.razor.js");
-
+            try
+            {
+                moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/cuenta/cuenta/Indice.razor.js");
+            }
+            catch { }
+            
             if (string.IsNullOrEmpty(subpagina) == true)
             {
                 MostrarEnlaces();
@@ -388,7 +392,11 @@
 
         if (moduloJs != null)
         {
-            await moduloJs.InvokeVoidAsync("cambiarEnlace", "/admin/" + subpaginaEnlaces + "/");
+            try
+            {
+                await moduloJs.InvokeVoidAsync("cambiarEnlace", "/admin/" + subpaginaEnlaces + "/");
+            }
+            catch {}
         }
     }
 
@@ -409,7 +417,11 @@
 
         if (moduloJs != null)
         {
-            await moduloJs.InvokeVoidAsync("cambiarEnlace", "/admin/" + subpaginaDuplicados + "/");
+            try
+            {
+                await moduloJs.InvokeVoidAsync("cambiarEnlace", "/admin/" + subpaginaDuplicados + "/");
+            }
+            catch { }
         }
     }
 
@@ -432,7 +444,11 @@
 
         if (moduloJs != null)
         {
-            await moduloJs.InvokeVoidAsync("cambiarEnlace", "/admin/" + subpaginaErrores + "/");
+            try
+            {
+                await moduloJs.InvokeVoidAsync("cambiarEnlace", "/admin/" + subpaginaErrores + "/");
+            }
+            catch { }
         }
     }
 
@@ -452,7 +468,11 @@
 
         if (moduloJs != null)
         {
-            await moduloJs.InvokeVoidAsync("cambiarEnlace", "/admin/" + subpaginaTareas + "/");
+            try
+            {
+                await moduloJs.InvokeVoidAsync("cambiarEnlace", "/admin/" + subpaginaTareas + "/");
+            }
+            catch { }
         }
     }
 
@@ -472,7 +492,11 @@
 
         if (moduloJs != null)
         {
-            await moduloJs.InvokeVoidAsync("cambiarEnlace", "/admin/" + subpaginaDivisas + "/");
+            try
+            {
+                await moduloJs.InvokeVoidAsync("cambiarEnlace", "/admin/" + subpaginaDivisas + "/");
+            }
+            catch { }
         }
     }
 
@@ -494,8 +518,12 @@
         nuevosDLCsCantidad = await BaseDatos.Juegos.Buscar.DLCsCantidad();
 
         if (moduloJs != null)
-        {
-            await moduloJs.InvokeVoidAsync("cambiarEnlace", "/admin/" + subpaginaDLCs + "/");
+        {     
+            try
+            {
+                await moduloJs.InvokeVoidAsync("cambiarEnlace", "/admin/" + subpaginaDLCs + "/");
+            }
+            catch { }
         }
     }
 
@@ -518,7 +546,11 @@
 
         if (moduloJs != null)
         {
-            await moduloJs.InvokeVoidAsync("cambiarEnlace", "/admin/" + subpaginaPendientes + "/");
+            try
+            {
+                await moduloJs.InvokeVoidAsync("cambiarEnlace", "/admin/" + subpaginaPendientes + "/");
+            }
+            catch { }
         }
     }
 
@@ -538,7 +570,11 @@
 
         if (moduloJs != null)
         {
-            await moduloJs.InvokeVoidAsync("cambiarEnlace", "/admin/" + subpaginaJuegos + "/");
+            try
+            {
+                await moduloJs.InvokeVoidAsync("cambiarEnlace", "/admin/" + subpaginaJuegos + "/");
+            }
+            catch { }
         }
     }
 
@@ -558,7 +594,11 @@
 
         if (moduloJs != null)
         {
-            await moduloJs.InvokeVoidAsync("cambiarEnlace", "/admin/" + subpaginaNoticias + "/");
+            try
+            {
+                await moduloJs.InvokeVoidAsync("cambiarEnlace", "/admin/" + subpaginaNoticias + "/");
+            }
+            catch { }
         }
     }
 
@@ -578,7 +618,11 @@
 
         if (moduloJs != null)
         {
-            await moduloJs.InvokeVoidAsync("cambiarEnlace", "/admin/" + subpaginaBundles + "/");
+            try
+            {
+                await moduloJs.InvokeVoidAsync("cambiarEnlace", "/admin/" + subpaginaBundles + "/");
+            }
+            catch { }
         }
     }
 
@@ -598,7 +642,11 @@
 
         if (moduloJs != null)
         {
-            await moduloJs.InvokeVoidAsync("cambiarEnlace", "/admin/" + subpaginaGratis + "/");
+            try
+            {
+                await moduloJs.InvokeVoidAsync("cambiarEnlace", "/admin/" + subpaginaGratis + "/");
+            }
+            catch { }
         }
     }
 
@@ -618,7 +666,11 @@
 
         if (moduloJs != null)
         {
-            await moduloJs.InvokeVoidAsync("cambiarEnlace", "/admin/" + subpaginaSuscripciones + "/");
+            try
+            {
+                await moduloJs.InvokeVoidAsync("cambiarEnlace", "/admin/" + subpaginaSuscripciones + "/");
+            }
+            catch { }
         }
     }
 
@@ -638,7 +690,11 @@
 
         if (moduloJs != null)
         {
-            await moduloJs.InvokeVoidAsync("cambiarEnlace", "/admin/" + subpaginaRecompensas + "/");
+            try
+            {
+                await moduloJs.InvokeVoidAsync("cambiarEnlace", "/admin/" + subpaginaRecompensas + "/");
+            }
+            catch { }
         }
     }
 
@@ -658,7 +714,11 @@
 
         if (moduloJs != null)
         {
-            await moduloJs.InvokeVoidAsync("cambiarEnlace", "/admin/" + subpaginaCupones + "/");
+            try
+            {
+                await moduloJs.InvokeVoidAsync("cambiarEnlace", "/admin/" + subpaginaCupones + "/");
+            }
+            catch { }
         }
     }
 

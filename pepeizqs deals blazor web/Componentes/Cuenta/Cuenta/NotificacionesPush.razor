@@ -264,11 +264,30 @@ else
 
     private IJSObjectReference moduloJs;
 
+    protected override void OnInitialized()
+    {
+        AuthenticationStateProvider.AuthenticationStateChanged += OnAuthStateChanged;
+    }
+
+    private void OnAuthStateChanged(Task<AuthenticationState> task)
+    {
+        InvokeAsync(async () =>
+        {
+            var authState = await task;
+            usuarioId = authState.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            StateHasChanged();
+        });
+    }
+
     protected override async Task OnAfterRenderAsync(bool primerRender)
     {
         if (primerRender == true)
         {
-            moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/cuenta/cuenta/NotificacionesPush.razor.js");
+            try
+            {
+                moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/cuenta/cuenta/NotificacionesPush.razor.js");
+            }
+            catch {}
 
             try
             {
@@ -276,9 +295,6 @@ else
 
                 if (navegadorSoportaNotificaciones == true)
                 {
-                    var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-                    usuarioId = authState.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-
                     if (string.IsNullOrEmpty(usuarioId) == false)
                     {
                         var suscripcionExiste = Db.PushSubscriptions.FirstOrDefault(s => s.UserId == usuarioId && s.Activa);
@@ -313,20 +329,20 @@ else
                         }
 
                         if (usuario.NotificationPushBundles == null)
-			            {
-				            estadoBundles = null;
-			            }
-			            else
-			            {
-				            if (usuario.NotificationPushBundles == true)
-				            {
-					            estadoBundles = "checked";
-				            }
-				            else
-				            {
-					            estadoBundles = null;
-				            }
-			            }
+                        {
+                            estadoBundles = null;
+                        }
+                        else
+                        {
+                            if (usuario.NotificationPushBundles == true)
+                            {
+                                estadoBundles = "checked";
+                            }
+                            else
+                            {
+                                estadoBundles = null;
+                            }
+                        }
 
                         if (usuario.NotificationPushFree == null)
                         {
@@ -491,7 +507,6 @@ else
             }
 
             usuarioSuscrito = false;
-            StateHasChanged();
         }
         catch (Exception ex)
         {
@@ -641,7 +656,11 @@ else
     {
         if (moduloJs != null)
         {
-            await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
+            try
+            {
+                await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
+            }
+            catch { }
         }
     }
 
@@ -649,7 +668,11 @@ else
     {
         if (moduloJs != null)
         {
-            await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
+            try
+            {
+                await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
+            }
+            catch { }
         }
     }
 }
