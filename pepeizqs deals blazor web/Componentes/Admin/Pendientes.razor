@@ -3,131 +3,131 @@
 @using Tiendas2
 @using global::Juegos
 
-<div style="display: flex; justify-content: space-between; flex-direction: row; gap: 40px;">
-    <div class="caja-admin-pendientes" style="min-width: 300px; display: flex; flex-direction: column; gap: 5px; height: fit-content;">
-        @foreach (var pendiente in pendientesTiendas)
-        {
-            if (pendiente.Pendientes.Count > 0)
+@if (pendientesTiendas.Any(p => p.Pendientes.Count > 0) || pendientesSuscripciones.Any(p => p.Pendientes.Count > 0) || pendientesStreamings.Any(p => p.Pendientes.Count > 0) || pendientesPlataformas.Any(p => p.Pendientes.Count > 0))
+{
+    <div style="display: flex; justify-content: space-between; flex-direction: row; gap: 40px;">
+        <div class="caja-admin-pendientes" style="min-width: 300px; display: flex; flex-direction: column; gap: 5px; height: fit-content;">
+            @foreach (var pendiente in pendientesTiendas)
             {
-                string fondo = string.Empty;
+                if (pendiente.Pendientes.Count > 0)
+                {
+                    string fondo = string.Empty;
 
-                if (string.IsNullOrEmpty(idTiendaPendiente) == true && string.IsNullOrEmpty(idSuscripcionPendiente) == true && string.IsNullOrEmpty(idStreamingPendiente) == true && string.IsNullOrEmpty(idPlataformaPendiente) == true)
-                {
-                    idTiendaPendiente = pendiente.Tienda.Id;
-                }
-                else
-                {
-                    if (idTiendaPendiente != pendiente.Tienda.Id)
+                    if (string.IsNullOrEmpty(idTiendaPendiente) == true && string.IsNullOrEmpty(idSuscripcionPendiente) == true && string.IsNullOrEmpty(idStreamingPendiente) == true && string.IsNullOrEmpty(idPlataformaPendiente) == true)
                     {
-                        fondo = "background-color: transparent;";
+                        idTiendaPendiente = pendiente.Tienda.Id;
                     }
-                }
+                    else
+                    {
+                        if (idTiendaPendiente != pendiente.Tienda.Id)
+                        {
+                            fondo = "background-color: transparent;";
+                        }
+                    }
 
-                <button @onclick="@(e => ClickearTiendaPendientes(e, pendiente.Tienda.Id, pendiente.Tienda.Nombre))" class="boton-pequeño" style="display: block; box-shadow: none; padding: 6px 12px; @fondo">
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <img src="@pendiente.Tienda.ImagenIcono" style="height: 16px; width: 16px; display: block;" />
+                    <button @onclick="@(e => ClickearTiendaPendientes(e, pendiente.Tienda.Id, pendiente.Tienda.Nombre))" class="boton-pequeño" style="display: block; box-shadow: none; padding: 6px 12px; @fondo">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <img src="@pendiente.Tienda.ImagenIcono" style="height: 16px; width: 16px; display: block;" />
 
-                        <div>
-                            @pendiente.Tienda.Nombre (@pendiente.Pendientes.Count)
+                            <div>
+                                @pendiente.Tienda.Nombre (@pendiente.Pendientes.Count)
+                            </div>
                         </div>
-                    </div>
-                </button>
+                    </button>
+                }
             }
-        }
 
-        @foreach (var pendiente in pendientesSuscripciones)
-        {
-            if (pendiente.Pendientes.Count > 0)
+            @foreach (var pendiente in pendientesSuscripciones)
             {
-                string fondo = string.Empty;
+                if (pendiente.Pendientes.Count > 0)
+                {
+                    string fondo = string.Empty;
 
-                if (string.IsNullOrEmpty(idTiendaPendiente) == true && string.IsNullOrEmpty(idSuscripcionPendiente) == true && string.IsNullOrEmpty(idStreamingPendiente) == true && string.IsNullOrEmpty(idPlataformaPendiente) == true)
-                {
-                    idSuscripcionPendiente = pendiente.Suscripcion.Id.ToString();
-                }
-                else
-                {
-                    if (idSuscripcionPendiente != pendiente.Suscripcion.Id.ToString())
+                    if (string.IsNullOrEmpty(idTiendaPendiente) == true && string.IsNullOrEmpty(idSuscripcionPendiente) == true && string.IsNullOrEmpty(idStreamingPendiente) == true && string.IsNullOrEmpty(idPlataformaPendiente) == true)
                     {
-                        fondo = "background-color: transparent;";
+                        idSuscripcionPendiente = pendiente.Suscripcion.Id.ToString();
                     }
-                }
+                    else
+                    {
+                        if (idSuscripcionPendiente != pendiente.Suscripcion.Id.ToString())
+                        {
+                            fondo = "background-color: transparent;";
+                        }
+                    }
 
-                <button @onclick="@(e => ClickearSuscripcionPendientes(e, pendiente.Suscripcion.Id.ToString(), pendiente.Suscripcion.Nombre))" class="boton-pequeño" style="display: block; padding: 6px 12px; box-shadow: none; @fondo">
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <img src="@pendiente.Suscripcion.ImagenIcono" style="height: 16px; width: 16px; display: block;" />
+                    <button @onclick="@(e => ClickearSuscripcionPendientes(e, pendiente.Suscripcion.Id.ToString(), pendiente.Suscripcion.Nombre))" class="boton-pequeño" style="display: block; padding: 6px 12px; box-shadow: none; @fondo">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <img src="@pendiente.Suscripcion.ImagenIcono" style="height: 16px; width: 16px; display: block;" />
 
-                        <div>
-                            @pendiente.Suscripcion.Nombre (@pendiente.Pendientes.Count)
+                            <div>
+                                @pendiente.Suscripcion.Nombre (@pendiente.Pendientes.Count)
+                            </div>
                         </div>
-                    </div>
-                </button>
+                    </button>
+                }
             }
-        }
 
-        @foreach (var pendiente in pendientesStreamings)
-        {
-            if (pendiente.Pendientes.Count > 0)
+            @foreach (var pendiente in pendientesStreamings)
             {
-                string fondo = string.Empty;
+                if (pendiente.Pendientes.Count > 0)
+                {
+                    string fondo = string.Empty;
 
-                if (string.IsNullOrEmpty(idTiendaPendiente) == true && string.IsNullOrEmpty(idSuscripcionPendiente) == true && string.IsNullOrEmpty(idStreamingPendiente) == true && string.IsNullOrEmpty(idPlataformaPendiente) == true)
-                {
-                    idStreamingPendiente = pendiente.Streaming.Id.ToString();
-                }
-                else
-                {
-                    if (idStreamingPendiente != pendiente.Streaming.Id.ToString())
+                    if (string.IsNullOrEmpty(idTiendaPendiente) == true && string.IsNullOrEmpty(idSuscripcionPendiente) == true && string.IsNullOrEmpty(idStreamingPendiente) == true && string.IsNullOrEmpty(idPlataformaPendiente) == true)
                     {
-                        fondo = "background-color: transparent;";
+                        idStreamingPendiente = pendiente.Streaming.Id.ToString();
                     }
-                }
+                    else
+                    {
+                        if (idStreamingPendiente != pendiente.Streaming.Id.ToString())
+                        {
+                            fondo = "background-color: transparent;";
+                        }
+                    }
 
-                <button @onclick="@(e => ClickearStreamingPendientes(e, pendiente.Streaming.Id.ToString(), pendiente.Streaming.Nombre))" class="boton-pequeño" style="display: block; padding: 6px 12px; box-shadow: none; @fondo">
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <img src="@pendiente.Streaming.ImagenIcono" style="height: 16px; width: 16px; display: block;" />
-                        
-                        <div>
-                            @pendiente.Streaming.Nombre (@pendiente.Pendientes.Count)
+                    <button @onclick="@(e => ClickearStreamingPendientes(e, pendiente.Streaming.Id.ToString(), pendiente.Streaming.Nombre))" class="boton-pequeño" style="display: block; padding: 6px 12px; box-shadow: none; @fondo">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <img src="@pendiente.Streaming.ImagenIcono" style="height: 16px; width: 16px; display: block;" />
+
+                            <div>
+                                @pendiente.Streaming.Nombre (@pendiente.Pendientes.Count)
+                            </div>
                         </div>
-                    </div>
-                </button>
+                    </button>
+                }
             }
-        }
 
-        @foreach (var pendiente in pendientesPlataformas)
-        {
-            if (pendiente.Pendientes.Count > 0)
+            @foreach (var pendiente in pendientesPlataformas)
             {
-                string fondo = string.Empty;
+                if (pendiente.Pendientes.Count > 0)
+                {
+                    string fondo = string.Empty;
 
-                if (string.IsNullOrEmpty(idTiendaPendiente) == true && string.IsNullOrEmpty(idSuscripcionPendiente) == true && string.IsNullOrEmpty(idStreamingPendiente) == true && string.IsNullOrEmpty(idPlataformaPendiente) == true)
-                {
-                    idPlataformaPendiente = pendiente.Plataforma.Id.ToString();
-                }
-                else
-                {
-                    if (idPlataformaPendiente != pendiente.Plataforma.Id.ToString())
+                    if (string.IsNullOrEmpty(idTiendaPendiente) == true && string.IsNullOrEmpty(idSuscripcionPendiente) == true && string.IsNullOrEmpty(idStreamingPendiente) == true && string.IsNullOrEmpty(idPlataformaPendiente) == true)
                     {
-                        fondo = "background-color: transparent;";
+                        idPlataformaPendiente = pendiente.Plataforma.Id.ToString();
                     }
-                }
+                    else
+                    {
+                        if (idPlataformaPendiente != pendiente.Plataforma.Id.ToString())
+                        {
+                            fondo = "background-color: transparent;";
+                        }
+                    }
 
-                <button @onclick="@(e => ClickearPlataformaPendientes(e, pendiente.Plataforma.Id.ToString(), pendiente.Plataforma.Nombre))" class="boton-pequeño" style="display: block; padding: 6px 12px; box-shadow: none; @fondo">
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <img src="@pendiente.Plataforma.ImagenIcono" style="height: 16px; width: 16px; display: block;" />
+                    <button @onclick="@(e => ClickearPlataformaPendientes(e, pendiente.Plataforma.Id.ToString(), pendiente.Plataforma.Nombre))" class="boton-pequeño" style="display: block; padding: 6px 12px; box-shadow: none; @fondo">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <img src="@pendiente.Plataforma.ImagenIcono" style="height: 16px; width: 16px; display: block;" />
 
-                        <div>
-                            @pendiente.Plataforma.Nombre (@pendiente.Pendientes.Count)
+                            <div>
+                                @pendiente.Plataforma.Nombre (@pendiente.Pendientes.Count)
+                            </div>
                         </div>
-                    </div>
-                </button>
+                    </button>
+                }
             }
-        }
-    </div>
+        </div>
 
-    @if (pendientesTiendas.Any(p => p.Pendientes.Count > 0) || pendientesSuscripciones.Any(p => p.Pendientes.Count > 0) || pendientesStreamings.Any(p => p.Pendientes.Count > 0) || pendientesPlataformas.Any(p => p.Pendientes.Count > 0))
-    {
         <div style="width: 100%;">
             <div style="display: flex; align-items: center; gap: 30px;">
                 @if (idsPendiente != "0" && ocupado == false)
@@ -190,94 +190,94 @@
                                 }
                             }
                         </div>
-                    }  
+                    }
                 </div>
             </div>
         </div>
-    }  
-</div>
-
-<div style="margin-top: 30px;">
-    <div style="width: 100%; display: flex; align-items: center; gap: 10px;">
-        <div style="width: 20px;">
-            <svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                <path d="M480 272C480 317.9 465.1 360.3 440 394.7L566.6 521.4C579.1 533.9 579.1 554.2 566.6 566.7C554.1 579.2 533.8 579.2 521.3 566.7L394.7 440C360.3 465.1 317.9 480 272 480C157.1 480 64 386.9 64 272C64 157.1 157.1 64 272 64C386.9 64 480 157.1 480 272zM272 416C351.5 416 416 351.5 416 272C416 192.5 351.5 128 272 128C192.5 128 128 192.5 128 272C128 351.5 192.5 416 272 416z" />
-            </svg>
-        </div>
-
-        <input type="text" @bind-value="textoBuscador" @bind-value:event="oninput" @bind-value:after="TextoCambiaBuscador" class="entrada-texto" style="min-width: auto;" />
     </div>
 
-    @if (buscadorBuscando == false && string.IsNullOrEmpty(textoBuscador) == false)
-    {
-        <div class="caja-admin-pendientes" style="padding: 10px; margin-top: 10px;">
-            @if (buscadorBuscando == true)
-            {
-                <div>
-                    Buscando...
-                </div>
-            }
-            else if (string.IsNullOrEmpty(textoBuscador) == false)
-            {
-                if (pestañasBuscador.Values.All(p => p.resultados.Count == 0))
+    <div style="margin-top: 30px;">
+        <div style="width: 100%; display: flex; align-items: center; gap: 10px;">
+            <div style="width: 20px;">
+                <svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                    <path d="M480 272C480 317.9 465.1 360.3 440 394.7L566.6 521.4C579.1 533.9 579.1 554.2 566.6 566.7C554.1 579.2 533.8 579.2 521.3 566.7L394.7 440C360.3 465.1 317.9 480 272 480C157.1 480 64 386.9 64 272C64 157.1 157.1 64 272 64C386.9 64 480 157.1 480 272zM272 416C351.5 416 416 351.5 416 272C416 192.5 351.5 128 272 128C192.5 128 128 192.5 128 272C128 351.5 192.5 416 272 416z" />
+                </svg>
+            </div>
+
+            <input type="text" @bind-value="textoBuscador" @bind-value:event="oninput" @bind-value:after="TextoCambiaBuscador" class="entrada-texto" style="min-width: auto;" />
+        </div>
+
+        @if (buscadorBuscando == false && string.IsNullOrEmpty(textoBuscador) == false)
+        {
+            <div class="caja-admin-pendientes" style="padding: 10px; margin-top: 10px;">
+                @if (buscadorBuscando == true)
                 {
                     <div>
-                        No hay resultados
+                        Buscando...
                     </div>
                 }
-                else
+                else if (string.IsNullOrEmpty(textoBuscador) == false)
                 {
-                    <div style="display: flex; align-items: center; gap: 20px;">
-                        @foreach (var (tipo, info) in ObtenerInfoPestañas())
-                        {
-                            var pestaña = pestañasBuscador[tipo];
-                            <button @onclick="@(e => CambiarPestañas(e, info.Indice))" class="boton-pequeño" style="width: @(info.Ancho)px; text-align: center; box-shadow: none; @pestaña.ObtenerEstilo()">
-                                @info.Titulo (@pestaña.resultados.Count)
-                            </button>
-                        }
-                    </div>
-
-                    foreach (var pestaña in pestañasBuscador.Values.Where(p => p.activa && p.resultados.Count > 0))
+                    if (pestañasBuscador.Values.All(p => p.resultados.Count == 0))
                     {
                         <div>
-                            @foreach (var item in pestaña.resultados)
-                            {
-                                <hr />
-                                <div class="perfil-flexible-centrado" style="flex-wrap: wrap;">
-                                    <div style="width: 150px; min-width: 150px;">
-                                        <button @onclick="@(e => ClickearIdPendientes(e, item))" class="boton-pequeño" style="text-align: center;">
-                                            Añadir ID
-
-                                            <div style="font-size: 13px;">
-                                                @item.Id
-                                            </div>
-                                        </button>
-                                    </div>
-
-                                    <div style="padding-left: 15px;">
-                                        <a href="/game/@item.Id" target="_blank">
-                                            <img src="@item.Imagenes.Header_460x215" style="width: 230px; height: 112px; display: block;" />
-                                        </a>
-                                    </div>
-
-                                    <div style="width: 100%; padding: 5px 10px; flex: 1;">
-                                        @item.Nombre
-                                    </div>
-
-                                    <div class="admin-busqueda-juego-derecha">
-                                        <button @onclick="@(e => ClickearBorrarPendientes(e, item.Id.ToString()))" class="boton-pequeño" style="background-color: var(--fondoPeligro); text-align: center;">
-                                            Borrar
-                                        </button>
-                                    </div>
-                                </div>
-                            }
+                            No hay resultados
                         </div>
                     }
+                    else
+                    {
+                        <div style="display: flex; align-items: center; gap: 20px;">
+                            @foreach (var (tipo, info) in ObtenerInfoPestañas())
+                            {
+                                var pestaña = pestañasBuscador[tipo];
+                                <button @onclick="@(e => CambiarPestañas(e, info.Indice))" class="boton-pequeño" style="width: @(info.Ancho)px; text-align: center; box-shadow: none; @pestaña.ObtenerEstilo()">
+                                    @info.Titulo (@pestaña.resultados.Count)
+                                </button>
+                            }
+                        </div>
+
+                        foreach (var pestaña in pestañasBuscador.Values.Where(p => p.activa && p.resultados.Count > 0))
+                        {
+                            <div>
+                                @foreach (var item in pestaña.resultados)
+                                {
+                                    <hr />
+                                    <div class="perfil-flexible-centrado" style="flex-wrap: wrap;">
+                                        <div style="width: 150px; min-width: 150px;">
+                                            <button @onclick="@(e => ClickearIdPendientes(e, item))" class="boton-pequeño" style="text-align: center;">
+                                                Añadir ID
+
+                                                <div style="font-size: 13px;">
+                                                    @item.Id
+                                                </div>
+                                            </button>
+                                        </div>
+
+                                        <div style="padding-left: 15px;">
+                                            <a href="/game/@item.Id" target="_blank">
+                                                <img src="@item.Imagenes.Header_460x215" style="width: 230px; height: 112px; display: block;" />
+                                            </a>
+                                        </div>
+
+                                        <div style="width: 100%; padding: 5px 10px; flex: 1;">
+                                            @item.Nombre
+                                        </div>
+
+                                        <div class="admin-busqueda-juego-derecha">
+                                            <button @onclick="@(e => ClickearBorrarPendientes(e, item.Id.ToString()))" class="boton-pequeño" style="background-color: var(--fondoPeligro); text-align: center;">
+                                                Borrar
+                                            </button>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    }
                 }
-            }
-        </div>
-    }
-</div>
+            </div>
+        }
+    </div>
+}
 
 @code {
 

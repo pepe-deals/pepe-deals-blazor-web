@@ -213,7 +213,7 @@
             return;
         }
 
-        bool tiempoExcedido = string.IsNullOrEmpty(usuario.SteamAccountLastCheck) || Convert.ToDateTime(usuario.SteamAccountLastCheck) + tiempoActualizar < DateTime.Now;
+        bool tiempoExcedido = string.IsNullOrEmpty(usuario.SteamAccountLastCheck) == false && Convert.ToDateTime(usuario.SteamAccountLastCheck) + tiempoActualizar < DateTime.Now;
 
         if (tiempoExcedido == true)
         {
