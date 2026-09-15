@@ -97,10 +97,10 @@ namespace APIs.Kinguin
 			{
 				resultados = await Herramientas.Impact.ObtenerCatalogo("33299");
 			}
-			//else if (region == TiendaRegion.EstadosUnidos)
-			//{
-			//	resultados = await Herramientas.Impact.ObtenerCatalogo("32047");
-			//}
+			else if (region == TiendaRegion.EstadosUnidos)
+			{
+				resultados = await Herramientas.Impact.ObtenerCatalogo("32047");
+			}
 
 			if (resultados?.Count > 0)
 			{
@@ -112,13 +112,164 @@ namespace APIs.Kinguin
 					{
 						JuegoDRM drmJuego = JuegoDRM.NoEspecificado;
 
-						if (region == TiendaRegion.Europa && resultado.Nombre.Contains("EU Steam CD Key") == true)
+						if (region == TiendaRegion.Europa && (
+							resultado.Nombre.ToLower().Contains("eu steam cd key") == true ||
+							resultado.Nombre.ToLower().Contains("eu pc steam cd key") == true))
 						{
-							drmJuego = JuegoDRM.Steam;
+							if (resultado.Nombre.Contains("EN Language Only") == false &&
+								resultado.Nombre.Contains("RU Language Only") == false &&
+								resultado.Nombre.Contains("Polish Language Only") == false)
+							{
+								drmJuego = JuegoDRM.Steam;
+							}
 						}
-						else if (region == TiendaRegion.EstadosUnidos && resultado.Nombre.Contains("US Steam CD Key") == true)
+						else if (region == TiendaRegion.EstadosUnidos && (
+							resultado.Nombre.ToLower().Contains("us steam cd key") == true ||
+							resultado.Nombre.ToLower().Contains("us pc steam cd key") == true ||
+							resultado.Nombre.ToLower().Contains("na steam cd key") == true ||
+							resultado.Nombre.ToLower().Contains("na pc steam cd key") == true ||
+							resultado.Nombre.ToLower().Contains("na/latam steam cd key") == true ||
+							resultado.Nombre.ToLower().Contains("na/latam pc steam cd key") == true))
 						{
-							drmJuego = JuegoDRM.Steam;
+							if (resultado.Nombre.Contains("RU Language Only") == false &&
+								resultado.Nombre.Contains("Polish Language Only") == false)
+							{
+								drmJuego = JuegoDRM.Steam;
+							}
+						}
+						else
+						{
+							if (resultado.Nombre.ToLower().Contains("steam cd key") == true)
+							{
+								drmJuego = JuegoDRM.Steam;
+							}
+
+							if (region == TiendaRegion.EstadosUnidos && resultado.Nombre.Contains("EMEA Steam CD Key") == true)
+							{
+								drmJuego = JuegoDRM.NoEspecificado;
+							}
+
+							if (resultado.Nombre.ToLower().Contains("language only") == true)
+							{
+								drmJuego = JuegoDRM.NoEspecificado;
+							}
+
+							if (resultado.Nombre.ToLower().Contains("ru vpn required steam cd key") == true)
+							{
+								drmJuego = JuegoDRM.NoEspecificado;
+							}
+							if (resultado.Nombre.ToLower().Contains("ru/cis pc steam cd key") == true)
+							{
+								drmJuego = JuegoDRM.NoEspecificado;
+							}
+							else if (resultado.Nombre.ToLower().Contains("ru/cis steam cd key") == true)
+							{
+								drmJuego = JuegoDRM.NoEspecificado;
+							}
+							else if (resultado.Nombre.ToLower().Contains("ru pc steam cd key") == true)
+							{
+								drmJuego = JuegoDRM.NoEspecificado;
+							}
+							else if (resultado.Nombre.ToLower().Contains("ru steam cd key") == true)
+							{
+								drmJuego = JuegoDRM.NoEspecificado;
+							}
+							else if (resultado.Nombre.ToLower().Contains("ru/cis/tr pc steam cd key") == true)
+							{
+								drmJuego = JuegoDRM.NoEspecificado;
+							}
+							else if (resultado.Nombre.ToLower().Contains("ru/cis/tr steam cd key") == true)
+							{
+								drmJuego = JuegoDRM.NoEspecificado;
+							}
+							else if (resultado.Nombre.ToLower().Contains("asia pc steam cd key") == true)
+							{
+								drmJuego = JuegoDRM.NoEspecificado;
+							}
+							else if (resultado.Nombre.ToLower().Contains("asia steam cd key") == true)
+							{
+								drmJuego = JuegoDRM.NoEspecificado;
+							}
+							else if (resultado.Nombre.ToLower().Contains("latam pc steam cd key") == true)
+							{
+								drmJuego = JuegoDRM.NoEspecificado;
+							}
+							else if (resultado.Nombre.ToLower().Contains("latam steam cd key") == true)
+							{
+								drmJuego = JuegoDRM.NoEspecificado;
+							}
+							else if (resultado.Nombre.ToLower().Contains("latin america pc steam cd key") == true)
+							{
+								drmJuego = JuegoDRM.NoEspecificado;
+							}
+							else if (resultado.Nombre.ToLower().Contains("latin america steam cd key") == true)
+							{
+								drmJuego = JuegoDRM.NoEspecificado;
+							}
+							else if (resultado.Nombre.ToLower().Contains("anzac pc steam cd key") == true)
+							{
+								drmJuego = JuegoDRM.NoEspecificado;
+							}
+							else if (resultado.Nombre.ToLower().Contains("anzac steam cd key") == true)
+							{
+								drmJuego = JuegoDRM.NoEspecificado;
+							}
+							else if (resultado.Nombre.ToLower().Contains("mea pc steam cd key") == true)
+							{
+								drmJuego = JuegoDRM.NoEspecificado;
+							}
+							else if (resultado.Nombre.ToLower().Contains("mea steam cd key") == true)
+							{
+								drmJuego = JuegoDRM.NoEspecificado;
+							}
+							else if (resultado.Nombre.ToLower().Contains("tr pc steam cd key") == true)
+							{
+								drmJuego = JuegoDRM.NoEspecificado;
+							}
+							else if (resultado.Nombre.ToLower().Contains("tr steam cd key") == true)
+							{
+								drmJuego = JuegoDRM.NoEspecificado;
+							}
+							else if (resultado.Nombre.ToLower().Contains("jp pc steam cd key") == true)
+							{
+								drmJuego = JuegoDRM.NoEspecificado;
+							}
+							else if (resultado.Nombre.ToLower().Contains("jp steam cd key") == true)
+							{
+								drmJuego = JuegoDRM.NoEspecificado;
+							}
+							else if (resultado.Nombre.ToLower().Contains("pl pc steam cd key") == true)
+							{
+								drmJuego = JuegoDRM.NoEspecificado;
+							}
+							else if (resultado.Nombre.ToLower().Contains("pl steam cd key") == true)
+							{
+								drmJuego = JuegoDRM.NoEspecificado;
+							}
+							else if (resultado.Nombre.ToLower().Contains("sea/oceania pc steam cd key") == true)
+							{
+								drmJuego = JuegoDRM.NoEspecificado;
+							}
+							else if (resultado.Nombre.ToLower().Contains("sea/oceania steam cd key") == true)
+							{
+								drmJuego = JuegoDRM.NoEspecificado;
+							}
+							else if (resultado.Nombre.ToLower().Contains("asia/oceania pc steam cd key") == true)
+							{
+								drmJuego = JuegoDRM.NoEspecificado;
+							}
+							else if (resultado.Nombre.ToLower().Contains("asia/oceania steam cd key") == true)
+							{
+								drmJuego = JuegoDRM.NoEspecificado;
+							}
+							else if (resultado.Nombre.ToLower().Contains("asia/south america pc steam cd key") == true)
+							{
+								drmJuego = JuegoDRM.NoEspecificado;
+							}
+							else if (resultado.Nombre.ToLower().Contains("asia/south america steam cd key") == true)
+							{
+								drmJuego = JuegoDRM.NoEspecificado;
+							}
 						}
 
 						if (drmJuego != JuegoDRM.NoEspecificado)
@@ -127,8 +278,18 @@ namespace APIs.Kinguin
 							{
 								string nombre = WebUtility.HtmlDecode(resultado.Nombre);
 
+								nombre = nombre.Replace("EU PC Steam CD Key", null);
 								nombre = nombre.Replace("EU Steam CD Key", null);
+								nombre = nombre.Replace("EU PC Steam CD Key", null);
 								nombre = nombre.Replace("US Steam CD Key", null);
+								nombre = nombre.Replace("US PC Steam CD Key", null);
+								nombre = nombre.Replace("NA Steam CD Key", null);
+								nombre = nombre.Replace("NA PC Steam CD Key", null);
+								nombre = nombre.Replace("RoW Steam CD Key", null);
+								nombre = nombre.Replace("RoW PC Steam CD Key", null);
+								nombre = nombre.Replace("PC Steam CD Key", null);
+								nombre = nombre.Replace("Steam CD Key", null);
+								nombre = nombre.Replace("Steam CD key", null);
 								nombre = nombre.Trim();
 
 								string enlaceJuego = LimpiarEnlace(resultado.Url);

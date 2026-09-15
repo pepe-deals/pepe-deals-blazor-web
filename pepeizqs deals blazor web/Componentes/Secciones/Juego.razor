@@ -1296,7 +1296,7 @@
                                                         if (usuarioRegion == TiendaRegion.Europa && juego.PrecioMinimosHistoricos?.Count > 0 || (usuarioRegion == TiendaRegion.EstadosUnidos && juego.PrecioMinimosHistoricosUS?.Count > 0))
                                                         {
                                                             <div style="margin-top: 10px; background: rgba(0,0,0,.15); width: fit-content;">
-                                                                <div style="display: flex; align-items: center; gap: 8px; width: fit-content; @(usuarioTiendasNoOficial == true ? "padding: 10px;" : "padding: 5px;") ">
+                                                                <div style="display: flex; align-items: center; width: fit-content;">
                                                                     @{
                                                                         decimal precioMinimoValor = 100000;
 
@@ -1356,8 +1356,8 @@
                                                                                 precioMinimoTexto = Herramientas.Precios.Dolar(precioMinimoValor);
                                                                             }
 
-                                                                            <div style="background-color: rgba(0,0,0,.3); padding: 5px 10px">@precioMinimoTexto</div>
-                                                                            <label style="font-size: 14px; margin-right: 5px;">@mensajeMinimoOficialDRM</label>          
+                                                                            <div style="background-color: rgba(0,0,0,.3); padding: 8px 10px">@precioMinimoTexto</div>
+                                                                            <label style="font-size: 14px; padding: 8px 12px;">@mensajeMinimoOficialDRM</label>          
                                                                         }
                                                                     }
                                                                 </div>

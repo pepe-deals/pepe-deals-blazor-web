@@ -119,6 +119,7 @@ namespace APIs.Loaded
 								"PC (EN)",
 								"PC (WW)",
 								"PC (EMEA)",
+								"PC-DLC",
 								"(PC)",
 								"PC",
 								"(EN)"
