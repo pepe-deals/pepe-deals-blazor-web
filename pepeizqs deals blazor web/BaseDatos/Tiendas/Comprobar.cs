@@ -10,7 +10,7 @@ namespace BaseDatos.Tiendas
 {
 	public static class Comprobar
 	{
-		public static async Task Steam(TiendaRegion region, List<JuegoPrecio> ofertas, List<JuegoReseñas> reseñas, bool rapido)
+		public static async Task Steam(TiendaRegion region, List<JuegoPrecio> ofertas, List<JuegoReseñas> reseñas, bool rapido)	
 		{
 			if (ofertas == null || ofertas.Count == 0)
 			{

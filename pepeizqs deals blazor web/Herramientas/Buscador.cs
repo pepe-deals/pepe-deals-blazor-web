@@ -106,7 +106,7 @@ namespace Herramientas
 			return nombre;
 		}
 
-		public static string GenerarMensaje(bool noOficiales, TiendaRegion region, string idioma, Juegos.Juego juego, bool buscarBundles, bool buscarGratis, bool buscarSuscripciones)
+		public static string GenerarMensaje(bool noOficiales, bool marketplaces, TiendaRegion region, string idioma, Juegos.Juego juego, bool buscarBundles, bool buscarGratis, bool buscarSuscripciones)
 		{
 			string mensaje = string.Empty;
 
@@ -207,6 +207,11 @@ namespace Herramientas
 					preciosActualesEU.AddRange(juego.PreciosActualesNoOficialesEU);
 				}
 
+				if (marketplaces == true && juego.PreciosActualesMarketplacesEU?.Count > 0)
+				{
+					preciosActualesEU.AddRange(juego.PreciosActualesMarketplacesEU);
+				}
+
 				if (preciosActualesEU?.Count > 0)
 				{
 					foreach (var oferta in preciosActualesEU)
@@ -262,6 +267,11 @@ namespace Herramientas
 				if (noOficiales == true && juego.PreciosActualesNoOficialesUS?.Count > 0)
 				{
 					preciosActualesUS.AddRange(juego.PreciosActualesNoOficialesUS);
+				}
+
+				if (marketplaces == true && juego.PreciosActualesMarketplacesUS?.Count > 0)
+				{
+					preciosActualesUS.AddRange(juego.PreciosActualesMarketplacesUS);
 				}
 
 				if (preciosActualesUS?.Count > 0)

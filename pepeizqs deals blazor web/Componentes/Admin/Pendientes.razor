@@ -129,7 +129,7 @@
         </div>
 
         <div style="width: 100%;">
-            <div style="display: flex; align-items: center; gap: 30px;">
+            <div style="display: flex; align-items: center; gap: 30px; height: 37px;">
                 @if (idsPendiente != "0" && ocupado == false)
                 {
                     <button @onclick="@(e => ClickearActualizarPendientes(e, enlacePendiente))" class="boton-pequeño" style="width: 130px; text-align: center; box-shadow: none;">
@@ -137,9 +137,12 @@
                     </button>
                 }
 
-                <button @onclick="@(e => ClickearDescartarPendientes(e, enlacePendiente))" class="boton-pequeño" style="width: 130px; text-align: center; margin-left: auto; background-color: var(--fondoPeligro); box-shadow: none;">
-                    Descartar
-                </button>
+                @if (ocupado == false)
+                {
+                    <button @onclick="@(e => ClickearDescartarPendientes(e, enlacePendiente))" class="boton-pequeño" style="width: 130px; text-align: center; margin-left: auto; background-color: var(--fondoPeligro); box-shadow: none;">
+                        Descartar
+                    </button>
+                }
             </div>
 
             <div class="caja-admin-pendientes" style="padding: 10px; display: flex; flex-direction: column; gap: 10px;">
@@ -179,7 +182,7 @@
 
                     @if (string.IsNullOrEmpty(idsPendiente) == false && seleccionados?.Count > 0)
                     {
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; background-color: rgba(0,0,0,.2); padding: 10px; width: 100%;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; background-color: rgba(0,0,0,.2); padding: 10px; width: 100%; justify-items: left;">
                             @foreach (var resultado in seleccionados)
                             {
                                 if (resultado != null)
@@ -209,23 +212,23 @@
 
         @if (buscadorBuscando == false && string.IsNullOrEmpty(textoBuscador) == false)
         {
-            <div class="caja-admin-pendientes" style="padding: 10px; margin-top: 10px;">
-                @if (buscadorBuscando == true)
+            if (buscadorBuscando == true)
+            {
+                <div style="padding: 10px; margin-top: 10px;">
+                    Buscando...
+                </div>
+            }
+            else if (string.IsNullOrEmpty(textoBuscador) == false)
+            {
+                if (pestañasBuscador.Values.All(p => p.resultados.Count == 0))
                 {
-                    <div>
-                        Buscando...
+                    <div style="padding: 10px; margin-left: 30px; font-size: 15px;">
+                        No hay resultados
                     </div>
                 }
-                else if (string.IsNullOrEmpty(textoBuscador) == false)
+                else
                 {
-                    if (pestañasBuscador.Values.All(p => p.resultados.Count == 0))
-                    {
-                        <div>
-                            No hay resultados
-                        </div>
-                    }
-                    else
-                    {
+                    <div class="caja-admin-pendientes" style="padding: 10px; margin-top: 10px;">
                         <div style="display: flex; align-items: center; gap: 20px;">
                             @foreach (var (tipo, info) in ObtenerInfoPestañas())
                             {
@@ -236,7 +239,7 @@
                             }
                         </div>
 
-                        foreach (var pestaña in pestañasBuscador.Values.Where(p => p.activa && p.resultados.Count > 0))
+                        @foreach (var pestaña in pestañasBuscador.Values.Where(p => p.activa && p.resultados.Count > 0))
                         {
                             <div>
                                 @foreach (var item in pestaña.resultados)
@@ -272,9 +275,9 @@
                                 }
                             </div>
                         }
-                    }
+                    </div>
                 }
-            </div>
+            }
         }
     </div>
 }
@@ -1210,6 +1213,7 @@
         nombreBuscar = (nombreBuscar.EndsWith("Ultimate Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Ultimate Edition", null) : nombreBuscar).TrimEnd();
         nombreBuscar = (nombreBuscar.EndsWith("Gold Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Gold Edition", null) : nombreBuscar).TrimEnd();
         nombreBuscar = (nombreBuscar.EndsWith("Day One Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Day One Edition", null) : nombreBuscar).TrimEnd();
+        nombreBuscar = (nombreBuscar.EndsWith("Special Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Special Edition", null) : nombreBuscar).TrimEnd();
         nombreBuscar = (nombreBuscar.EndsWith("DLC", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("DLC", null) : nombreBuscar).TrimEnd();
 
         InicializarPestañasBuscador();

@@ -652,7 +652,7 @@
 						</div>
 
 						<div style="margin-top: 10px; font-size: 15px;">
-							@Herramientas.Buscador.GenerarMensaje(noOficial, region, idioma, juego, true, true, true)
+							@Herramientas.Buscador.GenerarMensaje(noOficial, marketplace, region, idioma, juego, true, true, true)
 						</div>
 					</div>
 				</div>
@@ -666,7 +666,7 @@
 					<img src="@Herramientas.Ficheros.Imagenes.ServidorExterno(juego.Imagenes.Library_600x900)" style="max-height: 278px; object-fit: cover; display: block;" alt="@juego.Nombre" loading="lazy" />
 
 					<div style="font-size: 14px; display: flex; align-items: center; justify-content: center; height: 100%; padding: 10px; text-align: center;">
-						@Herramientas.Buscador.GenerarMensaje(noOficial, region, idioma, juego, true, true, true)
+						@Herramientas.Buscador.GenerarMensaje(noOficial, marketplace, region, idioma, juego, true, true, true)
 					</div>
 				</div>
 			</a>
@@ -686,7 +686,7 @@
 						</div>
 
 						<div style="margin-top: 10px; font-size: 15px;">
-							@Herramientas.Buscador.GenerarMensaje(noOficial, region, idioma, juego, true, true, true)
+							@Herramientas.Buscador.GenerarMensaje(noOficial, marketplace, region, idioma, juego, true, true, true)
 						</div>
 					</div>
 				</div>
@@ -700,7 +700,7 @@
 					<img src="@Herramientas.Ficheros.Imagenes.ServidorExterno(juego.Imagenes.Header_460x215, 255, 120)" style="max-width: 100vw; max-height: 100vh; object-fit: cover; display: block;" alt="@juego.Nombre" loading="lazy" />
 
 					<div style="font-size: 14px; display: flex; align-items: center; justify-content: center; height: 100%; padding: 10px; text-align: center;">
-						@Herramientas.Buscador.GenerarMensaje(noOficial, region, idioma, juego, true, true, true)
+						@Herramientas.Buscador.GenerarMensaje(noOficial, marketplace, region, idioma, juego, true, true, true)
 					</div>
 				</div>
 			</a>
@@ -757,7 +757,7 @@
 					<div style="width: 100%;">
 						<div>@juego.Nombre</div>
 						<div style="margin-top: 10px; font-size: 14px;">
-							@Herramientas.Buscador.GenerarMensaje(false, region, idioma, juego, true, true, true)
+							@Herramientas.Buscador.GenerarMensaje(noOficial, marketplace, region, idioma, juego, true, true, true)
 						</div>
 					</div>
 				</div>
@@ -775,7 +775,7 @@
                     <div style="width: 100%;">
                         <div>@juego.Nombre</div>
                         <div style="margin-top: 10px; font-size: 14px;">
-							@Herramientas.Buscador.GenerarMensaje(false, region, idioma, juego, true, true, true)
+							@Herramientas.Buscador.GenerarMensaje(noOficial, marketplace, region, idioma, juego, true, true, true)
                         </div>
                     </div>
                 </div>
@@ -798,7 +798,7 @@
 					<div style="width: 100%;">
 						<div>@juego.Nombre</div>
 						<div style="margin-top: 10px; font-size: 14px;">
-							@Herramientas.Buscador.GenerarMensaje(false, region, idioma, juego, true, true, true)
+							@Herramientas.Buscador.GenerarMensaje(noOficial, marketplace, region, idioma, juego, true, true, true)
 						</div>
 					</div>
 				</div>
@@ -815,6 +815,9 @@
 
 	[Parameter]
 	public bool noOficial { get; set; } = false;
+
+	[Parameter]
+	public bool marketplace { get; set; } = false;
 
 	[Parameter]
 	public TiendaRegion region { get; set; } = TiendaRegion.Europa;
