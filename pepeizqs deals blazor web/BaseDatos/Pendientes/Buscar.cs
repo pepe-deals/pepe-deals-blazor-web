@@ -6,24 +6,24 @@ namespace BaseDatos.Pendientes
 {
 	public static class Buscar
 	{
-		public static async Task<string> IDs(string nombre)
+		public static async Task<Dictionary<bool, List<int>>> IDs(string nombre)
 		{
 			try
 			{
 				string busqueda1 = "SELECT id FROM juegos WHERE nombre=@nombre OR REPLACE(nombreCodigo, ' ', '')=@nombreLimpio";
 
-				var id = await Herramientas.BaseDatos.Select(async conexion =>
+				List<int> ids = (await Herramientas.BaseDatos.Select(async conexion =>
 				{
-					return await conexion.QueryFirstOrDefaultAsync<int?>(busqueda1, new
+					return await conexion.QueryAsync<int>(busqueda1, new
 					{
 						nombre,
 						nombreLimpio = Herramientas.Buscador.LimpiarNombre(nombre, true)
 					});
-				});
+				})).ToList();
 
-				if (id != null)
+				if (ids.Count > 0)
 				{
-					return id.Value.ToString();
+					return new Dictionary<bool, List<int>> { { false, ids } };
 				}
 			}
 			catch (Exception ex)
@@ -35,18 +35,21 @@ namespace BaseDatos.Pendientes
 			{
 				string busqueda2 = "SELECT ids FROM juegosIDs WHERE nombre=@nombre OR REPLACE(nombreCodigo, ' ', '')=@nombreLimpio";
 
-				var ids = await Herramientas.BaseDatos.Select(async conexion =>
+				List<string> ids = (await Herramientas.BaseDatos.Select(async conexion =>
 				{
-					return await conexion.QueryFirstOrDefaultAsync<string>(busqueda2, new 
-					{ 
+					return await conexion.QueryAsync<string>(busqueda2, new
+					{
 						nombre,
 						nombreLimpio = Herramientas.Buscador.LimpiarNombre(nombre, true)
 					});
-				});
+				})).ToList();
 
-				if (ids != null)
+				if (ids?.Count > 0)
 				{
-					return ids;
+					return new Dictionary<bool, List<int>> { { true, ids
+						.SelectMany(s => s.Split(',', StringSplitOptions.RemoveEmptyEntries))
+						.Select(int.Parse)
+						.ToList() } };
 				}
 			}
 			catch (Exception ex)
@@ -54,7 +57,7 @@ namespace BaseDatos.Pendientes
 				BaseDatos.Errores.Insertar.Mensaje("Pendientes Buscar IDs 2", ex);
 			}
 
-			return "0";
+			return null;
 		}
 
 		public static async Task<int> Cantidad()

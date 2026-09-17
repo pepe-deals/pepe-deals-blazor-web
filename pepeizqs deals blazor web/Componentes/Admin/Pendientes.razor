@@ -336,7 +336,21 @@
             imagenPendiente = pendientesTiendas[0].Pendientes[0].Imagen;
             enlacePendiente = pendientesTiendas[0].Pendientes[0].Enlace;
 
-            idsPendiente = await BaseDatos.Pendientes.Buscar.IDs(pendientesTiendas[0].Pendientes[0].Nombre);
+            var resultado = await BaseDatos.Pendientes.Buscar.IDs(nombrePendiente);
+
+            if (resultado != null)
+            {
+                List<int> ids = resultado.Values.First();
+
+                if (ids?.Count > 0)
+                {
+                    idsPendiente = string.Join(",", ids);
+                }
+            }
+            else
+            {
+                idsPendiente = "0";
+            }
 
             if (idsPendiente == "0")
             {
@@ -370,7 +384,22 @@
             nombrePendiente = pendientesSuscripciones[0].Pendientes[0].Nombre;
             imagenPendiente = pendientesSuscripciones[0].Pendientes[0].Imagen;
             enlacePendiente = pendientesSuscripciones[0].Pendientes[0].Enlace;
-            idsPendiente = await BaseDatos.Pendientes.Buscar.IDs(pendientesSuscripciones[0].Pendientes[0].Nombre);
+
+            var resultado = await BaseDatos.Pendientes.Buscar.IDs(nombrePendiente);
+
+            if (resultado != null)
+            {
+                List<int> ids = resultado.Values.First();
+
+                if (ids?.Count > 0)
+                {
+                    idsPendiente = string.Join(",", ids);
+                }
+            }
+            else
+            {
+                idsPendiente = "0";
+            }
         }
 
         #endregion
@@ -396,7 +425,22 @@
             nombrePendiente = pendientesStreamings[0].Pendientes[0].Nombre;
             imagenPendiente = pendientesStreamings[0].Pendientes[0].Imagen;
             enlacePendiente = pendientesStreamings[0].Pendientes[0].Enlace;
-            idsPendiente = await BaseDatos.Pendientes.Buscar.IDs(pendientesStreamings[0].Pendientes[0].Nombre);
+
+            var resultado = await BaseDatos.Pendientes.Buscar.IDs(nombrePendiente);
+
+            if (resultado != null)
+            {
+                List<int> ids = resultado.Values.First();
+
+                if (ids?.Count > 0)
+                {
+                    idsPendiente = string.Join(",", ids);
+                }
+            }
+            else
+            {
+                idsPendiente = "0";
+            }
         }
 
         #endregion
@@ -422,7 +466,22 @@
             nombrePendiente = pendientesPlataformas[0].Pendientes[0].Nombre;
             imagenPendiente = pendientesPlataformas[0].Pendientes[0].Imagen;
             enlacePendiente = pendientesPlataformas[0].Pendientes[0].Enlace;
-            idsPendiente = await BaseDatos.Pendientes.Buscar.IDs(pendientesPlataformas[0].Pendientes[0].Nombre);
+
+            var resultado = await BaseDatos.Pendientes.Buscar.IDs(nombrePendiente);
+
+            if (resultado != null)
+            {
+                List<int> ids = resultado.Values.First();
+
+                if (ids?.Count > 0)
+                {
+                    idsPendiente = string.Join(",", ids);
+                }
+            }
+            else
+            {
+                idsPendiente = "0";
+            }
         }
 
         #endregion
@@ -479,10 +538,50 @@
                 }
 
                 imagenPendiente = imagen;
-
                 enlacePendiente = juego.Enlace;
 
-                idsPendiente = await BaseDatos.Pendientes.Buscar.IDs(nombrePendiente);
+                var resultado = await BaseDatos.Pendientes.Buscar.IDs(nombrePendiente);
+
+                if (resultado != null)
+                {
+                    bool juegosIds = resultado.Keys.First();
+                    List<int> ids = resultado.Values.First();
+
+                    if (ids?.Count > 0)
+                    {
+                        idsPendiente = string.Join(",", ids);
+                    }
+
+                    if (idsPendiente != "0" && ((ids?.Count == 1 && juegosIds == false) || (ids?.Count > 1 && juegosIds == true)) && (
+                        Tiendas2.TiendasCargar.DevolverTienda(idTiendaPendiente).Tipo == TiendaTipo.NoOficial ||
+                        Tiendas2.TiendasCargar.DevolverTienda(idTiendaPendiente).Tipo == TiendaTipo.Marketplace))
+                    {
+                        await BaseDatos.Pendientes.Actualizar.Tienda(idTiendaPendiente, enlacePendiente, idsPendiente);
+
+                        BaseDatos.Pendientes.Pendiente siguienteTienda = null;
+
+                        foreach (var pendiente in pendientesTiendas)
+                        {
+                            if (pendiente.Tienda.Id == idTiendaPendiente)
+                            {
+                                pendiente.Pendientes.RemoveAll(p => p.Enlace == enlacePendiente);
+                                siguienteTienda = pendiente.Pendientes.FirstOrDefault();
+                                break;
+                            }
+                        }
+
+                        await ClickearTiendaPendientes(idTiendaPendiente, true, siguienteTienda);
+                    }
+
+                    if (ids?.Count > 1 && juegosIds == false)
+                    {
+                        await CuandoIdPendientesSeaCero(nombrePendiente);
+                    }
+                }
+                else
+                {
+                    idsPendiente = "0";
+                }
 
                 if (idsPendiente == "0")
                 {
@@ -541,7 +640,18 @@
 
                 enlacePendiente = juego.Enlace;
 
-                idsPendiente = await BaseDatos.Pendientes.Buscar.IDs(nombrePendiente);
+                var resultado = await BaseDatos.Pendientes.Buscar.IDs(nombrePendiente);
+
+                if (resultado != null)
+                {
+                    List<int> ids = resultado.Values.First();
+
+                    if (ids?.Count > 0)
+                    {
+                        idsPendiente = string.Join(",", ids);
+                    }
+                }
+
                 await AñadirResultados();
             }
         }
@@ -592,7 +702,18 @@
 
                 enlacePendiente = juego.Enlace;
 
-                idsPendiente = await BaseDatos.Pendientes.Buscar.IDs(nombrePendiente);
+                var resultado = await BaseDatos.Pendientes.Buscar.IDs(nombrePendiente);
+
+                if (resultado != null)
+                {
+                    List<int> ids = resultado.Values.First();
+
+                    if (ids?.Count > 0)
+                    {
+                        idsPendiente = string.Join(",", ids);
+                    }
+                }
+
                 await AñadirResultados();
             }
         }
@@ -1207,6 +1328,8 @@
     private async Task CuandoIdPendientesSeaCero(string nombreBuscar2)
     {
         string nombreBuscar = nombreBuscar2;
+        nombreBuscar = (nombreBuscar.EndsWith("Digital Deluxe Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Digital Deluxe Edition", null) : nombreBuscar).TrimEnd();
+        nombreBuscar = (nombreBuscar.EndsWith("Digital Special Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Digital Special Edition", null) : nombreBuscar).TrimEnd();
         nombreBuscar = (nombreBuscar.EndsWith("Complete Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Complete Edition", null) : nombreBuscar).TrimEnd();
         nombreBuscar = (nombreBuscar.EndsWith("Standard Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Standard Edition", null) : nombreBuscar).TrimEnd();
         nombreBuscar = (nombreBuscar.EndsWith("Deluxe Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Deluxe Edition", null) : nombreBuscar).TrimEnd();
