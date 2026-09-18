@@ -118,7 +118,8 @@ namespace APIs.Kinguin
 							resultado.Nombre.ToLower().Contains("eu/mea/au/nz steam cd key") == true ||
 							resultado.Nombre.ToLower().Contains("eu/na steam cd key") == true ||
 							resultado.Nombre.ToLower().Contains("eu/na pc steam cd key") == true ||
-							resultado.Nombre.ToLower().Contains("eu (without ru/cis) steam cd key") == true))
+							resultado.Nombre.ToLower().Contains("eu (without ru/cis) steam cd key") == true ||
+							resultado.Nombre.ToLower().Contains("eu (without de) steam cd key") == true))
 						{
 							drmJuego = JuegoDRM.Steam;
 						}
@@ -153,14 +154,18 @@ namespace APIs.Kinguin
 							"language only",
 							"ru vpn required steam pc cd key",
 							"ru vpn required steam cd key",
+							"ru vpn required pc steam cd key",
 							"ru vpn activated steam pc cd key",
 							"ru vpn activated steam cd key",
+							"ru vpn activated pc steam cd key",
 							"ru/cis pc steam cd key",
 							"ru/cis steam cd key",
 							"ru pc steam cd key",
 							"ru steam cd key",
 							"ru/cis/tr pc steam cd key",
 							"ru/cis/tr steam cd key",
+							"cn vpn activated steam pc cd key",
+							"cn vpn activated steam cd key",
 							"asia pc steam cd key",
 							"asia steam cd key",
 							"latam pc steam cd key",
@@ -169,7 +174,7 @@ namespace APIs.Kinguin
 							"latin america steam cd key",
 							"anzac pc steam cd key",
 							"anzac steam cd key",
-							"mea pc steam cd key",
+							"mea pc steam cd key", 
 							"mea steam cd key",
 							"tr pc steam cd key",
 							"tr steam cd key",
@@ -187,8 +192,15 @@ namespace APIs.Kinguin
 							"asia/pacific steam cd key",
 							"asia/africa pc steam cd key",
 							"asia/africa steam cd key",
+							"asia + africa pc steam cd key",
+							"asia + africa steam cd key",
 							"asia pc steam cd key",
+							"asia dlc steam cd key",
 							"asia steam cd key",
+							"south america pc steam cd key",
+							"south america steam cd key",
+							"mena pc steam cd key",
+							"mena steam cd key",
 							"cn pc steam cd key",
 							"cn steam cd key",
 							"sea pc steam cd key",
@@ -213,13 +225,31 @@ namespace APIs.Kinguin
 							"middle east steam cd key",
 							"(pcr) pc steam cd key",
 							"(pcr) steam cd key",
+							"outside europe pc steam cd key",
+							"outside europe steam cd key",
 							"ar/by/ba/br/in/me/ru/rs/tr/ua pc steam cd key",
 							"ar/by/ba/br/in/me/ru/rs/tr/ua steam cd key",
+							"fr pc steam cd key",
+							"fr steam cd key",
+							"meza pc steam cd key",
+							"meza steam cd key"
 						};
 
 						string nombreMinusculas = resultado.Nombre.ToLower();
 
 						if (textosDrmNoEspecificado.Any(frase => nombreMinusculas.Contains(frase)))
+						{
+							drmJuego = JuegoDRM.NoEspecificado;
+						}
+
+						string[] textos2DrmNoEspecificado = new[]
+						{
+							"-steam-gift"
+						};
+
+						string enlaceMinusculas = resultado.Url.ToLower();
+
+						if (textos2DrmNoEspecificado.Any(frase => enlaceMinusculas.Contains(frase)))
 						{
 							drmJuego = JuegoDRM.NoEspecificado;
 						}
@@ -236,6 +266,7 @@ namespace APIs.Kinguin
 								nombre = nombre.Replace("EU Steam CD Key", null);
 								nombre = nombre.Replace("EU PC Steam CD Key", null);
 								nombre = nombre.Replace("EU (without RU/CIS) Steam CD Key", null);
+								nombre = nombre.Replace("EU (without DE) Steam CD Key", null);
 								nombre = nombre.Replace("US Steam CD Key", null);
 								nombre = nombre.Replace("US PC Steam CD Key", null);
 								nombre = nombre.Replace("NA Steam CD Key", null);

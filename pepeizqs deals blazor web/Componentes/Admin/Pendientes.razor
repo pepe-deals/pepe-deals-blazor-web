@@ -570,6 +570,7 @@
                             }
                         }
 
+                        await InvokeAsync(StateHasChanged);
                         await ClickearTiendaPendientes(idTiendaPendiente, true, siguienteTienda);
                     }
 

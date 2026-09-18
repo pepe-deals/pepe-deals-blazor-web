@@ -482,7 +482,7 @@ namespace BaseDatos.Extension
 			return null;
 		}
 
-		private static void CargarPrecios(TiendaRegion region,string json, List<ExtensionPrecio> destino)
+		private static void CargarPrecios(TiendaRegion region, string json, List<ExtensionPrecio> destino)
 		{
 			if (string.IsNullOrEmpty(json) == true)
 			{
@@ -518,6 +518,15 @@ namespace BaseDatos.Extension
 				}
 
 				precio.Enlace = Herramientas.EnlaceAcortador.Generar(region, precio.Enlace, precio.Tienda, false, false);
+
+				if (region == TiendaRegion.Europa && precio.Moneda != Herramientas.JuegoMoneda.Euro && precio.PrecioCambiado == 0)
+				{
+					precio.PrecioCambiado = Herramientas.Divisas.CambioEuro(precio.Precio, precio.Moneda);
+				}
+				else if (region == TiendaRegion.EstadosUnidos && precio.Moneda != Herramientas.JuegoMoneda.Dolar && precio.PrecioCambiado == 0)
+				{
+					precio.PrecioCambiado = Herramientas.Divisas.CambioDolar(precio.Precio, precio.Moneda);
+				}
 
 				destino.Add(new ExtensionPrecio
 				{
