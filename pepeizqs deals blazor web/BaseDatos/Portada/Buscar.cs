@@ -94,7 +94,7 @@ namespace BaseDatos.Portada
 			return null;
 		}
 
-		public static async Task<List<Juego>> Destacados(bool noOficial, TiendaRegion region, int cantidadJuegos, int minimoReseñas, List<int> excluirJuegosIds = null, List<int> excluirSteamIds = null, bool ocultarBundles = true, int ocultarBundlesCantidad = 6, bool ocultarGratis = true, bool ocultarSuscripciones = true, int ocultarSuscripcionesCantidad = 6)
+		public static async Task<List<Juego>> Destacados(bool noOficial, bool marketplace, TiendaRegion region, int cantidadJuegos, int minimoReseñas, List<int> excluirJuegosIds = null, List<int> excluirSteamIds = null, bool ocultarBundles = true, int ocultarBundlesCantidad = 6, bool ocultarGratis = true, bool ocultarSuscripciones = true, int ocultarSuscripcionesCantidad = 6)
 		{
 			string tabla = "seccionMinimos";
 
@@ -148,7 +148,7 @@ namespace BaseDatos.Portada
 					WHERE jg.tipo = 0 {exclusionJuegos} {exclusionSteam} AND 
 						year(getdate()) < year(JSON_VALUE(jg.caracteristicas, '$.FechaLanzamientoSteam')) + 11 AND
 						precioMin.Precio >= 1.99 AND 
-						precioMin.Descuento > 0 AND 
+						{(noOficial == false && marketplace == false ? "precioMin.Descuento > 0 AND" : "")} 
 						precioMin.DRM = 0 AND 
 						(
 							(YEAR(precioMin.FechaTermina) > 2020 AND precioMin.FechaTermina > GETDATE())
@@ -163,21 +163,31 @@ namespace BaseDatos.Portada
 						{(ocultarGratis == true ? "NOT EXISTS (SELECT 1 FROM gratis WHERE gratis.juegoId = j.idMaestra AND gratis.DRM = 0) AND " : "")}
 						{(ocultarSuscripciones == true ? @$"NOT EXISTS (SELECT 1 FROM suscripciones WHERE suscripciones.juegoId = j.idMaestra AND suscripciones.DRM = 0 AND suscripciones.fechaTermina > DATEADD(MONTH, -{ocultarSuscripcionesCantidad}, GETDATE())) AND " : "")}
 						(jg.ocultarPortada IS NULL OR jg.ocultarPortada = 'false')";
-						}
+			}
 
-						string candidatosBase = ConstruirCandidatos(tabla, precioMinimosHistoricos);
+			string candidatosBase = ConstruirCandidatos(tabla, precioMinimosHistoricos);
 
-						if (noOficial == true)
-						{
-							string tablaNoOficial = region == TiendaRegion.EstadosUnidos ? "seccionMinimosNoOficialesUS" : "seccionMinimosNoOficialesEU";
-							string columnaNoOficial = region == TiendaRegion.EstadosUnidos ? "preciosHistoricosNoOficialesUS" : "preciosHistoricosNoOficialesEU";
+			if (noOficial == true)
+			{
+				string tablaNoOficial = region == TiendaRegion.EstadosUnidos ? "seccionMinimosNoOficialesUS" : "seccionMinimosNoOficialesEU";
+				string columnaNoOficial = region == TiendaRegion.EstadosUnidos ? "preciosHistoricosNoOficialesUS" : "preciosHistoricosNoOficialesEU";
 
-							string candidatosNoOficial = ConstruirCandidatos(tablaNoOficial, columnaNoOficial);
+				string candidatosNoOficial = ConstruirCandidatos(tablaNoOficial, columnaNoOficial);
 
-							candidatosBase = $"{candidatosBase} UNION ALL {candidatosNoOficial}";
-						}
+				candidatosBase = $"{candidatosBase} UNION ALL {candidatosNoOficial}";
+			}
 
-						string busqueda = @$";WITH CandidatosBase AS (
+			if (marketplace == true)
+			{
+				string tablaMarketplace = region == TiendaRegion.EstadosUnidos ? "seccionMinimosMarketplacesUS" : "seccionMinimosMarketplacesEU";
+				string columnaMarketplace = region == TiendaRegion.EstadosUnidos ? "preciosHistoricosMarketplacesUS" : "preciosHistoricosMarketplacesEU";
+				
+				string candidatosMarketplace = ConstruirCandidatos(tablaMarketplace, columnaMarketplace);
+				
+				candidatosBase = $"{candidatosBase} UNION ALL {candidatosMarketplace}";
+			}
+
+			string busqueda = @$";WITH CandidatosBase AS (
 					{candidatosBase}
 				),
 				Candidatos AS (

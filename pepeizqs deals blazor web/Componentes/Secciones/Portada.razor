@@ -164,9 +164,12 @@
 									</div>
 
 									<div class="destacado-sombra" style="display: flex; align-items: center;">
-										<div class="destacado-precio-descuento" style="background-color: darkgreen;">
-											@descuento%
-										</div>
+										@if (descuento != "0" && descuento != "00")
+										{
+											<div class="destacado-precio-descuento" style="background-color: darkgreen;">
+												@descuento%
+											</div>
+										}
 										<div class="destacado-precio-descuento" style="background-color: var(--fondoOscuro);">
 											@precioMostrar
 										</div>
@@ -965,6 +968,7 @@ else
 	private bool usuarioAdmin = false;
 	private TiendaRegion usuarioRegion = TiendaRegion.Europa;
 	private bool usuarioTiendasNoOficial = false;
+	private bool usuarioMarketplace = false;
 
 	[PersistentState] public Usuario opciones { get; set; }
 
@@ -979,6 +983,7 @@ else
 		dominio = datos.Dominio;
 		usuarioRegion = datos.Region;
 		usuarioTiendasNoOficial = datos.NoOficial;
+		usuarioMarketplace = datos.Marketplace;
 
 		if (string.IsNullOrEmpty(usuarioId) == false)
 		{
@@ -1029,6 +1034,11 @@ else
 				if (opciones.NoOfficial.HasValue == true)
 				{
 					usuarioTiendasNoOficial = opciones.NoOfficial.Value;
+				}
+
+				if (opciones.Marketplace.HasValue == true)
+				{
+					usuarioMarketplace = opciones.Marketplace.Value;
 				}
 
 				#region Opciones
@@ -1228,7 +1238,7 @@ else
 			}
 		}
 
-		return await BaseDatos.Portada.Buscar.Destacados(usuarioTiendasNoOficial, usuarioRegion, cantidad, minimoReseñasDestacados, excluirJuegosIds, excluirSteamIds, ocultarBundles, cantidadMesesOcultarBundlesDestacados, ocultarGratis, ocultarSuscripciones, cantidadMesesOcultarSuscripcionesDestacados);
+		return await BaseDatos.Portada.Buscar.Destacados(usuarioTiendasNoOficial, usuarioMarketplace, usuarioRegion, cantidad, minimoReseñasDestacados, excluirJuegosIds, excluirSteamIds, ocultarBundles, cantidadMesesOcultarBundlesDestacados, ocultarGratis, ocultarSuscripciones, cantidadMesesOcultarSuscripcionesDestacados);
 	}
 
 	private async Task CargarDestacados(bool vaciar)

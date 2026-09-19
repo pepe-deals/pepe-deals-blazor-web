@@ -8,7 +8,12 @@ namespace BaseDatos.Pendientes
 	{
 		public static async Task Tienda(string idTienda, string enlace, string idJuegos)
 		{
-            if (string.IsNullOrEmpty(idJuegos) == false && idJuegos != "0")
+			if (string.IsNullOrEmpty(idJuegos) == false)
+			{
+				idJuegos = string.Join(",", idJuegos.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Distinct());
+			}
+
+			if (string.IsNullOrEmpty(idJuegos) == false && idJuegos != "0")
             {
 				string sqlActualizar = "UPDATE tienda" + idTienda + " " +
 						"SET idJuegos=@idJuegos WHERE enlace=@enlace";

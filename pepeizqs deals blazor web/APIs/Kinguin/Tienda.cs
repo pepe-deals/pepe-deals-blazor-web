@@ -22,7 +22,7 @@ namespace APIs.Kinguin
 				Color = "#558205",
 				AdminUso = true,
 				UsuarioUso = true,
-				Regiones = new List<TiendaRegion> { TiendaRegion.Europa  }
+				Regiones = new List<TiendaRegion> { TiendaRegion.Europa, TiendaRegion.EstadosUnidos }
 			};
 
 			return tienda;
@@ -199,6 +199,8 @@ namespace APIs.Kinguin
 							"asia steam cd key",
 							"south america pc steam cd key",
 							"south america steam cd key",
+							"mena/af pc steam cd key",
+							"mena/af steam cd key",
 							"mena pc steam cd key",
 							"mena steam cd key",
 							"cn pc steam cd key",
@@ -229,10 +231,22 @@ namespace APIs.Kinguin
 							"outside europe steam cd key",
 							"ar/by/ba/br/in/me/ru/rs/tr/ua pc steam cd key",
 							"ar/by/ba/br/in/me/ru/rs/tr/ua steam cd key",
+							"za/kw/qa/sa/tr/ae pc steam cd key",
+							"za/kw/qa/sa/tr/ae steam cd key",
 							"fr pc steam cd key",
 							"fr steam cd key",
 							"meza pc steam cd key",
-							"meza steam cd key"
+							"meza steam cd key",
+							"ar pc steam cd key",
+							"ar steam cd key",
+							"tr/africa pc steam cd key",
+							"tr/africa steam cd key",
+							"cis pc steam cd key",
+							"cis steam cd key",
+							"brasil pc steam cd key",
+							"brasil steam cd key",
+							"china pc steam cd key",
+							"china steam cd key"
 						};
 
 						string nombreMinusculas = resultado.Nombre.ToLower();
@@ -244,6 +258,7 @@ namespace APIs.Kinguin
 
 						string[] textos2DrmNoEspecificado = new[]
 						{
+							"-steam-gift-pc-bundle",
 							"-steam-gift"
 						};
 

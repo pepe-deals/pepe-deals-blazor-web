@@ -1329,6 +1329,7 @@
     private async Task CuandoIdPendientesSeaCero(string nombreBuscar2)
     {
         string nombreBuscar = nombreBuscar2;
+        nombreBuscar = (nombreBuscar.EndsWith("Digital Limited Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Digital Limited Edition", null) : nombreBuscar).TrimEnd();
         nombreBuscar = (nombreBuscar.EndsWith("Digital Deluxe Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Digital Deluxe Edition", null) : nombreBuscar).TrimEnd();
         nombreBuscar = (nombreBuscar.EndsWith("Digital Special Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Digital Special Edition", null) : nombreBuscar).TrimEnd();
         nombreBuscar = (nombreBuscar.EndsWith("Complete Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Complete Edition", null) : nombreBuscar).TrimEnd();
@@ -1338,6 +1339,8 @@
         nombreBuscar = (nombreBuscar.EndsWith("Gold Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Gold Edition", null) : nombreBuscar).TrimEnd();
         nombreBuscar = (nombreBuscar.EndsWith("Day One Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Day One Edition", null) : nombreBuscar).TrimEnd();
         nombreBuscar = (nombreBuscar.EndsWith("Special Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Special Edition", null) : nombreBuscar).TrimEnd();
+        nombreBuscar = (nombreBuscar.EndsWith("Collector's Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Collector's Edition", null) : nombreBuscar).TrimEnd();
+        nombreBuscar = (nombreBuscar.EndsWith("Definitive Edition", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("Definitive Edition", null) : nombreBuscar).TrimEnd();
         nombreBuscar = (nombreBuscar.EndsWith("DLC", StringComparison.OrdinalIgnoreCase) ? nombreBuscar.Replace("DLC", null) : nombreBuscar).TrimEnd();
 
         InicializarPestañasBuscador();
