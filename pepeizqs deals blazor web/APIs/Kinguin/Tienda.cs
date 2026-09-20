@@ -118,8 +118,12 @@ namespace APIs.Kinguin
 							resultado.Nombre.ToLower().Contains("eu/mea/au/nz steam cd key") == true ||
 							resultado.Nombre.ToLower().Contains("eu/na steam cd key") == true ||
 							resultado.Nombre.ToLower().Contains("eu/na pc steam cd key") == true ||
+							resultado.Nombre.ToLower().Contains("eu/us steam cd key") == true ||
+							resultado.Nombre.ToLower().Contains("eu/us pc steam cd key") == true ||
 							resultado.Nombre.ToLower().Contains("eu (without ru/cis) steam cd key") == true ||
-							resultado.Nombre.ToLower().Contains("eu (without de) steam cd key") == true))
+							resultado.Nombre.ToLower().Contains("eu (without de) steam cd key") == true ||
+							resultado.Nombre.ToLower().Contains("eu v2 steam cd key") == true ||
+							resultado.Nombre.ToLower().Contains("emea/us pc steam cd key") == true))
 						{
 							drmJuego = JuegoDRM.Steam;
 						}
@@ -130,8 +134,13 @@ namespace APIs.Kinguin
 							resultado.Nombre.ToLower().Contains("na pc steam cd key") == true ||
 							resultado.Nombre.ToLower().Contains("na/latam steam cd key") == true ||
 							resultado.Nombre.ToLower().Contains("na/latam pc steam cd key") == true ||
+							resultado.Nombre.ToLower().Contains("na/oceania/africa steam cd key") == true ||
+							resultado.Nombre.ToLower().Contains("na/oceania/africa pc steam cd key") == true ||
 							resultado.Nombre.ToLower().Contains("eu/na steam cd key") == true ||
-							resultado.Nombre.ToLower().Contains("eu/na pc steam cd key") == true))
+							resultado.Nombre.ToLower().Contains("eu/na pc steam cd key") == true ||
+							resultado.Nombre.ToLower().Contains("eu/us steam cd key") == true ||
+							resultado.Nombre.ToLower().Contains("eu/us pc steam cd key") == true ||
+							resultado.Nombre.ToLower().Contains("emea/us pc steam cd key") == true))
 						{
 							drmJuego = JuegoDRM.Steam;
 						}
@@ -158,7 +167,11 @@ namespace APIs.Kinguin
 							"ru vpn activated steam pc cd key",
 							"ru vpn activated steam cd key",
 							"ru vpn activated pc steam cd key",
+							"asia vpn activated steam pc cd key",
+							"asia vpn activated steam cd key",
+							"asia vpn activated pc steam cd key",
 							"ru/cis pc steam cd key",
+							"ru/cis dlc steam cd key",
 							"ru/cis steam cd key",
 							"ru pc steam cd key",
 							"ru steam cd key",
@@ -243,10 +256,18 @@ namespace APIs.Kinguin
 							"tr/africa steam cd key",
 							"cis pc steam cd key",
 							"cis steam cd key",
+							"brazil pc steam cd key",
+							"brazil steam cd key",
 							"brasil pc steam cd key",
 							"brasil steam cd key",
 							"china pc steam cd key",
-							"china steam cd key"
+							"china steam cd key",
+							"za pc steam cd key",
+							"za steam cd key",
+							"eastern europe pc steam cd key",
+							"eastern europe steam cd key",
+							"jp/kr pc steam cd key",
+							"jp/kr steam cd key"
 						};
 
 						string nombreMinusculas = resultado.Nombre.ToLower();
