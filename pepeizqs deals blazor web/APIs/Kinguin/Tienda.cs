@@ -134,13 +134,16 @@ namespace APIs.Kinguin
 							resultado.Nombre.ToLower().Contains("na pc steam cd key") == true ||
 							resultado.Nombre.ToLower().Contains("na/latam steam cd key") == true ||
 							resultado.Nombre.ToLower().Contains("na/latam pc steam cd key") == true ||
+							resultado.Nombre.ToLower().Contains("na/anz steam cd key") == true ||
+							resultado.Nombre.ToLower().Contains("na/anz pc steam cd key") == true ||
 							resultado.Nombre.ToLower().Contains("na/oceania/africa steam cd key") == true ||
 							resultado.Nombre.ToLower().Contains("na/oceania/africa pc steam cd key") == true ||
 							resultado.Nombre.ToLower().Contains("eu/na steam cd key") == true ||
 							resultado.Nombre.ToLower().Contains("eu/na pc steam cd key") == true ||
 							resultado.Nombre.ToLower().Contains("eu/us steam cd key") == true ||
 							resultado.Nombre.ToLower().Contains("eu/us pc steam cd key") == true ||
-							resultado.Nombre.ToLower().Contains("emea/us pc steam cd key") == true))
+							resultado.Nombre.ToLower().Contains("emea/us pc steam cd key") == true ||
+							resultado.Nombre.ToLower().Contains("na/anz pc steam cd key") == true))
 						{
 							drmJuego = JuegoDRM.Steam;
 						}
@@ -161,6 +164,8 @@ namespace APIs.Kinguin
 						{
 							"languages only",
 							"language only",
+							"valid until",
+							"- pre-order bonus",
 							"ru vpn required steam pc cd key",
 							"ru vpn required steam cd key",
 							"ru vpn required pc steam cd key",
@@ -267,7 +272,19 @@ namespace APIs.Kinguin
 							"eastern europe pc steam cd key",
 							"eastern europe steam cd key",
 							"jp/kr pc steam cd key",
-							"jp/kr steam cd key"
+							"jp/kr steam cd key",
+							"br pc steam cd key",
+							"br steam cd key",
+							"sa pc steam cd key",
+							"sa steam cd key",
+							"ca pc steam cd key",
+							"ca steam cd key",
+							"turkey pc steam cd key",
+							"turkey steam cd key",
+							"pl/cz/hu pc steam cd key",
+							"pl/cz/hu steam cd key",
+							"eea pc steam cd key",
+							"eea steam cd key"
 						};
 
 						string nombreMinusculas = resultado.Nombre.ToLower();
