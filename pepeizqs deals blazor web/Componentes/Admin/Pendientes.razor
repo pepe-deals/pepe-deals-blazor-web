@@ -344,7 +344,7 @@
 
                 if (ids?.Count > 0)
                 {
-                    idsPendiente = string.Join(",", ids);
+                    idsPendiente = idsPendiente = string.Join(",", (string.Join(",", ids) ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Distinct());
                 }
             }
             else
@@ -549,7 +549,7 @@
 
                     if (ids?.Count > 0)
                     {
-                        idsPendiente = string.Join(",", ids);
+                        idsPendiente = idsPendiente = string.Join(",", (string.Join(",", ids) ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Distinct());
                     }
 
                     if (idsPendiente != "0" && string.IsNullOrEmpty(nombrePendiente) == false && 
@@ -973,7 +973,7 @@
     {
         ocupado = true;
 
-        idsPendiente = texto.Value.ToString();
+        idsPendiente = string.Join(",", (texto.Value?.ToString() ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Distinct());
 
         await AñadirResultados();
 
