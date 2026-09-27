@@ -60,10 +60,36 @@ namespace Tareas.Minimos
 							{
 								juego.IdMaestra = juego.Id;
 								juego.PreciosHistoricosNoOficialesEU = juego.PreciosHistoricosNoOficialesEU.Where(x => x.DRM == juego.DRMElegido).ToList();
+								juego.PrecioMinimosHistoricos = juego.PrecioMinimosHistoricos.Where(x => x.DRM == juego.DRMElegido).ToList();
 
-								if (juego.PreciosHistoricosNoOficialesEU?.Count > 0 && (juego.PreciosHistoricosNoOficialesEU[0].Precio > 0 || juego.PreciosHistoricosNoOficialesEU[0].PrecioCambiado > 0))
+								if ((juego.PreciosHistoricosNoOficialesEU?.Count > 0 && (juego.PreciosHistoricosNoOficialesEU[0].Precio > 0 || juego.PreciosHistoricosNoOficialesEU[0].PrecioCambiado > 0)) &&
+									(juego.PrecioMinimosHistoricos?.Count > 0 && (juego.PrecioMinimosHistoricos[0].Precio > 0 || juego.PrecioMinimosHistoricos[0].PrecioCambiado > 0)))
 								{
-									juegosParaInsertar.Add(juego);
+									decimal precioOficial = 0;
+									decimal precioNoOficial = 0;
+
+									if (juego.PrecioMinimosHistoricos[0].PrecioCambiado > 0)
+									{
+										precioOficial = juego.PrecioMinimosHistoricos[0].PrecioCambiado;
+									}
+									else if (juego.PrecioMinimosHistoricos[0].Precio > 0)
+									{
+										precioOficial = juego.PrecioMinimosHistoricos[0].Precio;
+									}
+
+									if (juego.PreciosHistoricosNoOficialesEU[0].PrecioCambiado > 0)
+									{
+										precioNoOficial = juego.PreciosHistoricosNoOficialesEU[0].PrecioCambiado;
+									}
+									else if (juego.PreciosHistoricosNoOficialesEU[0].Precio > 0)
+									{
+										precioNoOficial = juego.PreciosHistoricosNoOficialesEU[0].Precio;
+									}
+
+									if (precioNoOficial < precioOficial)
+									{
+										juegosParaInsertar.Add(juego);
+									}
 								}
 							}
 

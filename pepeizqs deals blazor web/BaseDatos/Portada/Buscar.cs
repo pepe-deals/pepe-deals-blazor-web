@@ -2,6 +2,7 @@
 
 using Dapper;
 using Juegos;
+using Servicios;
 using System.Data;
 using System.Text.Json;
 using Tareas.Minimos;
@@ -16,6 +17,10 @@ namespace BaseDatos.Portada
 			DynamicParameters parametros = new DynamicParameters();
 
 			string precioMinimosHistoricos = string.Empty;
+			string adicionalMinimosHistoricos1 = string.Empty;
+			string cruceAdicional = string.Empty;
+			string campoOficial = string.Empty;
+			string condicionesOficial = string.Empty;
 
 			if (tipo == TiendaTipo.Oficial && region == TiendaRegion.Europa)
 			{
@@ -28,10 +33,30 @@ namespace BaseDatos.Portada
 			else if (tipo == TiendaTipo.NoOficial && region == TiendaRegion.Europa)
 			{
 				precioMinimosHistoricos = "preciosHistoricosNoOficialesEU";
+				campoOficial = "precioMinimosHistoricos";
+
+				adicionalMinimosHistoricos1 = $", j.{campoOficial}, pmh2.DRM as DRMOficial";
 			}
 			else if (tipo == TiendaTipo.NoOficial && region == TiendaRegion.EstadosUnidos)
 			{
 				precioMinimosHistoricos = "preciosHistoricosNoOficialesUS";
+				campoOficial = "precioMinimosHistoricosUS";
+
+				adicionalMinimosHistoricos1 = $", j.{campoOficial}, pmh2.DRM as DRMOficial";
+			}
+			else if (tipo == TiendaTipo.Marketplace && region == TiendaRegion.Europa)
+			{
+				precioMinimosHistoricos = "preciosHistoricosMarketplacesEU";
+				campoOficial = "precioMinimosHistoricos";
+
+				adicionalMinimosHistoricos1 = $", j.{campoOficial}, pmh2.DRM as DRMOficial";
+			}
+			else if (tipo == TiendaTipo.Marketplace && region == TiendaRegion.EstadosUnidos)
+			{
+				precioMinimosHistoricos = "preciosHistoricosMarketplacesUS";
+				campoOficial = "precioMinimosHistoricosUS";
+
+				adicionalMinimosHistoricos1 = $", j.{campoOficial}, pmh2.DRM as DRMOficial";
 			}
 
 			if (string.IsNullOrEmpty(precioMinimosHistoricos) == true)
@@ -39,7 +64,22 @@ namespace BaseDatos.Portada
 				return null;
 			}
 
-			string busqueda = @$"SELECT j.id, j.{precioMinimosHistoricos}, pmh.DRM as DRMElegido
+			if (string.IsNullOrEmpty(campoOficial) == false)
+			{
+				cruceAdicional = $@"
+					CROSS APPLY OPENJSON(j.{campoOficial})
+					WITH (
+						DRM INT '$.DRM'
+					) AS pmh2";
+
+				condicionesOficial = $@"
+					AND j.{campoOficial} IS NOT NULL
+					AND j.{campoOficial} <> 'null'
+					AND ISJSON(j.{campoOficial}) = 1
+					AND pmh.DRM = pmh2.DRM";
+			}
+
+			string busqueda = @$"SELECT j.id, j.{precioMinimosHistoricos} {adicionalMinimosHistoricos1}, pmh.DRM as DRMElegido
 				FROM juegos j
 				CROSS APPLY OPENJSON(j.{precioMinimosHistoricos})
 				WITH (
@@ -48,6 +88,7 @@ namespace BaseDatos.Portada
 					DRM INT '$.DRM',
 					Tienda NVARCHAR(50) '$.Tienda'
 				) AS pmh
+				{cruceAdicional}
 				WHERE j.ultimaModificacion >= DATEADD(day, -3, GETDATE())
 				  AND j.analisis IS NOT NULL
 				  AND j.analisis <> 'null'
@@ -61,6 +102,7 @@ namespace BaseDatos.Portada
 				  AND j.{precioMinimosHistoricos} IS NOT NULL
 				  AND j.{precioMinimosHistoricos} <> 'null'
 				  AND ISJSON(j.{precioMinimosHistoricos}) = 1
+				  {condicionesOficial}
 				  AND (
 						(pmh.FechaActualizacion >= DATEADD(hour, -24, GETDATE()) AND (pmh.Tienda = 'steam' OR pmh.Tienda = 'steambundles')) OR
 						(pmh.FechaActualizacion >= DATEADD(hour, -25, GETDATE()) AND (pmh.Tienda = 'humblestore' OR pmh.Tienda = 'humblechoice')) OR
@@ -276,7 +318,7 @@ namespace BaseDatos.Portada
 			return null;
 		}
 
-		public static async Task<List<Juego>> Minimos(bool noOficial, TiendaRegion region, int tipo, int posicion = 0, List<string> categorias = null, List<string> drms = null, int cantidadReseñas = 199, List<int> excluirJuegosIds = null, List<int> excluirSteamIds = null, List<int> excluirGogIds = null)
+		public static async Task<List<Juego>> Minimos(bool noOficial, bool marketplace, TiendaRegion region, int tipo, int posicion = 0, List<string> categorias = null, List<string> drms = null, int cantidadReseñas = 199, List<int> excluirJuegosIds = null, List<int> excluirSteamIds = null, List<int> excluirGogIds = null)
 		{
 			string tabla = "seccionMinimos";
 
@@ -427,7 +469,7 @@ namespace BaseDatos.Portada
 						DRM int '$.DRM',
 						FechaDetectado datetime2 '$.FechaDetectado'
 					) precioMin
-					WHERE CONVERT(bigint, REPLACE(JSON_VALUE(jg.analisis, '$.Cantidad'),',','')) >= @cantidadAnalisis AND precioMin.Descuento > 0 AND (jg.MayorEdad <> 'true' OR jg.MayorEdad IS NULL) {categoria} {drm} {exclusionJuegos} {exclusionSteam} {exclusionGog} {filtroTipo}";
+					WHERE CONVERT(bigint, REPLACE(JSON_VALUE(jg.analisis, '$.Cantidad'),',','')) >= @cantidadAnalisis {(noOficial == false && marketplace == false ? "AND precioMin.Descuento > 0" : "")} AND (jg.MayorEdad <> 'true' OR jg.MayorEdad IS NULL) {categoria} {drm} {exclusionJuegos} {exclusionSteam} {exclusionGog} {filtroTipo}";
 			}
 
 			string busqueda = ConstruirBusqueda(tabla, precioMinimosHistoricos);
@@ -440,6 +482,16 @@ namespace BaseDatos.Portada
 				string busquedaNoOficial = ConstruirBusqueda(tablaNoOficial, columnaNoOficial);
 
 				busqueda = $"({busqueda}) UNION ALL ({busquedaNoOficial})";
+			}
+
+			if (marketplace == true)
+			{
+				string tablaMarketplace = region == TiendaRegion.EstadosUnidos ? "seccionMinimosMarketplacesUS" : "seccionMinimosMarketplacesEU";
+				string columnaMarketplace = region == TiendaRegion.EstadosUnidos ? "preciosHistoricosMarketplacesUS" : "preciosHistoricosMarketplacesEU";
+				
+				string busquedaMarketplace = ConstruirBusqueda(tablaMarketplace, columnaMarketplace);
+				
+				busqueda = $"({busqueda}) UNION ALL ({busquedaMarketplace})";
 			}
 
 			busqueda = $"SELECT * FROM ({busqueda}) AS resultado";

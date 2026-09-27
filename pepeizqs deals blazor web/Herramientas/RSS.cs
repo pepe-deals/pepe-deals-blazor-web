@@ -234,7 +234,7 @@ namespace Herramientas
 
 				List<SyndicationItem> items = new List<SyndicationItem>();
 
-				List<Juego> juegos = await global::BaseDatos.Portada.Buscar.Minimos(noOficial2, region, 3, 50, null, drmsUsar, cantidadReseñas);
+				List<Juego> juegos = await global::BaseDatos.Portada.Buscar.Minimos(noOficial2, marketplace2, region, 3, 50, null, drmsUsar, cantidadReseñas);
 
 				if (juegos.Count > 0)
 				{
@@ -288,6 +288,28 @@ namespace Herramientas
 							}
 
 							contenido = juego.PreciosHistoricosNoOficialesUS[0].Descuento.ToString() + "% - " + Herramientas.Precios.Dolar(precio);
+						}
+						else if (juego.PreciosHistoricosMarketplacesEU?.Count > 0)
+						{
+							decimal precio = juego.PreciosHistoricosMarketplacesEU[0].Precio;
+
+							if (juego.PreciosHistoricosMarketplacesEU[0].PrecioCambiado > 0)
+							{
+								precio = juego.PreciosHistoricosMarketplacesEU[0].PrecioCambiado;
+							}
+
+							contenido = juego.PreciosHistoricosMarketplacesEU[0].Descuento.ToString() + "% - " + Herramientas.Precios.Euro(precio);
+						}
+						else if (juego.PreciosHistoricosMarketplacesUS?.Count > 0)
+						{
+							decimal precio = juego.PreciosHistoricosMarketplacesUS[0].Precio;
+
+							if (juego.PreciosHistoricosMarketplacesUS[0].PrecioCambiado > 0)
+							{
+								precio = juego.PreciosHistoricosMarketplacesUS[0].PrecioCambiado;
+							}
+
+							contenido = juego.PreciosHistoricosMarketplacesUS[0].Descuento.ToString() + "% - " + Herramientas.Precios.Dolar(precio);
 						}
 
 						Uri enlaceUri = null;
