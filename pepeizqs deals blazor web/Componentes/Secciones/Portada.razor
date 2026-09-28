@@ -60,7 +60,7 @@
 {
 	var destacadoActual = juegosDestacadosMostrar[posicionMostrarDestacados];
 
-	@if (destacadoActual.Juego != null && destacadoActual.Excluido == false)
+	if (destacadoActual.Juego != null && destacadoActual.Excluido == false)
 	{
 		<div class="portada-espacio cuerpo-ancho">
 			<a href="/game/@destacadoActual.Juego.IdMaestra.ToString()/@Herramientas.EnlaceAdaptador.Nombre(destacadoActual.Juego.Nombre)/" style="cursor: pointer; border: 0px; padding: 0px; display: block; width: 100%;">

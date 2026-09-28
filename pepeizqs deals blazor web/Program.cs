@@ -13,11 +13,13 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.FileProviders;
 using pepeizqs_deals_blazor_web.Componentes;
 using pepeizqs_deals_web.Data;
+using System.Collections.Concurrent;
 using System.IO.Compression;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.RateLimiting;
 
 ClasesDapper.Registrar();
 
@@ -49,7 +51,7 @@ builder.Services.Configure<ZstandardCompressionProviderOptions>(opciones =>
 {
 	opciones.CompressionOptions = new ZstandardCompressionOptions
 	{
-		Quality = 6  
+		Quality = 6
 	};
 });
 
@@ -58,7 +60,7 @@ builder.Services.Configure<ZstandardCompressionProviderOptions>(opciones =>
 #region Optimizador
 
 builder.Services.AddWebOptimizer(
-	acciones => 
+	acciones =>
 	{
 		acciones.MinifyCssFiles();
 
@@ -184,8 +186,8 @@ builder.Services.AddIdentityCore<Usuario>(opciones =>
 	opciones.User.RequireUniqueEmail = true;
 })
 	.AddEntityFrameworkStores<pepeizqs_deals_webContext>()
-    .AddSignInManager()
-    .AddDefaultTokenProviders();
+	.AddSignInManager()
+	.AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<Usuario>, Herramientas.Correos.IdentityNoOpEmailSender>();
 
@@ -225,6 +227,8 @@ builder.Services.AddSingleton<Tareas.SteamDLCs>();
 builder.Services.AddSingleton<Tareas.Minimos.OficialesEstadosUnidos>();
 builder.Services.AddSingleton<Tareas.Minimos.NoOficialesEuropa>();
 builder.Services.AddSingleton<Tareas.Minimos.NoOficialesEstadosUnidos>();
+builder.Services.AddSingleton<Tareas.Minimos.MarketplacesEuropa>();
+builder.Services.AddSingleton<Tareas.Minimos.MarketplacesEstadosUnidos>();
 
 builder.Services.AddHostedService(provider => provider.GetRequiredService<Tareas.VigiladorRAM>());
 builder.Services.AddHostedService(provider => provider.GetRequiredService<Tareas.Comprobador>());
@@ -246,6 +250,8 @@ builder.Services.AddHostedService(provider => provider.GetRequiredService<Tareas
 builder.Services.AddHostedService(provider => provider.GetRequiredService<Tareas.Minimos.OficialesEstadosUnidos>());
 builder.Services.AddHostedService(provider => provider.GetRequiredService<Tareas.Minimos.NoOficialesEuropa>());
 builder.Services.AddHostedService(provider => provider.GetRequiredService<Tareas.Minimos.NoOficialesEstadosUnidos>());
+builder.Services.AddHostedService(provider => provider.GetRequiredService<Tareas.Minimos.MarketplacesEuropa>());
+builder.Services.AddHostedService(provider => provider.GetRequiredService<Tareas.Minimos.MarketplacesEstadosUnidos>());
 
 #endregion
 
@@ -336,6 +342,38 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddHealthChecks().AddCheck("self", () => HealthCheckResult.Healthy());
 
+#region Rate Limiting anti-bots
+
+builder.Services.AddRateLimiter(opciones =>
+{
+	opciones.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+	opciones.OnRejected = async (contexto, token) =>
+	{
+		string ip = contexto.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "desconocida";
+		BloqueoTemporalIps.Banear(ip);
+
+		contexto.HttpContext.Response.ContentType = "text/plain";
+
+		await contexto.HttpContext.Response.WriteAsync("Too many requests, IP temporarily blocked.", token);
+	};
+
+	opciones.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(contexto =>
+	{
+		string ip = contexto.Connection.RemoteIpAddress?.ToString() ?? "desconocida";
+
+		return RateLimitPartition.GetFixedWindowLimiter(ip, _ => new FixedWindowRateLimiterOptions
+		{
+			PermitLimit = 40,
+			Window = TimeSpan.FromSeconds(10),
+			QueueLimit = 0,
+			QueueProcessingOrder = QueueProcessingOrder.OldestFirst
+		});
+	});
+});
+
+#endregion
+
 #region Notificaciones Push
 
 builder.Services.AddScoped<NotificacionesPush>();
@@ -348,14 +386,35 @@ var app = builder.Build();
 
 app.Use(async (contexto, siguiente) =>
 {
+	string ipActual = contexto.Connection.RemoteIpAddress?.ToString() ?? "desconocida";
+
+	if (BloqueoTemporalIps.EstaBaneada(ipActual) == true)
+	{
+		contexto.Response.StatusCode = StatusCodes.Status403Forbidden;
+		return;
+	}
+
 	string? ruta = contexto.Request.Path.Value?.ToLowerInvariant() ?? "";
+
+	HashSet<string> rutasAtaque = new()
+	{
+		"/wp-admin/", "/wp-login.php", "/xmlrpc.php", "/wp-content/", "/wp-includes/",
+		"/wp-json/", "/.env", "/.git/", "/phpmyadmin", "/config.php", "/wordpress/"
+	};
+
+	if (rutasAtaque.Any(patron => ruta.Contains(patron)) == true || ruta.EndsWith(".php") == true)
+	{
+		BloqueoTemporalIps.Banear(ipActual);
+		contexto.Response.StatusCode = StatusCodes.Status403Forbidden;
+		return;
+	}
 
 	HashSet<string> extensiones = new()
 	{
-		"/.svg", "/.png", "/.jpg", "/.webp", "/.gif", "/ads.txt", ".php", "/game", "/.env"
+		"/.svg", "/.png", "/.jpg", "/.webp", "/.gif", "/ads.txt", "/game"
 	};
 
-	if (extensiones.Any(ext => ruta.EndsWith(ext)) == true || ruta.Contains("./") == true || ruta.Contains("/wp-admin/") == true)
+	if (extensiones.Any(ext => ruta.EndsWith(ext)) == true || ruta.Contains("./") == true)
 	{
 		contexto.Response.StatusCode = StatusCodes.Status301MovedPermanently;
 		contexto.Response.Headers.Location = "/";
@@ -388,7 +447,7 @@ app.Use(async (contexto, siguiente) =>
 	}
 
 	// Redireccionar HTTP a HTTPS
-	#nullable disable
+#nullable disable
 
 	string piscinaApp = builder.Configuration.GetValue<string>("PoolWeb:Contenido");
 	string piscinaUsada = Environment.GetEnvironmentVariable("APP_POOL_ID", EnvironmentVariableTarget.Process);
@@ -449,6 +508,12 @@ ServiciosGlobales.ServiceProvider = app.Services;
 
 #endregion
 
+#region Rate Limiting anti-bots
+
+app.UseRateLimiter();
+
+#endregion
+
 #region Compresion
 
 app.UseRequestDecompression();
@@ -500,7 +565,7 @@ app.UseStaticFiles(new StaticFileOptions
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseMigrationsEndPoint();
+	app.UseMigrationsEndPoint();
 }
 else
 {
@@ -598,7 +663,7 @@ app.MapAdditionalIdentityEndpoints();
 
 app.MapGet("extension/steam4/{id}/{region}/{noOficial}/{marketplace}/{clave}/", async (int id, string region, bool noOficial, bool marketplace, string clave) =>
 {
-	#nullable disable
+#nullable disable
 
 	string claveExtension = builder.Configuration.GetValue<string>("Extension:Clave");
 
@@ -617,7 +682,7 @@ app.MapGet("extension/steam4/{id}/{region}/{noOficial}/{marketplace}/{clave}/", 
 
 app.MapGet("extension/gog4/{slug}/{region}/{noOficial}/{marketplace}/{clave}/", async (string slug, string region, bool noOficial, bool marketplace, string clave) =>
 {
-	#nullable disable
+#nullable disable
 
 	string claveExtension = builder.Configuration.GetValue<string>("Extension:Clave");
 
@@ -636,7 +701,7 @@ app.MapGet("extension/gog4/{slug}/{region}/{noOficial}/{marketplace}/{clave}/", 
 
 app.MapGet("extension/epic4/{slug}/{region}/{noOficial}/{marketplace}/{clave}/", async (string slug, string region, bool noOficial, bool marketplace, string clave) =>
 {
-	#nullable disable
+#nullable disable
 
 	string claveExtension = builder.Configuration.GetValue<string>("Extension:Clave");
 
@@ -953,3 +1018,33 @@ app.MapHealthChecks("/vida");
 Herramientas.ImagenesOptimizador.GenerarImagenesResponsive(builder.Environment.WebRootPath);
 
 app.Run();
+
+#region Baneo temporal de IPs
+
+public static class BloqueoTemporalIps
+{
+	private static readonly ConcurrentDictionary<string, DateTime> ipsBaneadas = new();
+	private static readonly TimeSpan duracionBaneo = TimeSpan.FromMinutes(15);
+
+	public static void Banear(string ip)
+	{
+		ipsBaneadas[ip] = DateTime.UtcNow.Add(duracionBaneo);
+	}
+
+	public static bool EstaBaneada(string ip)
+	{
+		if (ipsBaneadas.TryGetValue(ip, out DateTime expira))
+		{
+			if (DateTime.UtcNow < expira)
+			{
+				return true;
+			}
+
+			ipsBaneadas.TryRemove(ip, out _);
+		}
+
+		return false;
+	}
+}
+
+#endregion
