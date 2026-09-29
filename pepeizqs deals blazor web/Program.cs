@@ -543,7 +543,7 @@ app.UseStaticFiles(new StaticFileOptions
 
 			contexto.Context.Response.Headers.CacheControl = esLibreriaTerceros
 				? "public, max-age=31536000, immutable"
-				: "public, max-age=0, must-revalidate";
+				: "no-cache";
 		}
 		else if (ruta.EndsWith(".woff2") || ruta.EndsWith(".woff") || ruta.EndsWith(".ttf"))
 		{
