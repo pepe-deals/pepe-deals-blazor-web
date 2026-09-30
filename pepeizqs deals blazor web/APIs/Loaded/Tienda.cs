@@ -1,6 +1,7 @@
 ﻿#nullable disable
 
 using Herramientas;
+using Herramientas.Afiliados;
 using Juegos;
 using System.Net;
 using Tiendas2;
@@ -82,11 +83,11 @@ namespace APIs.Loaded
 				
 			if (region == TiendaRegion.Europa)
 			{
-				resultados = await Herramientas.Impact.ObtenerCatalogo("12138");
+				resultados = await Impact.ObtenerCatalogo("12138");
 			}
 			else if (region == TiendaRegion.EstadosUnidos)
 			{
-				resultados = await Herramientas.Impact.ObtenerCatalogo("12134");
+				resultados = await Impact.ObtenerCatalogo("12134");
 			}
 
 			if (resultados?.Count > 0)

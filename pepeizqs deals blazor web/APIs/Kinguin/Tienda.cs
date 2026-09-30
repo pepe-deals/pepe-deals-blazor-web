@@ -1,6 +1,7 @@
 ﻿#nullable disable
 
 using Herramientas;
+using Herramientas.Afiliados;
 using Juegos;
 using System.Net;
 using Tiendas2;
@@ -95,11 +96,11 @@ namespace APIs.Kinguin
 
 			if (region == TiendaRegion.Europa)
 			{
-				resultados = await Herramientas.Impact.ObtenerCatalogo("33299");
+				resultados = await Impact.ObtenerCatalogo("33299");
 			}
 			else if (region == TiendaRegion.EstadosUnidos)
 			{
-				resultados = await Herramientas.Impact.ObtenerCatalogo("32047");
+				resultados = await Impact.ObtenerCatalogo("32047");
 			}
 
 			if (resultados?.Count > 0)
@@ -345,7 +346,8 @@ namespace APIs.Kinguin
 						string[] textos2DrmNoEspecificado = new[]
 						{
 							"-steam-gift-pc-bundle",
-							"-steam-gift"
+							"-steam-gift",
+							"??????"
 						};
 
 						string enlaceMinusculas = resultado.Url.ToLower();

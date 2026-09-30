@@ -1,0 +1,304 @@
+﻿#nullable disable
+
+using System.Globalization;
+using System.Net;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+namespace Herramientas.Afiliados
+{
+	public class DaisyconRespuesta
+	{
+		[JsonPropertyName("datafeed")]
+		public DaisyconDatafeed Datafeed { get; set; }
+	}
+
+	public class DaisyconDatafeed
+	{
+		[JsonPropertyName("info")]
+		public DaisyconFeedInfo Info { get; set; }
+
+		[JsonPropertyName("programs")]
+		public List<DaisyconPrograma> Programas { get; set; }
+	}
+
+	public class DaisyconFeedInfo
+	{
+		[JsonPropertyName("category")]
+		public string Categoria { get; set; }
+
+		[JsonPropertyName("sub_category")]
+		public string Subcategoria { get; set; }
+
+		[JsonPropertyName("product_count")]
+		public int TotalProductos { get; set; }
+
+		[JsonPropertyName("last_modified")]
+		public string UltimaModificacion { get; set; }
+
+		[JsonPropertyName("date_created")]
+		public string FechaCreacion { get; set; }
+	}
+
+	public class DaisyconPrograma
+	{
+		[JsonPropertyName("program_info")]
+		public DaisyconProgramaInfo Info { get; set; }
+
+		[JsonPropertyName("products")]
+		public List<DaisyconProducto> Productos { get; set; }
+	}
+
+	public class DaisyconProgramaInfo
+	{
+		[JsonPropertyName("id")]
+		public int Id { get; set; }
+
+		[JsonPropertyName("name")]
+		public string Nombre { get; set; }
+
+		[JsonPropertyName("currency")]
+		public string Moneda { get; set; }
+
+		[JsonPropertyName("product_count")]
+		public int TotalProductos { get; set; }
+	}
+
+	public class DaisyconProducto
+	{
+		[JsonPropertyName("update_info")]
+		public DaisyconActualizacion Actualizacion { get; set; }
+
+		[JsonPropertyName("product_info")]
+		public DaisyconProductoInfo Info { get; set; }
+
+		// Se rellenan al cargar el feed, para no perder de que programa viene cada producto
+
+		[JsonIgnore]
+		public int ProgramaId { get; set; }
+
+		[JsonIgnore]
+		public string Tienda { get; set; }
+	}
+
+	public class DaisyconActualizacion
+	{
+		[JsonPropertyName("daisycon_unique_id")]
+		public string Id { get; set; }
+
+		[JsonPropertyName("data_hash")]
+		public string Hash { get; set; }
+
+		[JsonPropertyName("status")]
+		public string Estado { get; set; }
+
+		[JsonPropertyName("insert_date")]
+		public string FechaInsercion { get; set; }
+
+		[JsonPropertyName("update_date")]
+		public string FechaActualizacion { get; set; }
+
+		[JsonPropertyName("delete_date")]
+		public string FechaEliminacion { get; set; }
+	}
+
+	public class DaisyconProductoInfo
+	{
+		[JsonPropertyName("title")]
+		public string Nombre { get; set; }
+
+		[JsonPropertyName("description")]
+		public string Descripcion { get; set; }
+
+		[JsonPropertyName("description_short")]
+		public string DescripcionCorta { get; set; }
+
+		[JsonPropertyName("link")]
+		public string Url { get; set; }
+
+		[JsonPropertyName("sku")]
+		public string Sku { get; set; }
+
+		[JsonPropertyName("ean")]
+		public string Ean { get; set; }
+
+		[JsonPropertyName("price")]
+		public string PrecioActualTexto { get; set; }
+
+		[JsonPropertyName("price_old")]
+		public string PrecioOriginalTexto { get; set; }
+
+		[JsonPropertyName("discount")]
+		public string EnDescuentoTexto { get; set; }
+
+		[JsonPropertyName("discount_amount")]
+		public string DescuentoCantidadTexto { get; set; }
+
+		[JsonPropertyName("discount_percentage")]
+		public string DescuentoTexto { get; set; }
+
+		[JsonPropertyName("currency")]
+		public string Moneda { get; set; }
+
+		[JsonPropertyName("in_stock")]
+		public string EnStockTexto { get; set; }
+
+		[JsonPropertyName("category")]
+		public string Categoria { get; set; }
+
+		[JsonPropertyName("category_path")]
+		public string CategoriaRuta { get; set; }
+
+		[JsonPropertyName("google_category_path")]
+		public List<string> GoogleCategoriaRuta { get; set; }
+
+		[JsonPropertyName("images")]
+		public List<DaisyconImagen> Imagenes { get; set; }
+
+		[JsonPropertyName("gaming_platform")]
+		public string Plataforma { get; set; }
+
+		[JsonPropertyName("activation_platform")]
+		public string PlataformaActivacion { get; set; }
+
+		[JsonPropertyName("region_lock")]
+		public string Region { get; set; }
+
+		[JsonPropertyName("release_date")]
+		public string FechaLanzamiento { get; set; }
+
+		[JsonPropertyName("steam_id")]
+		public string SteamId { get; set; }
+
+		[JsonPropertyName("genres")]
+		public string Generos { get; set; }
+
+		[JsonPropertyName("publishers")]
+		public string Editores { get; set; }
+
+		[JsonPropertyName("product_type")]
+		public string TipoProducto { get; set; }
+
+		// Cualquier campo que no este mapeado arriba (otros programas/verticales) cae aqui
+
+		[JsonExtensionData]
+		public Dictionary<string, JsonElement> Extra { get; set; }
+
+		[JsonIgnore]
+		public decimal? PrecioActual => LeerDecimal(PrecioActualTexto);
+
+		[JsonIgnore]
+		public decimal? PrecioOriginal => LeerDecimal(PrecioOriginalTexto);
+
+		[JsonIgnore]
+		public decimal? DescuentoCantidad => LeerDecimal(DescuentoCantidadTexto);
+
+		[JsonIgnore]
+		public int? Descuento =>
+			int.TryParse(DescuentoTexto, out int valor) ? valor : null;
+
+		[JsonIgnore]
+		public bool EnDescuento =>
+			string.Equals(EnDescuentoTexto, "true", StringComparison.OrdinalIgnoreCase);
+
+		[JsonIgnore]
+		public bool EnStock =>
+			string.Equals(EnStockTexto, "true", StringComparison.OrdinalIgnoreCase);
+
+		[JsonIgnore]
+		public string ImagenUrl
+		{
+			get
+			{
+				if (Imagenes == null || Imagenes.Count == 0)
+				{
+					return null;
+				}
+
+				DaisyconImagen imagen = Imagenes.FirstOrDefault(i => i.Tag == "default") ?? Imagenes[0];
+				return imagen.Url;
+			}
+		}
+
+		private static decimal? LeerDecimal(string texto)
+		{
+			return decimal.TryParse(texto, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal valor) ? valor : null;
+		}
+	}
+
+	public class DaisyconImagen
+	{
+		[JsonPropertyName("size")]
+		public string Tamano { get; set; }
+
+		[JsonPropertyName("tag")]
+		public string Tag { get; set; }
+
+		[JsonPropertyName("type")]
+		public string Tipo { get; set; }
+
+		[JsonPropertyName("location")]
+		public string Url { get; set; }
+	}
+
+	public static class Daisycon
+	{
+		private static readonly HttpClient cliente = new HttpClient(new HttpClientHandler
+		{
+			AutomaticDecompression = DecompressionMethods.All
+		})
+		{
+			Timeout = TimeSpan.FromMinutes(15)
+		};
+
+		private static readonly JsonSerializerOptions opciones = new JsonSerializerOptions
+		{
+			NumberHandling = JsonNumberHandling.AllowReadingFromString,
+			UnknownTypeHandling = JsonUnknownTypeHandling.JsonElement
+		};
+
+		public static async Task<DaisyconDatafeed> ObtenerFeed(string urlFeed)
+		{
+			using var respuesta = await cliente.GetAsync(urlFeed, HttpCompletionOption.ResponseHeadersRead);
+			respuesta.EnsureSuccessStatusCode();
+
+			using var stream = await respuesta.Content.ReadAsStreamAsync();
+			var contenido = await JsonSerializer.DeserializeAsync<DaisyconRespuesta>(stream, opciones);
+
+			return contenido?.Datafeed;
+		}
+
+		public static async Task<List<DaisyconProducto>> ObtenerProductos(string urlFeed, bool soloActivos = true)
+		{
+			List<DaisyconProducto> todos = new List<DaisyconProducto>();
+
+			DaisyconDatafeed feed = await ObtenerFeed(urlFeed);
+
+			if (feed?.Programas != null)
+			{
+				foreach (DaisyconPrograma programa in feed.Programas)
+				{
+					if (programa.Productos == null)
+					{
+						continue;
+					}
+
+					foreach (DaisyconProducto producto in programa.Productos)
+					{
+						if (soloActivos == true && producto.Actualizacion?.Estado != "active")
+						{
+							continue;
+						}
+
+						producto.ProgramaId = programa.Info?.Id ?? 0;
+						producto.Tienda = programa.Info?.Nombre;
+
+						todos.Add(producto);
+					}
+				}
+			}
+
+			return todos;
+		}
+	}
+}

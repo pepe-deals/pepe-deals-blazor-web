@@ -5,7 +5,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace Herramientas
+namespace Herramientas.Afiliados
 {
 	[XmlRoot("ImpactRadiusResponse")]
 	public class ImpactRadiusResponse

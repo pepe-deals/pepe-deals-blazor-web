@@ -22,9 +22,9 @@ namespace APIs.Gamesporium
 				Imagen300x80 = "/imagenes/tiendas/gamesporium_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/gamesporium_icono.webp",
 				Color = "#141414",
-				AdminUso = false,
-				UsuarioUso = false,
-				Regiones = new List<TiendaRegion> { TiendaRegion.Europa, TiendaRegion.EstadosUnidos }
+				AdminUso = true,
+				UsuarioUso = true,
+				Regiones = new List<TiendaRegion> { TiendaRegion.Europa }
 			};
 
 			return tienda;
@@ -50,12 +50,12 @@ namespace APIs.Gamesporium
 
 			if (region == TiendaRegion.Europa)
 			{
-				enlace = "https://feed.mulwi.com/f/b74893-2/feed.xml";
+				enlace = "https://daisycon.io/datafeed/?media_id=425594&standard_id=26&language_code=en&locale_id=6&type=JSON&program_id=21412&html_transform=strip&rawdata=false&encoding=utf8";
 			}
-			else if (region == TiendaRegion.EstadosUnidos)
-			{
-				enlace = "https://feed.mulwi.com/f/b74893-2/general_us.xml";
-			}
+			//else if (region == TiendaRegion.EstadosUnidos)
+			//{
+			//	enlace = "https://feed.mulwi.com/f/b74893-2/general_us.xml";
+			//}
 
 			if (string.IsNullOrEmpty(enlace) == true)
 			{

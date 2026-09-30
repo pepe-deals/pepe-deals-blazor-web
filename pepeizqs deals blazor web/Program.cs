@@ -1,6 +1,7 @@
 ﻿using ApexCharts;
 using AspNet.Security.OpenId.Steam;
 using Herramientas;
+using Herramientas.Afiliados;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Diagnostics;
