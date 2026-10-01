@@ -4,6 +4,7 @@ using Herramientas;
 using Herramientas.Afiliados;
 using Juegos;
 using System.Net;
+using System.Text.RegularExpressions;
 using Tiendas2;
 
 namespace APIs.Kinguin
@@ -346,13 +347,14 @@ namespace APIs.Kinguin
 						string[] textos2DrmNoEspecificado = new[]
 						{
 							"-steam-gift-pc-bundle",
-							"-steam-gift",
-							"??????"
+							"-steam-gift"
 						};
 
-						string enlaceMinusculas = resultado.Url.ToLower();
+						string enlaceMinusculas = WebUtility.UrlDecode(resultado.Url).ToLower();
 
-						if (textos2DrmNoEspecificado.Any(frase => enlaceMinusculas.Contains(frase)))
+						bool tieneCaracteresNoLatinos = Regex.IsMatch(enlaceMinusculas, @"[\u0400-\u04FF\u0600-\u06FF\u3040-\u30FF\u3400-\u9FFF\uAC00-\uD7AF]");
+
+						if (textos2DrmNoEspecificado.Any(frase => enlaceMinusculas.Contains(frase)) || tieneCaracteresNoLatinos)
 						{
 							drmJuego = JuegoDRM.NoEspecificado;
 						}
@@ -424,6 +426,8 @@ namespace APIs.Kinguin
 
 				if (ofertas?.Count > 0)
 				{
+					ofertas = ofertas.GroupBy(o => o.Enlace, StringComparer.OrdinalIgnoreCase).Select(g => g.First()).ToList();
+
 					int juegos2 = 0;
 
 					int tamaño = 500;

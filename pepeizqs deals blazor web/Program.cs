@@ -16,11 +16,13 @@ using pepeizqs_deals_blazor_web.Componentes;
 using pepeizqs_deals_web.Data;
 using System.Collections.Concurrent;
 using System.IO.Compression;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
+using static System.Net.WebRequestMethods;
 
 ClasesDapper.Registrar();
 
@@ -351,17 +353,46 @@ builder.Services.AddRateLimiter(opciones =>
 
 	opciones.OnRejected = async (contexto, token) =>
 	{
-		string ip = contexto.HttpContext.Connection.RemoteIpAddress?.ToString() ?? "desconocida";
-		BloqueoTemporalIps.Banear(ip);
+		HttpContext http = contexto.HttpContext;
 
-		contexto.HttpContext.Response.ContentType = "text/plain";
+		if (http.Request.Path.StartsWithSegments("/verify") == true)
+		{
+			http.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+			await http.Response.WriteAsync("Too many attempts, try again in a minute.", token);
+			return;
+		}
 
-		await contexto.HttpContext.Response.WriteAsync("Too many requests, IP temporarily blocked.", token);
+		string ip = http.Connection.RemoteIpAddress?.ToString() ?? "desconocida";
+		BloqueoTemporalIps.PedirCaptcha(ip);
+
+
+		bool esNavegacion = http.Request.Method == HttpMethods.Get &&
+				http.Request.Headers.Accept.ToString().Contains("text/html");
+
+		if (esNavegacion == true)
+		{
+			http.Response.Redirect($"/verify?returnUrl={Uri.EscapeDataString(http.Request.Path + http.Request.QueryString)}");
+			return;
+		}
+
+		http.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+		http.Response.ContentType = "text/plain";
+		await http.Response.WriteAsync("Too many requests, captcha required.", token);
 	};
 
 	opciones.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(contexto =>
 	{
 		string ip = contexto.Connection.RemoteIpAddress?.ToString() ?? "desconocida";
+
+		if (contexto.Request.Path.StartsWithSegments("/verify") == true)
+		{
+			return RateLimitPartition.GetFixedWindowLimiter("verify-" + ip, _ => new FixedWindowRateLimiterOptions
+			{
+				PermitLimit = 10,
+				Window = TimeSpan.FromMinutes(1),
+				QueueLimit = 0
+			});
+		}
 
 		return RateLimitPartition.GetFixedWindowLimiter(ip, _ => new FixedWindowRateLimiterOptions
 		{
@@ -392,6 +423,12 @@ app.Use(async (contexto, siguiente) =>
 	if (BloqueoTemporalIps.EstaBaneada(ipActual) == true)
 	{
 		contexto.Response.StatusCode = StatusCodes.Status403Forbidden;
+		return;
+	}
+
+	if (BloqueoTemporalIps.RequiereCaptcha(ipActual) == true && contexto.Request.Path.StartsWithSegments("/verify") == false)
+	{
+		contexto.Response.Redirect($"/verify?returnUrl={Uri.EscapeDataString(contexto.Request.Path + contexto.Request.QueryString)}");
 		return;
 	}
 
@@ -448,7 +485,7 @@ app.Use(async (contexto, siguiente) =>
 	}
 
 	// Redireccionar HTTP a HTTPS
-#nullable disable
+	#nullable disable
 
 	string piscinaApp = builder.Configuration.GetValue<string>("PoolWeb:Contenido");
 	string piscinaUsada = Environment.GetEnvironmentVariable("APP_POOL_ID", EnvironmentVariableTarget.Process);
@@ -1014,6 +1051,57 @@ app.MapGet("/login-steam/callback", async (HttpContext contexto, UserManager<Usu
 
 #endregion
 
+#region Captcha
+
+app.MapGet("/verify", (string returnUrl, IConfiguration config) =>
+{
+	string html = $"""
+	<!DOCTYPE html>
+	<html><head><meta charset="utf-8"><meta name="robots" content="noindex"><title>Verificación</title>
+	<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script></head>
+	<body>
+		<form method="post" action="/verify">
+			<input type="hidden" name="returnUrl" value="{WebUtility.HtmlEncode(returnUrl ?? "/")}" />
+			<div class="cf-turnstile" data-sitekey="{config["Turnstile:SiteKey"]}"></div>
+			<button type="submit">Continue</button>
+		</form>
+	</body></html>
+	""";
+
+	return Results.Content(html, "text/html");
+});
+
+app.MapPost("/verify", async (HttpContext contexto, IHttpClientFactory fabrica, IConfiguration config) =>
+{
+	var formulario = await contexto.Request.ReadFormAsync();
+	string token = formulario["cf-turnstile-response"].ToString();
+	string returnUrl = formulario["returnUrl"].ToString();
+	string ip = contexto.Connection.RemoteIpAddress?.ToString() ?? "desconocida";
+
+	var respuesta = await fabrica.CreateClient().PostAsync(
+		"https://challenges.cloudflare.com/turnstile/v0/siteverify",
+		new FormUrlEncodedContent(new Dictionary<string, string>
+		{
+			["secret"] = config["Turnstile:SecretKey"]!,
+			["response"] = token,
+			["remoteip"] = ip
+		}));
+
+	using var json = JsonDocument.Parse(await respuesta.Content.ReadAsStringAsync());
+
+	if (json.RootElement.GetProperty("success").GetBoolean() == true)
+	{
+		BloqueoTemporalIps.Verificar(ip);
+
+		bool esLocal = returnUrl.StartsWith('/') && returnUrl.StartsWith("//") == false && returnUrl.StartsWith("/\\") == false;
+		return Results.Redirect(esLocal ? returnUrl : "/");
+	}
+
+	return Results.Redirect("/verify");
+});
+
+#endregion
+
 app.MapHealthChecks("/vida");
 
 Herramientas.ImagenesOptimizador.GenerarImagenesResponsive(builder.Environment.WebRootPath);
@@ -1046,6 +1134,15 @@ public static class BloqueoTemporalIps
 
 		return false;
 	}
+
+	private static readonly ConcurrentDictionary<string, DateTime> ipsConDesafio = new();
+
+	public static void PedirCaptcha(string ip) => ipsConDesafio[ip] = DateTime.UtcNow.AddHours(1);
+
+	public static bool RequiereCaptcha(string ip) =>
+		ipsConDesafio.TryGetValue(ip, out DateTime expira) && expira > DateTime.UtcNow;
+
+	public static void Verificar(string ip) => ipsConDesafio.TryRemove(ip, out _);
 }
 
 #endregion

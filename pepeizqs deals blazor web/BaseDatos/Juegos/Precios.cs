@@ -164,6 +164,11 @@ namespace BaseDatos.Juegos
 							minimo.PrecioCambiado = minimo.Precio;
 						}
 
+						if (nuevaOferta.Moneda != JuegoMoneda.Euro && nuevaOferta.Precio > 0 && nuevaOferta.PrecioCambiado == 0)
+						{
+							nuevaOferta.PrecioCambiado = Herramientas.Divisas.CambioEuro(nuevaOferta.Precio, nuevaOferta.Moneda);
+						}
+
 						if ((minimo.Moneda == JuegoMoneda.Euro && nuevaOferta.Moneda == JuegoMoneda.Euro && nuevaOferta.Precio > 0 && minimo.Precio > 0 && nuevaOferta.Precio < minimo.Precio && nuevaOferta.PrecioCambiado == 0) ||
 							(minimo.Moneda != JuegoMoneda.Euro && nuevaOferta.Moneda != JuegoMoneda.Euro && nuevaOferta.PrecioCambiado > 0 && minimo.PrecioCambiado > 0 && nuevaOferta.PrecioCambiado < minimo.PrecioCambiado) ||
 							(minimo.Moneda == JuegoMoneda.Euro && nuevaOferta.Moneda != JuegoMoneda.Euro && nuevaOferta.PrecioCambiado > 0 && minimo.Precio > 0 && nuevaOferta.PrecioCambiado < minimo.Precio) ||
@@ -629,6 +634,11 @@ namespace BaseDatos.Juegos
 					if (nuevaOferta.DRM == minimo.DRM)
 					{
 						drmEncontrado = true;
+
+						if (nuevaOferta.Moneda != JuegoMoneda.Dolar && nuevaOferta.Precio > 0 && nuevaOferta.PrecioCambiado == 0)
+						{
+							nuevaOferta.PrecioCambiado = Herramientas.Divisas.CambioDolar(nuevaOferta.Precio, nuevaOferta.Moneda);
+						}
 
 						if ((minimo.Moneda == JuegoMoneda.Dolar && nuevaOferta.Moneda == JuegoMoneda.Dolar && nuevaOferta.Precio > 0 && minimo.Precio > 0 && nuevaOferta.Precio < minimo.Precio && nuevaOferta.PrecioCambiado == 0) ||
 							(minimo.Moneda != JuegoMoneda.Dolar && nuevaOferta.Moneda != JuegoMoneda.Dolar && nuevaOferta.PrecioCambiado > 0 && minimo.PrecioCambiado > 0 && nuevaOferta.PrecioCambiado < minimo.PrecioCambiado) ||
