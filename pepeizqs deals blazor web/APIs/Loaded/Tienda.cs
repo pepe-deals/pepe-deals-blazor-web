@@ -108,6 +108,7 @@ namespace APIs.Loaded
 								"PC - DLC (North America)",
 								"PC - DLC (Europe & UK)",
 								"PC - DLC (EU)",
+								"PC - DLC (WW)",
 								"PC - DLC",
 								"PC DLC (Steam)",
 								"DLC (Global)",

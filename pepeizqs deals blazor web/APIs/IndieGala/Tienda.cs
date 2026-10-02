@@ -232,6 +232,9 @@ namespace APIs.IndieGala
 										{
 											nombre = WebUtility.HtmlDecode(nombre ?? string.Empty);
 
+											nombre = nombre.Replace(" - Early Access", null);
+											nombre = nombre.Trim();
+
 											if (imagen.Contains("https://www.indiegalacdn.com/") == false)
 											{
 												imagen = "https://www.indiegalacdn.com/" + imagen;

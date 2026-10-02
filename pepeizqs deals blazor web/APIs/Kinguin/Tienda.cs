@@ -387,6 +387,9 @@ namespace APIs.Kinguin
 								nombre = nombre.Replace("Steam CD Key", null);
 								nombre = nombre.Replace("Steam CD key", null);
 								nombre = nombre.Replace("DLC", null);
+								nombre = nombre.Replace("Pre-Order Bonus", null);
+								nombre = nombre.Replace("PRE-ORDER", null);
+								nombre = nombre.Replace("Day One Edition", null);
 								nombre = nombre.Trim();
 
 								string enlaceJuego = LimpiarEnlace(resultado.Url);
