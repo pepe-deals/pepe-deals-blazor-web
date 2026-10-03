@@ -49,6 +49,7 @@ namespace APIs.Battlenet
 				"doom-the-dark-ages",
 				"sea-of-thieves",
 				"the-outer-worlds-2",
+				"the-witcher-3-wild-hunt-remastered",
 				"tony-hawks-pro-skater-3-4",
 				"warcraft-orcs-and-humans"];
 

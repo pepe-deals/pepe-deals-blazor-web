@@ -415,7 +415,7 @@ namespace BaseDatos.Portada
 
 			string ConstruirBusqueda(string tablaOrigen, string columnaPrecio)
 			{
-				return @$"SELECT j.idMaestra, jg.nombre, jg.imagenes, j.{columnaPrecio}, JSON_VALUE(jg.media, '$.Videos[0].Micro') as video, jg.etiquetas,
+				return @$"SELECT j.idMaestra, jg.nombre, jg.imagenes, j.{columnaPrecio}, CASE WHEN ISJSON(jg.media) = 1 THEN JSON_VALUE(jg.media, '$.Videos[0].Micro') END as video, jg.etiquetas,
 				(
 					SELECT b.id, b.bundleTipo
 					FROM bundles b
@@ -469,7 +469,9 @@ namespace BaseDatos.Portada
 						DRM int '$.DRM',
 						FechaDetectado datetime2 '$.FechaDetectado'
 					) precioMin
-					WHERE CONVERT(bigint, REPLACE(JSON_VALUE(jg.analisis, '$.Cantidad'),',','')) >= @cantidadAnalisis {(noOficial == false && marketplace == false ? "AND precioMin.Descuento > 0" : "")} AND (jg.MayorEdad <> 'true' OR jg.MayorEdad IS NULL) {categoria} {drm} {exclusionJuegos} {exclusionSteam} {exclusionGog} {filtroTipo}";
+					WHERE CASE WHEN ISJSON(jg.analisis) = 1
+						THEN TRY_CONVERT(bigint, REPLACE(JSON_VALUE(jg.analisis, '$.Cantidad'),',',''))
+					END >= @cantidadAnalisis {(noOficial == false && marketplace == false ? "AND precioMin.Descuento > 0" : "")} AND (jg.MayorEdad <> 'true' OR jg.MayorEdad IS NULL) {categoria} {drm} {exclusionJuegos} {exclusionSteam} {exclusionGog} {filtroTipo}";
 			}
 
 			string busqueda = ConstruirBusqueda(tabla, precioMinimosHistoricos);

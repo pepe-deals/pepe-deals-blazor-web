@@ -16,7 +16,7 @@ namespace Herramientas
 				UserAgent = contexto?.HttpContext?.Request?.Headers?.UserAgent.ToString(),
 				Dominio = contexto?.HttpContext?.Request?.Host.Value,
 				Region = contexto?.HttpContext?.Request?.Cookies.TryGetValue("user_currency", out string valorRegion) == true && int.TryParse(valorRegion, out int valorRegionInt) && Enum.IsDefined(typeof(TiendaRegion), valorRegionInt) ? (TiendaRegion)valorRegionInt : TiendaRegion.Europa,
-				NoOficial = contexto?.HttpContext?.Request?.Cookies.TryGetValue("noofficial", out string valorNoOficial) == true && bool.TryParse(valorNoOficial, out bool valorNoOficialBool) ? valorNoOficialBool : false,
+				NoOficial = contexto?.HttpContext?.Request?.Cookies.TryGetValue("noofficial", out string valorNoOficial) == true && bool.TryParse(valorNoOficial, out bool valorNoOficialBool) ? valorNoOficialBool : true,
 				Marketplace = contexto?.HttpContext?.Request?.Cookies.TryGetValue("marketplace", out string valorMarketplace) == true && bool.TryParse(valorMarketplace, out bool valorMarketplaceBool) ? valorMarketplaceBool : false
 			};
 

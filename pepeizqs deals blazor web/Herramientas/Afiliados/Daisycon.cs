@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Web;
 
 namespace Herramientas.Afiliados
 {
@@ -243,6 +244,8 @@ namespace Herramientas.Afiliados
 
 	public static class Daisycon
 	{
+		public static string GamesporiumEuropa = string.Empty;
+
 		private static readonly HttpClient cliente = new HttpClient(new HttpClientHandler
 		{
 			AutomaticDecompression = DecompressionMethods.All
@@ -268,37 +271,36 @@ namespace Herramientas.Afiliados
 			return contenido?.Datafeed;
 		}
 
-		public static async Task<List<DaisyconProducto>> ObtenerProductos(string urlFeed, bool soloActivos = true)
+		public static string LimpiarEnlace(string enlace, string dominio)
 		{
-			List<DaisyconProducto> todos = new List<DaisyconProducto>();
+			var consulta = HttpUtility.ParseQueryString(new Uri(enlace).Query);
+			string destino = consulta["dl"];
 
-			DaisyconDatafeed feed = await ObtenerFeed(urlFeed);
-
-			if (feed?.Programas != null)
+			if (string.IsNullOrEmpty(destino))
 			{
-				foreach (DaisyconPrograma programa in feed.Programas)
-				{
-					if (programa.Productos == null)
-					{
-						continue;
-					}
-
-					foreach (DaisyconProducto producto in programa.Productos)
-					{
-						if (soloActivos == true && producto.Actualizacion?.Estado != "active")
-						{
-							continue;
-						}
-
-						producto.ProgramaId = programa.Info?.Id ?? 0;
-						producto.Tienda = programa.Info?.Nombre;
-
-						todos.Add(producto);
-					}
-				}
+				return null;
 			}
 
-			return todos;
+			int posicion = destino.IndexOf('?');
+
+			if (posicion >= 0)
+			{
+				destino = destino.Substring(0, posicion);
+			}
+
+			return $"{dominio.TrimEnd('/')}/{destino.TrimStart('/')}";
+		}
+
+		public static string CrearEnlaceAfiliado(string enlaceLimpio)
+		{
+			const string si = "21412";
+			const string li = "1924736";
+			const string wi = "425594";
+
+			var uri = new Uri(enlaceLimpio);
+			string destino = uri.PathAndQuery.TrimStart('/'); 
+
+			return $"https://glp8.net/c/?si={si}&li={li}&wi={wi}&dl={Uri.EscapeDataString(destino)}&ws=";
 		}
 	}
 }

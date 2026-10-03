@@ -1,6 +1,7 @@
 ﻿#nullable disable
 
 using Herramientas;
+using Herramientas.Afiliados;
 using Juegos;
 using System.Net;
 using System.Xml;
@@ -32,14 +33,7 @@ namespace APIs.Gamesporium
 
 		public static string Referido(string enlace)
 		{
-			if (enlace.Contains("?") == true)
-			{
-				return enlace + "&utm_source=affiliate&utm_medium=pepedeals";
-			}
-			else
-			{
-				return enlace + "?utm_source=affiliate&utm_medium=pepedeals";
-			}
+			return Daisycon.CrearEnlaceAfiliado(enlace);
 		}
 
 		public static async Task BuscarOfertas(TiendaRegion region)
@@ -50,7 +44,7 @@ namespace APIs.Gamesporium
 
 			if (region == TiendaRegion.Europa)
 			{
-				enlace = "https://daisycon.io/datafeed/?media_id=425594&standard_id=26&language_code=en&locale_id=6&type=JSON&program_id=21412&html_transform=strip&rawdata=false&encoding=utf8";
+				enlace = Daisycon.GamesporiumEuropa;
 			}
 			//else if (region == TiendaRegion.EstadosUnidos)
 			//{
@@ -66,203 +60,39 @@ namespace APIs.Gamesporium
 
 			if (string.IsNullOrEmpty(html) == false)
 			{
-				XmlReaderSettings opciones = new XmlReaderSettings
-				{
-					ConformanceLevel = ConformanceLevel.Document,
-					IgnoreWhitespace = true,
-					IgnoreComments = true,
-					DtdProcessing = DtdProcessing.Ignore,
-					XmlResolver = null
-				};
+				var resultados = await Daisycon.ObtenerFeed(enlace);
 
-				GamesporiumJuegos listaJuegos = new GamesporiumJuegos();
-				listaJuegos.Juegos = new List<GamesporiumJuego>();
-
-				using (var lector = XmlReader.Create(new StringReader(html), opciones))
-				{
-					while (lector.Read() == true)
-					{
-						if (lector.NodeType == XmlNodeType.Element && lector.Name == "product")
-						{
-							GamesporiumJuego juego = new GamesporiumJuego();
-
-							using (XmlReader juegoLector = lector.ReadSubtree())
-							{
-								while (juegoLector.Read())
-								{
-									if (juegoLector.NodeType == XmlNodeType.Element)
-									{
-										string LeerValorElemento(XmlReader lector)
-										{
-											if (lector.IsEmptyElement == true)
-											{
-												return string.Empty;
-											}
-
-											while (lector.Read() && lector.NodeType != XmlNodeType.Text && lector.NodeType != XmlNodeType.CDATA)
-											{
-											}
-
-											return (lector.NodeType == XmlNodeType.Text || lector.NodeType == XmlNodeType.CDATA)
-												? lector.Value?.Trim() ?? string.Empty
-												: string.Empty;
-										}
-
-										switch (juegoLector.Name)
-										{
-											case "ProductName":
-												juego.Nombre = LeerValorElemento(juegoLector);
-												break;
-
-											case "ProductURL":
-												juego.Enlace = LeerValorElemento(juegoLector);
-												break;
-
-											case "ImageURL":
-												juego.Imagen = LeerValorElemento(juegoLector);
-												break;
-
-											case "Currency":
-												juego.Moneda = LeerValorElemento(juegoLector);
-												break;
-
-											case "CompareAtPrice":
-												juego.PrecioRebajado = LeerValorElemento(juegoLector);
-												break;
-
-											case "Price":
-												juego.PrecioBase = LeerValorElemento(juegoLector);
-												break;
-
-											case "DRM":
-												juego.DRM = LeerValorElemento(juegoLector);
-												break;
-
-											case "WhitelistCountries":
-												juego.PaisesAprobados = LeerValorElemento(juegoLector);
-												break;
-
-											case "StockStatus":
-												juego.StockEstado = LeerValorElemento(juegoLector);
-												break;
-										}
-									}
-								}
-							}
-
-							listaJuegos.Juegos.Add(juego);
-						}
-					}
-				}
-
-				if (listaJuegos?.Juegos?.Count > 0)
+				if (resultados?.Info?.TotalProductos > 0)
 				{
 					List<JuegoPrecio> ofertas = new List<JuegoPrecio>();
 
-					foreach (GamesporiumJuego juego in listaJuegos.Juegos)
+					foreach (var programa in resultados.Programas)
 					{
-						bool buscar = true;
-
-						if (string.IsNullOrEmpty(juego.PaisesAprobados) == false)
+						foreach (var resultado in programa.Productos)
 						{
-							List<string> listaPaisesAprobados = new List<string>();
-
-							string[] datosPartidos = juego.PaisesAprobados.Split(',');
-							listaPaisesAprobados.AddRange(datosPartidos);
-
-							if (listaPaisesAprobados.Count > 0)
+							if (resultado.Info?.Descuento > 0 && resultado.Info?.EnStock == true && resultado.Info?.Moneda == "EUR" && resultado.Info?.PlataformaActivacion == "Steam" && resultado.Info?.Region == "ES")
 							{
-								bool encontrado = false;
-								foreach (var pais in listaPaisesAprobados)
+								string nombre = WebUtility.HtmlDecode(resultado.Info?.Nombre);
+
+								string enlaceJuego = Daisycon.LimpiarEnlace(resultado.Info?.Url, "https://gamesporium.com");
+
+								string imagen = resultado.Info?.ImagenUrl;
+
+								JuegoPrecio oferta = new JuegoPrecio
 								{
-									if (region == TiendaRegion.Europa && pais.ToLower().Trim() == "es")
-									{
-										encontrado = true;
-										break;
-									}
-									else if (region == TiendaRegion.EstadosUnidos && pais.ToLower().Trim() == "us")
-									{
-										encontrado = true;
-										break;
-									}
-								}
+									Nombre = nombre,
+									Enlace = enlaceJuego,
+									Imagen = imagen,
+									Precio = resultado.Info?.PrecioActual.Value ?? 0,
+									Descuento = resultado.Info?.Descuento.Value ?? 0,
+									Tienda = Generar().Id,
+									DRM = JuegoDRM.Steam,
+									FechaDetectado = DateTime.Now,
+									FechaActualizacion = DateTime.Now,
+									Moneda = JuegoMoneda.Euro
+								};
 
-								if (encontrado == false)
-								{
-									buscar = false;
-								}
-							}
-						}
-
-						if (region == TiendaRegion.Europa && juego.Moneda?.ToLower() != "eur")
-						{
-							buscar = false;
-						}
-						else if (region == TiendaRegion.EstadosUnidos && juego.Moneda?.ToLower() != "usd")
-						{
-							buscar = false;
-						}
-
-						if (juego.StockEstado?.ToLower() == "false")
-						{
-							buscar = false;
-						}
-
-						if (string.IsNullOrEmpty(juego.PrecioRebajado) == true)
-						{
-							buscar = false;
-						}
-
-						if (string.IsNullOrEmpty(juego.PrecioBase) == true)
-						{
-							buscar = false;
-						}
-
-						if (buscar == true)
-						{
-							decimal precioBase = decimal.Parse(juego.PrecioBase);
-							decimal precioRebajado = decimal.Parse(juego.PrecioRebajado);
-
-							int descuento = Calculadora.SacarDescuento(precioBase, precioRebajado);
-
-							if (descuento > 0)
-							{
-								string nombre = WebUtility.HtmlDecode(juego.Nombre);
-
-								string enlaceJuego = juego.Enlace;
-
-								string imagen = juego.Imagen;
-
-								bool esInt = int.TryParse(juego.DRM, out _);
-
-								if (esInt == false)
-								{
-									JuegoDRM drm = JuegoDRM2.Traducir(juego.DRM, Generar().Id);
-
-									JuegoPrecio oferta = new JuegoPrecio
-									{
-										Nombre = nombre,
-										Enlace = enlaceJuego,
-										Imagen = imagen,
-										Precio = precioRebajado,
-										Descuento = descuento,
-										Tienda = Generar().Id,
-										DRM = drm,
-										FechaDetectado = DateTime.Now,
-										FechaActualizacion = DateTime.Now
-									};
-
-									if (region == TiendaRegion.Europa)
-									{
-										oferta.Moneda = JuegoMoneda.Euro;
-									}
-									else if (region == TiendaRegion.EstadosUnidos)
-									{
-										oferta.Moneda = JuegoMoneda.Dolar;
-									}
-
-									ofertas.Add(oferta);
-								}
+								ofertas.Add(oferta);
 							}
 						}
 					}

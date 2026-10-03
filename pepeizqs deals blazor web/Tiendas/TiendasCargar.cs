@@ -174,6 +174,10 @@ namespace Tiendas2
 			{
 				await APIs.Kinguin.Tienda.BuscarOfertas(region);
 			}
+			else if (id == APIs.Gamesporium.Tienda.Generar().Id)
+			{
+				await APIs.Gamesporium.Tienda.BuscarOfertas(region);
+			}
 		}
 
 		public static Tienda DevolverTienda(string tiendaTexto)
