@@ -4,6 +4,7 @@ using Herramientas;
 using Juegos;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Tiendas2;
@@ -23,8 +24,8 @@ namespace APIs.Nexus
 				Imagen300x80 = "/imagenes/tiendas/nexus_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/nexus_icono.webp",
 				Color = "#3BB9AC",
-				AdminUso = true,
-				UsuarioUso = true,
+				AdminUso = false,
+				UsuarioUso = false,
 				Regiones = new List<TiendaRegion> { TiendaRegion.Europa, TiendaRegion.EstadosUnidos }
 			};
 
@@ -36,116 +37,182 @@ namespace APIs.Nexus
 			await BaseDatos.Admin.Actualizar.Tiendas(region, Generar().Id, DateTime.Now, 0);
 
 			HttpClient cliente = new HttpClient();
-			cliente.BaseAddress = new Uri("https://www.nexus.gg/");
 			cliente.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-			cliente.DefaultRequestHeaders.Add("x-algolia-api-key", "3bb19265d0e5978fa8b4af145f8209a5");
-			cliente.DefaultRequestHeaders.Add("x-algolia-application-id", "KZU3CQXW7F");
 
-			HttpRequestMessage peticion = new HttpRequestMessage(HttpMethod.Post, "https://kzu3cqxw7f-dsn.algolia.net/1/indexes/prod_test_release_date/query?x-algolia-agent=Algolia for JavaScript (4.13.1); Browser");
-			peticion.Content = new StringContent(@"{""query"":"""",""filters"":""skuType:\""game\"" AND discounted:true AND discountedPrice:0 TO 97 AND (requiresPermission:false)"",""facets"":[""developer"",""publisher"",""type"",""platform"",""operatingSystem"",""tags"",""discounted"",""discountedPrice"",""preorder"",""comingSoon"",""id"",""categoryName"",""skuType"",""requiresPermission""],""hitsPerPage"":40,""page"":0,""maxValuesPerFacet"":1000}");
+			List<JuegoPrecio> ofertas = new List<JuegoPrecio>();
 
-			HttpResponseMessage respuesta = await cliente.SendAsync(peticion);
+			int pagina = 0;
+			int tamañoPagina = 24;
+			bool continuar = true;
 
-			string html = string.Empty;
-
-			try
+			while (continuar == true)
 			{
-				html = await respuesta.Content.ReadAsStringAsync();
-			}
-			catch { }
-
-			if (string.IsNullOrEmpty(html) == false)
-			{
-				NexusJuegos juegos = JsonSerializer.Deserialize<NexusJuegos>(html);
-
-				if (juegos?.Resultados?.Count > 0)
+				string contenido = JsonSerializer.Serialize(new
 				{
-					List<JuegoPrecio> ofertas = new List<JuegoPrecio>();
+					query = "",
+					skuType = "game",
+					filters = new { skuIdSets = new int[0] },
+					sort = "_discount",
+					page = pagina,
+					pageSize = tamañoPagina
+				});
 
-					foreach (var juego in juegos.Resultados)
+				HttpRequestMessage peticion = new HttpRequestMessage(HttpMethod.Post, "https://api.nexus.gg/v1/store/search/library");
+				peticion.Version = HttpVersion.Version20;
+				peticion.VersionPolicy = HttpVersionPolicy.RequestVersionOrLower;
+
+				peticion.Content = new StringContent(contenido, Encoding.UTF8);
+				peticion.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+				peticion.Headers.TryAddWithoutValidation("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:157.0) Gecko/20100101 Firefox/157.0");
+				peticion.Headers.TryAddWithoutValidation("Accept", "*/*");
+				peticion.Headers.TryAddWithoutValidation("Accept-Language", "es-ES,es;q=0.9,en-US;q=0.8,en;q=0.7");
+				peticion.Headers.TryAddWithoutValidation("Referer", "https://www.nexus.gg/");
+				peticion.Headers.TryAddWithoutValidation("Origin", "https://www.nexus.gg");
+				peticion.Headers.TryAddWithoutValidation("Sec-Fetch-Dest", "empty");
+				peticion.Headers.TryAddWithoutValidation("Sec-Fetch-Mode", "cors");
+				peticion.Headers.TryAddWithoutValidation("Sec-Fetch-Site", "same-site");
+				peticion.Headers.TryAddWithoutValidation("Priority", "u=0");
+
+				string html = string.Empty;
+
+				try
+				{
+					HttpResponseMessage respuesta = await cliente.SendAsync(peticion);
+					html = await respuesta.Content.ReadAsStringAsync();
+				}
+				catch (Exception ex)
+				{
+					BaseDatos.Errores.Insertar.Mensaje(Generar().Id, ex);
+					break;
+				}
+
+				if (string.IsNullOrEmpty(html) == true)
+				{
+					break;
+				}
+
+				NexusJuegos juegos = null;
+
+				try
+				{
+					juegos = JsonSerializer.Deserialize<NexusJuegos>(html);
+				}
+				catch (Exception ex)
+				{
+					BaseDatos.Errores.Insertar.Mensaje(Generar().Id, ex);
+					break;
+				}
+
+				if (juegos?.Resultados == null || juegos.Resultados.Count == 0)
+				{
+					break;
+				}
+
+				int ofertasPagina = 0;
+
+				foreach (var juego in juegos.Resultados)
+				{
+					if (juego.RequierePermiso == true)
 					{
-						decimal precioRebajado = juego.PrecioRebajado;
-						decimal precioBase = juego.PrecioBase;
-
-						int descuento = Calculadora.SacarDescuento(precioBase, precioRebajado);
-
-						if (descuento > 0)
-						{
-							bool drmValido = false;
-
-							if (juego.DRMs.Count > 0)
-							{
-								foreach (var drm in juego.DRMs)
-								{
-									if (drm.ToLower() == "steam")
-									{
-										drmValido = true;
-										break;
-									}
-								}
-							}
-
-							if (drmValido == true)
-							{
-								string nombre = juego.Nombre;
-								nombre = WebUtility.HtmlDecode(nombre);
-
-								string enlace = "https://www.nexus.gg/pepeizq/" + juego.Slug;
-
-								string imagen = string.Empty;
-
-								JuegoPrecio oferta = new JuegoPrecio
-								{
-									Nombre = nombre,
-									Enlace = enlace,
-									Imagen = imagen,
-									Moneda = JuegoMoneda.Dolar,
-									Precio = precioRebajado,
-									Descuento = descuento,
-									Tienda = Generar().Id,
-									DRM = JuegoDRM.Steam,
-									FechaDetectado = DateTime.Now,
-									FechaActualizacion = DateTime.Now
-								};
-
-								ofertas.Add(oferta);
-							}
-						}
+						continue;
 					}
 
-					if (ofertas?.Count > 0)
+					decimal precioRebajado = juego.PrecioRebajado;
+					decimal precioBase = juego.PrecioBase;
+
+					int descuento = Calculadora.SacarDescuento(precioBase, precioRebajado);
+
+					if (descuento > 0)
 					{
-						int juegos2 = 0;
+						ofertasPagina += 1;
 
-						int tamaño = 500;
-						var lotes = ofertas
-							.Select((oferta, indice) => new { oferta, indice })
-							.GroupBy(x => x.indice / tamaño)
-							.Select(g => g.Select(x => x.oferta).ToList())
-							.ToList();
+						bool drmValido = false;
 
-						foreach (var lote in lotes)
+						if (juego.DRMs?.Count > 0)
 						{
-							try
+							foreach (var drm in juego.DRMs)
 							{
-								await BaseDatos.Tiendas.Comprobar.Resto(region, lote);
-							}
-							catch (Exception ex)
-							{
-								BaseDatos.Errores.Insertar.Mensaje(Generar().Id, ex);
-							}
-
-							juegos2 += lote.Count;
-
-							try
-							{
-								await BaseDatos.Admin.Actualizar.Tiendas(region, Generar().Id, DateTime.Now, juegos2);
-							}
-							catch (Exception ex)
-							{
-								BaseDatos.Errores.Insertar.Mensaje(Generar().Id, ex);
+								if (drm.ToLower() == "steam")
+								{
+									drmValido = true;
+									break;
+								}
 							}
 						}
+
+						if (drmValido == true)
+						{
+							string nombre = juego.Nombre;
+							nombre = WebUtility.HtmlDecode(nombre);
+
+							string enlace = "https://www.nexus.gg/pepeizq/" + juego.Slug;
+
+							string imagen = string.Empty;
+
+							JuegoPrecio oferta = new JuegoPrecio
+							{
+								Nombre = nombre,
+								Enlace = enlace,
+								Imagen = imagen,
+								Moneda = JuegoMoneda.Dolar,
+								Precio = precioRebajado,
+								Descuento = descuento,
+								Tienda = Generar().Id,
+								DRM = JuegoDRM.Steam,
+								FechaDetectado = DateTime.Now,
+								FechaActualizacion = DateTime.Now
+							};
+
+							ofertas.Add(oferta);
+						}
+					}
+				}
+
+				if (ofertasPagina == 0)
+				{
+					break;
+				}
+
+				if (juegos.Resultados.Count < tamañoPagina)
+				{
+					break;
+				}
+
+				pagina += 1;
+			}
+
+			if (ofertas?.Count > 0)
+			{
+				int juegos2 = 0;
+
+				int tamaño = 500;
+				var lotes = ofertas
+					.Select((oferta, indice) => new { oferta, indice })
+					.GroupBy(x => x.indice / tamaño)
+					.Select(g => g.Select(x => x.oferta).ToList())
+					.ToList();
+
+				foreach (var lote in lotes)
+				{
+					try
+					{
+						await BaseDatos.Tiendas.Comprobar.Resto(region, lote);
+					}
+					catch (Exception ex)
+					{
+						BaseDatos.Errores.Insertar.Mensaje(Generar().Id, ex);
+					}
+
+					juegos2 += lote.Count;
+
+					try
+					{
+						await BaseDatos.Admin.Actualizar.Tiendas(region, Generar().Id, DateTime.Now, juegos2);
+					}
+					catch (Exception ex)
+					{
+						BaseDatos.Errores.Insertar.Mensaje(Generar().Id, ex);
 					}
 				}
 			}
@@ -154,8 +221,11 @@ namespace APIs.Nexus
 
 	public class NexusJuegos
 	{
-		[JsonPropertyName("hits")]
+		[JsonPropertyName("skus")]
 		public List<NexusJuego> Resultados { get; set; }
+
+		[JsonPropertyName("totalSkus")]
+		public int Total { get; set; }
 	}
 
 	public class NexusJuego
@@ -174,5 +244,8 @@ namespace APIs.Nexus
 
 		[JsonPropertyName("platform")]
 		public List<string> DRMs { get; set; }
+
+		[JsonPropertyName("requiresPermission")]
+		public bool RequierePermiso { get; set; }
 	}
 }

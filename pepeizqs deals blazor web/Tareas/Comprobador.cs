@@ -37,361 +37,364 @@ namespace Tareas
 
 					foreach (var tienda in Tiendas2.TiendasCargar.GenerarListado())
 					{
-						TimeSpan siguienteComprobacion = TimeSpan.Zero;
-
-						if (tienda.Id == APIs.Battlenet.Tienda.Generar().Id)
+						if (tienda.AdminUso == true)
 						{
-							siguienteComprobacion = TimeSpan.FromHours(3);
+							TimeSpan siguienteComprobacion = TimeSpan.Zero;
 
-							if (DateTime.Now.Hour == 19)
-							{
-								siguienteComprobacion = TimeSpan.FromHours(4);
-							}
-
-							if (DateTime.Now.Hour == 20)
-							{
-								siguienteComprobacion = TimeSpan.FromMinutes(30);
-							}
-						}
-						//else if (tienda.Id == APIs.DLGamer.Tienda.Generar().Id)
-						//{
-						//	siguienteComprobacion = TimeSpan.FromHours(4);
-
-						//	if (DateTime.Now.Hour == 19)
-						//	{
-						//		siguienteComprobacion = TimeSpan.FromHours(5);
-						//	}
-						//}
-						else if (tienda.Id == APIs.EA.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(4);
-
-							if (DateTime.Now.Hour == 19)
-							{
-								siguienteComprobacion = TimeSpan.FromHours(5);
-							}
-							if (DateTime.Now.Hour == 20)
-							{
-								siguienteComprobacion = TimeSpan.FromMinutes(30);
-							}
-						}
-						else if (tienda.Id == APIs.EpicGames.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(3);
-
-							if (DateTime.Now.Hour == 19)
-							{
-								siguienteComprobacion = TimeSpan.FromHours(10);
-							}
-						}
-						else if (tienda.Id == APIs.Fanatical.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(2);
-
-							if (DateTime.Now.Hour == 19)
+							if (tienda.Id == APIs.Battlenet.Tienda.Generar().Id)
 							{
 								siguienteComprobacion = TimeSpan.FromHours(3);
-							}
 
-							if (DateTime.Now.Hour == 17)
-							{
-								siguienteComprobacion = TimeSpan.FromMinutes(30);
-							}
-						}
-						else if (tienda.Id == APIs.GameBillet.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(3);
-
-							if (DateTime.Now.Hour == 19)
-							{
-								siguienteComprobacion = TimeSpan.FromHours(4);
-							}
-						}
-						else if (tienda.Id == APIs.GamersGate.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(2);
-
-							if (DateTime.Now.Hour == 19)
-							{
-								siguienteComprobacion = TimeSpan.FromHours(3);
-							}
-						}
-						else if (tienda.Id == APIs.Gamesplanet.Tienda.GenerarDe().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(2);
-
-							if (DateTime.Now.Hour == 10)
-							{
-								siguienteComprobacion = TimeSpan.FromMinutes(30);
-							}
-
-							if (DateTime.Now.Hour == 19)
-							{
-								siguienteComprobacion = TimeSpan.FromHours(3);
-							}
-						}
-						else if (tienda.Id == APIs.Gamesplanet.Tienda.GenerarFr().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(2);
-
-							if (DateTime.Now.Hour == 10)
-							{
-								siguienteComprobacion = TimeSpan.FromMinutes(30);
-							}
-
-							if (DateTime.Now.Hour == 19)
-							{
-								siguienteComprobacion = TimeSpan.FromHours(3);
-							}
-						}
-						else if (tienda.Id == APIs.Gamesplanet.Tienda.GenerarUk().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(2);
-
-							if (DateTime.Now.Hour == 10)
-							{
-								siguienteComprobacion = TimeSpan.FromMinutes(30);
-							}
-
-							if (DateTime.Now.Hour == 19)
-							{
-								siguienteComprobacion = TimeSpan.FromHours(3);
-							}
-						}
-						else if (tienda.Id == APIs.Gamesplanet.Tienda.GenerarUs().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(2);
-
-							if (DateTime.Now.Hour == 10)
-							{
-								siguienteComprobacion = TimeSpan.FromMinutes(30);
-							}
-
-							if (DateTime.Now.Hour == 19)
-							{
-								siguienteComprobacion = TimeSpan.FromHours(3);
-							}
-						}
-						else if (tienda.Id == APIs.Gamesporium.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(3);
-
-							if (DateTime.Now.Hour == 19)
-							{
-								siguienteComprobacion = TimeSpan.FromHours(4);
-							}
-						}
-						else if (tienda.Id == APIs.GOG.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(3);
-
-							if (DateTime.Now.Hour == 19)
-							{
-								siguienteComprobacion = TimeSpan.FromHours(4);
-							}
-
-							if (DateTime.Now.Hour == 15)
-							{
-								siguienteComprobacion = TimeSpan.FromMinutes(30);
-							}
-						}
-						else if (tienda.Id == APIs.GreenManGaming.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(2);
-
-							if (DateTime.Now.Hour == 19)
-							{
-								siguienteComprobacion = TimeSpan.FromHours(3);
-							}
-
-							if (DateTime.Now.Hour == 17)
-							{
-								siguienteComprobacion = TimeSpan.FromMinutes(30);
-							}
-						}
-						else if (tienda.Id == APIs.GreenManGaming.Tienda.GenerarGold().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(2);
-
-							if (DateTime.Now.Hour == 19)
-							{
-								siguienteComprobacion = TimeSpan.FromHours(3);
-							}
-
-							if (DateTime.Now.Hour == 17)
-							{
-								siguienteComprobacion = TimeSpan.FromMinutes(30);
-							}
-						}
-						else if (tienda.Id == APIs.Humble.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(3);
-
-							if (DateTime.Now.Hour == 19 || DateTime.Now.Hour == 20)
-							{
-								siguienteComprobacion = TimeSpan.FromMinutes(30);
-							}
-						}
-						else if (tienda.Id == APIs.IndieGala.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(2);
-
-							if (DateTime.Now.Hour == 19)
-							{
-								siguienteComprobacion = TimeSpan.FromHours(3);
-							}
-						}
-						//else if (tienda.Id == APIs.JoyBuggy.Tienda.Generar().Id)
-						//{
-						//	siguienteComprobacion = TimeSpan.FromHours(3);
-
-						//	if (DateTime.Now.Hour == 19)
-						//	{
-						//		siguienteComprobacion = TimeSpan.FromHours(4);
-						//	}
-						//}
-						else if (tienda.Id == APIs.Muvegames.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(3);
-
-							if (DateTime.Now.Hour == 19)
-							{
-								siguienteComprobacion = TimeSpan.FromHours(4);
-							}
-						}
-						else if (tienda.Id == APIs.Nexus.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(3);
-
-							if (DateTime.Now.Hour == 19)
-							{
-								siguienteComprobacion = TimeSpan.FromHours(4);
-							}
-						}
-						else if (tienda.Id == APIs.PlanetPlay.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(3);
-
-							if (DateTime.Now.Hour == 19)
-							{
-								siguienteComprobacion = TimeSpan.FromHours(4);
-							}
-						}
-						else if (tienda.Id == APIs.Playsum.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(2);
-
-							if (DateTime.Now.Hour == 19)
-							{
-								siguienteComprobacion = TimeSpan.FromHours(3);
-							}
-						}
-						else if (tienda.Id == APIs.Steam.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(2);
-
-							if (DateTime.Now.Hour == 17 || DateTime.Now.Hour == 18)
-							{
-								siguienteComprobacion = TimeSpan.FromHours(8);
-							}
-
-							if (DateTime.Now.Hour == 19)
-							{
-								if (DateTime.Now.Minute > 3 && DateTime.Now.Minute < 30)
+								if (DateTime.Now.Hour == 19)
 								{
-									siguienteComprobacion = TimeSpan.FromSeconds(10);
+									siguienteComprobacion = TimeSpan.FromHours(4);
 								}
-								else
+
+								if (DateTime.Now.Hour == 20)
 								{
-									siguienteComprobacion = TimeSpan.FromMinutes(5);
+									siguienteComprobacion = TimeSpan.FromMinutes(30);
 								}
 							}
+							//else if (tienda.Id == APIs.DLGamer.Tienda.Generar().Id)
+							//{
+							//	siguienteComprobacion = TimeSpan.FromHours(4);
 
-							if (DateTime.Now.Hour == 20)
+							//	if (DateTime.Now.Hour == 19)
+							//	{
+							//		siguienteComprobacion = TimeSpan.FromHours(5);
+							//	}
+							//}
+							else if (tienda.Id == APIs.EA.Tienda.Generar().Id)
 							{
-								if (DateTime.Now.Minute < 30)
+								siguienteComprobacion = TimeSpan.FromHours(4);
+
+								if (DateTime.Now.Hour == 19)
 								{
-									siguienteComprobacion = TimeSpan.FromMinutes(10);
+									siguienteComprobacion = TimeSpan.FromHours(5);
 								}
-								else
+								if (DateTime.Now.Hour == 20)
+								{
+									siguienteComprobacion = TimeSpan.FromMinutes(30);
+								}
+							}
+							else if (tienda.Id == APIs.EpicGames.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(3);
+
+								if (DateTime.Now.Hour == 19)
+								{
+									siguienteComprobacion = TimeSpan.FromHours(10);
+								}
+							}
+							else if (tienda.Id == APIs.Fanatical.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(2);
+
+								if (DateTime.Now.Hour == 19)
+								{
+									siguienteComprobacion = TimeSpan.FromHours(3);
+								}
+
+								if (DateTime.Now.Hour == 17)
+								{
+									siguienteComprobacion = TimeSpan.FromMinutes(30);
+								}
+							}
+							else if (tienda.Id == APIs.GameBillet.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(3);
+
+								if (DateTime.Now.Hour == 19)
+								{
+									siguienteComprobacion = TimeSpan.FromHours(4);
+								}
+							}
+							else if (tienda.Id == APIs.GamersGate.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(2);
+
+								if (DateTime.Now.Hour == 19)
+								{
+									siguienteComprobacion = TimeSpan.FromHours(3);
+								}
+							}
+							else if (tienda.Id == APIs.Gamesplanet.Tienda.GenerarDe().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(2);
+
+								if (DateTime.Now.Hour == 10)
+								{
+									siguienteComprobacion = TimeSpan.FromMinutes(30);
+								}
+
+								if (DateTime.Now.Hour == 19)
+								{
+									siguienteComprobacion = TimeSpan.FromHours(3);
+								}
+							}
+							else if (tienda.Id == APIs.Gamesplanet.Tienda.GenerarFr().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(2);
+
+								if (DateTime.Now.Hour == 10)
+								{
+									siguienteComprobacion = TimeSpan.FromMinutes(30);
+								}
+
+								if (DateTime.Now.Hour == 19)
+								{
+									siguienteComprobacion = TimeSpan.FromHours(3);
+								}
+							}
+							else if (tienda.Id == APIs.Gamesplanet.Tienda.GenerarUk().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(2);
+
+								if (DateTime.Now.Hour == 10)
+								{
+									siguienteComprobacion = TimeSpan.FromMinutes(30);
+								}
+
+								if (DateTime.Now.Hour == 19)
+								{
+									siguienteComprobacion = TimeSpan.FromHours(3);
+								}
+							}
+							else if (tienda.Id == APIs.Gamesplanet.Tienda.GenerarUs().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(2);
+
+								if (DateTime.Now.Hour == 10)
+								{
+									siguienteComprobacion = TimeSpan.FromMinutes(30);
+								}
+
+								if (DateTime.Now.Hour == 19)
+								{
+									siguienteComprobacion = TimeSpan.FromHours(3);
+								}
+							}
+							else if (tienda.Id == APIs.Gamesporium.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(3);
+
+								if (DateTime.Now.Hour == 19)
+								{
+									siguienteComprobacion = TimeSpan.FromHours(4);
+								}
+							}
+							else if (tienda.Id == APIs.GOG.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(3);
+
+								if (DateTime.Now.Hour == 19)
+								{
+									siguienteComprobacion = TimeSpan.FromHours(4);
+								}
+
+								if (DateTime.Now.Hour == 15)
+								{
+									siguienteComprobacion = TimeSpan.FromMinutes(30);
+								}
+							}
+							else if (tienda.Id == APIs.GreenManGaming.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(2);
+
+								if (DateTime.Now.Hour == 19)
+								{
+									siguienteComprobacion = TimeSpan.FromHours(3);
+								}
+
+								if (DateTime.Now.Hour == 17)
+								{
+									siguienteComprobacion = TimeSpan.FromMinutes(30);
+								}
+							}
+							else if (tienda.Id == APIs.GreenManGaming.Tienda.GenerarGold().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(2);
+
+								if (DateTime.Now.Hour == 19)
+								{
+									siguienteComprobacion = TimeSpan.FromHours(3);
+								}
+
+								if (DateTime.Now.Hour == 17)
+								{
+									siguienteComprobacion = TimeSpan.FromMinutes(30);
+								}
+							}
+							else if (tienda.Id == APIs.Humble.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(3);
+
+								if (DateTime.Now.Hour == 19 || DateTime.Now.Hour == 20)
+								{
+									siguienteComprobacion = TimeSpan.FromMinutes(30);
+								}
+							}
+							else if (tienda.Id == APIs.IndieGala.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(2);
+
+								if (DateTime.Now.Hour == 19)
+								{
+									siguienteComprobacion = TimeSpan.FromHours(3);
+								}
+							}
+							//else if (tienda.Id == APIs.JoyBuggy.Tienda.Generar().Id)
+							//{
+							//	siguienteComprobacion = TimeSpan.FromHours(3);
+
+							//	if (DateTime.Now.Hour == 19)
+							//	{
+							//		siguienteComprobacion = TimeSpan.FromHours(4);
+							//	}
+							//}
+							else if (tienda.Id == APIs.Muvegames.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(3);
+
+								if (DateTime.Now.Hour == 19)
+								{
+									siguienteComprobacion = TimeSpan.FromHours(4);
+								}
+							}
+							else if (tienda.Id == APIs.Nexus.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(3);
+
+								if (DateTime.Now.Hour == 19)
+								{
+									siguienteComprobacion = TimeSpan.FromHours(4);
+								}
+							}
+							else if (tienda.Id == APIs.PlanetPlay.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(3);
+
+								if (DateTime.Now.Hour == 19)
+								{
+									siguienteComprobacion = TimeSpan.FromHours(4);
+								}
+							}
+							else if (tienda.Id == APIs.Playsum.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(2);
+
+								if (DateTime.Now.Hour == 19)
+								{
+									siguienteComprobacion = TimeSpan.FromHours(3);
+								}
+							}
+							else if (tienda.Id == APIs.Steam.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(2);
+
+								if (DateTime.Now.Hour == 17 || DateTime.Now.Hour == 18)
+								{
+									siguienteComprobacion = TimeSpan.FromHours(8);
+								}
+
+								if (DateTime.Now.Hour == 19)
+								{
+									if (DateTime.Now.Minute > 3 && DateTime.Now.Minute < 30)
+									{
+										siguienteComprobacion = TimeSpan.FromSeconds(10);
+									}
+									else
+									{
+										siguienteComprobacion = TimeSpan.FromMinutes(5);
+									}
+								}
+
+								if (DateTime.Now.Hour == 20)
+								{
+									if (DateTime.Now.Minute < 30)
+									{
+										siguienteComprobacion = TimeSpan.FromMinutes(10);
+									}
+									else
+									{
+										siguienteComprobacion = TimeSpan.FromMinutes(20);
+									}
+								}
+							}
+							else if (tienda.Id == APIs.Stove.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(3);
+
+								if (DateTime.Now.Hour == 19)
+								{
+									siguienteComprobacion = TimeSpan.FromHours(4);
+								}
+							}
+							else if (tienda.Id == APIs.Ubisoft.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(3);
+
+								if (DateTime.Now.Hour == 19)
+								{
+									siguienteComprobacion = TimeSpan.FromHours(4);
+								}
+							}
+							else if (tienda.Id == APIs.Voidu.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(4);
+
+								if (DateTime.Now.Hour == 19)
+								{
+									siguienteComprobacion = TimeSpan.FromHours(5);
+								}
+							}
+							else if (tienda.Id == APIs.WinGameStore.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(2);
+
+								if (DateTime.Now.Hour == 18)
 								{
 									siguienteComprobacion = TimeSpan.FromMinutes(20);
 								}
-							}
-						}
-						else if (tienda.Id == APIs.Stove.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(3);
 
-							if (DateTime.Now.Hour == 19)
+								if (DateTime.Now.Hour == 19)
+								{
+									siguienteComprobacion = TimeSpan.FromHours(3);
+								}
+							}
+							else if (tienda.Id == APIs.Loaded.Tienda.Generar().Id)
 							{
 								siguienteComprobacion = TimeSpan.FromHours(4);
 							}
-						}
-						else if (tienda.Id == APIs.Ubisoft.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(3);
-
-							if (DateTime.Now.Hour == 19)
-							{
-								siguienteComprobacion = TimeSpan.FromHours(4);
-							}
-						}
-						else if (tienda.Id == APIs.Voidu.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(4);
-
-							if (DateTime.Now.Hour == 19)
-							{
-								siguienteComprobacion = TimeSpan.FromHours(5);
-							}
-						}
-						else if (tienda.Id == APIs.WinGameStore.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(2);
-
-							if (DateTime.Now.Hour == 18)
-							{
-								siguienteComprobacion = TimeSpan.FromMinutes(20);
-							}
-
-							if (DateTime.Now.Hour == 19)
+							else if (tienda.Id == APIs.Yuplay.Tienda.Generar().Id)
 							{
 								siguienteComprobacion = TimeSpan.FromHours(3);
 							}
-						}
-						else if (tienda.Id == APIs.Loaded.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(4);
-						}
-						else if (tienda.Id == APIs.Yuplay.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(3);
-						}
-						else if (tienda.Id == APIs.Gameseal.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(4);
-						}
-						else if (tienda.Id == APIs.Kinguin.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(4);
-						}
-
-						if (siguienteComprobacion > TimeSpan.Zero)
-						{
-							bool sePuedeUsar = await BaseDatos.Admin.Buscar.TiendasPosibleUsar(siguienteComprobacion, tienda.Id);
-
-							if (sePuedeUsar == true)
+							else if (tienda.Id == APIs.Gameseal.Tienda.Generar().Id)
 							{
-								try
-								{
-									await TiendasCargar.TareasGestionador(TiendaRegion.Europa, tienda.Id);
+								siguienteComprobacion = TimeSpan.FromHours(4);
+							}
+							else if (tienda.Id == APIs.Kinguin.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(4);
+							}
 
-									seEjecutoAlgo = true;
-								}
-								catch (Exception ex)
+							if (siguienteComprobacion > TimeSpan.Zero)
+							{
+								bool sePuedeUsar = await BaseDatos.Admin.Buscar.TiendasPosibleUsar(siguienteComprobacion, tienda.Id);
+
+								if (sePuedeUsar == true)
 								{
-									BaseDatos.Errores.Insertar.Mensaje("Comprobador: " + tienda.Id, ex);
+									try
+									{
+										await TiendasCargar.TareasGestionador(TiendaRegion.Europa, tienda.Id);
+
+										seEjecutoAlgo = true;
+									}
+									catch (Exception ex)
+									{
+										BaseDatos.Errores.Insertar.Mensaje("Comprobador: " + tienda.Id, ex);
+									}
 								}
 							}
 						}
@@ -531,117 +534,120 @@ namespace Tareas
 
 					foreach (var tienda in Tiendas2.TiendasCargar.GenerarListado())
 					{
-						TimeSpan siguienteComprobacion = TimeSpan.Zero;
+						if (tienda.AdminUso == true)
+						{
+							TimeSpan siguienteComprobacion = TimeSpan.Zero;
 
-						if (tienda.Id == APIs.Steam.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(5);
-						}
-						else if (tienda.Id == APIs.Fanatical.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(5);
-						}
-						else if (tienda.Id == APIs.GamersGate.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(5);
-						}
-						else if (tienda.Id == APIs.Gamesplanet.Tienda.GenerarUk().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(5);
-						}
-						else if (tienda.Id == APIs.Gamesplanet.Tienda.GenerarFr().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(5);
-						}
-						else if (tienda.Id == APIs.Gamesplanet.Tienda.GenerarDe().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(5);
-						}
-						else if (tienda.Id == APIs.Gamesplanet.Tienda.GenerarUs().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(5);
-						}
-						else if (tienda.Id == APIs.GreenManGaming.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(5);
-						}
-						else if (tienda.Id == APIs.GreenManGaming.Tienda.GenerarGold().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(6);
-						}
-						else if (tienda.Id == APIs.GOG.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(6);
-						}
-						else if (tienda.Id == APIs.IndieGala.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(6);
-						}
-						else if (tienda.Id == APIs.WinGameStore.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(6);
-						}
-						else if (tienda.Id == APIs.GameBillet.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(6);
-						}
-						else if (tienda.Id == APIs.Playsum.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(6);
-						}
-						else if (tienda.Id == APIs.PlanetPlay.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(6);
-						}
-						//else if (tienda.Id == APIs.DLGamer.Tienda.Generar().Id)
-						//{
-						//	siguienteComprobacion = TimeSpan.FromHours(6);
-						//}
-						//else if (tienda.Id == APIs.JoyBuggy.Tienda.Generar().Id)
-						//{
-						//	siguienteComprobacion = TimeSpan.FromHours(6);
-						//}
-						else if (tienda.Id == APIs.Battlenet.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(6);
-						}
-						else if (tienda.Id == APIs.Nexus.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(6);
-						}
-						else if (tienda.Id == APIs.Loaded.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(6);
-						}
-						else if (tienda.Id == APIs.Gameseal.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(6);
-						}
-						else if (tienda.Id == APIs.Kinguin.Tienda.Generar().Id)
-						{
-							siguienteComprobacion = TimeSpan.FromHours(6);
-						}
-
-						if (DateTime.Now.Hour == 18 || DateTime.Now.Hour == 19)
-						{
-							siguienteComprobacion = TimeSpan.Zero;
-						}
-
-						if (siguienteComprobacion > TimeSpan.Zero)
-						{
-							bool sePuedeUsar = await BaseDatos.Admin.Buscar.TiendasPosibleUsarUS(siguienteComprobacion, tienda.Id);
-
-							if (sePuedeUsar == true)
+							if (tienda.Id == APIs.Steam.Tienda.Generar().Id)
 							{
-								try
-								{
-									await Tiendas2.TiendasCargar.TareasGestionador(TiendaRegion.EstadosUnidos, tienda.Id);
+								siguienteComprobacion = TimeSpan.FromHours(5);
+							}
+							else if (tienda.Id == APIs.Fanatical.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(5);
+							}
+							else if (tienda.Id == APIs.GamersGate.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(5);
+							}
+							else if (tienda.Id == APIs.Gamesplanet.Tienda.GenerarUk().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(5);
+							}
+							else if (tienda.Id == APIs.Gamesplanet.Tienda.GenerarFr().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(5);
+							}
+							else if (tienda.Id == APIs.Gamesplanet.Tienda.GenerarDe().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(5);
+							}
+							else if (tienda.Id == APIs.Gamesplanet.Tienda.GenerarUs().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(5);
+							}
+							else if (tienda.Id == APIs.GreenManGaming.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(5);
+							}
+							else if (tienda.Id == APIs.GreenManGaming.Tienda.GenerarGold().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(6);
+							}
+							else if (tienda.Id == APIs.GOG.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(6);
+							}
+							else if (tienda.Id == APIs.IndieGala.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(6);
+							}
+							else if (tienda.Id == APIs.WinGameStore.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(6);
+							}
+							else if (tienda.Id == APIs.GameBillet.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(6);
+							}
+							else if (tienda.Id == APIs.Playsum.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(6);
+							}
+							else if (tienda.Id == APIs.PlanetPlay.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(6);
+							}
+							//else if (tienda.Id == APIs.DLGamer.Tienda.Generar().Id)
+							//{
+							//	siguienteComprobacion = TimeSpan.FromHours(6);
+							//}
+							//else if (tienda.Id == APIs.JoyBuggy.Tienda.Generar().Id)
+							//{
+							//	siguienteComprobacion = TimeSpan.FromHours(6);
+							//}
+							else if (tienda.Id == APIs.Battlenet.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(6);
+							}
+							else if (tienda.Id == APIs.Nexus.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(6);
+							}
+							else if (tienda.Id == APIs.Loaded.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(6);
+							}
+							else if (tienda.Id == APIs.Gameseal.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(6);
+							}
+							else if (tienda.Id == APIs.Kinguin.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(6);
+							}
 
-									seEjecutoAlgo = true;
-								}
-								catch (Exception ex)
+							if (DateTime.Now.Hour == 18 || DateTime.Now.Hour == 19)
+							{
+								siguienteComprobacion = TimeSpan.Zero;
+							}
+
+							if (siguienteComprobacion > TimeSpan.Zero)
+							{
+								bool sePuedeUsar = await BaseDatos.Admin.Buscar.TiendasPosibleUsarUS(siguienteComprobacion, tienda.Id);
+
+								if (sePuedeUsar == true)
 								{
-									BaseDatos.Errores.Insertar.Mensaje("Comprobador: " + tienda.Id, ex);
+									try
+									{
+										await Tiendas2.TiendasCargar.TareasGestionador(TiendaRegion.EstadosUnidos, tienda.Id);
+
+										seEjecutoAlgo = true;
+									}
+									catch (Exception ex)
+									{
+										BaseDatos.Errores.Insertar.Mensaje("Comprobador: " + tienda.Id, ex);
+									}
 								}
 							}
 						}
@@ -649,7 +655,7 @@ namespace Tareas
 
 					#endregion
 
-					if (seEjecutoAlgo)
+					if (seEjecutoAlgo == true)
 					{
 						var tareasEnUso = await BaseDatos.Admin.Buscar.TiendasEnUso(TimeSpan.FromSeconds(60));
 

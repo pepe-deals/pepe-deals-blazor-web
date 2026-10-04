@@ -1095,6 +1095,18 @@
                 {
                     usuarioMarketplace = opcionesCabecera.Marketplace.Value;
                 }
+
+                if (opcionesCabecera != null && opcionesCabecera.EmailConfirmed == true)
+                {
+                    bool patreonActivo = Herramientas.Patreon.VerificarActivo(opcionesCabecera.PatreonLastCheck);
+                    TimeSpan tiempoActualizar = patreonActivo ? TimeSpan.FromDays(1) : TimeSpan.FromDays(7);
+
+                    await Task.WhenAll(
+                        ProcesarSteamCuenta(opcionesCabecera, tiempoActualizar, usuarioId),
+                        ProcesarGogCuenta(opcionesCabecera, tiempoActualizar, usuarioId),
+                        ProcesarPatreon(opcionesCabecera, patreonActivo, usuarioId)
+                    );
+                }
             }
         }
 
@@ -2173,5 +2185,70 @@
             catch { }
         }
     }
+
+    #region Cuentas
+
+    private async Task ProcesarSteamCuenta(Usuario usuario, TimeSpan tiempoActualizar, string usuarioId)
+    {
+        if (string.IsNullOrEmpty(usuario.SteamId) == true)
+        {
+            return;
+        }
+
+        bool tiempoExcedido = string.IsNullOrEmpty(usuario.SteamAccountLastCheck) == false && Convert.ToDateTime(usuario.SteamAccountLastCheck) + tiempoActualizar < DateTime.Now;
+
+        if (tiempoExcedido == true)
+        {
+            await BaseDatos.UsuariosActualizar.Insertar.Ejecutar(usuarioId, "Steam");
+        }
+    }
+
+    private async Task ProcesarGogCuenta(Usuario usuario, TimeSpan tiempoActualizar, string usuarioId)
+    {
+        if (string.IsNullOrEmpty(usuario.GogId) == true)
+        {
+            return;
+        }
+
+        bool tiempoExcedido = usuario.GogAccountLastCheck + tiempoActualizar < DateTime.Now;
+
+        if (tiempoExcedido == true)
+        {
+            await BaseDatos.UsuariosActualizar.Insertar.Ejecutar(usuarioId, "GOG");
+        }
+    }
+
+    private async Task ProcesarPatreon(Usuario usuario, bool patreonActivo, string usuarioId)
+    {
+        if (patreonActivo == false)
+        {
+            return;
+        }
+
+        if (usuario.PatreonLastLogin == null)
+        {
+            await Task.WhenAll(
+                BaseDatos.Usuarios.Actualizar.Opcion("PatreonLastLogin", DateTime.Now, usuarioId),
+                BaseDatos.Usuarios.Actualizar.Opcion("PatreonCoins", 2, usuarioId),
+                BaseDatos.Recompensas.Historial.Insertar(usuarioId, 2, "Daily", DateTime.Now)
+            );
+        }
+        else
+        {
+            int monedasGanadas = usuario.PatreonContribution > 0 ? 2 : 2;
+            int monedasLimite = usuario.PatreonContribution > 0 ? 120 : 20;
+
+            if (usuario.PatreonCoins < monedasLimite && usuario.PatreonLastLogin?.DayOfYear != DateTime.Now.DayOfYear)
+            {
+                await Task.WhenAll(
+                    BaseDatos.Usuarios.Actualizar.Opcion("PatreonLastLogin", DateTime.Now, usuarioId),
+                    BaseDatos.Usuarios.Actualizar.Opcion("PatreonCoins", (int)usuario.PatreonCoins + monedasGanadas, usuarioId),
+                    BaseDatos.Recompensas.Historial.Insertar(usuarioId, monedasGanadas, "Daily", DateTime.Now)
+                );
+            }
+        }
+    }
+
+    #endregion
 }
 

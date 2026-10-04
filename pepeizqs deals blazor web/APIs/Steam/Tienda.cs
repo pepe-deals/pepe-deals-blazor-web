@@ -3,7 +3,6 @@
 //https://store.steampowered.com/saleaction/ajaxgetdeckappcompatibilityreport?nAppID=1868140&l=spanish&cc=ES
 //https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid=730
 //https://api.steampowered.com/IStoreService/GetAppList/v1/?key=[devkey]&max_results=50000
-//https://store.steampowered.com/appreviews/730?json=1
 //https://store.steampowered.com/curator/185907/ajaxgetcreatorhomeinfo?get_appids=true
 //https://store.steampowered.com/actions/ajaxresolvebundles?bundleids=45867&cc=ES&l=english
 

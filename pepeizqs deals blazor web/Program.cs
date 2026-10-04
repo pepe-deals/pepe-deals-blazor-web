@@ -427,6 +427,15 @@ app.Use(async (contexto, siguiente) =>
 		return;
 	}
 
+	if (contexto.Request.Method == HttpMethods.Get
+		&& contexto.Request.Path.StartsWithSegments("/verify") == false
+		&& contexto.Request.Headers.Accept.ToString().Contains("text/html") == true
+		&& Uri.TryCreate(contexto.Request.Headers.Referer.ToString(), UriKind.Absolute, out Uri? referer) == true
+		&& (referer.Host == "aocr.org" || referer.Host.EndsWith(".aocr.org") == true))
+	{
+		BloqueoTemporalIps.PedirCaptcha(ipActual);
+	}
+
 	if (BloqueoTemporalIps.RequiereCaptcha(ipActual) == true && contexto.Request.Path.StartsWithSegments("/verify") == false)
 	{
 		contexto.Response.Redirect($"/verify?returnUrl={Uri.EscapeDataString(contexto.Request.Path + contexto.Request.QueryString)}");

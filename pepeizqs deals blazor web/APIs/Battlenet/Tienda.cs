@@ -101,7 +101,7 @@ namespace APIs.Battlenet
 
 								foreach (var producto in juegobattle.Productos)
 								{
-									if (producto.Precio.Precio != null)
+									if (producto.Precio?.Precio != null)
 									{
 										string textoPrecioRebajado = producto.Precio.Precio.PrecioRebajado;
 
