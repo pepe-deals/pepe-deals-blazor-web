@@ -2,6 +2,7 @@
 
 using System.Globalization;
 using System.Net;
+using System.Security.Cryptography;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Web;
@@ -293,14 +294,30 @@ namespace Herramientas.Afiliados
 
 		public static string CrearEnlaceAfiliado(string enlaceLimpio)
 		{
-			const string si = "21412";
-			const string li = "1924736";
+			string si = string.Empty;
+			string li = string.Empty;
 			const string wi = "425594";
 
-			var uri = new Uri(enlaceLimpio);
-			string destino = uri.PathAndQuery.TrimStart('/'); 
+			if (enlaceLimpio.Contains("yuplay.com") == true)
+			{
+				si = "19969";
+				li = "1857632";
+			}
+			else if (enlaceLimpio.Contains("gamesporium.com") == true)
+			{
+				si = "21412";
+				li = "1924736";
+			}
 
-			return $"https://glp8.net/c/?si={si}&li={li}&wi={wi}&dl={Uri.EscapeDataString(destino)}&ws=";
+			if (string.IsNullOrEmpty(si) == false && string.IsNullOrEmpty(li) == false)
+			{
+				var uri = new Uri(enlaceLimpio);
+				string destino = uri.PathAndQuery.TrimStart('/');
+
+				return $"https://glp8.net/c/?si={si}&li={li}&wi={wi}&dl={Uri.EscapeDataString(destino)}&ws=";
+			}
+
+			return enlaceLimpio;
 		}
 	}
 }

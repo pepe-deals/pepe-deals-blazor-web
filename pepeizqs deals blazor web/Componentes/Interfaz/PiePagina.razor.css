@@ -1,12 +1,13 @@
 * {
     --colorEncabezadoPie: #e3eeff;
+    --colorBordePie: rgba(0, 255, 255, 0.15);
 }
 
 .pie2 {
     background-color: color-mix(in srgb, var(--fondoOscuro) 80%, var(--fondoCuerpo));
     font-size: var(--tamañoTexto);
     color: var(--colorTexto);
-    border-top: 1px solid rgba(0,255,255,0.15);
+    border-top: 1px solid var(--colorBordePie);
 }
 
 .subir-arriba2 {

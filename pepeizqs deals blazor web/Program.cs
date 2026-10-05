@@ -397,7 +397,7 @@ builder.Services.AddRateLimiter(opciones =>
 
 		return RateLimitPartition.GetFixedWindowLimiter(ip, _ => new FixedWindowRateLimiterOptions
 		{
-			PermitLimit = 40,
+			PermitLimit = 100,
 			Window = TimeSpan.FromSeconds(10),
 			QueueLimit = 0,
 			QueueProcessingOrder = QueueProcessingOrder.OldestFirst
@@ -427,11 +427,13 @@ app.Use(async (contexto, siguiente) =>
 		return;
 	}
 
+	string[] dominiosBloqueados = ["aocr.org", "binance.com", "polycola.com", "iconspedia.com", "iboogie.com", "heapr.com", "onelook.com"];
+
 	if (contexto.Request.Method == HttpMethods.Get
 		&& contexto.Request.Path.StartsWithSegments("/verify") == false
 		&& contexto.Request.Headers.Accept.ToString().Contains("text/html") == true
 		&& Uri.TryCreate(contexto.Request.Headers.Referer.ToString(), UriKind.Absolute, out Uri? referer) == true
-		&& (referer.Host == "aocr.org" || referer.Host.EndsWith(".aocr.org") == true))
+		&& dominiosBloqueados.Any(d => referer.Host == d || referer.Host.EndsWith("." + d)) == true)
 	{
 		BloqueoTemporalIps.PedirCaptcha(ipActual);
 	}

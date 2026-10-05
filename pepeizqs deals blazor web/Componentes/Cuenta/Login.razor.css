@@ -7,7 +7,7 @@
 }
 
 .caja-login-titulo {
-    background: color-mix(in srgb, var(--fondoSubcabecera) 45%, var(--fondoBotonPequeño));
+    background: rgba(0, 0, 0, .4);
     padding: 20px 50px;
     border-top-left-radius: inherit;
     border-top-right-radius: inherit;

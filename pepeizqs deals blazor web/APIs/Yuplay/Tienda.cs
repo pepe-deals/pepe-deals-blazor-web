@@ -32,7 +32,7 @@ namespace APIs.Yuplay
 
 		public static string Referido(string enlace)
 		{
-			return enlace + "?partner=19b1d908fe49e597";
+			return Herramientas.Afiliados.Daisycon.CrearEnlaceAfiliado(enlace + "?partner=19b1d908fe49e597");
 		}
 
 		public static async Task BuscarOfertas(TiendaRegion region)
