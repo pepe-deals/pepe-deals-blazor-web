@@ -26,7 +26,7 @@ namespace APIs.GreenManGaming
             bundle.FechaEmpieza = fechaEmpieza;
 
             DateTime fechaTermina = DateTime.Now;
-            fechaTermina = fechaTermina.AddDays(35);
+            fechaTermina = fechaTermina.AddDays(21);
             fechaTermina = new DateTime(fechaTermina.Year, fechaTermina.Month, fechaTermina.Day, fechaTermina.Hour, 0, 0);
 
             bundle.FechaTermina = fechaTermina;
@@ -78,14 +78,19 @@ namespace APIs.GreenManGaming
 						bundle.Nombre = WebUtility.HtmlDecode(titulo);
 					}
 
-                    if (html.Contains(Strings.ChrW(34) + "og:image" + Strings.ChrW(34)) == true)
+                    if (string.IsNullOrEmpty(bundle.Imagen) == true && html.Contains(Strings.ChrW(34) + "og:image" + Strings.ChrW(34)) == true)
                     {
-                        int int1 = html.IndexOf(Strings.ChrW(34) + "og:image" + Strings.ChrW(34)) + 12;
-                        string temp1 = html.Remove(0, int1);
+                        int int1 = html.IndexOf(Strings.ChrW(34) + "og:image" + Strings.ChrW(34));
+                        string temp1 = html.Remove(0, int1 + 2);
 
-                        string imagen = temp1.Substring(0, temp1.IndexOf(Strings.ChrW(34))).Trim();
+                        int int2 = temp1.IndexOf("content=");
+                        string temp2 = temp1.Remove(0, int2 + 9);
 
-                        bundle.Imagen = imagen;
+                        int int3 = temp2.IndexOf(Strings.ChrW(34));
+                        string temp3 = temp2.Remove(int3, temp2.Length - int3);
+
+                        bundle.Imagen = temp3;
+                        bundle.ImagenNoticia = temp3;
 					}
 				}
 			}

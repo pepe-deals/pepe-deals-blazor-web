@@ -128,6 +128,7 @@ namespace APIs.GamersGate
 									{
 										enlaceJuego = enlaceJuego.Replace("/en-us/", "/");
 										enlaceJuego = enlaceJuego.Replace("/es/", "/");
+										enlaceJuego = enlaceJuego.Replace("/sv/", "/");
 									}
 
 									JuegoDRM juegoDRM = JuegoDRM2.Traducir(drm, Generar().Id);

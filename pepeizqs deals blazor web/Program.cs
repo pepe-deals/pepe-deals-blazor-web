@@ -22,7 +22,6 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
-using static System.Net.WebRequestMethods;
 
 ClasesDapper.Registrar();
 
@@ -427,7 +426,8 @@ app.Use(async (contexto, siguiente) =>
 		return;
 	}
 
-	string[] dominiosBloqueados = ["aocr.org", "binance.com", "polycola.com", "iconspedia.com", "iboogie.com", "heapr.com", "onelook.com"];
+	string[] dominiosBloqueados = [
+		"aocr.org", "binance.com", "heapr.com", "iboogie.com", "iconspedia.com", "onelook.com", "polycola.com"];
 
 	if (contexto.Request.Method == HttpMethods.Get
 		&& contexto.Request.Path.StartsWithSegments("/verify") == false

@@ -305,10 +305,19 @@
 else
 {
 	<div class="portada-espacio cuerpo-ancho">
-		<img src="/imagenes/otros/portada-placeholder.webp" style="width: 100%; aspect-ratio: 96/31; color: transparent;" fetchpriority="high" alt="Placeholder" />
-	
-		<div class="destacados-galeria-fila" style="visibility: hidden; min-height: 100px;">
-		</div>
+		@if (DateTime.Now.Hour == 4)
+		{
+			<div class="portada-espacio cuerpo-ancho" style="background-color: var(--fondoPeligro); padding: 10px 15px; text-align: center;">
+				@Herramientas.Idiomas.BuscarTexto(idioma, "String37", "Index")
+			</div>
+		}
+		else
+		{
+			<img src="/imagenes/otros/portada-placeholder.webp" style="width: 100%; aspect-ratio: 96/31; color: transparent;" fetchpriority="high" alt="Placeholder" />
+
+			<div class="destacados-galeria-fila" style="visibility: hidden; min-height: 100px;">
+			</div>
+		}
 	</div>
 }
 

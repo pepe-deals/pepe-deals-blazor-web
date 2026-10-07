@@ -37,28 +37,21 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
     const { request } = event;
+
+    if (request.method !== 'GET') return;
+
     const url = new URL(request.url);
-
-    const esMiDominio = url.hostname.includes('pepe.deals');
-
-    if (!esMiDominio) {
-        event.respondWith(fetch(request));
-        return;
-    }
+    if (!url.hostname.includes('pepe.deals')) return;
 
     if (request.destination === 'image') {
         event.respondWith(
             caches.match(request).then(response => {
                 return response || fetch(request).then(fetchResponse => {
                     if (fetchResponse.status === 200) {
-                        return caches.open(CACHE_NAME).then(cache => {
-                            cache.put(request, fetchResponse.clone());
-                            return fetchResponse;
-                        });
+                        const clone = fetchResponse.clone();
+                        event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.put(request, clone)));
                     }
                     return fetchResponse;
-                }).catch(() => {
-                    return caches.match(request);
                 });
             })
         );
@@ -68,19 +61,15 @@ self.addEventListener('fetch', event => {
     event.respondWith(
         fetch(request)
             .then(response => {
-                if (response.status === 200 && request.method === 'GET') {
-                    const responseClone = response.clone();
-                    caches.open(CACHE_NAME).then(cache => {
-                        cache.put(request, responseClone);
-                    });
+                if (response.status === 200 && !response.redirected) {
+                    const clone = response.clone();
+                    event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.put(request, clone)));
                 }
                 return response;
             })
-            .catch(() => {
-                if (request.method === 'GET') {
-                    return caches.match(request);
-                }
-                throw new Error('Network request failed');
+            .catch(async () => {
+                const cached = await caches.match(request);
+                return (cached && !cached.redirected) ? cached : Response.error();
             })
     );
 });

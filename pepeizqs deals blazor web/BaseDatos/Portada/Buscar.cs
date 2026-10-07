@@ -229,22 +229,56 @@ namespace BaseDatos.Portada
 				candidatosBase = $"{candidatosBase} UNION ALL {candidatosMarketplace}";
 			}
 
-			string busqueda = @$";WITH CandidatosBase AS (
+			string cabecera;
+
+			if (cantidadJuegos == 6)
+			{
+				cabecera = @$";DECLARE @base TABLE (idMaestra int, PrecioJson nvarchar(max), idSteam int, Resenas bigint);
+							   DECLARE @primero TABLE (idMaestra int, PrecioJson nvarchar(max), idSteam int);
+
+				INSERT INTO @base
+				SELECT x.idMaestra, x.PrecioJson, x.idSteam,
+					CONVERT(bigint, REPLACE(JSON_VALUE(jg.analisis, '$.Cantidad'),',',''))
+				FROM ({candidatosBase}) x
+				INNER JOIN dbo.juegos jg ON jg.id = x.idMaestra;
+
+				INSERT INTO @primero
+				SELECT TOP (1) idMaestra, PrecioJson, idSteam
+				FROM @base
+				ORDER BY CASE WHEN Resenas >= 10000 THEN 0 ELSE 1 END, NEWID();
+
+						WITH Candidatos AS (
+							SELECT idMaestra, PrecioJson, idSteam FROM @primero
+							UNION ALL
+							SELECT idMaestra, PrecioJson, idSteam FROM (
+								SELECT TOP (5) idMaestra, PrecioJson, idSteam
+								FROM @base
+								WHERE idMaestra NOT IN (SELECT idMaestra FROM @primero)
+								ORDER BY NEWID()
+							) resto
+						)";
+			}
+			else
+			{
+				cabecera = @$";WITH CandidatosBase AS (
 					{candidatosBase}
 				),
 				Candidatos AS (
 					SELECT TOP ({cantidadJuegos}) idMaestra, PrecioJson, idSteam
 					FROM CandidatosBase
 					ORDER BY NEWID()
-				)
-				SELECT c.idMaestra, jg.nombre,
-					JSON_VALUE(jg.imagenes, '$.Logo') as logo, 
-					JSON_VALUE(jg.imagenes, '$.Library_1920x620') as fondo, 
-					JSON_VALUE(jg.imagenes, '$.Header_460x215') as header, 
-					JSON_VALUE(jg.media, '$.Videos[0].Micro') as video,
-					c.PrecioJson AS {precioMinimosHistoricos}, c.idSteam
-				FROM Candidatos c
-				INNER JOIN dbo.juegos jg ON jg.id = c.idMaestra;";
+				)";
+			}
+
+			string busqueda = @$"{cabecera}
+			SELECT c.idMaestra, jg.nombre,
+				JSON_VALUE(jg.imagenes, '$.Logo') as logo, 
+				JSON_VALUE(jg.imagenes, '$.Library_1920x620') as fondo, 
+				JSON_VALUE(jg.imagenes, '$.Header_460x215') as header, 
+				JSON_VALUE(jg.media, '$.Videos[0].Micro') as video,
+				c.PrecioJson AS {precioMinimosHistoricos}, c.idSteam
+			FROM Candidatos c
+			INNER JOIN dbo.juegos jg ON jg.id = c.idMaestra;";
 
 			try
 			{
