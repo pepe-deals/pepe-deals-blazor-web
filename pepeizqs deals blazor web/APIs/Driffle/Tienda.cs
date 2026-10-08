@@ -6,7 +6,7 @@ using Juegos;
 using System.Net;
 using Tiendas2;
 
-namespace APIs.Gamesporium
+namespace APIs.Driffle
 {
 	public static class Tienda
 	{
@@ -14,13 +14,13 @@ namespace APIs.Gamesporium
 		{
 			Tiendas2.Tienda tienda = new Tiendas2.Tienda
 			{
-				Id = "gamesporium",
-				Nombre = "Gamesporium",
-				Tipo = TiendaTipo.Oficial,
-				ImagenLogo = "/imagenes/tiendas/gamesporium_logo.webp",
-				Imagen300x80 = "/imagenes/tiendas/gamesporium_300x80.webp",
-				ImagenIcono = "/imagenes/tiendas/gamesporium_icono.webp",
-				Color = "#141414",
+				Id = "driffle",
+				Nombre = "Driffle",
+				Tipo = TiendaTipo.Marketplace,
+				ImagenLogo = "/imagenes/tiendas/driffle_logo.webp",
+				Imagen300x80 = "/imagenes/tiendas/driffle_300x80.webp",
+				ImagenIcono = "/imagenes/tiendas/driffle_icono.ico",
+				Color = "#558205",
 				AdminUso = true,
 				UsuarioUso = true,
 				Regiones = new List<TiendaRegion> { TiendaRegion.Europa }
@@ -42,12 +42,8 @@ namespace APIs.Gamesporium
 
 			if (region == TiendaRegion.Europa)
 			{
-				enlace = Daisycon.GamesporiumEuropa;
+				enlace = Daisycon.DriffleEuropa;
 			}
-			//else if (region == TiendaRegion.EstadosUnidos)
-			//{
-			//	enlace = "https://feed.mulwi.com/f/b74893-2/general_us.xml";
-			//}
 
 			if (string.IsNullOrEmpty(enlace) == true)
 			{
@@ -68,11 +64,27 @@ namespace APIs.Gamesporium
 					{
 						foreach (var resultado in programa.Productos)
 						{
-							if (resultado.Info?.Descuento > 0 && resultado.Info?.EnStock == true && resultado.Info?.Moneda == "EUR" && resultado.Info?.PlataformaActivacion == "Steam" && resultado.Info?.Region == "ES")
+							if (resultado.Info?.Descuento > 0 && resultado.Info?.EnStock == true && resultado.Info?.Moneda == "EUR" && resultado.Info?.PlataformaActivacion == "Steam" && (resultado.Info?.Region == "Global" || resultado.Info?.Region == "Europe") && resultado.Info?.Nombre.Contains("Steam Gift") == false)
 							{
 								string nombre = WebUtility.HtmlDecode(resultado.Info?.Nombre);
+								nombre = nombre.Replace("- Steam - Digital Key", null);
+								nombre = nombre.Replace("(Global) (PC)", null);
+								nombre = nombre.Replace("(Europe) (PC)", null);
+								nombre = nombre.Replace("(Global) (PC / Mac)", null);
+								nombre = nombre.Replace("(Europe) (PC / Mac)", null);
+								nombre = nombre.Replace("(Global) (PC / Linux)", null);
+								nombre = nombre.Replace("(Europe) (PC / Linux)", null);
+								nombre = nombre.Replace("(Global) (PC / Mac / Linux)", null);
+								nombre = nombre.Replace("(Europe) (PC / Mac / Linux)", null);
+								nombre = nombre.Trim();
 
-								string enlaceJuego = Daisycon.LimpiarEnlace(resultado.Info?.Url, "https://gamesporium.com");
+								if (nombre.EndsWith(" DLC") == true)
+								{
+									nombre = nombre.Replace("DLC", null);
+									nombre = nombre.Trim();
+								}
+
+								string enlaceJuego = Daisycon.LimpiarEnlace(resultado.Info?.Url, "https://driffle.com");
 
 								string imagen = resultado.Info?.ImagenUrl;
 

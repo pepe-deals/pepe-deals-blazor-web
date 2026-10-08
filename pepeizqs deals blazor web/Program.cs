@@ -155,6 +155,7 @@ APIs.Fanatical.Tienda.ApiKey = builder.Configuration.GetValue<string>("Fanatical
 Impact.AccountSid = builder.Configuration.GetValue<string>("ImpactLoaded:AccountSid");
 Impact.AuthToken = builder.Configuration.GetValue<string>("ImpactLoaded:AuthToken");
 Daisycon.GamesporiumEuropa = builder.Configuration.GetValue<string>("Daisycon:GamesporiumEuropa");
+Daisycon.DriffleEuropa = builder.Configuration.GetValue<string>("Daisycon:DriffleEuropa");
 
 builder.Services.AddDbContextPool<pepeizqs_deals_webContext>(opciones => {
 	opciones.UseSqlServer(conexionTexto, opciones2 =>

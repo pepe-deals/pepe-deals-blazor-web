@@ -246,6 +246,7 @@ namespace Herramientas.Afiliados
 	public static class Daisycon
 	{
 		public static string GamesporiumEuropa = string.Empty;
+		public static string DriffleEuropa = string.Empty;
 
 		private static readonly HttpClient cliente = new HttpClient(new HttpClientHandler
 		{

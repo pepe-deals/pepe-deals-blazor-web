@@ -146,7 +146,7 @@ namespace Herramientas
 					}
 					else if (tienda == APIs.Loaded.Tienda.Generar().Id)
 					{
-						enlace = APIs.Loaded.Tienda.Referido(region,enlace);
+						enlace = APIs.Loaded.Tienda.Referido(region, enlace);
 					}
 					else if (tienda == APIs.Gameseal.Tienda.Generar().Id)
 					{
@@ -155,6 +155,10 @@ namespace Herramientas
 					else if (tienda == APIs.Kinguin.Tienda.Generar().Id)
 					{
 						enlace = APIs.Kinguin.Tienda.Referido(region, enlace);
+					}
+					else if (tienda == APIs.Driffle.Tienda.Generar().Id)
+					{
+						enlace = APIs.Driffle.Tienda.Referido(enlace);
 					}
 				}
 			}
