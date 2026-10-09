@@ -309,6 +309,11 @@ namespace Herramientas.Afiliados
 				si = "21412";
 				li = "1924736";
 			}
+			else if (enlaceLimpio.Contains("driffle.com") == true)
+			{
+				si = "19866";
+				li = "1850067";
+			}
 
 			if (string.IsNullOrEmpty(si) == false && string.IsNullOrEmpty(li) == false)
 			{
