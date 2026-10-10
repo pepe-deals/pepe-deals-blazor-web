@@ -439,6 +439,14 @@ app.Use(async (contexto, siguiente) =>
 		BloqueoTemporalIps.PedirCaptcha(ipActual);
 	}
 
+	string[] prefijosSospechosos = ["159.138."];
+
+	if (contexto.Request.Path.StartsWithSegments("/verify") == false
+		&& prefijosSospechosos.Any(p => ipActual.StartsWith(p)) == true)
+	{
+		BloqueoTemporalIps.PedirCaptcha(ipActual);
+	}
+
 	if (BloqueoTemporalIps.RequiereCaptcha(ipActual) == true && contexto.Request.Path.StartsWithSegments("/verify") == false)
 	{
 		contexto.Response.Redirect($"/verify?returnUrl={Uri.EscapeDataString(contexto.Request.Path + contexto.Request.QueryString)}");
