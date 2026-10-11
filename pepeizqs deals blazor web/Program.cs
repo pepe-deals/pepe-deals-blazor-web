@@ -439,7 +439,7 @@ app.Use(async (contexto, siguiente) =>
 		BloqueoTemporalIps.PedirCaptcha(ipActual);
 	}
 
-	string[] prefijosSospechosos = ["159.138."];
+	string[] prefijosSospechosos = ["113.4.", "119.8.", "159.138.", "43.", "45."];
 
 	if (contexto.Request.Path.StartsWithSegments("/verify") == false
 		&& prefijosSospechosos.Any(p => ipActual.StartsWith(p)) == true)
