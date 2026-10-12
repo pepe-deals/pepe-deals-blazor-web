@@ -427,19 +427,19 @@ app.Use(async (contexto, siguiente) =>
 		return;
 	}
 
-	string[] dominiosBloqueados = [
+	string[] dominiosSospechosos = [
 		"aocr.org", "binance.com", "heapr.com", "iboogie.com", "iconspedia.com", "onelook.com", "polycola.com"];
 
 	if (contexto.Request.Method == HttpMethods.Get
 		&& contexto.Request.Path.StartsWithSegments("/verify") == false
 		&& contexto.Request.Headers.Accept.ToString().Contains("text/html") == true
 		&& Uri.TryCreate(contexto.Request.Headers.Referer.ToString(), UriKind.Absolute, out Uri? referer) == true
-		&& dominiosBloqueados.Any(d => referer.Host == d || referer.Host.EndsWith("." + d)) == true)
+		&& dominiosSospechosos.Any(d => referer.Host == d || referer.Host.EndsWith("." + d)) == true)
 	{
 		BloqueoTemporalIps.PedirCaptcha(ipActual);
 	}
 
-	string[] prefijosSospechosos = ["113.4.", "119.8.", "159.138.", "43.", "45."];
+	string[] prefijosSospechosos = ["1.92.", "101.43.", "113.4.", "119.8.", "159.138.", "3.210.", "43.", "45.", "79.106."];
 
 	if (contexto.Request.Path.StartsWithSegments("/verify") == false
 		&& prefijosSospechosos.Any(p => ipActual.StartsWith(p)) == true)
