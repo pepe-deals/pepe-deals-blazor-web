@@ -22,6 +22,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
+using static Herramientas.Ficheros.Constructor;
 
 ClasesDapper.Registrar();
 
@@ -148,6 +149,8 @@ builder.Services.AddAuthentication(opciones =>
 
 var conexionTexto = builder.Configuration.GetConnectionString("pepeizqs_deals_webContextConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 Herramientas.BaseDatos.cadenaConexion = conexionTexto;
+
+PeticionInterna.Clave = builder.Configuration["AntiCaptcha:Key"];
 
 APIs.Steam.Cuenta.ApiKey = builder.Configuration.GetValue<string>("SteamAPI:Key");
 APIs.Fanatical.Tienda.ApiKey = builder.Configuration.GetValue<string>("FanaticalAPI:Key");
@@ -383,6 +386,11 @@ builder.Services.AddRateLimiter(opciones =>
 
 	opciones.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(contexto =>
 	{
+		if (PeticionInterna.Es(contexto) == true)
+		{
+			return RateLimitPartition.GetNoLimiter("interno");
+		}
+
 		string ip = contexto.Connection.RemoteIpAddress?.ToString() ?? "desconocida";
 
 		if (contexto.Request.Path.StartsWithSegments("/verify") == true)
@@ -421,7 +429,9 @@ app.Use(async (contexto, siguiente) =>
 {
 	string ipActual = contexto.Connection.RemoteIpAddress?.ToString() ?? "desconocida";
 
-	if (BloqueoTemporalIps.EstaBaneada(ipActual) == true)
+	bool esInterna = PeticionInterna.Es(contexto);
+
+	if (esInterna == false && BloqueoTemporalIps.EstaBaneada(ipActual) == true)
 	{
 		contexto.Response.StatusCode = StatusCodes.Status403Forbidden;
 		return;
@@ -430,7 +440,7 @@ app.Use(async (contexto, siguiente) =>
 	string[] dominiosSospechosos = [
 		"aocr.org", "binance.com", "heapr.com", "iboogie.com", "iconspedia.com", "onelook.com", "polycola.com"];
 
-	if (contexto.Request.Method == HttpMethods.Get
+	if (esInterna == false && contexto.Request.Method == HttpMethods.Get
 		&& contexto.Request.Path.StartsWithSegments("/verify") == false
 		&& contexto.Request.Headers.Accept.ToString().Contains("text/html") == true
 		&& Uri.TryCreate(contexto.Request.Headers.Referer.ToString(), UriKind.Absolute, out Uri? referer) == true
@@ -441,13 +451,13 @@ app.Use(async (contexto, siguiente) =>
 
 	string[] prefijosSospechosos = ["1.92.", "101.43.", "113.4.", "119.8.", "159.138.", "3.210.", "43.", "45.", "79.106."];
 
-	if (contexto.Request.Path.StartsWithSegments("/verify") == false
+	if (esInterna == false && contexto.Request.Path.StartsWithSegments("/verify") == false
 		&& prefijosSospechosos.Any(p => ipActual.StartsWith(p)) == true)
 	{
 		BloqueoTemporalIps.PedirCaptcha(ipActual);
 	}
 
-	if (BloqueoTemporalIps.RequiereCaptcha(ipActual) == true && contexto.Request.Path.StartsWithSegments("/verify") == false)
+	if (esInterna == false && BloqueoTemporalIps.RequiereCaptcha(ipActual) == true && contexto.Request.Path.StartsWithSegments("/verify") == false)
 	{
 		contexto.Response.Redirect($"/verify?returnUrl={Uri.EscapeDataString(contexto.Request.Path + contexto.Request.QueryString)}");
 		return;
@@ -1118,7 +1128,12 @@ app.MapPost("/verify", async (HttpContext contexto, IHttpClientFactory fabrica, 
 		return Results.Redirect(esLocal ? returnUrl : "/");
 	}
 
-	return Results.Redirect("/verify");
+	if (json.RootElement.TryGetProperty("error-codes", out JsonElement errores) == true)
+	{
+		BaseDatos.Errores.Insertar.Mensaje("Turnstile siteverify", errores.ToString());
+	}
+
+	return Results.Redirect($"/verify?returnUrl={Uri.EscapeDataString(returnUrl)}");
 });
 
 #endregion

@@ -3,6 +3,8 @@
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using System.Security.Cryptography;
+using System.Text;
 using Image = SixLabors.ImageSharp.Image;
 
 namespace Herramientas.Ficheros
@@ -107,13 +109,7 @@ namespace Herramientas.Ficheros
 				{
 					try
 					{
-						var httpClient2 = new HttpClient();
-						var respuesta = await httpClient2.GetAsync(encabezadoEnlace);
-						respuesta.EnsureSuccessStatusCode();
-						var stream = await respuesta.Content.ReadAsStreamAsync();
-						encabezadoImagen = Image.Load(stream);
-
-						double aspectRatio = (double)encabezadoImagen.Width / encabezadoImagen.Height;
+						encabezadoImagen = await CargarImagen(encabezadoEnlace);
 
 						if (modo == LayoutModo.Vertical)
 						{
@@ -129,6 +125,8 @@ namespace Herramientas.Ficheros
 					}
 					catch (Exception ex)
 					{
+						global::BaseDatos.Errores.Insertar.Mensaje("Error descarga imagen de encabezado", ex.Message);
+
 						return new CombinarImagenResultado
 						{
 							Exito = false,
@@ -145,13 +143,12 @@ namespace Herramientas.Ficheros
 				{
 					try
 					{
-						var response = await httpClient.GetAsync(imagenEnlace);
-						response.EnsureSuccessStatusCode();
-						var stream = await response.Content.ReadAsStreamAsync();
-						imagenes.Add(Image.Load(stream));
+						imagenes.Add(await CargarImagen(imagenEnlace));
 					}
 					catch (Exception ex)
 					{
+						global::BaseDatos.Errores.Insertar.Mensaje("Error descarga imagen", ex.Message);
+
 						return new CombinarImagenResultado
 						{
 							Exito = false,
@@ -304,6 +301,8 @@ namespace Herramientas.Ficheros
 			}
 			catch (Exception ex)
 			{
+				global::BaseDatos.Errores.Insertar.Mensaje("Error combinar imagenes", ex.Message);
+
 				return new CombinarImagenResultado
 				{
 					Exito = false,
@@ -311,6 +310,78 @@ namespace Herramientas.Ficheros
 					RequestMalo = false
 				};
 			}
+		}
+
+		private static readonly HttpClient clienteImagenes = CrearCliente();
+
+		private static HttpClient CrearCliente()
+		{
+			var cliente = new HttpClient(new HttpClientHandler
+			{
+				AutomaticDecompression = System.Net.DecompressionMethods.GZip | System.Net.DecompressionMethods.Deflate | System.Net.DecompressionMethods.Brotli
+			});
+			cliente.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:157.0) Gecko/20100101 Firefox/157.0");
+			cliente.DefaultRequestHeaders.Accept.ParseAdd("image/webp,image/png,image/jpeg,image/gif;q=0.9");
+			return cliente;
+		}
+
+		public static class PeticionInterna
+		{
+			public static string Clave { get; set; }
+
+			public static bool Es(HttpContext contexto)
+			{
+				string recibida = contexto.Request.Headers["X-Interno"].ToString();
+
+				if (string.IsNullOrEmpty(Clave) == true || string.IsNullOrEmpty(recibida) == true)
+				{
+					return false;
+				}
+
+				return CryptographicOperations.FixedTimeEquals(Encoding.UTF8.GetBytes(recibida), Encoding.UTF8.GetBytes(Clave));
+			}
+		}
+
+		public static async Task<Image> CargarImagen(string enlace)
+		{
+			string relativa = enlace;
+		
+			if (relativa.StartsWith("https://pepe.deals") == true)
+			{
+				relativa = relativa.Substring("https://pepe.deals".Length);
+			}
+
+			if (relativa.StartsWith("/imagenes/") == true && relativa.Contains("..") == false)
+			{
+				string rutaRelativa = relativa.TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
+
+				foreach (string baseRuta in new[] { AppContext.BaseDirectory, Directory.GetCurrentDirectory() })
+				{
+					string ruta = Path.Combine(baseRuta, rutaRelativa);
+
+					if (File.Exists(ruta) == true)
+					{
+						return await Image.LoadAsync(ruta);
+					}
+				}
+			}
+
+			if (Uri.TryCreate(enlace, UriKind.Absolute, out Uri absoluta) == false)
+			{
+				absoluta = new Uri(new Uri("https://pepe.deals"), enlace);
+			}
+
+			using var peticion = new HttpRequestMessage(HttpMethod.Get, absoluta);
+
+			if (absoluta.Host == "pepe.deals")
+			{
+				peticion.Headers.Add("X-Interno", PeticionInterna.Clave);
+			}
+
+			using var respuesta = await clienteImagenes.SendAsync(peticion);
+			respuesta.EnsureSuccessStatusCode();
+			using var stream = await respuesta.Content.ReadAsStreamAsync();
+			return await Image.LoadAsync(stream);
 		}
 
 		private static void ProcesarEncabezadoVertical(ref Image<Rgba32> imagenCombinada, Image encabezadoImagen, int totalAncho, int padding, int alturaMaxima, int separadorAltura, ImagenModo modoImagen)
@@ -367,146 +438,6 @@ namespace Herramientas.Ficheros
 			imagenCombinada.Mutate(ctx => ctx.DrawImage(encabezadoRedimensionado, new SixLabors.ImageSharp.Point(offsetX, offsetY), 1));
 
 			encabezadoRedimensionado.Dispose();
-		}
-	}
-
-	public static class ConstructorReddit
-	{
-		public static async Task<CombinarImagenResultado> Imagen(List<string> imagenesEnlaces, float gradosRotacion = 5f)
-		{
-			try
-			{
-				int totalAncho = 1280;
-				int totalAltura = 720;
-
-				double rad = gradosRotacion * Math.PI / 180.0;
-				double cosT = Math.Cos(rad);
-				double sinT = Math.Sin(rad);
-
-				int columnas = (int)Math.Ceiling(Math.Sqrt(imagenesEnlaces.Count * (16.0 / 9.0)));
-				int filas = (int)Math.Ceiling((double)imagenesEnlaces.Count / columnas);
-
-				double pasoX = (double)totalAncho / columnas;
-				double pasoY = (double)totalAltura / filas;
-
-				double wDesdePasoX = pasoX / (cosT + 1.5 * sinT);
-				double wDesdePasoY = pasoY / (sinT + 1.5 * cosT);
-				int coverAncho = (int)Math.Ceiling(Math.Max(wDesdePasoX, wDesdePasoY));
-				int coverAltura = (int)Math.Ceiling(coverAncho * 1.5);
-
-				int canvasRot = (int)Math.Ceiling(Math.Sqrt(coverAncho * coverAncho + coverAltura * coverAltura));
-
-				var imagenes = new List<Image>();
-				using var httpClient = new HttpClient();
-
-				foreach (string enlace in imagenesEnlaces)
-				{
-					try
-					{
-						var response = await httpClient.GetAsync(enlace);
-						response.EnsureSuccessStatusCode();
-						var stream = await response.Content.ReadAsStreamAsync();
-						imagenes.Add(Image.Load(stream));
-					}
-					catch (Exception ex)
-					{
-						return new CombinarImagenResultado
-						{
-							Exito = false,
-							ErrorMensaje = $"Error al descargar imagen de {enlace}: {ex.Message}",
-							RequestMalo = true
-						};
-					}
-				}
-
-				if (imagenes.Count == 0)
-					return new CombinarImagenResultado
-					{
-						Exito = false,
-						ErrorMensaje = "No se pudieron descargar las imágenes",
-						RequestMalo = true
-					};
-
-				int margen = (int)(Math.Max(totalAncho, totalAltura) * 0.3);
-				int canvasIntermedioAncho = totalAncho + margen * 2;
-				int canvasIntermedioAltura = totalAltura + margen * 2;
-
-				using var intermedio = new Image<Rgba32>(canvasIntermedioAncho, canvasIntermedioAltura, new Rgba32(0, 0, 0, 0));
-
-				int indice = 0;
-				for (int fila = 0; fila < filas && indice < imagenes.Count; fila++)
-				{
-					for (int col = 0; col < columnas && indice < imagenes.Count; col++, indice++)
-					{
-						int centroCoverX = margen + (int)Math.Round(col * pasoX + pasoX / 2);
-						int centroCoverY = margen + (int)Math.Round(fila * pasoY + pasoY / 2);
-
-						using var coverRedimensionada = imagenes[indice].Clone(ctx =>
-							ctx.Resize(coverAncho, coverAltura)
-						);
-
-						using var canvasRotado = new Image<Rgba32>(canvasRot, canvasRot, new Rgba32(0, 0, 0, 0));
-						canvasRotado.Mutate(ctx =>
-						{
-							int offsetX = (canvasRot - coverAncho) / 2;
-							int offsetY = (canvasRot - coverAltura) / 2;
-							ctx.DrawImage(coverRedimensionada, new Point(offsetX, offsetY), 1f);
-							ctx.Rotate(gradosRotacion);
-						});
-
-						int drawX = centroCoverX - canvasRot / 2;
-						int drawY = centroCoverY - canvasRot / 2;
-
-						intermedio.Mutate(ctx =>
-							ctx.DrawImage(canvasRotado, new Point(drawX, drawY), 1f)
-						);
-					}
-				}
-
-				using var imagenFinal = new Image<Rgba32>(totalAncho, totalAltura, new Rgba32(0, 0, 0, 0));
-				using var recortado = intermedio.Clone(ctx =>
-					ctx.Crop(new Rectangle(margen, margen, totalAncho, totalAltura))
-				);
-				imagenFinal.Mutate(ctx => ctx.DrawImage(recortado, new Point(0, 0), 1f));
-
-				string nombreFichero = $"{Guid.NewGuid()}.png";
-				string rutaDirectorio = Path.Combine(AppContext.BaseDirectory, "imagenes", "portadas");
-
-				if (!Directory.Exists(rutaDirectorio))
-					Directory.CreateDirectory(rutaDirectorio);
-
-				try
-				{
-					await imagenFinal.SaveAsPngAsync(Path.Combine(rutaDirectorio, nombreFichero));
-
-					foreach (var img in imagenes)
-						img.Dispose();
-
-					return new CombinarImagenResultado
-					{
-						Exito = true,
-						DirectorioFichero = $"/imagenes/portadas/{nombreFichero}"
-					};
-				}
-				catch (Exception ex)
-				{
-					return new CombinarImagenResultado
-					{
-						Exito = false,
-						ErrorMensaje = $"Error al guardar la imagen: {ex.Message}",
-						RequestMalo = false
-					};
-				}
-			}
-			catch (Exception ex)
-			{
-				return new CombinarImagenResultado
-				{
-					Exito = false,
-					ErrorMensaje = $"Error al construir portada: {ex.Message}",
-					RequestMalo = false
-				};
-			}
 		}
 	}
 
