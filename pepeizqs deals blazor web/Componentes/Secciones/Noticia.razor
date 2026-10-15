@@ -140,7 +140,7 @@
 	<img class="juego-fondo" src="@fondo" alt="Background" />
 
 	<div class="cuerpo-ancho" style="@estiloCaja">
-		<div style="background: color-mix(in srgb, var(--fondoSubcabecera) 45%, var(--fondoBotonPequeño)); border: 2px solid var(--glaseadoBorde); border-top-left-radius: 20px; border-top-right-radius: 20px; margin-top: 40px;">
+		<div style="background: color-mix(in srgb, var(--fondoSubcabecera) 45%, var(--fondoBotonPequeño)); border: 2px solid rgba(0,0,0,.2); border-top-left-radius: 20px; border-top-right-radius: 20px; margin-top: 40px;">
 			<div style="display: flex; align-items: center; gap: 30px; flex-wrap: nowrap; padding: 30px 40px;">
 				@{
 					string imagenIcono = string.Empty;
@@ -329,7 +329,7 @@
 			}
 		</div>
 
-		<div style="background: color-mix(in srgb, var(--fondoSubcabecera) 45%, var(--fondoBotonPequeño)); border: 2px solid var(--glaseadoBorde); border-top: 0px; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; display: flex; align-items: center; gap: 15px; padding: 30px 40px; margin-bottom: 60px;">
+		<div style="background: color-mix(in srgb, var(--fondoSubcabecera) 45%, var(--fondoBotonPequeño)); border: 2px solid rgba(0,0,0,.2); border-top: 0px; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; display: flex; align-items: center; gap: 15px; padding: 30px 40px; margin-bottom: 60px;">
 			<div>
 				@Herramientas.Idiomas.BuscarTexto(idioma, "String11", "News"):
 			</div>
@@ -443,7 +443,7 @@
 
 	@if (noticiaAnterior != null || noticiaPosterior != null)
 	{
-		<div class="cuerpo-ancho" style="padding: 30px; display: flex; align-items: center; gap: 40px; background-color: var(--fondoSubsubcabecera); border: solid var(--glaseadoBorde); border-width: 2px 2px 0 2px; border-top-left-radius: 20px; border-top-right-radius: 20px;">
+		<div class="cuerpo-ancho" style="padding: 30px; display: flex; align-items: center; gap: 40px; background-color: var(--fondoSubsubcabecera); border: 1px solid rgba(0,0,0,.2); border-width: 2px 2px 0 2px; border-top-left-radius: 20px; border-top-right-radius: 20px;">
 			@if (noticiaAnterior?.Id > 0)
 			{
 				string enlaceAnterior = "/news/" + noticiaAnterior.Id + "/" + Herramientas.EnlaceAdaptador.Nombre(Herramientas.Idiomas.ElegirTexto(idioma, noticiaAnterior.TituloEn, noticiaAnterior.TituloEs)) + "/";

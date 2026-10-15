@@ -1627,11 +1627,12 @@ END DESC";
 			return tabla;
 		}
 
-		public static async Task<List<Juego>> Minimos(bool noOficial, TiendaRegion region, int posicion = 0, int ordenar = 0, List<MostrarJuegoTienda> tiendas = null, List<MostrarJuegoDRM> drms = null, List<MostrarJuegoTipo> tipos = null, List<string> categorias = null, List<string> etiquetas = null, int? minimoDescuento = null, int? maximoPrecio = null, List<MostrarJuegoSteamDeck> deck = null, List<MostrarJuegoSteamOS> steamos = null, List<MostrarJuegoSteamMachine> machine = null, List<MostrarJuegoSteamFrame> frame = null, int lanzamiento = 0, int? minimoReseñas = 0, string nombreBusqueda = null, List<int> excluirJuegosIds = null, List<int> excluirSteamIds = null, List<int> excluirGogIds = null)
+		public static async Task<List<Juego>> Minimos(bool noOficial, bool marketplace, TiendaRegion region, int posicion = 0, int ordenar = 0, List<MostrarJuegoTienda> tiendas = null, List<MostrarJuegoDRM> drms = null, List<MostrarJuegoTipo> tipos = null, List<string> categorias = null, List<string> etiquetas = null, int? minimoDescuento = null, int? maximoPrecio = null, List<MostrarJuegoSteamDeck> deck = null, List<MostrarJuegoSteamOS> steamos = null, List<MostrarJuegoSteamMachine> machine = null, List<MostrarJuegoSteamFrame> frame = null, int lanzamiento = 0, int? minimoReseñas = 0, string nombreBusqueda = null, List<int> excluirJuegosIds = null, List<int> excluirSteamIds = null, List<int> excluirGogIds = null)
 		{
 			string tablaMinimos = region == TiendaRegion.Europa ? "seccionMinimos" : "seccionMinimosUS";
 			string precioMinimosHistoricos = region == TiendaRegion.Europa ? "precioMinimosHistoricos" : "precioMinimosHistoricosUS";
 			string columnaNoOficialNombre = region == TiendaRegion.Europa ? "preciosHistoricosNoOficialesEU" : "preciosHistoricosNoOficialesUS";
+			string columnaMarketplaceNombre = region == TiendaRegion.Europa ? "preciosHistoricosMarketplacesEU" : "preciosHistoricosMarketplacesUS";
 
 			DynamicParameters parametros = new DynamicParameters();
 			parametros.Add("etiquetas2", etiquetas?.Count > 0 ? string.Join(",", etiquetas) : "");
@@ -1765,7 +1766,7 @@ END DESC";
 				minimoDescuento = 1;
 			}
 
-			if (minimoDescuento > 0)
+			if (minimoDescuento > 0 && noOficial == false && marketplace == false)
 			{
 				dondeMinimoDescuento = "pmh.Descuento >= " + minimoDescuento.ToString();
 			}
@@ -2006,6 +2007,15 @@ END DESC";
 				busqueda = $"({busqueda}) UNION ALL ({busquedaNoOficial})";
 			}
 
+			if (marketplace == true)
+			{
+				string tablaMarketplace = region == TiendaRegion.Europa ? "seccionMinimosMarketplacesEU" : "seccionMinimosMarketplacesUS";
+
+				string busquedaMarketplace = ConstruirBusqueda(tablaMarketplace, columnaMarketplaceNombre, false);
+
+				busqueda = $"({busqueda}) UNION ALL ({busquedaMarketplace})";
+			}
+
 			#region Order
 
 			if (ordenar == 0)
@@ -2098,6 +2108,16 @@ END DESC";
 					if (string.IsNullOrEmpty(fila.preciosHistoricosNoOficialesUS) == false)
 					{
 						juego.PreciosHistoricosNoOficialesUS = JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.preciosHistoricosNoOficialesUS);
+					}
+
+					if (string.IsNullOrEmpty(fila.preciosHistoricosMarketplacesEU) == false)
+					{
+						juego.PreciosHistoricosMarketplacesEU = JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.preciosHistoricosMarketplacesEU);
+					}
+
+					if (string.IsNullOrEmpty(fila.preciosHistoricosMarketplacesUS) == false)
+					{
+						juego.PreciosHistoricosMarketplacesUS = JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.preciosHistoricosMarketplacesUS);
 					}
 
 					if (string.IsNullOrEmpty(fila.video) == false)

@@ -41,7 +41,7 @@
 
 .caja-bundle-contenido {
     background-color: var(--fondoSubsubcabecera);
-    border: 2px solid var(--glaseadoBorde);
+    border: 2px solid rgba(0,0,0,.2);
 }
 
 .caja-bundle-mensaje {
