@@ -1,0 +1,184 @@
+﻿#nullable disable
+
+using Herramientas;
+using Juegos;
+using System.Xml;
+using System.Xml.Linq;
+using Tiendas2;
+
+namespace APIs.Eneba
+{
+	public static class Tienda
+	{
+		public static Tiendas2.Tienda Generar()
+		{
+			Tiendas2.Tienda tienda = new Tiendas2.Tienda
+			{
+				Id = "eneba",
+				Nombre = "Eneba",
+				Tipo = TiendaTipo.Marketplace,
+				ImagenLogo = "/imagenes/tiendas/eneba_logo.webp",
+				Imagen300x80 = "/imagenes/tiendas/eneba_300x80.webp",
+				ImagenIcono = "/imagenes/tiendas/eneba_icono.ico",
+				Color = "#558205",
+				AdminUso = true,
+				UsuarioUso = true,
+				Regiones = new List<TiendaRegion> { TiendaRegion.Europa }
+			};
+
+			return tienda;
+		}
+
+		public static async Task BuscarOfertas(TiendaRegion region)
+		{
+			await BaseDatos.Admin.Actualizar.Tiendas(region, Generar().Id, DateTime.Now, 0);
+
+			string enlace = string.Empty;
+
+			if (region == TiendaRegion.Europa)
+			{
+				enlace = "https://www.eneba.com/rss/products.xml?currency=EUR&country=ES";
+			}
+
+			if (string.IsNullOrEmpty(enlace) == true)
+			{
+				return;
+			}
+
+			List<EnebaOferta> resultados = await LeerFeed(enlace);
+
+			if (resultados?.Count > 0)
+			{
+				foreach (var resultado in resultados)
+				{
+					JuegoDRM juegoDRM = JuegoDRM2.Traducir(resultado.DRM, Generar().Id);
+
+					if (juegoDRM == JuegoDRM.Steam && resultado.EnStock == "in stock")
+					{
+					}
+				}
+			}
+		}
+
+		private static readonly XNamespace g = "http://base.google.com/ns/1.0";
+
+		private const int ResultadosPorPagina = 5000;
+		private const int MaximoPeticiones = 25; 
+		private const int PausaEntrePeticionesMs = 1000;
+
+		public static async Task<List<EnebaOferta>> LeerFeed(string enlaceBase)
+		{
+			List<EnebaOferta> ofertas = new List<EnebaOferta>();
+
+			for (int peticion = 0; peticion < MaximoPeticiones; peticion++)
+			{
+				int desde = peticion * ResultadosPorPagina;
+				string enlace = desde == 0 ? enlaceBase : $"{enlaceBase}&from={desde}";
+
+				(List<EnebaOferta> pagina, int itemsLeidos) = await LeerPagina(enlace);
+				ofertas.AddRange(pagina);
+
+				if (itemsLeidos < ResultadosPorPagina)
+				{
+					break;
+				}
+
+				await Task.Delay(PausaEntrePeticionesMs);
+			}
+
+			return ofertas;
+		}
+
+		private static async Task<(List<EnebaOferta> ofertas, int itemsLeidos)> LeerPagina(string enlace)
+		{
+			List<EnebaOferta> ofertas = new List<EnebaOferta>();
+			int itemsLeidos = 0;
+
+			string html = await Herramientas.Decompiladores.Estandar(enlace);
+
+			XmlNamespaceManager nsManager = new XmlNamespaceManager(new NameTable());
+			nsManager.AddNamespace("g", g.NamespaceName);
+
+			using XmlReader lector = XmlReader.Create(new StringReader(html), new XmlReaderSettings { DtdProcessing = DtdProcessing.Ignore }, new XmlParserContext(null, nsManager, null, XmlSpace.None));
+
+			lector.MoveToContent();
+
+			while (lector.EOF == false)
+			{
+				if (lector.NodeType == XmlNodeType.Element && lector.LocalName == "item")
+				{
+					XElement item = (XElement)XNode.ReadFrom(lector);
+					itemsLeidos += 1;
+
+					EnebaOferta oferta = ConvertirItem(item);
+
+					if (oferta != null)
+					{
+						ofertas.Add(oferta);
+					}
+
+					continue;
+				}
+
+				lector.Read();
+			}
+
+			return (ofertas, itemsLeidos);
+		}
+
+		private static EnebaOferta ConvertirItem(XElement item)
+		{
+			string Texto(XName nombre) => item.Element(nombre)?.Value.Trim();
+
+			string precioTexto = Texto(g + "price");
+
+			if (string.IsNullOrEmpty(precioTexto) == true)
+			{
+				return null;
+			}
+
+			string[] partes = precioTexto.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+			if (decimal.TryParse(partes[0], System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture, out decimal precio) == false)
+			{
+				return null;
+			}
+
+			return new EnebaOferta
+			{
+				Id = Texto(g + "id"),
+				Sku = Texto("sku"),
+				Titulo = Texto("title"),
+				TituloOriginal = Texto("original_title"),
+				Enlace = Texto("link"),
+				Imagen = Texto(g + "image_link"),
+				EnStock = Texto(g + "availability"),
+				Precio = precio,
+				Moneda = partes.Length > 1 ? partes[1] : "EUR",
+				Categoria = Texto(g + "google_product_category"),
+				Tipo = Texto(g + "product_type"),
+				DRM = Texto(g + "brand"),
+				Region = Texto("region"),
+				Condicion = Texto(g + "condition")
+			};
+		}
+	}
+
+	public class EnebaOferta
+	{
+		public string Id { get; set; }
+		public string Sku { get; set; }
+		public string Titulo { get; set; }
+		public string TituloOriginal { get; set; }
+		public string Enlace { get; set; }
+		public string Imagen { get; set; }
+		public string EnStock { get; set; }
+		public decimal Precio { get; set; }
+		public string Moneda { get; set; }
+		public string Categoria { get; set; }
+		public string Tipo { get; set; }
+		public string DRM { get; set; }
+		public string Region { get; set; }
+		public string Condicion { get; set; }
+	}
+}

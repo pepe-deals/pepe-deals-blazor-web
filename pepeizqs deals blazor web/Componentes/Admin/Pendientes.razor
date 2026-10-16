@@ -559,17 +559,17 @@
                     {
                         await BaseDatos.Pendientes.Actualizar.Tienda(idTiendaPendiente, enlacePendiente, idsPendiente);
 
-                        BaseDatos.Pendientes.Pendiente siguienteTienda = null;
-
                         foreach (var pendiente in pendientesTiendas)
                         {
                             if (pendiente.Tienda.Id == idTiendaPendiente)
                             {
                                 pendiente.Pendientes.RemoveAll(p => p.Enlace == enlacePendiente);
-                                siguienteTienda = pendiente.Pendientes.FirstOrDefault();
                                 break;
                             }
                         }
+
+                        PendientesTienda destino = SeleccionarTiendaConPendientes();
+                        BaseDatos.Pendientes.Pendiente siguienteTienda = destino?.Pendientes.FirstOrDefault();
 
                         await InvokeAsync(StateHasChanged);
                         await ClickearTiendaPendientes(idTiendaPendiente, true, siguienteTienda);
@@ -797,7 +797,9 @@
                 }
             }
 
-            await ClickearTiendaPendientes(idTiendaPendiente, true);
+            PendientesTienda destino = SeleccionarTiendaConPendientes();
+
+            await ClickearTiendaPendientes(idTiendaPendiente, true, destino?.Pendientes.FirstOrDefault());
         }
 
         if (string.IsNullOrEmpty(idSuscripcionPendiente) == false)
@@ -882,17 +884,17 @@
                 }
             }
 
-            BaseDatos.Pendientes.Pendiente siguienteTienda = null;
-
             foreach (var pendiente in pendientesTiendas)
             {
                 if (pendiente.Tienda.Id == idTiendaPendiente)
                 {
                     pendiente.Pendientes.RemoveAll(p => p.Enlace == enlace);
-                    siguienteTienda = pendiente.Pendientes.FirstOrDefault();
                     break;
                 }
             }
+
+            PendientesTienda destino = SeleccionarTiendaConPendientes();
+            BaseDatos.Pendientes.Pendiente siguienteTienda = destino?.Pendientes.FirstOrDefault();
 
             await ClickearTiendaPendientes(idTiendaPendiente, true, siguienteTienda);
         }
@@ -963,6 +965,28 @@
         }
 
         ocupado = false;
+    }
+
+    private PendientesTienda SeleccionarTiendaConPendientes()
+    {
+        PendientesTienda actual = pendientesTiendas.FirstOrDefault(p => p.Tienda.Id == idTiendaPendiente);
+
+        if (actual?.Pendientes?.Count > 0)
+        {
+            return actual;
+        }
+
+        int indice = actual != null ? pendientesTiendas.IndexOf(actual) : -1;
+
+        PendientesTienda siguiente = pendientesTiendas.Skip(indice + 1).FirstOrDefault(p => p.Pendientes?.Count > 0)
+                                     ?? pendientesTiendas.FirstOrDefault(p => p.Pendientes?.Count > 0);
+
+        if (siguiente != null)
+        {
+            idTiendaPendiente = siguiente.Tienda.Id;
+        }
+
+        return siguiente;
     }
 
     #region Seleccionados

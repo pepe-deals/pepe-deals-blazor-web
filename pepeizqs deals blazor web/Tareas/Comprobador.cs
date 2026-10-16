@@ -382,6 +382,10 @@ namespace Tareas
 							{
 								siguienteComprobacion = TimeSpan.FromHours(4);
 							}
+							else if (tienda.Id == APIs.Eneba.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(4);
+							}
 
 							if (siguienteComprobacion > TimeSpan.Zero)
 							{

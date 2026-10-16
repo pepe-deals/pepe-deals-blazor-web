@@ -258,9 +258,12 @@
 
 											<div>
 												<div style="display: flex; align-items: center;">
-													<div style="text-align: center; padding: 10px 15px; margin: 0px; min-width: 65px; font-size: 18px; background-color: darkgreen;">
-														@juego.Precio.Descuento.ToString()%
-													</div>
+													@if (juego.Precio.Descuento > 0)
+													{
+														<div style="text-align: center; padding: 10px 15px; margin: 0px; min-width: 65px; font-size: 18px; background-color: darkgreen;">
+															@juego.Precio.Descuento.ToString()%
+														</div>
+													}
 
 													<div style="padding: 5px 15px; min-width: 110px; text-align: center; font-size: 18px;">
 														@MensajeMinimo(usuarioRegion, juego.Precio, false)
@@ -683,6 +686,7 @@
 	private bool usuarioPatreon = false;
 	private TiendaRegion usuarioRegion = TiendaRegion.Europa;
 	private bool usuarioTiendasNoOficial = false;
+	private bool usuarioTiendasMarketplace = false;
 
 	public Usuario opciones { get; set; }
 	[PersistentState] public DateTime ultimaVisita { get; set; }
@@ -716,6 +720,7 @@
 		dominio = datos.Dominio;
 		usuarioRegion = datos.Region;
 		usuarioTiendasNoOficial = datos.NoOficial;
+        usuarioTiendasMarketplace = datos.Marketplace;
 
 		if (string.IsNullOrEmpty(usuarioId) == false)
 		{
@@ -739,9 +744,14 @@
 				usuarioTiendasNoOficial = opciones.NoOfficial.Value;
 			}
 
+            if (opciones?.Marketplace.HasValue == true)
+            {
+                usuarioTiendasMarketplace = opciones.Marketplace.Value;
+            }
+
 			Task<List<Bundles2.Bundle>> tareaBundles = (bundlesActuales != null) ? Task.FromResult(bundlesActuales) : BaseDatos.Bundles.Buscar.Actuales();
 			Task<List<JuegoSuscripcion>> tareaSuscripciones = (suscripcionesActuales != null) ? Task.FromResult(suscripcionesActuales) : BaseDatos.Suscripciones.Buscar.Actuales();
-			Task<List<JuegoDeseadoMostrar>> tareaDeseados = (deseadosGestor != null) ? Task.FromResult(deseadosGestor) : Herramientas.Deseados.LeerJuegos(usuarioTiendasNoOficial, usuarioRegion, usuarioId);
+			Task<List<JuegoDeseadoMostrar>> tareaDeseados = (deseadosGestor != null) ? Task.FromResult(deseadosGestor) : Herramientas.Deseados.LeerJuegos(usuarioTiendasNoOficial, usuarioTiendasMarketplace, usuarioRegion, usuarioId);
 
 			await Task.WhenAll(tareaDeseados, tareaBundles, tareaSuscripciones);
 

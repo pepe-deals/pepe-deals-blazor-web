@@ -518,6 +518,7 @@
 	private bool usuarioPatreon = false;
 	private TiendaRegion usuarioRegion = TiendaRegion.Europa;
 	private bool usuarioTiendasNoOficial = false;
+	private bool usuarioTiendasMarketplace = false;
 	[PersistentState] public Usuario opciones { get; set; }
 
 	[Parameter]
@@ -536,6 +537,7 @@
 		dominio = datos.Dominio;
 		usuarioRegion = datos.Region;
 		usuarioTiendasNoOficial = datos.NoOficial;
+        usuarioTiendasMarketplace = datos.Marketplace;
 
 		if (string.IsNullOrEmpty(usuarioId) == false)
 		{
@@ -579,6 +581,11 @@
 				{
 					usuarioTiendasNoOficial = opciones.NoOfficial.Value;
 				}
+
+                if (opciones.Marketplace.HasValue == true)
+                {
+                    usuarioTiendasMarketplace = opciones.Marketplace.Value;
+                }
 			}
 		}
 
@@ -647,7 +654,7 @@
 				}
 			}
 
-			juegosCurator ??= await global::BaseDatos.Juegos.Buscar.MultiplesJuegosSteam3(usuarioTiendasNoOficial, usuarioRegion, curator.SteamIds);
+			juegosCurator ??= await global::BaseDatos.Juegos.Buscar.MultiplesJuegosSteam3(usuarioTiendasNoOficial, usuarioTiendasMarketplace, usuarioRegion, curator.SteamIds);
 
 			if (juegosCurator?.Count > 0)
 			{

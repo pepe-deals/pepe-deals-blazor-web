@@ -9,23 +9,23 @@ namespace Herramientas
 {
 	public static class Deseados
 	{
-		public static async Task<List<JuegoDeseadoMostrar>> LeerJuegos(bool noOficial, TiendaRegion region, string usuarioId)
+		public static async Task<List<JuegoDeseadoMostrar>> LeerJuegos(bool noOficial, bool marketplace, TiendaRegion region, string usuarioId)
 		{
 			Usuario deseadosUsuario = await global::BaseDatos.Usuarios.Buscar.DeseadosTiene(usuarioId);
 
-			Task<List<JuegoDeseadoMostrar>> tareaSteam = CargarDeseadosSteam(deseadosUsuario, noOficial, region);
-			Task<List<JuegoDeseadoMostrar>> tareaWeb = CargarDeseadosWeb(deseadosUsuario, noOficial, region);
-			Task<List<JuegoDeseadoMostrar>> tareaGog = CargarDeseadosGog(deseadosUsuario, noOficial, region);
+			Task<List<JuegoDeseadoMostrar>> tareaSteam = CargarDeseadosSteam(deseadosUsuario, noOficial, marketplace, region);
+			Task<List<JuegoDeseadoMostrar>> tareaWeb = CargarDeseadosWeb(deseadosUsuario, noOficial, marketplace, region);
+			Task<List<JuegoDeseadoMostrar>> tareaGog = CargarDeseadosGog(deseadosUsuario, noOficial, marketplace, region);
 
 			await Task.WhenAll(tareaSteam, tareaWeb, tareaGog);
 
 			return tareaSteam.Result.Concat(tareaWeb.Result).Concat(tareaGog.Result).ToList();
 		}
 
-		private static async Task<List<JuegoDeseadoMostrar>> CargarDeseadosSteam(Usuario deseadosUsuario, bool noOficial, TiendaRegion region)
+		private static async Task<List<JuegoDeseadoMostrar>> CargarDeseadosSteam(Usuario deseadosUsuario, bool noOficial, bool marketplace, TiendaRegion region)
 		{
 			List<JuegoDeseadoMostrar> resultado = new List<JuegoDeseadoMostrar>();
-			HashSet<(string, JuegoDRM, bool, bool)> deseadosHash = new HashSet<(string, JuegoDRM, bool, bool)>();
+			HashSet<(string, JuegoDRM, bool, bool, bool)> deseadosHash = new HashSet<(string, JuegoDRM, bool, bool, bool)>();
 
 			if (string.IsNullOrEmpty(deseadosUsuario.SteamWishlist) == true)
 			{
@@ -39,7 +39,7 @@ namespace Herramientas
 				return resultado;
 			}
 
-			List<Juego> juegos = await global::BaseDatos.Juegos.Buscar.MultiplesJuegosSteam2(noOficial, region, ids);
+			List<Juego> juegos = await global::BaseDatos.Juegos.Buscar.MultiplesJuegosSteam2(noOficial, marketplace, region, ids);
 
 			foreach (var juego in juegos.Where(j => j != null))
 			{
@@ -49,16 +49,19 @@ namespace Herramientas
 				bool esNoOficial = juego.PreciosHistoricosNoOficialesEU?.Count > 0 || juego.PreciosHistoricosNoOficialesUS?.Count > 0
 					|| juego.PreciosActualesNoOficialesEU?.Count > 0 || juego.PreciosActualesNoOficialesUS?.Count > 0;
 
-				AñadirJuegoMostrar(resultado, deseadosHash, juego, JuegoDRM.Steam, true, region, esOficial, esNoOficial);
+				bool esMarketplace = juego.PreciosHistoricosMarketplacesEU?.Count > 0 || juego.PreciosHistoricosMarketplacesUS?.Count > 0
+					|| juego.PreciosActualesMarketplacesEU?.Count > 0 || juego.PreciosActualesMarketplacesUS?.Count > 0;
+
+				AñadirJuegoMostrar(resultado, deseadosHash, juego, JuegoDRM.Steam, true, region, esOficial, esNoOficial, esMarketplace);
 			}
 
 			return resultado;
 		}
 
-		private static async Task<List<JuegoDeseadoMostrar>> CargarDeseadosWeb(Usuario deseadosUsuario, bool noOficial, TiendaRegion region)
+		private static async Task<List<JuegoDeseadoMostrar>> CargarDeseadosWeb(Usuario deseadosUsuario, bool noOficial, bool marketplace, TiendaRegion region)
 		{
 			List<JuegoDeseadoMostrar> resultado = new List<JuegoDeseadoMostrar>();
-			HashSet<(string, JuegoDRM, bool, bool)> deseadosHash = new HashSet<(string, JuegoDRM, bool, bool)>();
+			HashSet<(string, JuegoDRM, bool, bool, bool)> deseadosHash = new HashSet<(string, JuegoDRM, bool, bool, bool)>();
 
 			if (string.IsNullOrEmpty(deseadosUsuario.Wishlist) == true)
 			{
@@ -74,7 +77,7 @@ namespace Herramientas
 
 			Dictionary<string, JuegoDeseado> deseadosWebDicc = deseadosWeb.ToDictionary(d => d.IdBaseDatos);
 
-			List<Juego> juegos = await global::BaseDatos.Juegos.Buscar.MultiplesJuegos(noOficial,region, deseadosWeb);
+			List<Juego> juegos = await global::BaseDatos.Juegos.Buscar.MultiplesJuegos(noOficial, marketplace, region, deseadosWeb);
 
 			foreach (var juego in juegos.Where(j => j != null))
 			{
@@ -84,18 +87,21 @@ namespace Herramientas
 				bool esNoOficial = juego.PreciosHistoricosNoOficialesEU?.Count > 0 || juego.PreciosHistoricosNoOficialesUS?.Count > 0
 					|| juego.PreciosActualesNoOficialesEU?.Count > 0 || juego.PreciosActualesNoOficialesUS?.Count > 0;
 
+				bool esMarketplace = juego.PreciosHistoricosMarketplacesEU?.Count > 0 || juego.PreciosHistoricosMarketplacesUS?.Count > 0
+					|| juego.PreciosActualesMarketplacesEU?.Count > 0 || juego.PreciosActualesMarketplacesUS?.Count > 0;
+
 				JuegoDRM drm = deseadosWebDicc.TryGetValue(juego.Id.ToString(), out var deseado) ? deseado.DRM : JuegoDRM.NoEspecificado;
 
-				AñadirJuegoMostrar(resultado, deseadosHash, juego, drm, false, region, esOficial, esNoOficial);
+				AñadirJuegoMostrar(resultado, deseadosHash, juego, drm, false, region, esOficial, esNoOficial, esMarketplace);
 			}
 
 			return resultado;
 		}
 
-		private static async Task<List<JuegoDeseadoMostrar>> CargarDeseadosGog(Usuario deseadosUsuario, bool noOficial, TiendaRegion region)
+		private static async Task<List<JuegoDeseadoMostrar>> CargarDeseadosGog(Usuario deseadosUsuario, bool noOficial, bool marketplace, TiendaRegion region)
 		{
 			List<JuegoDeseadoMostrar> resultado = new List<JuegoDeseadoMostrar>();
-			HashSet<(string, JuegoDRM, bool, bool)> deseadosHash = new HashSet<(string, JuegoDRM, bool, bool)>();
+			HashSet<(string, JuegoDRM, bool, bool, bool)> deseadosHash = new HashSet<(string, JuegoDRM, bool, bool, bool)>();
 
 			if (string.IsNullOrEmpty(deseadosUsuario.GogWishlist) == true)
 			{
@@ -109,7 +115,7 @@ namespace Herramientas
 				return resultado;
 			}
 
-			List<Juego> juegos = await global::BaseDatos.Juegos.Buscar.MultiplesJuegosGOG(noOficial, region, ids);
+			List<Juego> juegos = await global::BaseDatos.Juegos.Buscar.MultiplesJuegosGOG(noOficial, marketplace, region, ids);
 
 			foreach (var juego in juegos.Where(j => j != null))
 			{
@@ -119,16 +125,19 @@ namespace Herramientas
 				bool esNoOficial = juego.PreciosHistoricosNoOficialesEU?.Count > 0 || juego.PreciosHistoricosNoOficialesUS?.Count > 0
 					|| juego.PreciosActualesNoOficialesEU?.Count > 0 || juego.PreciosActualesNoOficialesUS?.Count > 0;
 
-				AñadirJuegoMostrar(resultado, deseadosHash, juego, JuegoDRM.GOG, true, region, esOficial, esNoOficial);
+				bool esMarketplace = juego.PreciosHistoricosMarketplacesEU?.Count > 0 || juego.PreciosHistoricosMarketplacesUS?.Count > 0
+					|| juego.PreciosActualesMarketplacesEU?.Count > 0 || juego.PreciosActualesMarketplacesUS?.Count > 0;
+
+				AñadirJuegoMostrar(resultado, deseadosHash, juego, JuegoDRM.GOG, true, region, esOficial, esNoOficial, esMarketplace);
 			}
 
 			return resultado;
 		}
 
-		private static void AñadirJuegoMostrar(List<JuegoDeseadoMostrar> deseadosGestor, HashSet<(string id, JuegoDRM DRM, bool oficial, bool noOficial)> deseadosHash,
-			Juego juego, JuegoDRM drm, bool importado, TiendaRegion region, bool oficial, bool noOficial)
+		private static void AñadirJuegoMostrar(List<JuegoDeseadoMostrar> deseadosGestor, HashSet<(string id, JuegoDRM DRM, bool oficial, bool noOficial, bool marketplace)> deseadosHash,
+			Juego juego, JuegoDRM drm, bool importado, TiendaRegion region, bool oficial, bool noOficial, bool marketplace)
 		{
-			if (deseadosHash.Add((juego.Id.ToString(), drm, oficial, noOficial)) == false)
+			if (deseadosHash.Add((juego.Id.ToString(), drm, oficial, noOficial, marketplace)) == false)
 			{
 				return;
 			}
@@ -159,8 +168,20 @@ namespace Herramientas
 					historico = juego.PreciosHistoricosNoOficialesUS.FirstOrDefault(h => h.DRM == drm);
 				}
 			}
-			
-			if (historico != null && OfertaActiva.Verificar(historico) && ExisteEnActuales(historico, juego, drm, region, oficial, noOficial))
+
+			if (marketplace == true)
+			{
+				if (region == TiendaRegion.Europa && juego.PreciosHistoricosMarketplacesEU?.Count > 0)
+				{
+					historico = juego.PreciosHistoricosMarketplacesEU.FirstOrDefault(h => h.DRM == drm);
+				}
+				else if (region == TiendaRegion.EstadosUnidos && juego.PreciosHistoricosMarketplacesUS?.Count > 0)
+				{
+					historico = juego.PreciosHistoricosMarketplacesUS.FirstOrDefault(h => h.DRM == drm);
+				}
+			}
+
+			if (historico != null && OfertaActiva.Verificar(historico) && ExisteEnActuales(historico, juego, drm, region, oficial, noOficial, marketplace))
 			{
 				nuevoDeseado = new JuegoDeseadoMostrar
 				{
@@ -207,6 +228,7 @@ namespace Herramientas
 					.OrderBy(p => p.Moneda == Herramientas.JuegoMoneda.Dolar ? p.Precio : p.PrecioCambiado)
 					.FirstOrDefault();
 			}
+
 			if (nuevoDeseado == null && noOficial == true && region == TiendaRegion.Europa && juego.PreciosActualesNoOficialesEU?.Count > 0)
 			{
 				precioFinal = juego.PreciosActualesNoOficialesEU
@@ -224,6 +246,35 @@ namespace Herramientas
 			else if (nuevoDeseado == null && noOficial == true && region == TiendaRegion.EstadosUnidos && juego.PreciosActualesNoOficialesUS?.Count > 0)
 			{
 				precioFinal = juego.PreciosActualesNoOficialesUS
+					.Where(p => p != null && p.DRM == drm && Herramientas.OfertaActiva.Verificar(p) && p.Precio > 0)
+					.Select(p =>
+					{
+						if (p.Moneda != Herramientas.JuegoMoneda.Dolar && p.PrecioCambiado == 0)
+							p.PrecioCambiado = Herramientas.Divisas.CambioDolar(p.Precio, p.Moneda);
+						return p;
+					})
+					.Where(p => p.Moneda == Herramientas.JuegoMoneda.Dolar ? p.Precio > 0 : p.PrecioCambiado > 0)
+					.OrderBy(p => p.Moneda == Herramientas.JuegoMoneda.Dolar ? p.Precio : p.PrecioCambiado)
+					.FirstOrDefault();
+			}
+
+			if (nuevoDeseado == null && marketplace == true && region == TiendaRegion.Europa && juego.PreciosActualesMarketplacesEU?.Count > 0)
+			{
+				precioFinal = juego.PreciosActualesMarketplacesEU
+					.Where(p => p != null && p.DRM == drm && Herramientas.OfertaActiva.Verificar(p) && p.Precio > 0)
+					.Select(p =>
+					{
+						if (p.Moneda != Herramientas.JuegoMoneda.Euro && p.PrecioCambiado == 0)
+							p.PrecioCambiado = Herramientas.Divisas.CambioEuro(p.Precio, p.Moneda);
+						return p;
+					})
+					.Where(p => p.Moneda == Herramientas.JuegoMoneda.Euro ? p.Precio > 0 : p.PrecioCambiado > 0)
+					.OrderBy(p => p.Moneda == Herramientas.JuegoMoneda.Euro ? p.Precio : p.PrecioCambiado)
+					.FirstOrDefault();
+			}
+			else if (nuevoDeseado == null && marketplace == true && region == TiendaRegion.EstadosUnidos && juego.PreciosActualesMarketplacesUS?.Count > 0)
+			{
+				precioFinal = juego.PreciosActualesMarketplacesUS
 					.Where(p => p != null && p.DRM == drm && Herramientas.OfertaActiva.Verificar(p) && p.Precio > 0)
 					.Select(p =>
 					{
@@ -274,6 +325,16 @@ namespace Herramientas
 					minimo = juego.PreciosHistoricosNoOficialesUS?.FirstOrDefault(m => m.DRM == drm);
 				}
 
+				if (marketplace == true && region == TiendaRegion.Europa)
+				{
+					minimo = juego.PreciosHistoricosMarketplacesEU?.FirstOrDefault(m => m.DRM == drm);
+				}
+
+				if (marketplace == true && region == TiendaRegion.EstadosUnidos)
+				{
+					minimo = juego.PreciosHistoricosMarketplacesUS?.FirstOrDefault(m => m.DRM == drm);
+				}
+
 				if (minimo != null)
 				{
 					if (region == TiendaRegion.Europa)
@@ -305,7 +366,7 @@ namespace Herramientas
 			deseadosGestor.Add(nuevoDeseado);
 		}
 
-		private static bool ExisteEnActuales(JuegoPrecio historico, Juego juego, JuegoDRM drm, TiendaRegion region, bool oficial, bool noOficial)
+		private static bool ExisteEnActuales(JuegoPrecio historico, Juego juego, JuegoDRM drm, TiendaRegion region, bool oficial, bool noOficial, bool marketplace)
 		{
 			List<JuegoPrecio> preciosActuales = null;
 
@@ -330,6 +391,18 @@ namespace Herramientas
 				else if (region == TiendaRegion.EstadosUnidos)
 				{
 					preciosActuales = juego.PreciosActualesNoOficialesUS;
+				}
+			}
+
+			if (marketplace == true)
+			{
+				if (region == TiendaRegion.Europa)
+				{
+					preciosActuales = juego.PreciosActualesMarketplacesEU;
+				}
+				else if (region == TiendaRegion.EstadosUnidos)
+				{
+					preciosActuales = juego.PreciosActualesMarketplacesUS;
 				}
 			}
 

@@ -421,6 +421,15 @@ builder.Services.AddScoped<NotificacionesPush>();
 
 #endregion
 
+#region Decir a Google que deje de indexar http
+
+builder.Services.AddHttpsRedirection(opciones =>
+{
+	opciones.RedirectStatusCode = StatusCodes.Status308PermanentRedirect;
+});
+
+#endregion
+
 var app = builder.Build();
 
 #region Control inicial de peticiones
@@ -449,7 +458,7 @@ app.Use(async (contexto, siguiente) =>
 		BloqueoTemporalIps.PedirCaptcha(ipActual);
 	}
 
-	string[] prefijosSospechosos = ["1.92.", "101.43.", "113.4.", "119.8.", "159.138.", "3.210.", "43.", "45.", "79.106."];
+	string[] prefijosSospechosos = ["1.92.", "101.43.", "113.4.", "119.8.", "159.138.", "188.34.", "3.210.", "3.69.", "43.", "45.", "79.106."];
 
 	if (esInterna == false && contexto.Request.Path.StartsWithSegments("/verify") == false
 		&& prefijosSospechosos.Any(p => ipActual.StartsWith(p)) == true)

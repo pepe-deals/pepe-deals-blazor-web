@@ -374,7 +374,7 @@ namespace Herramientas
 
 			List<SyndicationItem> items = new List<SyndicationItem>();
 
-			List<JuegoDeseadoMostrar> juegos = await Deseados.LeerJuegos(noOficial2, region, usuarioId);
+			List<JuegoDeseadoMostrar> juegos = await Deseados.LeerJuegos(noOficial2, marketplace2, region, usuarioId);
 
 			if (juegos?.Count > 0)
 			{

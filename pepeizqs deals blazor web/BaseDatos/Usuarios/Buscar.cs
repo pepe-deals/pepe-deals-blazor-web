@@ -881,7 +881,7 @@ namespace BaseDatos.Usuarios
 				return null;
 			}
 
-			string busqueda = "SELECT Currency, NoOfficial FROM AspNetUsers WHERE Id=@Id";
+			string busqueda = "SELECT Currency, NoOfficial, Marketplace FROM AspNetUsers WHERE Id=@Id";
 
 			try
 			{
