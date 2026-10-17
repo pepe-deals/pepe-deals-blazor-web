@@ -51,10 +51,41 @@ namespace APIs.Eneba
 			{
 				foreach (var resultado in resultados)
 				{
-					JuegoDRM juegoDRM = JuegoDRM2.Traducir(resultado.DRM, Generar().Id);
+					bool regionCorrecta = false;
 
-					if (juegoDRM == JuegoDRM.Steam && resultado.EnStock == "in stock")
+					if (region == TiendaRegion.Europa && (resultado.Region == "global" || resultado.Region == "europe"))
 					{
+						regionCorrecta = true;
+					}
+
+					if (regionCorrecta == true)
+					{
+						JuegoDRM juegoDRM = JuegoDRM2.Traducir(resultado.DRM, Generar().Id);
+
+						if (juegoDRM == JuegoDRM.Steam && resultado.EnStock == "in stock")
+						{
+							string enlaceJuego = resultado.Enlace;
+							enlaceJuego = enlaceJuego.Replace("?currency=EUR", null);
+
+							string precioJuego = resultado.Precio;
+							precioJuego = precioJuego.Replace(" EUR", null);
+
+							JuegoPrecio oferta = new JuegoPrecio
+							{
+								Nombre = resultado.TituloOriginal,
+								Imagen = resultado.Imagen,
+								DRM = juegoDRM,
+								Enlace = enlaceJuego,
+								Descuento = 0,
+								Precio = decimal.Parse(precioJuego, System.Globalization.CultureInfo.InvariantCulture),
+								Moneda = JuegoMoneda.Euro,
+								Tienda = Generar().Id,
+								FechaDetectado = DateTime.Now,
+								FechaActualizacion = DateTime.Now
+							};
+
+							BaseDatos.Errores.Insertar.Mensaje("test 2", System.Text.Json.JsonSerializer.Serialize(oferta));
+						}
 					}
 				}
 			}
@@ -130,20 +161,6 @@ namespace APIs.Eneba
 		{
 			string Texto(XName nombre) => item.Element(nombre)?.Value.Trim();
 
-			string precioTexto = Texto(g + "price");
-
-			if (string.IsNullOrEmpty(precioTexto) == true)
-			{
-				return null;
-			}
-
-			string[] partes = precioTexto.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-			if (decimal.TryParse(partes[0], System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture, out decimal precio) == false)
-			{
-				return null;
-			}
-
 			return new EnebaOferta
 			{
 				Id = Texto(g + "id"),
@@ -153,8 +170,7 @@ namespace APIs.Eneba
 				Enlace = Texto("link"),
 				Imagen = Texto(g + "image_link"),
 				EnStock = Texto(g + "availability"),
-				Precio = precio,
-				Moneda = partes.Length > 1 ? partes[1] : "EUR",
+				Precio = Texto(g + "price"),
 				Categoria = Texto(g + "google_product_category"),
 				Tipo = Texto(g + "product_type"),
 				DRM = Texto(g + "brand"),
@@ -173,7 +189,7 @@ namespace APIs.Eneba
 		public string Enlace { get; set; }
 		public string Imagen { get; set; }
 		public string EnStock { get; set; }
-		public decimal Precio { get; set; }
+		public string Precio { get; set; }
 		public string Moneda { get; set; }
 		public string Categoria { get; set; }
 		public string Tipo { get; set; }
