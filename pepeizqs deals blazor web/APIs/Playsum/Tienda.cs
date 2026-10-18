@@ -163,6 +163,11 @@ namespace APIs.Playsum
 									{
 										string nombre = WebUtility.HtmlDecode(juego.Nombre);
 
+										if (nombre.EndsWith(" - NEW") == true)
+										{
+											nombre = nombre.Substring(0, nombre.Length - 6);
+										}
+
 										string enlace = juego.Enlace;
 
 										JuegoDRM drm = JuegoDRM2.Traducir(juego.DRM, Generar().Id);

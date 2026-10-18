@@ -39,6 +39,10 @@ namespace APIs.Eneba
 			{
 				enlace = "https://www.eneba.com/rss/products.xml?currency=EUR&country=ES";
 			}
+			else if (region == TiendaRegion.EstadosUnidos)
+			{
+				enlace = "https://www.eneba.com/rss/products.xml?currency=USD&country=US";
+			}
 
 			if (string.IsNullOrEmpty(enlace) == true)
 			{
@@ -49,11 +53,17 @@ namespace APIs.Eneba
 
 			if (resultados?.Count > 0)
 			{
+				List<JuegoPrecio> ofertas = new List<JuegoPrecio>();
+
 				foreach (var resultado in resultados)
 				{
 					bool regionCorrecta = false;
 
 					if (region == TiendaRegion.Europa && (resultado.Region == "global" || resultado.Region == "europe"))
+					{
+						regionCorrecta = true;
+					}
+					else if (region == TiendaRegion.EstadosUnidos && (resultado.Region == "global" || resultado.Region == "united_states"))
 					{
 						regionCorrecta = true;
 					}
@@ -64,15 +74,31 @@ namespace APIs.Eneba
 
 						if (juegoDRM == JuegoDRM.Steam && resultado.EnStock == "in stock")
 						{
+							string nombreJuego = resultado.TituloOriginal;
+							nombreJuego = nombreJuego.Replace("Bethesda.net Key", null);
+							nombreJuego = nombreJuego.Replace("Bethesda.net key", null);
+							nombreJuego = nombreJuego.Replace("Bethesda key", null);
+							nombreJuego = nombreJuego.Replace("Steam Key GLOBAL", null);
+							nombreJuego = nombreJuego.Replace("Steam Key", null);
+							nombreJuego = nombreJuego.Replace("Steam key", null);
+							nombreJuego = (nombreJuego.EndsWith(" Key")) ? nombreJuego.Substring(0, nombreJuego.Length - 4).Trim() : nombreJuego;
+							nombreJuego = (nombreJuego.EndsWith(" key")) ? nombreJuego.Substring(0, nombreJuego.Length - 4).Trim() : nombreJuego;
+							nombreJuego = nombreJuego.Replace("(DLC)", null);
+							nombreJuego = nombreJuego.Replace("(PC)", null);
+							nombreJuego = nombreJuego.Replace("[VR]", null);
+							nombreJuego = nombreJuego.Trim();
+
 							string enlaceJuego = resultado.Enlace;
 							enlaceJuego = enlaceJuego.Replace("?currency=EUR", null);
+							enlaceJuego = enlaceJuego.Replace("?currency=USD", null);
 
 							string precioJuego = resultado.Precio;
 							precioJuego = precioJuego.Replace(" EUR", null);
+							precioJuego = precioJuego.Replace(" USD", null);
 
 							JuegoPrecio oferta = new JuegoPrecio
 							{
-								Nombre = resultado.TituloOriginal,
+								Nombre = nombreJuego,
 								Imagen = resultado.Imagen,
 								DRM = juegoDRM,
 								Enlace = enlaceJuego,
@@ -84,7 +110,47 @@ namespace APIs.Eneba
 								FechaActualizacion = DateTime.Now
 							};
 
-							BaseDatos.Errores.Insertar.Mensaje("test 2", System.Text.Json.JsonSerializer.Serialize(oferta));
+							if (region == TiendaRegion.EstadosUnidos)
+							{
+								oferta.Moneda = JuegoMoneda.Dolar;
+							}
+
+							ofertas.Add(oferta);
+						}
+					}
+				}
+
+				if (ofertas?.Count > 0)
+				{
+					int juegos2 = 0;
+
+					int tamaño = 500;
+					var lotes = ofertas
+						.Select((oferta, indice) => new { oferta, indice })
+						.GroupBy(x => x.indice / tamaño)
+						.Select(g => g.Select(x => x.oferta).ToList())
+						.ToList();
+
+					foreach (var lote in lotes)
+					{
+						try
+						{
+							await BaseDatos.Tiendas.Comprobar.Resto(region, lote);
+						}
+						catch (Exception ex)
+						{
+							BaseDatos.Errores.Insertar.Mensaje(Generar().Id, ex);
+						}
+
+						juegos2 += lote.Count;
+
+						try
+						{
+							await BaseDatos.Admin.Actualizar.Tiendas(region, Generar().Id, DateTime.Now, juegos2);
+						}
+						catch (Exception ex)
+						{
+							BaseDatos.Errores.Insertar.Mensaje(Generar().Id, ex);
 						}
 					}
 				}
