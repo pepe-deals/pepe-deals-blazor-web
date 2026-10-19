@@ -160,7 +160,7 @@ namespace APIs.Eneba
 		private static readonly XNamespace g = "http://base.google.com/ns/1.0";
 
 		private const int ResultadosPorPagina = 5000;
-		private const int MaximoPeticiones = 25; 
+		private const int MaximoPeticiones = 50; 
 		private const int PausaEntrePeticionesMs = 1000;
 
 		public static async Task<List<EnebaOferta>> LeerFeed(string enlaceBase)
