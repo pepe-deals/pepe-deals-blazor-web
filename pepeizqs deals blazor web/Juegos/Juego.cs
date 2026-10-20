@@ -132,8 +132,11 @@ namespace Juegos
 		public DateTime FechaDetectado { get; set; }
 		public DateTime FechaActualizacion { get; set; }
 		public DateTime FechaTermina { get; set; }
+		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
 		public int CodigoDescuento { get; set; }
+		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
 		public string CodigoTexto { get; set; }
+		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
 		public JuegoSteamBundle BundleSteam { get; set; }
 	}
 

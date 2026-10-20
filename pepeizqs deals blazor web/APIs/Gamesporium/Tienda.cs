@@ -71,6 +71,9 @@ namespace APIs.Gamesporium
 							if (resultado.Info?.Descuento > 0 && resultado.Info?.EnStock == true && resultado.Info?.Moneda == "EUR" && resultado.Info?.PlataformaActivacion == "Steam" && resultado.Info?.Region == "ES")
 							{
 								string nombre = WebUtility.HtmlDecode(resultado.Info?.Nombre);
+								nombre = nombre.Replace("(Mac)", null);
+								nombre = nombre.Replace(" - Direct", null);
+								nombre = nombre.Trim();
 
 								string enlaceJuego = Daisycon.LimpiarEnlace(resultado.Info?.Url, "https://gamesporium.com");
 
