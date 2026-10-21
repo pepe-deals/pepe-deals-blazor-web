@@ -124,6 +124,7 @@ namespace APIs.Gameseal
 								nombre = nombre.Replace("(MAC)", null);
 								nombre = nombre.Replace("(DLC)", null);
 								nombre = nombre.Replace("PRE-ORDER", null);
+								nombre = nombre.Replace("[VR]", null);
 								nombre = nombre.Trim();
 
 								string enlaceJuego = LimpiarEnlace(resultado.Url);

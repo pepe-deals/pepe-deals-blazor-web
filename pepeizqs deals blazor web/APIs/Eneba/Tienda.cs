@@ -68,13 +68,21 @@ namespace APIs.Eneba
 						regionCorrecta = true;
 					}
 
-					if (regionCorrecta == true)
+					bool nombreCorrecto = true;
+
+					if (resultado.TituloOriginal?.Contains("(valid until") == true)
+					{
+						nombreCorrecto = false;
+					}
+
+					if (regionCorrecta == true && nombreCorrecto == true)
 					{
 						JuegoDRM juegoDRM = JuegoDRM2.Traducir(resultado.DRM, Generar().Id);
 
 						if (juegoDRM == JuegoDRM.Steam && resultado.EnStock == "in stock")
 						{
 							string nombreJuego = resultado.TituloOriginal;
+							nombreJuego = nombreJuego.Replace(" - Early Access", null);
 							nombreJuego = nombreJuego.Replace("Bethesda.net Key", null);
 							nombreJuego = nombreJuego.Replace("Bethesda.net key", null);
 							nombreJuego = nombreJuego.Replace("Bethesda key", null);
@@ -84,6 +92,7 @@ namespace APIs.Eneba
 							nombreJuego = (nombreJuego.EndsWith(" Key")) ? nombreJuego.Substring(0, nombreJuego.Length - 4).Trim() : nombreJuego;
 							nombreJuego = (nombreJuego.EndsWith(" key")) ? nombreJuego.Substring(0, nombreJuego.Length - 4).Trim() : nombreJuego;
 							nombreJuego = nombreJuego.Replace("(DLC)", null);
+							nombreJuego = nombreJuego.Replace("(ROW)", null);
 							nombreJuego = nombreJuego.Replace("(PC)", null);
 							nombreJuego = nombreJuego.Replace("[VR]", null);
 							nombreJuego = nombreJuego.Trim();
