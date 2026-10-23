@@ -95,6 +95,8 @@ namespace APIs.Eneba
 							nombreJuego = nombreJuego.Replace("(ROW)", null);
 							nombreJuego = nombreJuego.Replace("(PC)", null);
 							nombreJuego = nombreJuego.Replace("[VR]", null);
+							nombreJuego = nombreJuego.Replace("(incl. Pre-Order Bonus)", null);
+							nombreJuego = nombreJuego.Replace("(incl. Early Access)", null);
 							nombreJuego = nombreJuego.Trim();
 
 							string enlaceJuego = resultado.Enlace;

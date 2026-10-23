@@ -866,6 +866,7 @@ namespace Juegos
 					"mpsoftware",
 					"ms store",
 					"muchbetter",
+					"mullvadvpn",
 					"mycard",
 					"myprepaidcentervisa",
 					"mytrainz",
