@@ -29,6 +29,18 @@ namespace APIs.Eneba
 			return tienda;
 		}
 
+		public static string Referido(string enlace)
+		{
+			if (enlace.Contains("?") == true)
+			{
+				return enlace + "&af_id=pepe_deals";
+			}
+			else
+			{
+				return enlace + "?af_id=pepe_deals";
+			}
+		}
+
 		public static async Task BuscarOfertas(TiendaRegion region)
 		{
 			await BaseDatos.Admin.Actualizar.Tiendas(region, Generar().Id, DateTime.Now, 0);

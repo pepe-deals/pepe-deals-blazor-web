@@ -160,6 +160,10 @@ namespace Herramientas
 					{
 						enlace = APIs.Driffle.Tienda.Referido(enlace);
 					}
+					else if (tienda == APIs.Eneba.Tienda.Generar().Id)
+					{
+						enlace = APIs.Eneba.Tienda.Referido(enlace);
+					}
 				}
 			}
 			

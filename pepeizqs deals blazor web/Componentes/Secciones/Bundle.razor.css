@@ -1,7 +1,7 @@
 .bundle-tabla {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    grid-gap: 30px;
+    grid-gap: 20px;
 }
 
 .bundle-espacio {
@@ -19,7 +19,7 @@
 @media (max-width: 900px) {
     .bundle-tabla {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        grid-gap: 20px;
+        grid-gap: 10px;
     }
 
     .bundle-espacio {
@@ -41,7 +41,7 @@
 
 .caja-bundle-contenido {
     background-color: var(--fondoSubsubcabecera);
-    border: 2px solid rgba(0,0,0,.2);
+    border: 2px solid rgba(0,0,0,.4);
 }
 
 .caja-bundle-mensaje {

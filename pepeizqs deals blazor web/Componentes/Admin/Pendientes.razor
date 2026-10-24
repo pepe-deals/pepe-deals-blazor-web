@@ -554,9 +554,11 @@
 
                     if (idsPendiente != "0" && string.IsNullOrEmpty(nombrePendiente) == false && 
                         ((ids?.Count == 1 && juegosIds == false) || (ids?.Count > 1 && juegosIds == true)) && (
-                        Tiendas2.TiendasCargar.DevolverTienda(idTiendaPendiente).Id == APIs.Gamesporium.Tienda.Generar().Id ||
-                        Tiendas2.TiendasCargar.DevolverTienda(idTiendaPendiente).Tipo == TiendaTipo.NoOficial ||
-                        Tiendas2.TiendasCargar.DevolverTienda(idTiendaPendiente).Tipo == TiendaTipo.Marketplace))
+                            Tiendas2.TiendasCargar.DevolverTienda(idTiendaPendiente).Id == APIs.GameBillet.Tienda.Generar().Id ||
+                            Tiendas2.TiendasCargar.DevolverTienda(idTiendaPendiente).Id == APIs.PlanetPlay.Tienda.Generar().Id ||
+                            Tiendas2.TiendasCargar.DevolverTienda(idTiendaPendiente).Id == APIs.Gamesporium.Tienda.Generar().Id ||
+                            Tiendas2.TiendasCargar.DevolverTienda(idTiendaPendiente).Tipo == TiendaTipo.NoOficial ||
+                            Tiendas2.TiendasCargar.DevolverTienda(idTiendaPendiente).Tipo == TiendaTipo.Marketplace))
                     {
                         await BaseDatos.Pendientes.Actualizar.Tienda(idTiendaPendiente, enlacePendiente, idsPendiente);
 
