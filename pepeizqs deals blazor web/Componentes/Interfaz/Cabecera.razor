@@ -813,7 +813,7 @@
 
                                     <button @onclick="(e => CopiarAlClipboard(e, enlaceClipboard))"
                                             @onmouseenter="@(() => MostrarTooltipBuscador("tooltip-header-clipboard"))"
-                                            @onmousemove="@((MouseEventArgs e) => ActualizarPosicionTooltipBuscador(e, "tooltip-header-clipboard"))"
+                                            data-tooltip-buscador="tooltip-header-clipboard"
                                             @onmouseleave="@(() => OcultarTooltipBuscador("tooltip-header-clipboard"))"
                                             style="border: 0px; background: transparent; padding: 0px; display: flex; align-items: center; line-height: 1; cursor: pointer;">
                                         <div style="width: 24px; height: 24px;">
@@ -825,7 +825,7 @@
 
                                     <button @onclick="(e => LimpiarBusqueda(e))"
                                             @onmouseenter="@(() => MostrarTooltipBuscador("tooltip-header-cleansearch"))"
-                                            @onmousemove="@((MouseEventArgs e) => ActualizarPosicionTooltipBuscador(e, "tooltip-header-cleansearch"))"
+                                            data-tooltip-buscador="tooltip-header-cleansearch"
                                             @onmouseleave="@(() => OcultarTooltipBuscador("tooltip-header-cleansearch"))"
                                             style="border: 0px; background: transparent; padding: 0px; display: flex; align-items: center; line-height: 1; cursor: pointer;">
                                         <div style="width: 24px; height: 24px;">
@@ -1516,7 +1516,7 @@
 
     private CancellationTokenSource cts;
     private int busquedaActualId = 0;
-    private const int retraso = 150;
+    private const int retraso = 50;
     private const int minimosCaracteresBusqueda = 2;
     private const int resultadosMaximos = 30;
 
@@ -2161,18 +2161,6 @@
             try
             {
                 await moduloJs.InvokeVoidAsync("ocultarTooltipBuscador", id);
-            }
-            catch { }
-        }
-    }
-
-    private async Task ActualizarPosicionTooltipBuscador(MouseEventArgs e, string id)
-    {
-        if (moduloJs != null)
-        {
-            try
-            {
-                await moduloJs.InvokeVoidAsync("actualizarPosicionTooltipBuscador", e.ClientX, e.ClientY, id);
             }
             catch { }
         }

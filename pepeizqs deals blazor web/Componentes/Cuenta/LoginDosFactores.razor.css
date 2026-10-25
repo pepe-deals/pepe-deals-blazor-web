@@ -86,7 +86,7 @@
 }
 
 ::deep .checkbox-caja .checkbox-interior:hover {
-    background-color: var(--checkboxFalso);
+    background-color: var(--checkboxFalsoHover);
     transition-duration: 0s;
     cursor: pointer;
 }

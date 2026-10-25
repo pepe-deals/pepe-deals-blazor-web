@@ -438,35 +438,30 @@ app.Use(async (contexto, siguiente) =>
 {
 	string ipActual = contexto.Connection.RemoteIpAddress?.ToString() ?? "desconocida";
 
-	bool esInterna = PeticionInterna.Es(contexto);
+	bool noEsDudosa = PeticionInterna.Es(contexto) == true || IpsPermitidas.Es(ipActual) == true;
 
-	if (esInterna == false && BloqueoTemporalIps.EstaBaneada(ipActual) == true)
+	if (noEsDudosa == false && BloqueoTemporalIps.EstaBaneada(ipActual) == true)
 	{
 		contexto.Response.StatusCode = StatusCodes.Status403Forbidden;
 		return;
 	}
 
-	string[] dominiosSospechosos = [
-		"aocr.org", "binance.com", "heapr.com", "iboogie.com", "iconspedia.com", "onelook.com", "polycola.com"];
-
-	if (esInterna == false && contexto.Request.Method == HttpMethods.Get
+	if (noEsDudosa == false && contexto.Request.Method == HttpMethods.Get
 		&& contexto.Request.Path.StartsWithSegments("/verify") == false
 		&& contexto.Request.Headers.Accept.ToString().Contains("text/html") == true
 		&& Uri.TryCreate(contexto.Request.Headers.Referer.ToString(), UriKind.Absolute, out Uri? referer) == true
-		&& dominiosSospechosos.Any(d => referer.Host == d || referer.Host.EndsWith("." + d)) == true)
+		&& DominiosSospechosos.dominios.Any(d => referer.Host == d || referer.Host.EndsWith("." + d)) == true)
 	{
 		BloqueoTemporalIps.PedirCaptcha(ipActual);
 	}
 
-	string[] prefijosSospechosos = ["1.92.", "101.43.", "113.4.", "119.8.", "159.138.", "188.34.", "3.210.", "3.69.", "43.", "45.", "79.106."];
-
-	if (esInterna == false && contexto.Request.Path.StartsWithSegments("/verify") == false
-		&& prefijosSospechosos.Any(p => ipActual.StartsWith(p)) == true)
+	if (noEsDudosa == false && contexto.Request.Path.StartsWithSegments("/verify") == false
+		&& PrefijosSospechosos.prefijos.Any(p => ipActual.StartsWith(p)) == true)
 	{
 		BloqueoTemporalIps.PedirCaptcha(ipActual);
 	}
 
-	if (esInterna == false && BloqueoTemporalIps.RequiereCaptcha(ipActual) == true && contexto.Request.Path.StartsWithSegments("/verify") == false)
+	if (noEsDudosa == false && BloqueoTemporalIps.RequiereCaptcha(ipActual) == true && contexto.Request.Path.StartsWithSegments("/verify") == false)
 	{
 		contexto.Response.Redirect($"/verify?returnUrl={Uri.EscapeDataString(contexto.Request.Path + contexto.Request.QueryString)}");
 		return;
@@ -867,7 +862,7 @@ app.MapGet("/robots.txt", async (HttpContext http) =>
 
 User-agent: *
 Disallow: /account/
-Disallow: /link/
+Disallow: /link/news/
 Disallow: /publisher/
 Disallow: /_framework/
 Disallow: /_blazor/

@@ -136,14 +136,23 @@ function alHacerScroll() {
 
 let resizeObserverCabecera = null;
 
+function alMoverTooltipBuscador(e) {
+    const boton = e.target.closest?.('[data-tooltip-buscador]');
+    if (!boton) return;
+
+    actualizarPosicionTooltipBuscador(e.clientX, e.clientY, boton.dataset.tooltipBuscador);
+}
+
 export function iniciarScrollCabecera() {
     window.addEventListener("scroll", alHacerScroll, { passive: true });
+    document.addEventListener("mousemove", alMoverTooltipBuscador, { passive: true });
 
     observarAlturaCabecera();
 }
 
 export function destruirScrollCabecera() {
     window.removeEventListener("scroll", alHacerScroll);
+    document.removeEventListener("mousemove", alMoverTooltipBuscador);
 
     if (resizeObserverCabecera != null) {
         resizeObserverCabecera.disconnect();

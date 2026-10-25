@@ -83,6 +83,26 @@ namespace Tareas.Mantenimiento
 								return await conexion.ExecuteAsync("TRUNCATE TABLE seccionMinimosUS");
 							});
 
+							await Herramientas.BaseDatos.Select(async (conexion) =>
+							{
+								return await conexion.ExecuteAsync("TRUNCATE TABLE seccionMinimosNoOficialesEU");
+							});
+
+							await Herramientas.BaseDatos.Select(async (conexion) =>
+							{
+								return await conexion.ExecuteAsync("TRUNCATE TABLE seccionMinimosNoOficialesUS");
+							});
+
+							await Herramientas.BaseDatos.Select(async (conexion) =>
+							{
+								return await conexion.ExecuteAsync("TRUNCATE TABLE seccionMinimosMarketplacesEU");
+							});
+
+							await Herramientas.BaseDatos.Select(async (conexion) =>
+							{
+								return await conexion.ExecuteAsync("TRUNCATE TABLE seccionMinimosMarketplacesUS");
+							});
+
 							await BaseDatos.Reseñas.Limpiar.Ejecutar();
 							await BaseDatos.Juegos.Limpiar.Minimos();
 							await BaseDatos.Portapapeles.Borrar.Limpieza();
