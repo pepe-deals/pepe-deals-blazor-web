@@ -302,54 +302,12 @@
 					{
 						juegosTier = juegosTier.OrderBy(x => x.Nombre).ToList();
 
-						foreach (var juego in juegosTier)
-						{
-							if (juego.Juego?.Tipo == Juegos.JuegoTipo.DLC)
-							{
-								if (string.IsNullOrEmpty(juego.Juego?.Maestro) == false)
-								{
-									if (juego.Juego?.Maestro != "no")
-									{
-										foreach (var juego2 in juegosTier)
-										{
-											if (juego2.JuegoId == juego.Juego?.Maestro)
-											{
-												if (juego2.DLCs == null)
-												{
-													juego2.DLCs = new List<string>();
-												}
-
-												bool añadir = true;
-
-												if (juego2.DLCs.Count > 0)
-												{
-													foreach (var dlc in juego2.DLCs)
-													{
-														if (dlc == juego.JuegoId)
-														{
-															añadir = false;
-															break;
-														}
-													}
-												}
-
-												if (añadir == true)
-												{
-													juego2.DLCs.Add(juego.JuegoId);
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-
 						if (bundle.Pick == true)
 						{
-							<div class="caja-bundle-contenido cuerpo-ancho bundle-espacio2" style="border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; font-size: 18px; display: flex; align-items: center; flex-direction: row; justify-content: space-around; margin-bottom: 40px; padding: 25px;">
+							<div class="cuerpo-ancho bundle-espacio2" style="font-size: 18px; display: flex; align-items: center; flex-direction: row; justify-content: space-between; padding: 20px 0px;">
 								@foreach (var tier2 in OrdenarTiers(bundle.Tiers))
 								{
-									<div class="caja-bundle-mensaje bundle-espacio3" style="border-radius: 20px; text-align: center; display: flex; align-items: center; gap: 5px;">
+									<div class="caja-bundle-mensaje bundle-espacio3" style="border-radius: 10px; text-align: center; display: flex; align-items: center; gap: 5px; width: 100%; justify-content: center;">
 										@if (tier2.CantidadJuegos == 1)
 										{
 											<label>@tier2.CantidadJuegos.ToString() @Herramientas.Idiomas.BuscarTexto(idioma, "String21", "Bundle") • @Herramientas.Precios.Euro(decimal.Parse(tier2.Precio))</label>
@@ -431,14 +389,22 @@
 						<div class="caja-bundle-contenido cuerpo-ancho" style="@espacioFondo @bordesRedondeado">
 							@if (bundle.Pick == false)
 							{
-								<div class="caja-bundle-mensaje" style="font-size: 18px; padding: 25px 30px;">
-									<div style="margin-bottom: 5px;">
-										Tier @tier.Posicion: @Herramientas.Precios.Euro(decimal.Parse(tier.Precio))
+								<div class="caja-bundle-mensaje" style="background: rgba(0,0,0,.3); border: 1px solid rgba(0,0,0,.5); font-size: 18px; padding: 20px 30px; display: flex; align-items: center; justify-content: space-between;">
+									<div style="display: flex; align-items: center; gap: 20px;">
+										<div>
+											Tier @tier.Posicion
+										</div>
+
+										<div style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,.2); padding: 5px 10px;">
+											@Herramientas.Precios.Euro(decimal.Parse(tier.Precio))
+										</div>
 									</div>
 
 									@foreach (var juego in juegosTier)
 									{
-										if (juego.Juego?.PrecioMinimosHistoricos != null)
+										decimal sumarATotalMinimos = 0;
+
+										if (usuarioRegion == TiendaRegion.Europa && juego.Juego?.PrecioMinimosHistoricos?.Count > 0)
 										{
 											foreach (var historico in juego.Juego.PrecioMinimosHistoricos)
 											{
@@ -446,17 +412,118 @@
 												{
 													if (historico.PrecioCambiado > 0)
 													{
-														totalMinimos = totalMinimos + historico.PrecioCambiado;
+														sumarATotalMinimos = historico.PrecioCambiado;
 													}
 													else
 													{
-														totalMinimos = totalMinimos + historico.Precio;
+														sumarATotalMinimos = historico.Precio;
 													}
 
 													break;
 												}
 											}
 										}
+										else if (usuarioRegion == TiendaRegion.EstadosUnidos && juego.Juego?.PrecioMinimosHistoricosUS?.Count > 0)
+										{
+											foreach (var historico in juego.Juego.PrecioMinimosHistoricosUS)
+											{
+												if (historico.DRM == juego.DRM)
+												{
+													if (historico.PrecioCambiado > 0)
+													{
+														sumarATotalMinimos = historico.PrecioCambiado;
+													}
+													else
+													{
+														sumarATotalMinimos = historico.Precio;
+													}
+
+													break;
+												}
+											}
+										}
+
+										if (usuarioTiendasNoOficial == true && usuarioRegion == TiendaRegion.Europa && juego.Juego?.PreciosActualesNoOficialesEU?.Count > 0)
+										{
+											foreach (var precio in juego.Juego.PreciosActualesNoOficialesEU)
+											{
+												if (precio.DRM == juego.DRM)
+												{
+													if (precio.PrecioCambiado > 0 && precio.PrecioCambiado < sumarATotalMinimos)
+													{
+														sumarATotalMinimos = precio.PrecioCambiado;
+													}
+													else if (precio.Precio < sumarATotalMinimos)
+													{
+														sumarATotalMinimos = precio.Precio;
+													}
+
+													break;
+												}
+											}
+										}
+										else if (usuarioTiendasNoOficial == true && usuarioRegion == TiendaRegion.EstadosUnidos && juego.Juego?.PreciosActualesNoOficialesUS?.Count > 0)
+										{
+                                            foreach (var precio in juego.Juego.PreciosActualesNoOficialesUS)
+                                            {
+                                                if (precio.DRM == juego.DRM)
+                                                {
+                                                    if (precio.PrecioCambiado > 0 && precio.PrecioCambiado < sumarATotalMinimos)
+                                                    {
+                                                        sumarATotalMinimos = precio.PrecioCambiado;
+                                                    }
+                                                    else if (precio.Precio < sumarATotalMinimos)
+                                                    {
+                                                        sumarATotalMinimos = precio.Precio;
+                                                    }
+                                                    break;
+                                                }
+                                            }
+										}
+
+										if (usuarioTiendasMarketplace == true && usuarioRegion == TiendaRegion.Europa && juego.Juego?.PreciosActualesMarketplacesEU?.Count > 0)
+										{
+											foreach (var precio in juego.Juego.PreciosActualesMarketplacesEU)
+											{
+												if (precio.DRM == juego.DRM)
+												{
+													if (precio.PrecioCambiado > 0 && precio.PrecioCambiado < sumarATotalMinimos)
+													{
+														sumarATotalMinimos = precio.PrecioCambiado;
+													}
+													else if (precio.Precio < sumarATotalMinimos)
+													{
+														sumarATotalMinimos = precio.Precio;
+													}
+
+													break;
+												}
+											}
+										}
+										else if (usuarioTiendasMarketplace == true && usuarioRegion == TiendaRegion.EstadosUnidos && juego.Juego?.PreciosActualesMarketplacesUS?.Count > 0)
+										{
+											foreach (var precio in juego.Juego.PreciosActualesMarketplacesUS)
+											{
+												if (precio.DRM == juego.DRM)
+												{
+													if (precio.PrecioCambiado > 0 && precio.PrecioCambiado < sumarATotalMinimos)
+													{
+														sumarATotalMinimos = precio.PrecioCambiado;
+													}
+													else if (precio.Precio < sumarATotalMinimos)
+													{
+														sumarATotalMinimos = precio.Precio;
+													}
+
+													break;
+												}
+											}
+										}
+
+                                        if (sumarATotalMinimos > 0)
+                                        {
+                                            totalMinimos = totalMinimos + sumarATotalMinimos;
+                                        }
 									}
 
 									<div style="font-size: 14px;">
@@ -471,7 +538,7 @@
 									{
 										bool mostrar = true;
 
-										if (juego.Juego?.Tipo == Juegos.JuegoTipo.DLC)
+										if (juego.Juego?.Tipo == Juegos.JuegoTipo.DLC || juego.Juego?.Tipo == Juegos.JuegoTipo.Music)
 										{
 											if (string.IsNullOrEmpty(juego.Juego.Maestro) == false)
 											{
@@ -607,6 +674,9 @@
 	private bool usuarioPatreon = false;
 	private bool usuarioAdmin = false;
 	private TiendaRegion usuarioRegion = TiendaRegion.Europa;
+	private bool usuarioTiendasNoOficial = false;
+	private bool usuarioTiendasMarketplace = false;
+	[PersistentState] public Usuario opciones { get; set; }
 
 	[Parameter]
 	public int bundleId { get; set; }
@@ -630,6 +700,8 @@
 		userAgent = datos.UserAgent;
 		dominio = datos.Dominio;
 		usuarioRegion = datos.Region;
+		usuarioTiendasNoOficial = datos.NoOficial;
+		usuarioTiendasMarketplace = datos.Marketplace;
 
 		if (string.IsNullOrEmpty(usuarioId) == false)
 		{
@@ -638,16 +710,16 @@
 			Task<Usuario> tareaDeseados = (deseadosUsuario != null) ? Task.FromResult(deseadosUsuario) : BaseDatos.Usuarios.Buscar.DeseadosTiene(usuarioId);
 			Task<DateTime?> tareaPatreon = BaseDatos.Usuarios.Buscar.FechaPatreon(usuarioId);
 			Task<bool> tareaAdmin = BaseDatos.Usuarios.Buscar.RolDios(usuarioId);
-			Task<int> tareaRegion = BaseDatos.Usuarios.Buscar.OpcionInt(usuarioId, "Currency");
+			Task<Usuario> tareaUsuario = (opciones != null) ? Task.FromResult(opciones) : BaseDatos.Usuarios.Buscar.OpcionesBundle(usuarioId);
 
-			await Task.WhenAll(tareaIdioma, tareaJuegos, tareaDeseados, tareaPatreon, tareaAdmin, tareaRegion);
+			await Task.WhenAll(tareaIdioma, tareaJuegos, tareaDeseados, tareaPatreon, tareaAdmin, tareaUsuario);
 
 			idioma = tareaIdioma.Result;
 			juegosUsuario = tareaJuegos.Result;
 			deseadosUsuario = tareaDeseados.Result;
 			usuarioPatreon = Herramientas.Patreon.VerificarActivo(tareaPatreon.Result);
 			usuarioAdmin = tareaAdmin.Result;
-			usuarioRegion = (TiendaRegion)tareaRegion.Result;
+			opciones = tareaUsuario.Result;
 
 			if (juegosUsuarioIndex == null)
 			{
@@ -662,6 +734,24 @@
 			if (deseadosWebIndex == null)
 			{
 				deseadosWebIndex = Herramientas.Deseados.CrearWebIndex(deseadosUsuario);
+			}
+
+			if (opciones != null)
+			{
+				if (opciones.Currency.HasValue == true)
+				{
+					usuarioRegion = (TiendaRegion)opciones.Currency.Value;
+				}
+
+				if (opciones.NoOfficial.HasValue == true)
+				{
+					usuarioTiendasNoOficial = opciones.NoOfficial.Value;
+				}
+
+				if (opciones.Marketplace.HasValue == true)
+				{
+					usuarioTiendasMarketplace = opciones.Marketplace.Value;
+				}
 			}
 		}
 
@@ -682,32 +772,64 @@
 	{
 		if (bundle?.Juegos?.Count > 0)
 		{
-			int reseñas = 0;
+			List<Bundles2.BundleJuego> pendientes = bundle.Juegos.Where(j => string.IsNullOrEmpty(j.JuegoId) == false && j.Juego == null).ToList();
 
-			if (bundle?.Juegos?.Count > 0)
+			if (pendientes.Count > 0)
 			{
-				foreach (var juego in bundle.Juegos)
-				{
-					if (string.IsNullOrEmpty(juego.JuegoId) == false && juego.Juego == null)
-					{
-						juego.Juego = await BaseDatos.Juegos.Buscar.UnJuego(juego.JuegoId);
-						juego.Imagen = juego.Juego.Imagenes.Header_460x215;
+				List<JuegoDeseado> ids = pendientes.Select(j => new JuegoDeseado { IdBaseDatos = j.JuegoId, DRM = j.DRM }).DistinctBy(j => j.IdBaseDatos).ToList();
 
-						if (Herramientas.UsuarioJuegos.ComprobarSiEstaExcluido(juegosUsuarioIndex?.Excluidos, int.Parse(juego.JuegoId)) == true)
+				List<Juegos.Juego> encontrados = await BaseDatos.Juegos.Buscar.MultiplesJuegosBundle(usuarioTiendasNoOficial, usuarioTiendasMarketplace, usuarioRegion, ids);
+
+				if (encontrados?.Count > 0)
+				{
+					Dictionary<int, Juegos.Juego> porId = encontrados.GroupBy(j => j.Id).ToDictionary(g => g.Key, g => UnirFilas(g.ToList()));
+					int reseñas = 0;
+
+					foreach (var juego in pendientes)
+					{
+						int idJuego = int.Parse(juego.JuegoId);
+
+						if (porId.TryGetValue(idJuego, out Juegos.Juego encontrado) == false)
+						{
+							continue;
+						}
+
+						juego.Juego = encontrado;
+						juego.Imagen = encontrado.Imagenes.Header_460x215;
+
+						if (Herramientas.UsuarioJuegos.ComprobarSiEstaExcluido(juegosUsuarioIndex?.Excluidos, idJuego) == true)
 						{
 							juego.Color = "var(--fondoPeligro)";
 						}
 
-						if (juego.Juego != null && string.IsNullOrEmpty(juego.Juego.Analisis?.Cantidad) == false)
+						if (string.IsNullOrEmpty(encontrado.Analisis?.Cantidad) == false)
 						{
-							string temp = juego.Juego.Analisis.Cantidad;
-							temp = temp.Replace(",", null);
-							int reseñasJuego = int.Parse(temp);
+							int reseñasJuego = int.Parse(encontrado.Analisis.Cantidad.Replace(",", null));
 
 							if (reseñasJuego > reseñas)
 							{
 								reseñas = reseñasJuego;
-								fondo = juego.Juego.Imagenes?.Library_1920x620;
+								fondo = encontrado.Imagenes?.Library_1920x620;
+							}
+						}
+					}
+
+					foreach (var juego in pendientes)
+					{
+						string maestro = juego.Juego?.Maestro;
+
+						if (juego.Juego?.Tipo != Juegos.JuegoTipo.DLC || string.IsNullOrEmpty(maestro) == true || maestro == "no")
+						{
+							continue;
+						}
+
+						foreach (var juego2 in pendientes.Where(j => j.JuegoId == maestro))
+						{
+							juego2.DLCs ??= new List<string>();
+
+							if (juego2.DLCs.Contains(juego.JuegoId) == false)
+							{
+								juego2.DLCs.Add(juego.JuegoId);
 							}
 						}
 					}
@@ -884,4 +1006,21 @@
 	}
 
 	#endregion
+
+	private static Juegos.Juego UnirFilas(List<Juegos.Juego> filas)
+	{
+		Juegos.Juego unido = filas[0];
+
+		foreach (var fila in filas.Skip(1))
+		{
+			unido.PrecioMinimosHistoricos ??= fila.PrecioMinimosHistoricos;
+			unido.PrecioMinimosHistoricosUS ??= fila.PrecioMinimosHistoricosUS;
+			unido.PreciosHistoricosNoOficialesEU ??= fila.PreciosHistoricosNoOficialesEU;
+			unido.PreciosHistoricosNoOficialesUS ??= fila.PreciosHistoricosNoOficialesUS;
+			unido.PreciosHistoricosMarketplacesEU ??= fila.PreciosHistoricosMarketplacesEU;
+			unido.PreciosHistoricosMarketplacesUS ??= fila.PreciosHistoricosMarketplacesUS;
+		}
+
+		return unido;
+	}
 }

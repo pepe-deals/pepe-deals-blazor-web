@@ -863,72 +863,71 @@
                             @if (resultadosMostrar?.Count > 0)
                             {
                                 <div style="margin-bottom: 30px;">
-                                    <Virtualize Context="juego" Items="@resultadosMostrar" OverscanCount="3">
-                                        <ItemContent>
-                                            <div @key="juego.Juego.Id - 2" style="display: flex; flex-direction: row; align-items: center; margin-top: 30px;">
-                                                @{
-                                                    string imagen = juego.Juego.Imagenes.Header_460x215;
+                                    @foreach (var juego in resultadosMostrar)
+                                    {
+                                        <div @key="juego.Juego.Id-2" style="display: flex; flex-direction: row; align-items: center; margin-top: 30px;">
+                                            @{
+                                                string imagen = juego.Juego.Imagenes.Header_460x215;
 
-                                                    if (juego.Juego.Tipo == JuegoTipo.Bundle)
-                                                    {
-                                                        imagen = Bundles2.BundlesCargar.DevolverBundle((Bundles2.BundleTipo)juego.Juego.IdSteam).ImagenIcono;
-                                                    }
-
-                                                    int ancho = 230;
-                                                    int alto = 107;
-
-                                                    if (juego.Juego.Tipo == JuegoTipo.Curator)
-                                                    {
-                                                        ancho = 107;
-                                                    }
-                                                    else if (juego.Juego.Tipo == JuegoTipo.Bundle)
-                                                    {
-                                                        ancho = 51;
-                                                        alto = 51;
-                                                    }
-
-                                                    string imagenEstilo = "width: " + ancho.ToString() + "px; height: " + alto.ToString() + "px; display: block;";
-
-                                                    if (juego.Juego.Tipo == JuegoTipo.Bundle)
-                                                    {
-                                                        imagenEstilo = "width: " + ancho.ToString() + "px; height: " + alto.ToString() + "px; display: block; margin: 23px;";
-                                                    }
-
-                                                    string enlace = "/game/" + juego.Juego.Id.ToString() + "/" + Herramientas.EnlaceAdaptador.Nombre(juego.Juego.Nombre) + "/";
-
-                                                    if (juego.Juego.Tipo == JuegoTipo.Curator)
-                                                    {
-                                                        enlace = "/curator/" + juego.Juego.ExeEpic;
-                                                    }
-                                                    else if (juego.Juego.Tipo == JuegoTipo.Bundle)
-                                                    {
-                                                        enlace = "/bundle/" + juego.Juego.Id.ToString() + "/" + Herramientas.EnlaceAdaptador.Nombre(juego.Juego.Nombre) + "/";
-                                                    }
+                                                if (juego.Juego.Tipo == JuegoTipo.Bundle)
+                                                {
+                                                    imagen = Bundles2.BundlesCargar.DevolverBundle((Bundles2.BundleTipo)juego.Juego.IdSteam).ImagenIcono;
                                                 }
 
-                                                <a href="@enlace" @onclick="(e => AbrirEnlace(e, enlace, false))" class="boton-pequeño" style="cursor: pointer; padding: 0px; background: linear-gradient(100deg, var(--fondoBotonPequeño) 0%, @juego.Color 100%);">
-                                                    <div class="perfil-flexible-centrado">
-                                                        <div>
-                                                            <img src="@imagen" style="@imagenEstilo" loading="lazy" decoding="async" />
-                                                        </div>
+                                                int ancho = 230;
+                                                int alto = 107;
 
-                                                        <div style="width: 100%; padding-left: 20px; padding-right: 20px; display: flex; flex-direction: column; gap: 5px;">
-                                                            <div>
-                                                                @juego.Juego.Nombre
-                                                            </div>
+                                                if (juego.Juego.Tipo == JuegoTipo.Curator)
+                                                {
+                                                    ancho = 107;
+                                                }
+                                                else if (juego.Juego.Tipo == JuegoTipo.Bundle)
+                                                {
+                                                    ancho = 51;
+                                                    alto = 51;
+                                                }
 
-                                                            @if (juego.Juego.Tipo != JuegoTipo.Curator && juego.Juego.Tipo != JuegoTipo.Bundle)
-                                                            {
-                                                                <div style="font-size: 15px;">
-                                                                    @Herramientas.Buscador.GenerarMensaje(usuarioTiendasNoOficial, usuarioMarketplace, usuarioRegion, idioma, juego.Juego, true, true, true)
-                                                                </div>
-                                                            }
-                                                        </div>
+                                                string imagenEstilo = "width: " + ancho.ToString() + "px; height: " + alto.ToString() + "px; display: block;";
+
+                                                if (juego.Juego.Tipo == JuegoTipo.Bundle)
+                                                {
+                                                    imagenEstilo = "width: " + ancho.ToString() + "px; height: " + alto.ToString() + "px; display: block; margin: 23px;";
+                                                }
+
+                                                string enlace = "/game/" + juego.Juego.Id.ToString() + "/" + Herramientas.EnlaceAdaptador.Nombre(juego.Juego.Nombre) + "/";
+
+                                                if (juego.Juego.Tipo == JuegoTipo.Curator)
+                                                {
+                                                    enlace = "/curator/" + juego.Juego.ExeEpic;
+                                                }
+                                                else if (juego.Juego.Tipo == JuegoTipo.Bundle)
+                                                {
+                                                    enlace = "/bundle/" + juego.Juego.Id.ToString() + "/" + Herramientas.EnlaceAdaptador.Nombre(juego.Juego.Nombre) + "/";
+                                                }
+                                            }
+
+                                            <a href="@enlace" @onclick="(e => AbrirEnlace(e, enlace, false))" class="boton-pequeño" style="cursor: pointer; padding: 0px; background: linear-gradient(100deg, var(--fondoBotonPequeño) 0%, @juego.Color 100%);">
+                                                <div class="perfil-flexible-centrado">
+                                                    <div>
+                                                        <img src="@imagen" style="@imagenEstilo" loading="lazy" decoding="async" />
                                                     </div>
-                                                </a>
-                                            </div>
-                                        </ItemContent>
-                                    </Virtualize>
+
+                                                    <div style="width: 100%; padding-left: 20px; padding-right: 20px; display: flex; flex-direction: column; gap: 5px;">
+                                                        <div>
+                                                            @juego.Juego.Nombre
+                                                        </div>
+
+                                                        @if (juego.Juego.Tipo != JuegoTipo.Curator && juego.Juego.Tipo != JuegoTipo.Bundle)
+                                                        {
+                                                            <div style="font-size: 15px;">
+                                                                @Herramientas.Buscador.GenerarMensaje(usuarioTiendasNoOficial, usuarioMarketplace, usuarioRegion, idioma, juego.Juego, true, true, true)
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    }
                                 </div>
                             }
                         </div>

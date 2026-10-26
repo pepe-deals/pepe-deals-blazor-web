@@ -217,8 +217,8 @@ namespace BaseDatos.Usuarios
 			}
 
 			string busqueda = @"SELECT Avatar, Email, Nickname, Currency, NoOfficial, Marketplace, 
-								Language, EmailConfirmed, PatreonLastCheck, SteamAccount, SteamAccountLastCheck,
-								GogAccount, GogAccountLastCheck, PatreonLastLogin, PatreonCoins, PatreonContribution FROM AspNetUsers WHERE Id=@Id";
+								Language, EmailConfirmed, PatreonLastCheck, SteamId, SteamAccount, SteamAccountLastCheck,
+								GogId, GogAccount, GogAccountLastCheck, PatreonLastLogin, PatreonCoins, PatreonContribution FROM AspNetUsers WHERE Id=@Id";
 
 			try
 			{
@@ -326,6 +326,30 @@ namespace BaseDatos.Usuarios
 			catch (Exception ex)
 			{
 				BaseDatos.Errores.Insertar.Mensaje("Usuario Opciones Deseados", ex);
+			}
+
+			return null;
+		}
+
+		public static async Task<Usuario> OpcionesBundle(string usuarioId)
+		{
+			if (string.IsNullOrEmpty(usuarioId) == true)
+			{
+				return null;
+			}
+
+			string busqueda = "SELECT Currency, NoOfficial, Marketplace FROM AspNetUsers WHERE Id=@Id";
+
+			try
+			{
+				return await Herramientas.BaseDatos.Select(async conexion =>
+				{
+					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
+				});
+			}
+			catch (Exception ex)
+			{
+				BaseDatos.Errores.Insertar.Mensaje("Usuario Opciones Bundle", ex);
 			}
 
 			return null;

@@ -397,6 +397,165 @@ WHERE id=@id AND j.tipo=0";
 			}
 		}
 
+		public static async Task<List<Juego>> MultiplesJuegosBundle(bool noOficial, bool marketplace, TiendaRegion region, List<JuegoDeseado> ids)
+		{
+			if (ids?.Count == 0)
+			{
+				return null;
+			}
+
+			string precioMinimosHistoricos = region switch
+			{
+				TiendaRegion.Europa => "precioMinimosHistoricos",
+				TiendaRegion.EstadosUnidos => "precioMinimosHistoricosUS",
+				_ => string.Empty
+			};
+
+			string precioActualesTiendas = region switch
+			{
+				TiendaRegion.Europa => "precioActualesTiendas",
+				TiendaRegion.EstadosUnidos => "precioActualesTiendasUS",
+				_ => string.Empty
+			};
+
+			string precioMinimosNoOficial = region switch
+			{
+				TiendaRegion.Europa => "preciosHistoricosNoOficialesEU",
+				TiendaRegion.EstadosUnidos => "preciosHistoricosNoOficialesUS",
+				_ => string.Empty
+			};
+
+			string precioActualesNoOficial = region switch
+			{
+				TiendaRegion.Europa => "preciosActualesNoOficialesEU",
+				TiendaRegion.EstadosUnidos => "preciosActualesNoOficialesUS",
+				_ => string.Empty
+			};
+
+			string precioMinimosMarketplace = region switch
+			{
+				TiendaRegion.Europa => "preciosHistoricosMarketplacesEU",
+				TiendaRegion.EstadosUnidos => "preciosHistoricosMarketplacesUS",
+				_ => string.Empty
+			};
+
+			string precioActualesMarketplace = region switch
+			{
+				TiendaRegion.Europa => "preciosActualesMarketplacesEU",
+				TiendaRegion.EstadosUnidos => "preciosActualesMarketplacesUS",
+				_ => string.Empty
+			};
+
+			var idsBaseDatos = ids.Select(j => int.Parse(j.IdBaseDatos)).ToList();
+
+			string ConstruirBusqueda(bool esNoOficial, bool esMarketplace)
+			{
+				string columnasPrecio = string.Empty;
+
+				if (esNoOficial == false && esMarketplace == false)
+				{
+					columnasPrecio = $"j.{precioMinimosHistoricos} AS {precioMinimosHistoricos}, NULL AS {precioMinimosNoOficial}, NULL AS {precioMinimosMarketplace}, " +
+									 $"j.{precioActualesTiendas} AS {precioActualesTiendas}, NULL AS {precioActualesNoOficial}, NULL AS {precioActualesMarketplace},";
+				}
+				else if (esNoOficial == true)
+				{
+					columnasPrecio = $"NULL AS {precioMinimosHistoricos}, j.{precioMinimosNoOficial} AS {precioMinimosNoOficial}, NULL AS {precioMinimosMarketplace}, " +
+									 $"NULL AS {precioActualesTiendas}, j.{precioActualesNoOficial} AS {precioActualesNoOficial}, NULL AS {precioActualesMarketplace},";
+				}
+				else if (esMarketplace == true)
+				{
+					columnasPrecio = $"NULL AS {precioMinimosHistoricos}, NULL AS {precioMinimosNoOficial}, j.{precioMinimosMarketplace} AS {precioMinimosMarketplace}, " +
+									 $"NULL AS {precioActualesTiendas}, NULL AS {precioActualesNoOficial}, j.{precioActualesMarketplace} AS {precioActualesMarketplace},";
+				}
+
+				return $@"SELECT
+					j.id, j.nombre, j.imagenes, {columnasPrecio} j.media,
+					j.tipo, j.analisis, j.etiquetas, j.maestro, j.idSteam, j.idGog, j.idAmazon,
+					j.exeEpic, j.exeUbisoft,
+					(
+						SELECT b.id, b.bundleTipo
+						FROM bundles b
+						INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
+						WHERE bj.juegoId = j.id
+							AND b.fechaEmpieza <= GETDATE()
+							AND b.fechaTermina >= GETDATE()
+						FOR JSON PATH
+					) AS BundlesActuales,
+					(
+						SELECT b.id, b.bundleTipo
+						FROM bundles b
+						INNER JOIN bundlesJuegos bj ON bj.bundleId = b.id
+						WHERE bj.juegoId = j.id
+							AND b.fechaTermina < GETDATE()
+						FOR JSON PATH
+					) AS BundlesPasados,
+					(
+						SELECT g.gratis
+						FROM gratis g
+						WHERE g.juegoId = j.id
+							AND g.fechaEmpieza <= GETDATE()
+							AND g.fechaTermina >= GETDATE()
+						FOR JSON PATH
+					) AS GratisActuales,
+					(
+						SELECT g.gratis
+						FROM gratis g
+						WHERE g.juegoId = j.id
+							AND g.fechaTermina < GETDATE()
+						FOR JSON PATH
+					) AS GratisPasados,
+					(
+						SELECT s.suscripcion
+						FROM suscripciones s
+						WHERE s.juegoId = j.id
+							AND s.FechaEmpieza <= GETDATE()
+							AND s.FechaTermina >= GETDATE()
+						FOR JSON PATH
+					) AS SuscripcionesActuales,
+					(
+						SELECT s.suscripcion
+						FROM suscripciones s
+						WHERE s.juegoId = j.id
+							AND s.FechaTermina < GETDATE()
+						FOR JSON PATH
+					) AS SuscripcionesPasados,
+				CASE
+					WHEN j.analisis = 'null' OR j.analisis IS NULL THEN 0
+					ELSE CONVERT(int, REPLACE(JSON_VALUE(j.analisis, '$.Cantidad'),',',''))
+				END AS OrdenReseñas
+				FROM juegos j
+				WHERE id IN @Ids";
+			}
+
+			string sqlBuscar = ConstruirBusqueda(esNoOficial: false, esMarketplace: false);
+
+			if (noOficial == true)
+			{
+				string busquedaNoOficial = ConstruirBusqueda(esNoOficial: true, esMarketplace: false);
+				sqlBuscar = $"({sqlBuscar}) UNION ALL ({busquedaNoOficial})";
+			}
+
+			if (marketplace == true)
+			{
+				string busquedaMarketplace = ConstruirBusqueda(esNoOficial: false, esMarketplace: true);
+				sqlBuscar = $"({sqlBuscar}) UNION ALL ({busquedaMarketplace})";
+			}
+
+			sqlBuscar = sqlBuscar + " ORDER BY OrdenReseñas DESC";
+
+			try
+			{
+				return await Herramientas.BaseDatos.Select(async conexion =>
+					(await conexion.QueryAsync<Juego>(sqlBuscar, new { Ids = idsBaseDatos })).ToList()
+				);
+			}
+			catch (Exception ex)
+			{
+				BaseDatos.Errores.Insertar.Mensaje("Juego Multiples", ex);
+				return null;
+			}
+		}
+
 		public static async Task<List<Juego>> MultiplesJuegos(bool noOficial, bool marketplace, TiendaRegion region, List<JuegoDeseado> ids)
 		{
 			if (ids?.Count == 0)

@@ -45,10 +45,10 @@
 }
 
 .caja-bundle-mensaje {
-    background-color: rgba(0,0,0,.3);
+    background-color: var(--fondoSubsubcabecera);
     border-top-left-radius: inherit;
     border-top-right-radius: inherit;
-    box-shadow: 0 2px 3px -1px rgba(0, 0, 0, 0.2);
+    border: 2px solid rgba(0,0,0,.5);
 }
 
 .juego-fondo {

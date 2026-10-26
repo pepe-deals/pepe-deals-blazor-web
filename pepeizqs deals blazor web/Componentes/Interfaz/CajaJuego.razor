@@ -95,6 +95,14 @@
 		{
 			oferta = juego.PreciosHistoricosNoOficialesUS[0];
 		}
+		else if (juego.PreciosHistoricosMarketplacesEU?.Count > 0)
+		{
+			oferta = juego.PreciosHistoricosMarketplacesEU[0];
+		}
+		else if (juego.PreciosHistoricosMarketplacesUS?.Count > 0)
+		{
+			oferta = juego.PreciosHistoricosMarketplacesUS[0];
+		}
 
 		if (oferta != null)
 		{
@@ -168,7 +176,7 @@
 		idTooltip = idTooltip + "-" + idCurator.ToString();
 	}
 
-	Herramientas.ToolTipDatos tooltip = Herramientas.Tooltip.Generar(idioma, tipo, juego, drmUsar, usuarioConectado, idBundle, tipoGratis, tipoSuscripcion);
+	Herramientas.ToolTipDatos tooltip = null;
 
 	<div class="tooltip-juego" id="trigger-@idTooltip" style="width: auto;"
 		 @onmouseenter="@(() => ActivarTooltip($"trigger-{idTooltip}", $"tooltip-{idTooltip}"))"
@@ -176,6 +184,8 @@
 		<div id="tooltip-@idTooltip" class="tooltip-relleno">
 			@if (enseñarTooltip == true)
 			{
+				tooltip = Herramientas.Tooltip.Generar(idioma, tipo, juego, drmUsar, usuarioConectado, idBundle, tipoGratis, tipoSuscripcion);
+
 				if (string.IsNullOrEmpty(tooltip.Video) == false)
 				{
 					string videoMostrarMp4 = tooltip.Video;
@@ -892,7 +902,7 @@
 	public EventCallback<(bool tieneJuego, bool tieneDeseadoWeb, bool tieneDeseadoImportado)> OnEstadoUsuario { get; set; }
 
 	public JuegoDRM drmUsar = JuegoDRM.NoEspecificado;
-    public string tiendaUsar = string.Empty;
+	public string tiendaUsar = string.Empty;
 
 	private bool _estadoInicializado = false;
 
@@ -947,11 +957,21 @@
 			else if (juego.PreciosHistoricosNoOficialesUS?.Count > 0)
 			{
 				drmUsar = juego.PreciosHistoricosNoOficialesUS[0].DRM;
-                tiendaUsar = juego.PreciosHistoricosNoOficialesUS[0].Tienda;
+				tiendaUsar = juego.PreciosHistoricosNoOficialesUS[0].Tienda;
+			}
+			else if (juego.PreciosHistoricosMarketplacesEU?.Count > 0)
+			{
+				drmUsar = juego.PreciosHistoricosMarketplacesEU[0].DRM;
+				tiendaUsar = juego.PreciosHistoricosMarketplacesEU[0].Tienda;
+			}
+			else if (juego.PreciosHistoricosMarketplacesUS?.Count > 0)
+			{
+				drmUsar = juego.PreciosHistoricosMarketplacesUS[0].DRM;
+				tiendaUsar = juego.PreciosHistoricosMarketplacesUS[0].Tienda;
 			}
 		}
 
-		if (tipo != Tipo.PortadaNuevos && tipo != Tipo.PortadaLanzamientos && tipo != Tipo.PortadaPopulares && tipo != Tipo.PortadaProximamente &&
+		if (tipo != Tipo.PortadaNuevos && tipo != Tipo.PortadaLanzamientos && tipo != Tipo.PortadaPopulares && tipo != Tipo.PortadaProximamente && 
 			tipo != Tipo.MinimosHistoricos && tipo != Tipo.SteamDeck && tipo != Tipo.SteamMachine && tipo != Tipo.SteamFrame && tipo != Tipo.SteamOS && tipo != Tipo.GeforceNOW && tipo != Tipo.Boosteroid)
 		{
 			string nuevoFondoColor = "background-color: var(--fondoBotonPequeño)";
