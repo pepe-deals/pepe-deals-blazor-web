@@ -232,6 +232,7 @@ namespace APIs.IndieGala
 										{
 											nombre = WebUtility.HtmlDecode(nombre ?? string.Empty);
 
+											nombre = nombre.Replace("(US)", null);
 											nombre = nombre.Replace(" - Early Access", null);
 											nombre = nombre.Trim();
 

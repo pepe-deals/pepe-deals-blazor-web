@@ -659,7 +659,7 @@ namespace BaseDatos.Juegos
 			}
 		}
 
-		public static async Task HistoricosEU(Juego juego)
+		public static async Task HistoricosOficialesEU(Juego juego)
 		{
 			string sqlActualizar = "UPDATE juegos " +
 					"SET historicos=@historicos WHERE id=@id";
@@ -679,11 +679,11 @@ namespace BaseDatos.Juegos
 			}
 			catch (Exception ex)
 			{
-				BaseDatos.Errores.Insertar.Mensaje("Actualizar Historicos EU " + juego.Id.ToString(), ex);
+				BaseDatos.Errores.Insertar.Mensaje("Actualizar Historicos Oficiales EU " + juego.Id.ToString(), ex);
 			}
 		}
 
-		public static async Task HistoricosUS(Juego juego)
+		public static async Task HistoricosOficialesUS(Juego juego)
 		{
 			string sqlActualizar = "UPDATE juegos " +
 					"SET historicosUS=@historicosUS WHERE id=@id";
@@ -703,7 +703,103 @@ namespace BaseDatos.Juegos
 			}
 			catch (Exception ex)
 			{
-				BaseDatos.Errores.Insertar.Mensaje("Actualizar Historicos US " + juego.Id.ToString(), ex);
+				BaseDatos.Errores.Insertar.Mensaje("Actualizar Historicos Oficiales US " + juego.Id.ToString(), ex);
+			}
+		}
+
+		public static async Task HistoricosNoOficialesEU(Juego juego)
+		{
+			string sqlActualizar = "UPDATE juegos " +
+					"SET historicosNoOficialesEU=@historicosNoOficialesEU WHERE id=@id";
+
+			var parametros = new
+			{
+				id = juego.Id,
+				historicosNoOficialesEU = JsonSerializer.Serialize(juego.HistoricosNoOficialesEU)
+			};
+
+			try
+			{
+				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				{
+					return await conexion.ExecuteAsync(sqlActualizar, parametros, transaction: sentencia);
+				});
+			}
+			catch (Exception ex)
+			{
+				BaseDatos.Errores.Insertar.Mensaje("Actualizar Historicos No Oficiales EU " + juego.Id.ToString(), ex);
+			}
+		}
+
+		public static async Task HistoricosNoOficialesUS(Juego juego)
+		{
+			string sqlActualizar = "UPDATE juegos " +
+					"SET historicosNoOficialesUS=@historicosNoOficialesUS WHERE id=@id";
+
+			var parametros = new
+			{
+				id = juego.Id,
+				historicosNoOficialesUS = JsonSerializer.Serialize(juego.HistoricosNoOficialesUS)
+			};
+
+			try
+			{
+				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				{
+					return await conexion.ExecuteAsync(sqlActualizar, parametros, transaction: sentencia);
+				});
+			}
+			catch (Exception ex)
+			{
+				BaseDatos.Errores.Insertar.Mensaje("Actualizar Historicos No Oficiales US " + juego.Id.ToString(), ex);
+			}
+		}
+
+		public static async Task HistoricosMarketplacesEU(Juego juego)
+		{
+			string sqlActualizar = "UPDATE juegos " +
+					"SET historicosMarketplacesEU=@historicosMarketplacesEU WHERE id=@id";
+
+			var parametros = new
+			{
+				id = juego.Id,
+				historicosMarketplacesEU = JsonSerializer.Serialize(juego.HistoricosMarketplacesEU)
+			};
+
+			try
+			{
+				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				{
+					return await conexion.ExecuteAsync(sqlActualizar, parametros, transaction: sentencia);
+				});
+			}
+			catch (Exception ex)
+			{
+				BaseDatos.Errores.Insertar.Mensaje("Actualizar Historicos Marketplaces EU " + juego.Id.ToString(), ex);
+			}
+		}
+
+		public static async Task HistoricosMarketplacesUS(Juego juego)
+		{
+			string sqlActualizar = "UPDATE juegos " +
+					"SET historicosMarketplacesUS=@historicosMarketplacesUS WHERE id=@id";
+
+			var parametros = new
+			{
+				id = juego.Id,
+				historicosMarketplacesUS = JsonSerializer.Serialize(juego.HistoricosMarketplacesUS)
+			};
+
+			try
+			{
+				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				{
+					return await conexion.ExecuteAsync(sqlActualizar, parametros, transaction: sentencia);
+				});
+			}
+			catch (Exception ex)
+			{
+				BaseDatos.Errores.Insertar.Mensaje("Actualizar Historicos Marketplaces US " + juego.Id.ToString(), ex);
 			}
 		}
 

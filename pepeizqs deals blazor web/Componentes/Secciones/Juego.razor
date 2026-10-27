@@ -3305,7 +3305,7 @@
 
 @if (juego != null && enseñarHistorico == true)
 {
-    <JuegoHistoricos juego="@juego" drmGrafico="@drmGrafico" usuarioRegion="@usuarioRegion" idioma="@idioma" dominio="@dominio"
+    <JuegoHistoricos juego="@juego" drmGrafico="@drmGrafico" usuarioRegion="@usuarioRegion" idioma="@idioma" usuarioTiendasNoOficial="@usuarioTiendasNoOficial" usuarioTiendasMarketplace="@usuarioTiendasMarketplace" dominio="@dominio"
                      OnCerrar="@(() => HistoricoAbrirCerrar(drmGrafico))" mostrarLabelsDuplicadas="@enseñarOpcionesGraficoDuplicados" />
 }
 
@@ -4203,12 +4203,12 @@
         {
             if (usuarioRegion == TiendaRegion.Europa)
             {
-                string mensajeMinimoDRM = Herramientas.Minimos.CogerMinimoDRM(usuarioRegion, idioma, drm.Id, juego.Id, juego.Nombre, juego.PreciosHistoricosNoOficialesEU, juego.PreciosActualesNoOficialesEU, null);
+                string mensajeMinimoDRM = Herramientas.Minimos.CogerMinimoDRM(usuarioRegion, idioma, drm.Id, juego.Id, juego.Nombre, juego.PreciosHistoricosNoOficialesEU, juego.PreciosActualesNoOficialesEU, juego.HistoricosNoOficialesEU);
                 drmsEnseñar.Add(new DRMEnseñar { DRM = drm.Id, Mensaje = mensajeMinimoDRM, TipoTienda = TiendaTipo.NoOficial });    
             }
             else if (usuarioRegion == TiendaRegion.EstadosUnidos)
             {
-                string mensajeMinimoDRM = Herramientas.Minimos.CogerMinimoDRM(usuarioRegion, idioma, drm.Id, juego.Id, juego.Nombre, juego.PreciosHistoricosNoOficialesUS, juego.PreciosActualesNoOficialesUS, null);
+                string mensajeMinimoDRM = Herramientas.Minimos.CogerMinimoDRM(usuarioRegion, idioma, drm.Id, juego.Id, juego.Nombre, juego.PreciosHistoricosNoOficialesUS, juego.PreciosActualesNoOficialesUS, juego.HistoricosNoOficialesUS);
                 drmsEnseñar.Add(new DRMEnseñar { DRM = drm.Id, Mensaje = mensajeMinimoDRM, TipoTienda = TiendaTipo.NoOficial });                        
             }           
         }
@@ -4231,12 +4231,12 @@
         {
             if (usuarioRegion == TiendaRegion.Europa)
             {
-                string mensajeMinimoDRM = Herramientas.Minimos.CogerMinimoDRM(usuarioRegion, idioma, drm.Id, juego.Id, juego.Nombre, juego.PreciosHistoricosMarketplacesEU, juego.PreciosActualesMarketplacesEU, null);
+                string mensajeMinimoDRM = Herramientas.Minimos.CogerMinimoDRM(usuarioRegion, idioma, drm.Id, juego.Id, juego.Nombre, juego.PreciosHistoricosMarketplacesEU, juego.PreciosActualesMarketplacesEU, juego.HistoricosMarketplacesEU);
                 drmsEnseñar.Add(new DRMEnseñar { DRM = drm.Id, Mensaje = mensajeMinimoDRM, TipoTienda = TiendaTipo.Marketplace });    
             }
             else if (usuarioRegion == TiendaRegion.EstadosUnidos)
             {
-                string mensajeMinimoDRM = Herramientas.Minimos.CogerMinimoDRM(usuarioRegion, idioma, drm.Id, juego.Id, juego.Nombre, juego.PreciosHistoricosMarketplacesUS, juego.PreciosActualesMarketplacesUS, null);
+                string mensajeMinimoDRM = Herramientas.Minimos.CogerMinimoDRM(usuarioRegion, idioma, drm.Id, juego.Id, juego.Nombre, juego.PreciosHistoricosMarketplacesUS, juego.PreciosActualesMarketplacesUS, juego.HistoricosMarketplacesUS);
                 drmsEnseñar.Add(new DRMEnseñar { DRM = drm.Id, Mensaje = mensajeMinimoDRM, TipoTienda = TiendaTipo.Marketplace });                        
             }           
         }
@@ -5378,6 +5378,50 @@
         else if (region == TiendaRegion.EstadosUnidos && juego.HistoricosUS?.Count > 0)
         {
             foreach (var historico in juego.HistoricosUS)
+            {
+                if (historico.DRM == drm)
+                {
+                    tiene = true;
+                    break;
+                }
+            }
+        }
+        else if (usuarioTiendasNoOficial == true && region == TiendaRegion.Europa && juego.HistoricosNoOficialesEU?.Count > 0)
+        {
+            foreach (var historico in juego.HistoricosNoOficialesEU)
+            {
+                if (historico.DRM == drm)
+                {
+                    tiene = true;
+                    break;
+                }
+            }
+        }
+        else if (usuarioTiendasNoOficial == true && region == TiendaRegion.EstadosUnidos && juego.HistoricosNoOficialesUS?.Count > 0)
+        {
+            foreach (var historico in juego.HistoricosNoOficialesUS)
+            {
+                if (historico.DRM == drm)
+                {
+                    tiene = true;
+                    break;
+                }
+            }
+        }
+        else if (usuarioTiendasMarketplace == true && region == TiendaRegion.Europa && juego.HistoricosMarketplacesEU?.Count > 0)
+        {
+            foreach (var historico in juego.HistoricosMarketplacesEU)
+            {
+                if (historico.DRM == drm)
+                {
+                    tiene = true;
+                    break;
+                }
+            }
+        }
+        else if (usuarioTiendasMarketplace == true && region == TiendaRegion.EstadosUnidos && juego.HistoricosMarketplacesUS?.Count > 0)
+        {
+            foreach (var historico in juego.HistoricosMarketplacesUS)
             {
                 if (historico.DRM == drm)
                 {

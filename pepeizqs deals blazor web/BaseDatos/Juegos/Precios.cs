@@ -430,11 +430,21 @@ namespace BaseDatos.Juegos
 			{
 				sql.Append($"preciosActualesNoOficialesEU=@preciosActualesNoOficialesEU{indice}, ");
 				sql.Append($"preciosHistoricosNoOficialesEU=@preciosHistoricosNoOficialesEU{indice} ");
+
+				if (añadidoEnHistoricos == true)
+				{
+					sql.Append($", historicosNoOficialesEU=@historicosNoOficialesEU{indice} ");
+				}
 			}
 			else if (tiendaTipo == TiendaTipo.Marketplace)
 			{
 				sql.Append($"preciosActualesMarketplacesEU=@preciosActualesMarketplacesEU{indice}, ");
 				sql.Append($"preciosHistoricosMarketplacesEU=@preciosHistoricosMarketplacesEU{indice} ");
+
+				if (añadidoEnHistoricos == true)
+				{
+					sql.Append($", historicosMarketplacesEU=@historicosMarketplacesEU{indice} ");
+				}
 			}
 
 			if (ahora != null)
@@ -476,11 +486,21 @@ namespace BaseDatos.Juegos
 			{
 				parametros.Add($"@preciosActualesNoOficialesEU{indice}", JsonSerializer.Serialize(ofertasActuales));
 				parametros.Add($"@preciosHistoricosNoOficialesEU{indice}", JsonSerializer.Serialize(ofertasHistoricas));
+
+				if (añadidoEnHistoricos == true)
+				{
+					parametros.Add($"@historicosNoOficialesEU{indice}", JsonSerializer.Serialize(historicos));
+				}
 			}
 			else if (tiendaTipo == TiendaTipo.Marketplace)
 			{
 				parametros.Add($"@preciosActualesMarketplacesEU{indice}", JsonSerializer.Serialize(ofertasActuales));
 				parametros.Add($"@preciosHistoricosMarketplacesEU{indice}", JsonSerializer.Serialize(ofertasHistoricas));
+
+				if (añadidoEnHistoricos == true)
+				{
+					parametros.Add($"@historicosMarketplacesEU{indice}", JsonSerializer.Serialize(historicos));
+				}
 			}
 
 			if (ahora != null)
@@ -901,11 +921,21 @@ namespace BaseDatos.Juegos
 			{
 				sql.Append($"preciosActualesNoOficialesUS=@preciosActualesNoOficialesUS{indice}, ");
 				sql.Append($"preciosHistoricosNoOficialesUS=@preciosHistoricosNoOficialesUS{indice} ");
+
+				if (añadidoEnHistoricos == true)
+				{
+					sql.Append($", historicosNoOficialesUS=@historicosNoOficialesUS{indice} ");
+				}
 			}
 			else if (tiendaTipo == TiendaTipo.Marketplace)
 			{
 				sql.Append($"preciosActualesMarketplacesUS=@preciosActualesMarketplacesUS{indice}, ");
 				sql.Append($"preciosHistoricosMarketplacesUS=@preciosHistoricosMarketplacesUS{indice} ");
+
+				if (añadidoEnHistoricos == true)
+				{
+					sql.Append($", historicosMarketplacesUS=@historicosMarketplacesUS{indice} ");
+				}
 			}
 
 			if (ahora != null)
@@ -947,11 +977,21 @@ namespace BaseDatos.Juegos
 			{
 				parametros.Add($"@preciosActualesNoOficialesUS{indice}", JsonSerializer.Serialize(ofertasActualesUS));
 				parametros.Add($"@preciosHistoricosNoOficialesUS{indice}", JsonSerializer.Serialize(ofertasHistoricasUS));
+
+				if (añadidoEnHistoricos == true)
+				{
+					parametros.Add($"@historicosNoOficialesUS{indice}", JsonSerializer.Serialize(historicosUS));
+				}
 			}
 			else if (tiendaTipo == TiendaTipo.Marketplace)
 			{
 				parametros.Add($"@preciosActualesMarketplacesUS{indice}", JsonSerializer.Serialize(ofertasActualesUS));
 				parametros.Add($"@preciosHistoricosMarketplacesUS{indice}", JsonSerializer.Serialize(ofertasHistoricasUS));
+
+				if (añadidoEnHistoricos == true)
+				{
+					parametros.Add($"@historicosMarketplacesUS{indice}", JsonSerializer.Serialize(historicosUS));
+				}
 			}
 
 			if (ahora != null)

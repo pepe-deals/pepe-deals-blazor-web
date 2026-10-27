@@ -59,7 +59,7 @@
     </ApexPointTooltip>
 
     <ChildContent>
-        @foreach (var punto in puntos)
+        @foreach (var punto in lineaOficiales)
         {
             List<PuntoGrafico> datos = new List<PuntoGrafico>();
 
@@ -73,8 +73,52 @@
                 });
             }
 
-            <ApexPointSeries TItem="PuntoGrafico" Items="datos" Name="@punto.Año.ToString()"
+            <ApexPointSeries TItem="PuntoGrafico" Items="datos" Name="@punto.Nombre"
                 SeriesType="SeriesType.Line" XValue="e => e.DiaMes" YValue="e => e.Precio" ShowDataLabels="true"/>
+        }
+
+        @if (usuarioTiendasNoOficial == true)
+        {
+            foreach (var punto in lineaNoOficiales)
+            {
+                List<PuntoGrafico> datos = new List<PuntoGrafico>();
+
+                foreach (var subpunto in punto.Puntos)
+                {
+                    datos.Add(new PuntoGrafico
+                    {
+                        DiaMes = subpunto.Fecha,
+                        Precio = (decimal)subpunto.Precio,
+                        Año = punto.Año.ToString(),
+                        Tienda = subpunto.Tienda
+                    });
+                }
+
+                <ApexPointSeries TItem="PuntoGrafico" Items="datos" Name="@punto.Nombre"
+                                 SeriesType="SeriesType.Line" XValue="e => e.DiaMes" YValue="e => e.Precio" ShowDataLabels="true" />
+            }
+        }
+
+        @if (usuarioTiendasMarketplace == true)
+        {
+            foreach (var punto in lineaMarketplaces)
+            {
+                List<PuntoGrafico> datos = new List<PuntoGrafico>();
+
+                foreach (var subpunto in punto.Puntos)
+                {
+                    datos.Add(new PuntoGrafico
+                    {
+                        DiaMes = subpunto.Fecha,
+                        Precio = (decimal)subpunto.Precio,
+                        Año = punto.Año.ToString(),
+                        Tienda = subpunto.Tienda
+                    });
+                }
+
+                <ApexPointSeries TItem="PuntoGrafico" Items="datos" Name="@punto.Nombre"
+                                 SeriesType="SeriesType.Line" XValue="e => e.DiaMes" YValue="e => e.Precio" ShowDataLabels="true" />
+            }
         }
     </ChildContent>
 </ApexChart>
@@ -93,20 +137,36 @@
     public JuegoDRM drmGrafico { get; set; } = JuegoDRM.NoEspecificado;
 
     [Parameter]
-    public List<JuegoHistorico> historicos { get; set; }
+    public List<JuegoHistorico> historicosOficiales { get; set; }
+
+    [Parameter]
+    public List<JuegoHistorico> historicosNoOficiales { get; set; }
+
+    [Parameter]
+    public List<JuegoHistorico> historicosMarketplaces { get; set; }
 
     [Parameter] 
     public TiendaRegion usuarioRegion { get; set; }
 
     [Parameter]
+    public bool usuarioTiendasNoOficial { get; set; }
+
+    [Parameter]
+    public bool usuarioTiendasMarketplace { get; set; }
+
+    [Parameter]
     public bool mostrarLabelsDuplicadas { get; set; }
 
     private ApexChartOptions<PuntoGrafico> opcionesGrafico = new ApexChartOptions<PuntoGrafico>();
-    private List<Punto> puntos = new List<Punto>();
+
+    private List<Punto> lineaOficiales = new List<Punto>();
+    private List<Punto> lineaNoOficiales = new List<Punto>();
+    private List<Punto> lineaMarketplaces = new List<Punto>();
 
     private class Punto
     {
         public int Año { get; set; }
+        public string Nombre { get; set; }
         public List<PuntoDatos> Puntos { get; set; }
     }
 
@@ -128,110 +188,37 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        puntos.Clear();
+        lineaOficiales.Clear();
 
-        List<JuegoHistorico> historicosMostrar = historicos;
+        List<JuegoHistorico> historicosOficialesMostrar = historicosOficiales;
 
-        if (historicosMostrar?.Count > 0)
+        if (historicosOficialesMostrar?.Count > 0)
         {
-            JuegoDRM drm = drmGrafico;
+            await GenerarPuntos(historicosOficialesMostrar, lineaOficiales, Herramientas.Idiomas.BuscarTexto(idioma, "String141", "Game"));
+        }
 
-            #region Añadir Años
+        List<JuegoHistorico> historicosNoOficialesMostrar = null;
 
-            foreach (var historico in historicosMostrar)
+        if (usuarioTiendasNoOficial == true)
+        {
+            historicosNoOficialesMostrar = historicosNoOficiales;
+
+            if (historicosNoOficialesMostrar?.Count > 0)
             {
-                if (drm == historico.DRM)
-                {
-                    if (puntos.Count == 0)
-                    {
-                        Punto año = new Punto();
-                        año.Año = historico.Fecha.Year;
-                        año.Puntos = new List<PuntoDatos>();
-
-                        puntos.Add(año);
-                    }
-                    // else if (puntos.Count > 0)
-                    // {
-                    //     bool añadirAño = true;
-
-                    //     foreach (var punto in puntos)
-                    //     {
-                    //         if (punto.Año == historico.Fecha.Year)
-                    //         {
-                    //             añadirAño = false;
-                    //         }
-                    //     }
-
-                    //     if (añadirAño == true)
-                    //     {
-                    //         Punto año = new Punto();
-                    //         año.Año = historico.Fecha.Year;
-                    //         año.Puntos = new List<PuntoDatos>();
-
-                    //         puntos.Add(año);
-                    //     }
-                    // }
-                }
+                await GenerarPuntos(historicosNoOficialesMostrar, lineaNoOficiales, Herramientas.Idiomas.BuscarTexto(idioma, "String142", "Game"));
             }
+        }
 
-            #endregion
+        List<JuegoHistorico> historicosMarketplacesMostrar = null;
 
-            #region Añadir Puntos
+        if (usuarioTiendasMarketplace == true)
+        {
+            historicosMarketplacesMostrar = historicosMarketplaces;
 
-            foreach (var historico in historicosMostrar)
+            if (historicosMarketplacesMostrar?.Count > 0)
             {
-                if (drm == historico.DRM)
-                {
-                    bool añadir = true;
-
-                    var historico2 = historico;
-
-                    foreach (var historico3 in historicosMostrar)
-                    {
-                        if (drm == historico3.DRM && drm == historico2.DRM &&
-                            historico3.Fecha.Day == historico2.Fecha.Day &&
-                            historico3.Fecha.Month == historico2.Fecha.Month &&
-                            historico3.Fecha.Year == historico2.Fecha.Year &&
-                            historico3.Precio != historico2.Precio)
-                        {
-                            if (historico3.Precio < historico2.Precio)
-                            {
-                                añadir = false;
-                            }
-                        }
-                    }
-
-                    if (añadir == true)
-                    {
-                        foreach (var punto in puntos)
-                        {
-                            bool duplicado = false;
-
-                            PuntoDatos nuevoPunto = new PuntoDatos
-                            {
-                                Fecha = new DateTime(historico2.Fecha.Year, historico2.Fecha.Month, historico2.Fecha.Day),
-                                Precio = (double)historico2.Precio,
-                                Tienda = historico2.Tienda
-                            };
-
-                            foreach (var puntoPuesto in punto.Puntos)
-                            {
-                                if (puntoPuesto.Precio == nuevoPunto.Precio && puntoPuesto.Fecha.AddDays(21) > nuevoPunto.Fecha)
-                                {
-                                    duplicado = true;
-                                }
-                            }
-
-                            if (duplicado == false)
-                            {
-                                punto.Puntos.Add(nuevoPunto);
-                            }
-                        }
-                    }
-                }
+                await GenerarPuntos(historicosMarketplacesMostrar, lineaMarketplaces, Herramientas.Idiomas.BuscarTexto(idioma, "String143", "Game"));
             }
-
-            #endregion
         }
 
         string moneda = usuarioRegion == TiendaRegion.Europa ? "EUR" : "USD";
@@ -365,5 +352,86 @@
                 }
             };
         }
+    }
+
+    private async Task GenerarPuntos(List<JuegoHistorico> historicosReferencia, List<Punto> puntosAñadir, string nombre)
+    {
+        JuegoDRM drm = drmGrafico;
+
+        #region Añadir Años
+
+        foreach (var historico in historicosReferencia)
+        {
+            if (drm == historico.DRM)
+            {
+                if (puntosAñadir.Count == 0)
+                {
+                    Punto año = new Punto();
+                    año.Nombre = nombre;
+                    año.Puntos = new List<PuntoDatos>();
+
+                    puntosAñadir.Add(año);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Añadir Puntos
+
+        foreach (var historico in historicosReferencia)
+        {
+            if (drm == historico.DRM)
+            {
+                bool añadir = true;
+
+                var historico2 = historico;
+
+                foreach (var historico3 in historicosReferencia)
+                {
+                    if (drm == historico3.DRM && drm == historico2.DRM &&
+                        historico3.Fecha.Day == historico2.Fecha.Day &&
+                        historico3.Fecha.Month == historico2.Fecha.Month &&
+                        historico3.Fecha.Year == historico2.Fecha.Year &&
+                        historico3.Precio != historico2.Precio)
+                    {
+                        if (historico3.Precio < historico2.Precio)
+                        {
+                            añadir = false;
+                        }
+                    }
+                }
+
+                if (añadir == true)
+                {
+                    foreach (var punto in puntosAñadir)
+                    {
+                        bool duplicado = false;
+
+                        PuntoDatos nuevoPunto = new PuntoDatos
+                        {
+                            Fecha = new DateTime(historico2.Fecha.Year, historico2.Fecha.Month, historico2.Fecha.Day),
+                            Precio = (double)historico2.Precio,
+                            Tienda = historico2.Tienda
+                        };
+
+                        foreach (var puntoPuesto in punto.Puntos)
+                        {
+                            if (puntoPuesto.Precio == nuevoPunto.Precio && puntoPuesto.Fecha.AddDays(21) > nuevoPunto.Fecha)
+                            {
+                                duplicado = true;
+                            }
+                        }
+
+                        if (duplicado == false)
+                        {
+                            punto.Puntos.Add(nuevoPunto);
+                        }
+                    }
+                }
+            }
+        }
+
+        #endregion
     }
 }

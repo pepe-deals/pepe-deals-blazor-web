@@ -47,7 +47,6 @@ namespace Juegos
 		public DateTime? DeckComprobacion { get; set; }
 		public JuegoSteamOS SteamOS { get; set; }
 		public List<JuegoDeckToken> SteamOSTokens { get; set; }
-		public List<JuegoHistorico> Historicos { get; set; }
 		public JuegoGalaxyGOG GalaxyGOG { get; set; }
 		public JuegoCantidadJugadoresSteam CantidadJugadores { get; set; }
 		public List<JuegoIdioma> Idiomas { get; set; }
@@ -69,7 +68,6 @@ namespace Juegos
 		public List<JuegoSuscripcionPasados> SuscripcionesPasados { get; set; }
 		public List<JuegoPrecio> PrecioMinimosHistoricosUS { get; set; }
 		public List<JuegoPrecio> PrecioActualesTiendasUS { get; set; }
-		public List<JuegoHistorico> HistoricosUS { get; set; }
 		public bool Delistado { get; set; }
 		public string DescripcionSEO { get; set; }
 		public JuegoSteamFrame SteamFrame { get; set; }
@@ -84,6 +82,12 @@ namespace Juegos
 		public List<JuegoPrecio> PreciosHistoricosMarketplacesEU { get; set; }
 		public List<JuegoPrecio> PreciosActualesMarketplacesUS { get; set; }
 		public List<JuegoPrecio> PreciosHistoricosMarketplacesUS { get; set; }
+		public List<JuegoHistorico> Historicos { get; set; }
+		public List<JuegoHistorico> HistoricosUS { get; set; }
+		public List<JuegoHistorico> HistoricosNoOficialesEU { get; set; }
+		public List<JuegoHistorico> HistoricosNoOficialesUS { get; set; }
+		public List<JuegoHistorico> HistoricosMarketplacesEU { get; set; }
+		public List<JuegoHistorico> HistoricosMarketplacesUS { get; set; }
 	}
 
 	public static class JuegoCrear

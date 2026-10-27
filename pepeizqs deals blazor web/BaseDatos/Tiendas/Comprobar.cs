@@ -510,36 +510,43 @@ namespace BaseDatos.Tiendas
 
 			string precioMinimosHistoricos = string.Empty;
 			string precioActualesTiendas = string.Empty;
+			string historicos = string.Empty;
 
 			if (tiendaTipo == TiendaTipo.Oficial && region == TiendaRegion.Europa)
 			{
 				precioMinimosHistoricos = "precioMinimosHistoricos";
 				precioActualesTiendas = "precioActualesTiendas";
+				historicos = "historicos";
 			}
 			else if (tiendaTipo == TiendaTipo.Oficial && region == TiendaRegion.EstadosUnidos)
 			{
 				precioMinimosHistoricos = "precioMinimosHistoricosUS";
 				precioActualesTiendas = "precioActualesTiendasUS";
+				historicos = "historicosUS";
 			}
 			else if (tiendaTipo == TiendaTipo.NoOficial && region == TiendaRegion.Europa)
 			{
 				precioMinimosHistoricos = "preciosHistoricosNoOficialesEU";
 				precioActualesTiendas = "preciosActualesNoOficialesEU";
+				historicos = "historicosNoOficialesEU";
 			}
 			else if (tiendaTipo == TiendaTipo.NoOficial && region == TiendaRegion.EstadosUnidos)
 			{
 				precioMinimosHistoricos = "preciosHistoricosNoOficialesUS";
 				precioActualesTiendas = "preciosActualesNoOficialesUS";
+				historicos = "historicosNoOficialesUS";
 			}
 			else if (tiendaTipo == TiendaTipo.Marketplace && region == TiendaRegion.Europa)
 			{
 				precioMinimosHistoricos = "preciosHistoricosMarketplacesEU";
 				precioActualesTiendas = "preciosActualesMarketplacesEU";
+				historicos = "historicosMarketplacesEU";
 			}
 			else if (tiendaTipo == TiendaTipo.Marketplace && region == TiendaRegion.EstadosUnidos)
 			{
 				precioMinimosHistoricos = "preciosHistoricosMarketplacesUS";
 				precioActualesTiendas = "preciosActualesMarketplacesUS";
+				historicos = "historicosMarketplacesUS";
 			}
 
 			if (string.IsNullOrEmpty(precioMinimosHistoricos) == false && string.IsNullOrEmpty(precioActualesTiendas) == false)
@@ -580,7 +587,7 @@ namespace BaseDatos.Tiendas
 								   j.{precioMinimosHistoricos},
 								   j.{precioActualesTiendas},
 								   j.idSteam,
-								   j.historicos,
+								   j.{historicos},
 								   j.analisis,
 								   t.enlace
 							FROM {esquema} t
@@ -672,6 +679,10 @@ namespace BaseDatos.Tiendas
 											ofertasActualesEU = string.IsNullOrEmpty(fila.preciosActualesNoOficialesEU) || fila.preciosActualesNoOficialesEU == "null"
 												? new List<JuegoPrecio>()
 												: JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.preciosActualesNoOficialesEU);
+
+											historicosEU = string.IsNullOrEmpty(fila.historicosNoOficialesEU) || fila.historicosNoOficialesEU == "null"
+												? new List<JuegoHistorico>()
+												: JsonSerializer.Deserialize<List<JuegoHistorico>>(fila.historicosNoOficialesEU);
 										}
 										else if (tiendaTipo == TiendaTipo.Marketplace)
 										{
@@ -682,6 +693,10 @@ namespace BaseDatos.Tiendas
 											ofertasActualesEU = string.IsNullOrEmpty(fila.preciosActualesMarketplacesEU) || fila.preciosActualesMarketplacesEU == "null"
 												? new List<JuegoPrecio>()
 												: JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.preciosActualesMarketplacesEU);
+
+											historicosEU = string.IsNullOrEmpty(fila.historicosMarketplacesEU) || fila.historicosMarketplacesEU == "null"
+												? new List<JuegoHistorico>()
+												: JsonSerializer.Deserialize<List<JuegoHistorico>>(fila.historicosMarketplacesEU);
 										}
 
 										if (string.IsNullOrEmpty(fila.analisis) == false && fila.analisis != "null")
@@ -714,7 +729,11 @@ namespace BaseDatos.Tiendas
 
 												var ofertasHistoricasActualizado = JsonSerializer.Deserialize<List<JuegoPrecio>>(resultado.Item2.Get<string>($"@preciosHistoricosNoOficialesEU{indice}"));
 
-												estadosPorJuego[id] = (ofertasActualesActualizado, ofertasHistoricasActualizado, null, reseñas, idSteam);
+												var historicosActualizado = resultado.Item2.ParameterNames.Contains($"@historicosNoOficialesEU{indice}")
+													? JsonSerializer.Deserialize<List<JuegoHistorico>>(resultado.Item2.Get<string>($"@historicosNoOficialesEU{indice}"))
+													: historicosEU;
+
+												estadosPorJuego[id] = (ofertasActualesActualizado, ofertasHistoricasActualizado, historicosActualizado, reseñas, idSteam);
 											}
 											else if (tiendaTipo == TiendaTipo.Marketplace)
 											{
@@ -722,7 +741,11 @@ namespace BaseDatos.Tiendas
 
 												var ofertasHistoricasActualizado = JsonSerializer.Deserialize<List<JuegoPrecio>>(resultado.Item2.Get<string>($"@preciosHistoricosMarketplacesEU{indice}"));
 
-												estadosPorJuego[id] = (ofertasActualesActualizado, ofertasHistoricasActualizado, null, reseñas, idSteam);
+												var historicosActualizado = resultado.Item2.ParameterNames.Contains($"@historicosMarketplacesEU{indice}")
+													? JsonSerializer.Deserialize<List<JuegoHistorico>>(resultado.Item2.Get<string>($"@historicosMarketplacesEU{indice}"))
+													: historicosEU;
+
+												estadosPorJuego[id] = (ofertasActualesActualizado, ofertasHistoricasActualizado, historicosActualizado, reseñas, idSteam);
 											}
 
 											updates[id] = (resultado.Item1, resultado.Item2);
@@ -770,6 +793,10 @@ namespace BaseDatos.Tiendas
 											ofertasActualesUS = string.IsNullOrEmpty(fila.preciosActualesNoOficialesUS) || fila.preciosActualesNoOficialesUS == "null"
 												? new List<JuegoPrecio>()
 												: JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.preciosActualesNoOficialesUS);
+
+											historicosUS = string.IsNullOrEmpty(fila.historicosNoOficialesUS) || fila.historicosNoOficialesUS == "null"
+												? new List<JuegoHistorico>()
+												: JsonSerializer.Deserialize<List<JuegoHistorico>>(fila.historicosNoOficialesUS);
 										}
 										else if (tiendaTipo == TiendaTipo.Marketplace)
 										{
@@ -780,6 +807,10 @@ namespace BaseDatos.Tiendas
 											ofertasActualesUS = string.IsNullOrEmpty(fila.preciosActualesMarketplacesUS) || fila.preciosActualesMarketplacesUS == "null"
 												? new List<JuegoPrecio>()
 												: JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.preciosActualesMarketplacesUS);
+
+											historicosUS = string.IsNullOrEmpty(fila.historicosMarketplacesUS) || fila.historicosMarketplacesUS == "null"
+												? new List<JuegoHistorico>()
+												: JsonSerializer.Deserialize<List<JuegoHistorico>>(fila.historicosMarketplacesUS);
 										}
 
 										if (string.IsNullOrEmpty(fila.analisis) == false && fila.analisis != "null")
@@ -812,7 +843,11 @@ namespace BaseDatos.Tiendas
 
 												var ofertasHistoricasActualizado = JsonSerializer.Deserialize<List<JuegoPrecio>>(resultado.Item2.Get<string>($"@preciosHistoricosNoOficialesUS{indice}"));
 
-												estadosPorJuego[id] = (ofertasActualesActualizado, ofertasHistoricasActualizado, null, reseñas, idSteam);
+												var historicosActualizado = resultado.Item2.ParameterNames.Contains($"@historicosNoOficialesUS{indice}")
+													? JsonSerializer.Deserialize<List<JuegoHistorico>>(resultado.Item2.Get<string>($"@historicosNoOficialesUS{indice}"))
+													: historicosUS;
+
+												estadosPorJuego[id] = (ofertasActualesActualizado, ofertasHistoricasActualizado, historicosActualizado, reseñas, idSteam);
 											}
 											else if (tiendaTipo == TiendaTipo.Marketplace)
 											{
@@ -820,7 +855,11 @@ namespace BaseDatos.Tiendas
 												
 												var ofertasHistoricasActualizado = JsonSerializer.Deserialize<List<JuegoPrecio>>(resultado.Item2.Get<string>($"@preciosHistoricosMarketplacesUS{indice}"));
 												
-												estadosPorJuego[id] = (ofertasActualesActualizado, ofertasHistoricasActualizado, null, reseñas, idSteam);
+												var historicosActualizado = resultado.Item2.ParameterNames.Contains($"@historicosMarketplacesUS{indice}")
+													? JsonSerializer.Deserialize<List<JuegoHistorico>>(resultado.Item2.Get<string>($"@historicosMarketplacesUS{indice}"))
+													: historicosUS;
+
+												estadosPorJuego[id] = (ofertasActualesActualizado, ofertasHistoricasActualizado, historicosActualizado, reseñas, idSteam);
 											}
 
 											updates[id] = (resultado.Item1, resultado.Item2);

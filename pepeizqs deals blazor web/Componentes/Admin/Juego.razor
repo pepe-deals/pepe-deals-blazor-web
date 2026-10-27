@@ -106,22 +106,10 @@
 
 		<div style="width: auto;">
 			<button @onclick="(e => MostrarPestaña(e, 7))" class="boton-pequeño" style="padding: 10px 15px;">
-				Históricos EU
+				Históricos
 			</button>
 
 			@if (pestañaMostrar == 7)
-			{
-				<div style="background: color-mix(in srgb, var(--colorTexto) 50%, transparent); padding: 2px;">
-				</div>
-			}
-		</div>
-
-		<div style="width: auto;">
-			<button @onclick="(e => MostrarPestaña(e, 8))" class="boton-pequeño" style="padding: 10px 15px;">
-				Históricos US
-			</button>
-
-			@if (pestañaMostrar == 8)
 			{
 				<div style="background: color-mix(in srgb, var(--colorTexto) 50%, transparent); padding: 2px;">
 				</div>
@@ -656,59 +644,173 @@
 		}
 		else if (pestañaMostrar == 7)
 		{
-			if (juego.Historicos?.Count > 0)
-			{
-				foreach (var historico in juego.Historicos)
-				{
-					string imagenTienda = Tiendas2.TiendasCargar.DevolverTienda(historico.Tienda).ImagenIcono;
-					string imagenDRM = global::Juegos.JuegoDRM2.SacarImagen(historico.DRM);
+			<div style="display: flex; align-items: start; gap: 30px;">
+				<div style="display: flex; flex-direction: column; gap: 10px; width: 20%;">
+					@{
+						string borde1 = string.Empty;
 
-					<div style="margin-bottom: 10px; padding: 10px; background: var(--fondoBotonPequeño); border: 1px solid var(--fondoBotonPequeño); display: flex; align-items: center; gap: 10px;">
-						<div>
-							Fecha: @historico.Fecha.ToString("dd/MM/yyyy HH:mm")
-						</div>
-						<div>
-							Precio: @historico.Precio€
-						</div>
-						<div>
-							<img src="@imagenTienda" style="width: 20px; height: 20px;" />
-						</div>
-						<div>
-							<img src="@imagenDRM" style="width: 20px; height: 20px;"/>
-						</div>
+						if (pestañaMostrarHistoricos == 1)
+						{
+							borde1 = "border-right: 5px solid color-mix(in srgb, var(--colorTexto) 50%, transparent);";
+						}
 
-						<button @onclick="(e => BorrarRegistroHistorico(e, historico, TiendaRegion.Europa))" class="boton-pequeño-peligro" style="background-color: var(--fondoPeligro); width: fit-content; padding: 5px 15px; margin-left: auto;">Borrar</button>
-					</div>
-				}
-			}
-		}
-		else if (pestañaMostrar == 8)
-		{
-			if (juego.HistoricosUS?.Count > 0)
-			{
-				foreach (var historico in juego.HistoricosUS)
-				{
-					string imagenTienda = Tiendas2.TiendasCargar.DevolverTienda(historico.Tienda).ImagenIcono;
-					string imagenDRM = global::Juegos.JuegoDRM2.SacarImagen(historico.DRM);
+						<button @onclick="() => pestañaMostrarHistoricos = 1" class="boton-pequeño" style="display: flex; align-items: center; gap: 15px; padding: 10px 15px; @borde1">
+							<img src="/imagenes/banderas/europe.svg" style="width: 20px; height: 20px;" />
 
-					<div style="margin-bottom: 10px; padding: 10px; background: var(--fondoBotonPequeño); border: 1px solid var(--fondoBotonPequeño); display: flex; align-items: center; gap: 10px;">
-						<div>
-							Fecha: @historico.Fecha.ToString("dd/MM/yyyy HH:mm")
-						</div>
-						<div>
-							Precio: $@historico.Precio
-						</div>
-						<div>
-							<img src="@imagenTienda" style="width: 20px; height: 20px;" />
-						</div>
-						<div>
-							<img src="@imagenDRM" style="width: 20px; height: 20px;" />
-						</div>
+							<div>
+								Oficiales EU
+							</div>
+						</button>
 
-						<button @onclick="(e => BorrarRegistroHistorico(e, historico, TiendaRegion.EstadosUnidos))" class="boton-pequeño-peligro" style="background-color: var(--fondoPeligro); width: fit-content; padding: 5px 15px; margin-left: auto;">Borrar</button>
-					</div>
-				}
-			}
+						string borde2 = string.Empty;
+
+						if (pestañaMostrarHistoricos == 2)
+						{
+							borde2 = "border-right: 5px solid color-mix(in srgb, var(--colorTexto) 50%, transparent);";
+						}
+
+						<button @onclick="() => pestañaMostrarHistoricos = 2" class="boton-pequeño" style="display: flex; align-items: center; gap: 15px; padding: 10px 15px; @borde2">
+							<img src="/imagenes/banderas/english.svg" style="width: 20px; height: 20px;" />
+
+							<div>
+								Oficiales US
+							</div>
+						</button>
+
+						string borde3 = string.Empty;
+
+						if (pestañaMostrarHistoricos == 3)
+						{
+							borde3 = "border-right: 5px solid color-mix(in srgb, var(--colorTexto) 50%, transparent);";
+						}
+
+						<button @onclick="() => pestañaMostrarHistoricos = 3" class="boton-pequeño" style="display: flex; align-items: center; gap: 15px; padding: 10px 15px; @borde3">
+							<img src="/imagenes/banderas/europe.svg" style="width: 20px; height: 20px;" />
+
+							<div>
+								No Oficiales EU
+							</div>
+						</button>
+
+						string borde4 = string.Empty;
+
+						if (pestañaMostrarHistoricos == 4)
+						{
+							borde4 = "border-right: 5px solid color-mix(in srgb, var(--colorTexto) 50%, transparent);";
+						}
+
+						<button @onclick="() => pestañaMostrarHistoricos = 4" class="boton-pequeño" style="display: flex; align-items: center; gap: 15px; padding: 10px 15px; @borde4">
+							<img src="/imagenes/banderas/english.svg" style="width: 20px; height: 20px;" />
+
+							<div>
+								No Oficiales US
+							</div>
+						</button>
+
+						string borde5 = string.Empty;
+
+						if (pestañaMostrarHistoricos == 5)
+						{
+							borde5 = "border-right: 5px solid color-mix(in srgb, var(--colorTexto) 50%, transparent);";
+						}
+
+						<button @onclick="() => pestañaMostrarHistoricos = 5" class="boton-pequeño" style="display: flex; align-items: center; gap: 15px; padding: 10px 15px; @borde5">
+							<img src="/imagenes/banderas/europe.svg" style="width: 20px; height: 20px;" />
+
+							<div>
+								Marketplaces EU
+							</div>
+						</button>
+
+						string borde6 = string.Empty;
+
+						if (pestañaMostrarHistoricos == 6)
+						{
+							borde6 = "border-right: 5px solid color-mix(in srgb, var(--colorTexto) 50%, transparent);";
+						}
+
+						<button @onclick="() => pestañaMostrarHistoricos = 6" class="boton-pequeño" style="display: flex; align-items: center; gap: 15px; padding: 10px 15px; @borde6">
+							<img src="/imagenes/banderas/english.svg" style="width: 20px; height: 20px;" />
+
+							<div>
+								Marketplaces US
+							</div>
+						</button>
+					}
+				</div>
+
+				<div style="width: 80%;">
+					@if (pestañaMostrarHistoricos > 0)
+					{
+						List<JuegoHistorico> historicosMostrar = new List<JuegoHistorico>();
+						TiendaTipo historicosTipo = TiendaTipo.Oficial;
+						TiendaRegion historicosRegion = TiendaRegion.Europa;
+
+						if (pestañaMostrarHistoricos == 1)
+						{
+							historicosMostrar = juego.Historicos;
+							historicosTipo = TiendaTipo.Oficial;
+                            historicosRegion = TiendaRegion.Europa;
+						}
+						else if (pestañaMostrarHistoricos == 2)
+						{
+							historicosMostrar = juego.HistoricosUS;
+							historicosTipo = TiendaTipo.Oficial;
+							historicosRegion = TiendaRegion.EstadosUnidos;
+						}
+						else if (pestañaMostrarHistoricos == 3)
+						{
+							historicosMostrar = juego.HistoricosNoOficialesEU;
+							historicosTipo = TiendaTipo.NoOficial;
+							historicosRegion = TiendaRegion.Europa;
+						}
+						else if (pestañaMostrarHistoricos == 4)
+						{
+							historicosMostrar = juego.HistoricosNoOficialesUS;
+							historicosTipo = TiendaTipo.NoOficial;
+							historicosRegion = TiendaRegion.EstadosUnidos;
+						}
+						else if (pestañaMostrarHistoricos == 5)
+						{
+							historicosMostrar = juego.HistoricosMarketplacesEU;
+							historicosTipo = TiendaTipo.Marketplace;
+							historicosRegion = TiendaRegion.Europa;
+						}
+						else if (pestañaMostrarHistoricos == 6)
+						{
+							historicosMostrar = juego.HistoricosMarketplacesUS;
+							historicosTipo = TiendaTipo.Marketplace;
+							historicosRegion = TiendaRegion.EstadosUnidos;
+						}
+						
+						if (historicosMostrar?.Count > 0)
+						{
+							foreach (var historico in historicosMostrar)
+							{
+								string imagenTienda = Tiendas2.TiendasCargar.DevolverTienda(historico.Tienda).ImagenIcono;
+								string imagenDRM = global::Juegos.JuegoDRM2.SacarImagen(historico.DRM);
+
+								<div style="margin-bottom: 10px; padding: 10px; background: var(--fondoBotonPequeño); border: 1px solid var(--fondoBotonPequeño); display: flex; align-items: center; gap: 10px;">
+									<div>
+										Fecha: @historico.Fecha.ToString("dd/MM/yyyy HH:mm")
+									</div>
+									<div>
+										Precio: @historico.Precio€
+									</div>
+									<div>
+										<img src="@imagenTienda" style="width: 20px; height: 20px;" />
+									</div>
+									<div>
+										<img src="@imagenDRM" style="width: 20px; height: 20px;" />
+									</div>
+
+									<button @onclick="(e => BorrarRegistroHistorico(e, historico, historicosRegion, historicosTipo))" class="boton-pequeño-peligro" style="background-color: var(--fondoPeligro); width: fit-content; padding: 5px 15px; margin-left: auto;">Borrar</button>
+								</div>
+							}
+						}
+					}
+				</div>
+			</div>
 		}
 	}
 </div>
@@ -738,7 +840,7 @@
 	protected override void OnParametersSet()
 	{
 		claveExtension = Configuracion.GetValue<string>("Extension:Clave");
-        miUsuarioBD = Configuracion.GetValue<string>("MiUsuarioBD:Id");
+		miUsuarioBD = Configuracion.GetValue<string>("MiUsuarioBD:Id");
 
 		if (juego.Bundles != null)
 		{
@@ -826,11 +928,6 @@
 			}
 			i += 1;
 		}
-
-		if (juego.Historicos != null)
-		{
-			textoHistoricos = JsonSerializer.Serialize(juego.Historicos);
-		}
 	}
 
 	private int pestañaMostrar = 0;
@@ -859,6 +956,10 @@
 			{
 				textoPrecios = JsonSerializer.Serialize(juego.PrecioActualesTiendas);
 			}			
+		}
+		else if (pestañaMostrar == 7)
+		{
+			pestañaMostrarHistoricos = 1;
 		}
 	}
 
@@ -1529,34 +1630,41 @@
 
 	#region Historicos
 
-	private string textoHistoricos = string.Empty;
+	private int pestañaMostrarHistoricos = 0;
 
-	private async void TextoCambiaHistoricos(ChangeEventArgs texto)
-	{
-		if (string.IsNullOrEmpty(texto.Value.ToString().Trim()) == false)
-		{
-			string nuevoTexto = texto.Value.ToString().Trim();
-
-			textoHistoricos = nuevoTexto;
-			juego.Historicos = JsonSerializer.Deserialize<List<global::Juegos.JuegoHistorico>>(textoHistoricos);
-
-			await BaseDatos.Juegos.Actualizar.HistoricosEU(juego);
-		}
-	}
-
-	private async void BorrarRegistroHistorico(MouseEventArgs e, JuegoHistorico historicoBorrar, TiendaRegion region)
+	private async void BorrarRegistroHistorico(MouseEventArgs e, JuegoHistorico historicoBorrar, TiendaRegion region, TiendaTipo tipo)
 	{
 		if (historicoBorrar != null)
 		{
-			if (region == TiendaRegion.Europa)
+			if (tipo == TiendaTipo.Oficial && region == TiendaRegion.Europa)
 			{
 				juego.Historicos.Remove(historicoBorrar);
-				await BaseDatos.Juegos.Actualizar.HistoricosEU(juego);
+				await BaseDatos.Juegos.Actualizar.HistoricosOficialesEU(juego);
 			}
-			else if (region == TiendaRegion.EstadosUnidos)
+			else if (tipo == TiendaTipo.Oficial && region == TiendaRegion.EstadosUnidos)
 			{
 				juego.HistoricosUS.Remove(historicoBorrar);
-				await BaseDatos.Juegos.Actualizar.HistoricosUS(juego);
+				await BaseDatos.Juegos.Actualizar.HistoricosOficialesUS(juego);
+			}
+			else if (tipo == TiendaTipo.NoOficial && region == TiendaRegion.Europa)
+			{
+				juego.HistoricosNoOficialesEU.Remove(historicoBorrar);
+				await BaseDatos.Juegos.Actualizar.HistoricosNoOficialesEU(juego);
+			}
+			else if (tipo == TiendaTipo.NoOficial && region == TiendaRegion.EstadosUnidos)
+			{
+				juego.HistoricosNoOficialesUS.Remove(historicoBorrar);
+				await BaseDatos.Juegos.Actualizar.HistoricosNoOficialesUS(juego);
+			}
+			else if (tipo == TiendaTipo.Marketplace && region == TiendaRegion.Europa)
+			{
+				juego.HistoricosMarketplacesEU.Remove(historicoBorrar);
+				await BaseDatos.Juegos.Actualizar.HistoricosMarketplacesEU(juego);
+			}
+			else if (tipo == TiendaTipo.Marketplace && region == TiendaRegion.EstadosUnidos)
+			{
+				juego.HistoricosMarketplacesUS.Remove(historicoBorrar);
+				await BaseDatos.Juegos.Actualizar.HistoricosMarketplacesUS(juego);
 			}
 		}
 	}
