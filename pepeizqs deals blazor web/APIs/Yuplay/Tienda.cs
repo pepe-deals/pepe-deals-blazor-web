@@ -68,6 +68,10 @@ namespace APIs.Yuplay
 								if (producto.Descuento != null && string.IsNullOrEmpty(producto.Descuento.Valor) == false && int.Parse(producto.Descuento.Valor) > 0)
 								{
 									string nombre = WebUtility.HtmlDecode(producto.Nombre);
+									nombre = nombre.Replace("(EU)", null);
+									nombre = nombre.Replace("(Steam)", null);
+									nombre = nombre.Trim();
+
 									string enlaceJuego = "https://www.yuplay.com" + producto.Enlace;
 									string imagen = producto.Imagenes?.Width616 ?? producto.Imagenes?.Width267 ?? "";
 

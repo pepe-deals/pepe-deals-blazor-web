@@ -168,6 +168,9 @@ namespace APIs.Playsum
 											nombre = nombre.Substring(0, nombre.Length - 6);
 										}
 
+										nombre = nombre.Replace("- Early Access", null);
+										nombre = nombre.Trim();
+
 										string enlace = juego.Enlace;
 
 										JuegoDRM drm = JuegoDRM2.Traducir(juego.DRM, Generar().Id);

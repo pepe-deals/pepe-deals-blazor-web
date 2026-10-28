@@ -823,7 +823,7 @@
 							continue;
 						}
 
-						foreach (var juego2 in pendientes.Where(j => j.JuegoId == maestro))
+						foreach (var juego2 in pendientes.Where(j => j.JuegoId == maestro && j.Tier.Posicion == juego.Tier.Posicion))
 						{
 							juego2.DLCs ??= new List<string>();
 

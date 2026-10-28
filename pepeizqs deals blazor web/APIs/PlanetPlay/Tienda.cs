@@ -75,6 +75,8 @@ namespace APIs.PlanetPlay
 								if (descuento > 0)
 								{
 									string nombre = WebUtility.HtmlDecode(juego.Nombre);
+									nombre = nombre.Replace("- Early Access", null);
+									nombre = nombre.Trim();
 
 									string enlaceJuego = juego.Enlace;
 
