@@ -5,7 +5,6 @@
 @using Microsoft.AspNetCore.WebUtilities
 @using pepeizqs_deals_web.Data
 
-@inject IHttpContextAccessor Contexto
 @inject UserManager<Usuario> UserManager
 @inject SignInManager<Usuario> SignInManager
 @inject NavigationManager NavManager
@@ -24,6 +23,8 @@
 
     #nullable disable
 
+    [CascadingParameter] private Herramientas.ContextoUsuarioDatos datos { get; set; }
+
     private string idioma = "en";
 
     private string mensaje = null;
@@ -41,8 +42,7 @@
     private string Code { get; set; }
 
     protected override async Task OnInitializedAsync()
-    {
-        Herramientas.ContextoUsuarioDatos datos = Herramientas.ContextoUsuario.Leer(Contexto);
+    {       
         idioma = datos.Idioma;
 
         if (UserId is null || Email is null || Code is null)

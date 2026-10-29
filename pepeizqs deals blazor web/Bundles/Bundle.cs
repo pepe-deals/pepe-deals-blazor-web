@@ -50,4 +50,10 @@ namespace Bundles2
 		public bool DeseadoImportado;
 		public bool DeseadoWeb;
 	}
+
+	public enum BundleDiseño
+	{
+		Cuadricula,
+		Lista
+	}
 }

@@ -11,7 +11,6 @@
 @using System.Text.Json
 @using Tiendas2
 
-@inject IHttpContextAccessor Contexto
 @inject IJSRuntime JavaScript
 
 <Titulo tipo="@Titulo.Tipo.Minimos" idioma="@idioma" dominio="@dominio"/>
@@ -1052,6 +1051,8 @@ else
 
 	#nullable disable
 
+	[CascadingParameter] private Herramientas.ContextoUsuarioDatos datos { get; set; }
+
 	private static string idioma = "en";
 	private string usuarioId = null;
 	private string userAgent = null;
@@ -1097,7 +1098,6 @@ else
 
 	protected override async Task OnInitializedAsync()
 	{
-		Herramientas.ContextoUsuarioDatos datos = Herramientas.ContextoUsuario.Leer(Contexto);
 		idioma = datos.Idioma;
 		usuarioId = datos.UsuarioId;
 		userAgent = datos.UserAgent;

@@ -1,7 +1,13 @@
-.bundle-tabla {
+.bundle-cuadricula {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     grid-gap: 20px;
+}
+
+.bundle-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .bundle-espacio {
@@ -17,7 +23,7 @@
 }
 
 @media (max-width: 900px) {
-    .bundle-tabla {
+    .bundle-cuadricula {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         grid-gap: 10px;
     }
@@ -37,6 +43,8 @@
 
 * {
     --glaseadoBorde: #FFFFFF1A;
+    --glaseadoFondo: rgba(45, 47, 54, 0.70);
+    --botonSeleccionado: rgba(13, 22, 33, 0.75);
 }
 
 .caja-bundle-contenido {
@@ -45,10 +53,9 @@
 }
 
 .caja-bundle-mensaje {
-    background-color: var(--fondoSubsubcabecera);
-    border-top-left-radius: inherit;
-    border-top-right-radius: inherit;
-    border: 2px solid rgba(0,0,0,.5);
+    background-color: rgba(0,0,0,.3);
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
 }
 
 .juego-fondo {
@@ -79,3 +86,42 @@
     justify-content: center;
     align-items: center;
 }
+
+.caja-bundle-diseños {
+    background-blend-mode: overlay;
+    border-radius: 10px;
+    border: 2px solid rgba(0,0,0,.4);
+    width: fit-content;
+    background-color: var(--fondoSubsubcabecera);
+    backdrop-filter: blur(25px);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 5px;
+    margin: 20px 0px 20px auto;
+}
+
+.caja-bundle-diseños-animacion {
+    opacity: 0;
+    transition: all 0.5s ease, transform .2s ease;
+    pointer-events: none;
+    transform: scaleX(0);
+    transform-origin: left;
+    max-width: 0;
+    font-size: 16px;
+}
+
+    .caja-bundle-diseños-animacion.visible {
+        opacity: 1;
+        pointer-events: auto;
+        transform: scaleX(1);
+        max-width: fit-content;
+    }
+
+.boton-bundle-diseños {
+    transition: backdrop-filter 0.2s ease;
+}
+
+    .boton-bundle-diseños:hover {
+        backdrop-filter: brightness(50%);
+    }

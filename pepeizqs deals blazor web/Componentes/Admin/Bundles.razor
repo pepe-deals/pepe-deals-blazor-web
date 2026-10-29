@@ -2,8 +2,6 @@
 @using Microsoft.AspNetCore.Components.Web
 @using Tiendas2
 
-@inject IHttpContextAccessor Contexto
-
 <div class="caja-admin-bundles">
     <div>
         <div style="margin-bottom: 10px;">Enlace:</div>
@@ -200,11 +198,12 @@
 
     #nullable disable
 
+    [CascadingParameter] private Herramientas.ContextoUsuarioDatos datos { get; set; }
+
     private string dominio = null;
 
     protected override void OnInitialized()
     {
-        Herramientas.ContextoUsuarioDatos datos = Herramientas.ContextoUsuario.Leer(Contexto);
         dominio = datos.Dominio;
     }
 

@@ -1,7 +1,5 @@
 ﻿@page "/error"
 
-@inject IHttpContextAccessor Contexto
-
 <HeadContent>
     <PageTitle>Error • pepe's deals</PageTitle>
 
@@ -29,11 +27,12 @@
 
     #nullable disable
 
+    [CascadingParameter] private Herramientas.ContextoUsuarioDatos datos { get; set; }
+
     private string dominio = null;
 
     protected override void OnInitialized()
     {
-        Herramientas.ContextoUsuarioDatos datos = Herramientas.ContextoUsuario.Leer(Contexto);
         dominio = datos.Dominio;
     }
 }

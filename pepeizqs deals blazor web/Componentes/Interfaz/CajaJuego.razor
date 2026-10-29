@@ -1,5 +1,6 @@
 ﻿@implements IAsyncDisposable
 
+@using Bundles2
 @using Juegos
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.JSInterop
@@ -548,7 +549,7 @@
 			string claveBundle = juego.Id.ToString() + "-" + drmBundle;
 
 			<a @key="@claveBundle" class="boton-pequeño" style="padding: 0px; @fondoColor" href="@enlace" target="@enlaceNuevaPestaña">
-				<div style="padding: 0px; position: relative;">
+				<div style="padding: 0px; position: relative; @(diseñoBundle == Bundles2.BundleDiseño.Lista ? "display: flex; align-items: center; gap: 15px;" : "");">
 					@{
 						int cantidadBundles = (juego.BundlesActuales?.Count ?? 0) + (juego.BundlesPasados?.Count ?? 0);
 						bool añadirNuevo = false;
@@ -572,56 +573,121 @@
 					}
 
 					<div style="text-align: center;">
-						<img src="@Herramientas.Ficheros.Imagenes.ServidorExterno(juego.Imagenes.Header_460x215, 292, 136)" style="width: 100%; display: block;" alt="@juego.Nombre" loading="lazy" />
+						<img src="@Herramientas.Ficheros.Imagenes.ServidorExterno(juego.Imagenes.Header_460x215, 292, 136)" style="width: 100%; display: block; @(diseñoBundle == BundleDiseño.Lista ? "height: 80px;":"")" alt="@juego.Nombre" loading="lazy" />
 					</div>
 
-					<div style="display: flex; align-items: center; flex-wrap: wrap;">
-						<div style="display: flex; align-items: center; gap: 15px; padding: 15px;">
-							<img src="@Juegos.JuegoDRM2.SacarImagen(drmBundle)" style="max-width: 20px; max-height: 20px; display: block;" alt="@Juegos.JuegoDRM2.DevolverDRM(drmBundle)" loading="lazy" />
+					@if (diseñoBundle == BundleDiseño.Cuadricula)
+					{
+						<div style="display: flex; align-items: center; flex-wrap: wrap;">
+							<div style="display: flex; align-items: center; gap: 15px; padding: 15px;">
+								<img src="@Juegos.JuegoDRM2.SacarImagen(drmBundle)" style="max-width: 20px; max-height: 20px; display: block;" alt="@Juegos.JuegoDRM2.DevolverDRM(drmBundle)" loading="lazy" />
 
-							@if (juego.Analisis != null)
-							{
-								if (string.IsNullOrEmpty(juego.Analisis.Porcentaje) == false)
+								@if (juego.Analisis != null)
 								{
-									if (int.Parse(juego.Analisis.Porcentaje) > 74)
+									if (string.IsNullOrEmpty(juego.Analisis.Porcentaje) == false)
 									{
-										<img src="/imagenes/analisis/positivo3.svg" style="max-width: 22px; max-height: 22px; display: block;" loading="lazy" alt="Reviews Good" />
-									}
+										if (int.Parse(juego.Analisis.Porcentaje) > 74)
+										{
+											<img src="/imagenes/analisis/positivo3.svg" style="max-width: 22px; max-height: 22px; display: block;" loading="lazy" alt="Reviews Good" />
+										}
 
-									if (int.Parse(juego.Analisis.Porcentaje) > 49 && int.Parse(juego.Analisis.Porcentaje) < 75)
-									{
-										<img src="/imagenes/analisis/meh3.svg" style="max-width: 22px; max-height: 22px; display: block;" loading="lazy" alt="Reviews Meh" />
-									}
+										if (int.Parse(juego.Analisis.Porcentaje) > 49 && int.Parse(juego.Analisis.Porcentaje) < 75)
+										{
+											<img src="/imagenes/analisis/meh3.svg" style="max-width: 22px; max-height: 22px; display: block;" loading="lazy" alt="Reviews Meh" />
+										}
 
-									if (int.Parse(juego.Analisis.Porcentaje) < 50)
-									{
-										<img src="/imagenes/analisis/negativo3.svg" style="max-width: 22px; max-height: 22px; display: block;" loading="lazy" alt="Reviews Bad" />
+										if (int.Parse(juego.Analisis.Porcentaje) < 50)
+										{
+											<img src="/imagenes/analisis/negativo3.svg" style="max-width: 22px; max-height: 22px; display: block;" loading="lazy" alt="Reviews Bad" />
+										}
 									}
 								}
+							</div>
+
+							@if (añadirNuevo == true)
+							{
+								<div style="font-size: 14px; padding: 5px 10px; background-color: rgba(255, 255, 255, 0.2); width: fit-content; margin-left: auto; margin-right: 10px; border: 1px solid rgba(255,255,255,0.3);">
+									@Herramientas.Idiomas.BuscarTexto(idioma, "String24", "Bundle")
+								</div>
+							}
+
+							@if (dlcsBundle?.Count > 0)
+							{
+								<div style="font-size: 14px; padding: 8px 10px; background-color: var(--fondoDlc); width: fit-content; position: absolute; top: 0; right: 0;">
+									@if (dlcsBundle.Count == 1)
+									{
+										@("+" + Herramientas.Idiomas.BuscarTexto(idioma, "String27", "Bundle"))
+									}
+									else if (dlcsBundle.Count > 1)
+									{
+										@string.Format("+ " + Herramientas.Idiomas.BuscarTexto(idioma, "String28", "Bundle"), dlcsBundle.Count)
+									}
+								</div>
 							}
 						</div>
+					}
+					else if (diseñoBundle == BundleDiseño.Lista)
+					{
+						<div>
+							@juego.Nombre
+						</div>
 
-						@if (añadirNuevo == true)
-						{
-							<div style="font-size: 14px; padding: 5px 10px; background-color: rgba(255, 255, 255, 0.2); width: fit-content; margin-left: auto; margin-right: 10px; border: 1px solid rgba(255,255,255,0.3);">
-								@Herramientas.Idiomas.BuscarTexto(idioma, "String24", "Bundle")
-							</div>
-						}
+						<div style="display: flex; align-items: center; flex-wrap: wrap; margin-left: auto;">
+							@if (añadirNuevo == true)
+							{
+								<div style="font-size: 14px; padding: 5px 10px; margin-right: 5px; background-color: rgba(255, 255, 255, 0.2); width: fit-content; border: 1px solid rgba(255,255,255,0.3);">
+									@Herramientas.Idiomas.BuscarTexto(idioma, "String24", "Bundle")
+								</div>
+							}
 
-						@if (dlcsBundle?.Count > 0)
-						{
-							<div style="font-size: 14px; padding: 8px 10px; background-color: var(--fondoDlc); width: fit-content; position: absolute; top: 0; right: 0;">
-								@if (dlcsBundle.Count == 1)
+							@if (dlcsBundle?.Count > 0)
+							{
+								<div style="display: flex; align-items: center; gap: 5px; padding: 5px 10px; margin-right: 5px; background-color: var(--fondoDlc); width: fit-content; border: 1px solid rgba(0,0,0,0.5);">
+									<div style="font-size: 14px;">
+										@if (dlcsBundle.Count == 1)
+										{
+											@("+" + Herramientas.Idiomas.BuscarTexto(idioma, "String27", "Bundle"))
+										}
+										else if (dlcsBundle.Count > 1)
+										{
+											@string.Format("+ " + Herramientas.Idiomas.BuscarTexto(idioma, "String28", "Bundle"), dlcsBundle.Count)
+										}
+									</div>
+
+									<div style="display: flex; width: 20px; height: 20px;">
+										<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+											<path fill="rgba(255,255,255,0.5)" d="M320 576C461.4 576 576 461.4 576 320C576 178.6 461.4 64 320 64C178.6 64 64 178.6 64 320C64 461.4 178.6 576 320 576zM303 441L223 361C213.6 351.6 213.6 336.4 223 327.1C232.4 317.8 247.6 317.7 256.9 327.1L295.9 366.1L295.9 216C295.9 202.7 306.6 192 319.9 192C333.2 192 343.9 202.7 343.9 216L343.9 366.1L382.9 327.1C392.3 317.7 407.5 317.7 416.8 327.1C426.1 336.5 426.2 351.7 416.8 361L336.8 441C327.4 450.4 312.2 450.4 302.9 441z" />
+										</svg>
+									</div>
+								</div>
+							}
+
+							<div style="display: flex; align-items: center; gap: 10px; margin: 10px 20px;">
+								<img src="@Juegos.JuegoDRM2.SacarImagen(drmBundle)" style="max-width: 24px; max-height: 24px; display: block;" alt="@Juegos.JuegoDRM2.DevolverDRM(drmBundle)" loading="lazy" />
+
+								@if (juego.Analisis != null)
 								{
-									@("+" + Herramientas.Idiomas.BuscarTexto(idioma, "String27", "Bundle"))
-								}
-								else if (dlcsBundle.Count > 1)
-								{
-									@string.Format("+ " + Herramientas.Idiomas.BuscarTexto(idioma, "String28", "Bundle"), dlcsBundle.Count)
+									if (string.IsNullOrEmpty(juego.Analisis.Porcentaje) == false)
+									{
+										if (int.Parse(juego.Analisis.Porcentaje) > 74)
+										{
+											<img src="/imagenes/analisis/positivo3.svg" style="max-width: 24px; max-height: 24px; display: block;" loading="lazy" alt="Reviews Good" />
+										}
+
+										if (int.Parse(juego.Analisis.Porcentaje) > 49 && int.Parse(juego.Analisis.Porcentaje) < 75)
+										{
+											<img src="/imagenes/analisis/meh3.svg" style="max-width: 24px; max-height: 24px; display: block;" loading="lazy" alt="Reviews Meh" />
+										}
+
+										if (int.Parse(juego.Analisis.Porcentaje) < 50)
+										{
+											<img src="/imagenes/analisis/negativo3.svg" style="max-width: 24px; max-height: 24px; display: block;" loading="lazy" alt="Reviews Bad" />
+										}
+									}
 								}
 							</div>
-						}
-					</div>
+						</div>
+					}
 				</div>
 			</a>
 		}
@@ -867,6 +933,9 @@
 
 	[Parameter]
 	public List<string> dlcsBundle { get; set; }
+
+	[Parameter]
+	public BundleDiseño diseñoBundle { get; set; }
 
 	[Parameter]
 	public string enlaceNoticia { get; set; }

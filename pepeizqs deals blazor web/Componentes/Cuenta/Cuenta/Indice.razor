@@ -9,7 +9,6 @@
 @using Microsoft.AspNetCore.Components.Web
 @using pepeizqs_deals_web.Data
 
-@inject IHttpContextAccessor Contexto
 @inject IJSRuntime JavaScript
 
 <HeadContent>
@@ -217,6 +216,8 @@
 
     #nullable disable
 
+    [CascadingParameter] private Herramientas.ContextoUsuarioDatos datos { get; set; }
+
     [PersistentState]
     public string tituloNavegador { get; set; }
 
@@ -236,7 +237,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Herramientas.ContextoUsuarioDatos datos = Herramientas.ContextoUsuario.Leer(Contexto);
         idioma = datos.Idioma;
         usuarioId = datos.UsuarioId;
         userAgent = datos.UserAgent;

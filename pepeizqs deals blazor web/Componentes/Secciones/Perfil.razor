@@ -3,8 +3,6 @@
 @using pepeizqs_deals_web.Data
 @using static pepeizqs_deals_blazor_web.Componentes.Cuenta.Cuenta.Juegos
 
-@inject IHttpContextAccessor Contexto
-
 @if (perfil != null)
 {
 	string titulo = perfil.ProfileNickname2 + " • pepe's deals";
@@ -162,6 +160,8 @@ else
 
 	#nullable disable
 
+	[CascadingParameter] private Herramientas.ContextoUsuarioDatos datos { get; set; }
+
 	private string idioma = "en";
 	private string usuarioId = null;
 	private string userAgent = null;
@@ -181,7 +181,6 @@ else
 
 	protected override async Task OnInitializedAsync()
 	{
-		Herramientas.ContextoUsuarioDatos datos = Herramientas.ContextoUsuario.Leer(Contexto);
 		idioma = datos.Idioma;
 		usuarioId = datos.UsuarioId;
 		userAgent = datos.UserAgent;

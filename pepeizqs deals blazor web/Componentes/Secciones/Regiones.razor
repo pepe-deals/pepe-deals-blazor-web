@@ -3,8 +3,6 @@
 @using Tiendas2
 @using pepeizqs_deals_blazor_web.Componentes.Interfaz
 
-@inject IHttpContextAccessor Contexto
-
 <Titulo tipo="@Titulo.Tipo.Regiones" idioma="@idioma" dominio="@dominio"/>
 
 <div class="cuerpo-ancho" style="display: flex; flex-direction: column; gap: 40px; margin-top: 40px; margin-bottom: 40px;">
@@ -117,6 +115,8 @@
 
 	#nullable disable
 
+	[CascadingParameter] private Herramientas.ContextoUsuarioDatos datos { get; set; }
+
 	private string idioma = "en";
 	private string usuarioId = null;
 	private string dominio = null;
@@ -125,7 +125,6 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		Herramientas.ContextoUsuarioDatos datos = Herramientas.ContextoUsuario.Leer(Contexto);
 		idioma = datos.Idioma;
 		usuarioId = datos.UsuarioId;
 		dominio = datos.Dominio;

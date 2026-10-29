@@ -6,7 +6,6 @@
 @using global::Noticias
 @using pepeizqs_deals_web.Data
 
-@inject IHttpContextAccessor Contexto
 @inject Herramientas.NotificacionesPush Push
 @inject HttpClient Cliente
 @inject IConfiguration Configuracion
@@ -622,6 +621,8 @@ else if (noticiaTipoSeleccionada == NoticiaTipo.Despedidas)
 
     #nullable disable
 
+    [CascadingParameter] private Herramientas.ContextoUsuarioDatos datos { get; set; }
+
     private string dominio = null;
 
     private NoticiaTipo noticiaTipoSeleccionada = NoticiaTipo.Bundles;
@@ -647,7 +648,6 @@ else if (noticiaTipoSeleccionada == NoticiaTipo.Despedidas)
 
     protected override void OnInitialized()
     {
-        Herramientas.ContextoUsuarioDatos datos = Herramientas.ContextoUsuario.Leer(Contexto);
         dominio = datos.Dominio;
     }
 

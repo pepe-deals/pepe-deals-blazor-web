@@ -10,8 +10,8 @@
 @using pepeizqs_deals_blazor_web.Componentes.Interfaz
 @using pepeizqs_deals_web.Data
 
-@inject IHttpContextAccessor Contexto
 @inject IJSRuntime JavaScript
+@inject Servicios.DiseñoBundle ServicioDiseñoBundle
 
 @if (bundle != null)
 {
@@ -184,11 +184,6 @@
 		{
 			<pepeizqs_deals_blazor_web.Componentes.Admin.Bundle idioma="@idioma" bundleId="@bundle.Id" />
 		}
-
-		@if (Herramientas.Bots.UserAgentEsBot(userAgent) == false)
-		{
-			<img class="juego-fondo" src="@fondo" alt="Background" />
-		}
 		
 		<div class="cuerpo-ancho" style="background-color: var(--fondoSubcabecera); border: 2px solid var(--glaseadoBorde); border-top-left-radius: 20px; border-top-right-radius: 20px; margin-top: 40px; @(DateTime.Now > bundle.FechaTermina ? "border-bottom: 0px;" : "")">
 			<div style="display: flex; align-items: center; flex-wrap: nowrap; border-top-left-radius: inherit;">
@@ -276,6 +271,26 @@
 		decimal totalMinimos = 0;
 
 		<div>
+			<div class="cuerpo-ancho">
+				<div class="caja-bundle-diseños">
+					<button @onclick="@(async e => { await MostrarCuadricula(true); })" class="boton-bundle-diseños" style="@fondoCuadricula border: 0px; padding: 5px 10px; display: flex; align-items: center; color: var(--colorTexto); border-radius: 10px;">
+						<div style="display: flex; width: 24px; height: 24px;">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+								<path fill="var(--colorTexto)" d="M480 160L480 224L416 224L416 160L480 160zM480 288L480 352L416 352L416 288L480 288zM480 416L480 480L416 480L416 416L480 416zM352 352L288 352L288 288L352 288L352 352zM288 416L352 416L352 480L288 480L288 416zM224 352L160 352L160 288L224 288L224 352zM160 416L224 416L224 480L160 480L160 416zM160 224L160 160L224 160L224 224L160 224zM288 224L288 160L352 160L352 224L288 224zM160 96C124.7 96 96 124.7 96 160L96 480C96 515.3 124.7 544 160 544L480 544C515.3 544 544 515.3 544 480L544 160C544 124.7 515.3 96 480 96L160 96z" />
+							</svg>
+						</div>
+					</button>
+
+					<button @onclick="@(async e => { await MostrarLista(true); })" class="boton-bundle-diseños" style="@fondoLista border: 0px; padding: 5px 10px; display: flex; align-items: center; color: var(--colorTexto); border-radius: 10px;">
+						<div style="display: flex; width: 24px; height: 24px;">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+								<path fill="var(--colorTexto)" d="M104 112C90.7 112 80 122.7 80 136L80 184C80 197.3 90.7 208 104 208L152 208C165.3 208 176 197.3 176 184L176 136C176 122.7 165.3 112 152 112L104 112zM256 128C238.3 128 224 142.3 224 160C224 177.7 238.3 192 256 192L544 192C561.7 192 576 177.7 576 160C576 142.3 561.7 128 544 128L256 128zM256 288C238.3 288 224 302.3 224 320C224 337.7 238.3 352 256 352L544 352C561.7 352 576 337.7 576 320C576 302.3 561.7 288 544 288L256 288zM256 448C238.3 448 224 462.3 224 480C224 497.7 238.3 512 256 512L544 512C561.7 512 576 497.7 576 480C576 462.3 561.7 448 544 448L256 448zM80 296L80 344C80 357.3 90.7 368 104 368L152 368C165.3 368 176 357.3 176 344L176 296C176 282.7 165.3 272 152 272L104 272C90.7 272 80 282.7 80 296zM104 432C90.7 432 80 442.7 80 456L80 504C80 517.3 90.7 528 104 528L152 528C165.3 528 176 517.3 176 504L176 456C176 442.7 165.3 432 152 432L104 432z" />
+							</svg>
+						</div>
+					</button>
+				</div>
+			</div>
+			
 			@if (bundle.Tiers.Count > 0)
 			{
 				int i = 0;
@@ -304,10 +319,10 @@
 
 						if (bundle.Pick == true)
 						{
-							<div class="cuerpo-ancho bundle-espacio2" style="font-size: 18px; display: flex; align-items: center; flex-direction: row; justify-content: space-between; padding: 20px 0px;">
+							<div class="cuerpo-ancho bundle-espacio2" style="font-size: 18px; display: flex; align-items: center; flex-direction: row; justify-content: space-between; margin-bottom: 20px;">
 								@foreach (var tier2 in OrdenarTiers(bundle.Tiers))
 								{
-									<div class="caja-bundle-mensaje bundle-espacio3" style="border-radius: 10px; text-align: center; display: flex; align-items: center; gap: 5px; width: 100%; justify-content: center;">
+									<div class="bundle-espacio3" style="background: var(--fondoSubsubcabecera); border: 2px solid rgba(0,0,0,.4); border-radius: 10px; text-align: center; display: flex; align-items: center; gap: 5px; width: 100%; justify-content: center;">
 										@if (tier2.CantidadJuegos == 1)
 										{
 											<label>@tier2.CantidadJuegos.ToString() @Herramientas.Idiomas.BuscarTexto(idioma, "String21", "Bundle") • @Herramientas.Precios.Euro(decimal.Parse(tier2.Precio))</label>
@@ -325,7 +340,7 @@
 
 						string espacioFondo = "margin-bottom: 40px;";
 
-						if (i == bundle.Tiers.Count - 1 || bundle.Pick == true )
+						if (i == bundle.Tiers.Count - 1 || bundle.Pick == true)
 						{
 							if (tipo == Tipo.Bundle || tipo == Tipo.Bundles)
 							{
@@ -345,32 +360,22 @@
 							{
 								if (i == 0)
 								{
-									if (tipo == Tipo.Noticia || tipo == Tipo.Bundles || tipo == Tipo.Bundle)
-									{
-										if (bundle.Tiers.Count > 1)
-										{
-											bordesRedondeado = "border-bottom-left-radius: 20px; border-bottom-right-radius: 20px;";
-										}
-									}
-									else
-									{
-										bordesRedondeado = "border-radius: 20px;";
-									}
+									bordesRedondeado = "border-radius: 10px;";
 								}
 								else if (i == bundle.Tiers.Count - 1)
 								{
 									if (tipo == Tipo.Noticia)
 									{
-										bordesRedondeado = "border-top-left-radius: 20px; border-top-right-radius: 20px;";
+										bordesRedondeado = "border-top-left-radius: 10px; border-top-right-radius: 10px;";
 									}
 									else
 									{
-										bordesRedondeado = "border-radius: 20px;";
+										bordesRedondeado = "border-radius: 10px;";
 									}
 								}
 								else
 								{
-									bordesRedondeado = "border-radius: 20px;";
+									bordesRedondeado = "border-radius: 10px;";
 								}
 							}
 						}
@@ -378,18 +383,18 @@
 						{
 							if (tipo == Tipo.Noticia)
 							{
-								bordesRedondeado = "border-top-left-radius: 20px; border-top-right-radius: 20px;";
+								bordesRedondeado = "border-top-left-radius: 10px; border-top-right-radius: 10px;";
 							}
 							else
 							{
-								bordesRedondeado = "border-radius: 20px;";
+								bordesRedondeado = "border-radius: 10px;";
 							}
 						}
 
 						<div class="caja-bundle-contenido cuerpo-ancho" style="@espacioFondo @bordesRedondeado">
 							@if (bundle.Pick == false)
 							{
-								<div class="caja-bundle-mensaje" style="background: rgba(0,0,0,.3); border: 1px solid rgba(0,0,0,.5); font-size: 18px; padding: 20px 30px; display: flex; align-items: center; justify-content: space-between;">
+								<div class="caja-bundle-mensaje" style="font-size: 18px; padding: 20px 30px; display: flex; align-items: center; justify-content: space-between;">
 									<div style="display: flex; align-items: center; gap: 20px;">
 										<div>
 											Tier @tier.Posicion
@@ -464,21 +469,21 @@
 										}
 										else if (usuarioTiendasNoOficial == true && usuarioRegion == TiendaRegion.EstadosUnidos && juego.Juego?.PreciosActualesNoOficialesUS?.Count > 0)
 										{
-                                            foreach (var precio in juego.Juego.PreciosActualesNoOficialesUS)
-                                            {
-                                                if (precio.DRM == juego.DRM)
-                                                {
-                                                    if (precio.PrecioCambiado > 0 && precio.PrecioCambiado < sumarATotalMinimos)
-                                                    {
-                                                        sumarATotalMinimos = precio.PrecioCambiado;
-                                                    }
-                                                    else if (precio.Precio < sumarATotalMinimos)
-                                                    {
-                                                        sumarATotalMinimos = precio.Precio;
-                                                    }
-                                                    break;
-                                                }
-                                            }
+											foreach (var precio in juego.Juego.PreciosActualesNoOficialesUS)
+											{
+												if (precio.DRM == juego.DRM)
+												{
+													if (precio.PrecioCambiado > 0 && precio.PrecioCambiado < sumarATotalMinimos)
+													{
+														sumarATotalMinimos = precio.PrecioCambiado;
+													}
+													else if (precio.Precio < sumarATotalMinimos)
+													{
+														sumarATotalMinimos = precio.Precio;
+													}
+													break;
+												}
+											}
 										}
 
 										if (usuarioTiendasMarketplace == true && usuarioRegion == TiendaRegion.Europa && juego.Juego?.PreciosActualesMarketplacesEU?.Count > 0)
@@ -520,10 +525,10 @@
 											}
 										}
 
-                                        if (sumarATotalMinimos > 0)
-                                        {
-                                            totalMinimos = totalMinimos + sumarATotalMinimos;
-                                        }
+										if (sumarATotalMinimos > 0)
+										{
+											totalMinimos = totalMinimos + sumarATotalMinimos;
+										}
 									}
 
 									<div style="font-size: 14px;">
@@ -532,113 +537,111 @@
 								</div>
 							}
 
-							<div class="bundle-espacio">
-								<div class="bundle-tabla">
-									@foreach (Bundles2.BundleJuego juego in juegosTier)
-									{
-										bool mostrar = true;
+							<div class="bundle-espacio @(diseñoElegido == Bundles2.BundleDiseño.Cuadricula ? "bundle-cuadricula" : "bundle-lista")">
+								@foreach (Bundles2.BundleJuego juego in juegosTier)
+								{
+									bool mostrar = true;
 
-										if (juego.Juego?.Tipo == Juegos.JuegoTipo.DLC || juego.Juego?.Tipo == Juegos.JuegoTipo.Music)
+									if (juego.Juego?.Tipo == Juegos.JuegoTipo.DLC || juego.Juego?.Tipo == Juegos.JuegoTipo.Music)
+									{
+										if (string.IsNullOrEmpty(juego.Juego.Maestro) == false)
 										{
-											if (string.IsNullOrEmpty(juego.Juego.Maestro) == false)
+											if (juego.Juego.Maestro != "no")
 											{
-												if (juego.Juego.Maestro != "no")
+												foreach (var juego2 in juegosTier)
 												{
-													foreach (var juego2 in juegosTier)
+													if (juego2.JuegoId == juego.Juego.Maestro)
 													{
-														if (juego2.JuegoId == juego.Juego.Maestro)
-														{
-															mostrar = false;
-														}
+														mostrar = false;
 													}
 												}
 											}
 										}
+									}
 
-										if (mostrar == true)
-										{
-											<div style="display: flex; align-items: center; gap: 20px; position: relative;" @onmouseenter="(e => MostrarBotonDeseados(e, juego))" @onmouseleave="(e => OcultarBotonDeseados(e, juego))">
-												<div style="width: 100%; overflow: hidden; box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.28),0px 0px 1px 0px rgba(0, 0, 0, 0.24);">
-													<CajaJuego idioma="@idioma" juego="juego.Juego" drmBundle="juego.DRM" dlcsBundle="juego.DLCs" idBundle="@bundleId" color="@juego.Color"
-															   tipo="Interfaz.CajaJuego.Tipo.Bundle" juegosUsuarioIndex="@juegosUsuarioIndex" usuarioDeseadosImportados="@deseadosImportadosIndex" usuarioDeseadosWeb="@deseadosWebIndex" userAgent="@userAgent"
-															   OnEstadoUsuario="@(eu => { juego.Tiene = eu.tieneJuego; juego.DeseadoWeb = eu.tieneDeseadoWeb; juego.DeseadoImportado = eu.tieneDeseadoImportado; })" />
+									if (mostrar == true)
+									{
+										<div style="display: flex; align-items: center; gap: 20px; position: relative;" @onmouseenter="(e => MostrarBotonDeseados(e, juego))" @onmouseleave="(e => OcultarBotonDeseados(e, juego))">
+											<div style="width: 100%; overflow: hidden; box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.28),0px 0px 1px 0px rgba(0, 0, 0, 0.24);">
+												<CajaJuego idioma="@idioma" juego="juego.Juego" drmBundle="juego.DRM" dlcsBundle="juego.DLCs" idBundle="@bundleId" color="@juego.Color" diseñoBundle="@diseñoElegido"
+														   tipo="Interfaz.CajaJuego.Tipo.Bundle" juegosUsuarioIndex="@juegosUsuarioIndex" usuarioDeseadosImportados="@deseadosImportadosIndex" usuarioDeseadosWeb="@deseadosWebIndex" userAgent="@userAgent"
+														   OnEstadoUsuario="@(eu => { juego.Tiene = eu.tieneJuego; juego.DeseadoWeb = eu.tieneDeseadoWeb; juego.DeseadoImportado = eu.tieneDeseadoImportado; })" />
+											</div>
+
+											@if (string.IsNullOrEmpty(usuarioId) == false && juego.Juego != null && juego.Tiene == false && juego.DesplegableMostrar == true)
+											{
+												<div style="position: absolute; top: 0; left: 0;">
+													<button @onclick="@(e => DesplegarDropdown(juego.Juego.Id, juego.DRM))"
+															class="boton-pequeño" style="width: fit-content; padding: 10px; background-color: @juego.Color;">
+														<div class="svg-boton" style="display: flex;">
+															<svg style="width: 20px; height: 20px; transform: rotate(@(dropdownAbierto == juego.Juego.Id.ToString() + "-" + ((int)juego.DRM).ToString() ? "180deg" : "0deg")); transition: transform 0.2s;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+																<path d="M297.4 438.6C309.9 451.1 330.2 451.1 342.7 438.6L502.7 278.6C515.2 266.1 515.2 245.8 502.7 233.3C490.2 220.8 469.9 220.8 457.4 233.3L320 370.7L182.6 233.4C170.1 220.9 149.8 220.9 137.3 233.4C124.8 245.9 124.8 266.2 137.3 278.7L297.3 438.7z" />
+															</svg>
+														</div>
+													</button>
 												</div>
 
-												@if (string.IsNullOrEmpty(usuarioId) == false && juego.Juego != null && juego.Tiene == false && juego.DesplegableMostrar == true)
+												@if (dropdownAbierto == juego.Juego.Id.ToString() + "-" + ((int)juego.DRM).ToString())
 												{
-													<div style="position: absolute; top: 0; left: 0;">
-														<button @onclick="@(e => DesplegarDropdown(juego.Juego.Id, juego.DRM))"
-																class="boton-pequeño" style="width: fit-content; padding: 10px; background-color: @juego.Color;">
-															<div class="svg-boton" style="display: flex;">
-																<svg style="width: 20px; height: 20px; transform: rotate(@(dropdownAbierto == juego.Juego.Id.ToString() + "-" + ((int)juego.DRM).ToString() ? "180deg" : "0deg")); transition: transform 0.2s;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-																	<path d="M297.4 438.6C309.9 451.1 330.2 451.1 342.7 438.6L502.7 278.6C515.2 266.1 515.2 245.8 502.7 233.3C490.2 220.8 469.9 220.8 457.4 233.3L320 370.7L182.6 233.4C170.1 220.9 149.8 220.9 137.3 233.4C124.8 245.9 124.8 266.2 137.3 278.7L297.3 438.7z" />
-																</svg>
-															</div>
-														</button>
-													</div>
-
-													@if (dropdownAbierto == juego.Juego.Id.ToString() + "-" + ((int)juego.DRM).ToString())
-													{
-														<div style="position: absolute; top: 35px; left: 0; background-color: var(--fondo); border: 1px solid var(--fondoCodigo); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); z-index: 1000; width: fit-content; overflow: hidden; display: flex; flex-direction: column;">
-															@if (juego.DeseadoImportado == false)
-															{
-																<button @onclick="@(async e => { await CambiarEstadoDeseado(e, usuarioId, juego, juego.DRM); })"
-																		style="width: 100%; padding: 10px 12px; text-align: left; border: none; cursor: pointer; border-bottom: 1px solid var(--fondoCodigo); background-color: var(--fondoBotonPequeño); transition: background-color 0.2s;"
-																		onmouseover="this.style.backgroundColor='var(--fondoBotonPequeñoHover)'"
-																		onmouseout="this.style.backgroundColor='var(--fondoBotonPequeño)'">
-																	<div style="display: flex; align-items: center; gap: 10px;">
-																		<div style="width: 20px; height: 20px; display: flex; fill: var(--colorTexto);">
-																			@if (juego.DeseadoWeb == true)
-																			{
-																				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-																					<path d="M183.1 137.4C170.6 124.9 150.3 124.9 137.8 137.4C125.3 149.9 125.3 170.2 137.8 182.7L275.2 320L137.9 457.4C125.4 469.9 125.4 490.2 137.9 502.7C150.4 515.2 170.7 515.2 183.2 502.7L320.5 365.3L457.9 502.6C470.4 515.1 490.7 515.1 503.2 502.6C515.7 490.1 515.7 469.8 503.2 457.3L365.8 320L503.1 182.6C515.6 170.1 515.6 149.8 503.1 137.3C490.6 124.8 470.3 124.8 457.8 137.3L320.5 274.7L183.1 137.4z" />
-																				</svg>
-																			}
-																			else
-																			{
-																				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-																					<path d="M341.5 45.1C337.4 37.1 329.1 32 320.1 32C311.1 32 302.8 37.1 298.7 45.1L225.1 189.3L65.2 214.7C56.3 216.1 48.9 222.4 46.1 231C43.3 239.6 45.6 249 51.9 255.4L166.3 369.9L141.1 529.8C139.7 538.7 143.4 547.7 150.7 553C158 558.3 167.6 559.1 175.7 555L320.1 481.6L464.4 555C472.4 559.1 482.1 558.3 489.4 553C496.7 547.7 500.4 538.8 499 529.8L473.7 369.9L588.1 255.4C594.5 249 596.7 239.6 593.9 231C591.1 222.4 583.8 216.1 574.8 214.7L415 189.3L341.5 45.1z" />
-																				</svg>
-																			}
-																		</div>
-
-																		<span style="color: var(--colorTexto); font-size: 16px;">
-																			@if (juego.DeseadoWeb == true)
-																			{
-																				@Herramientas.Idiomas.BuscarTexto(idioma, "String13", "Index")
-																			}
-																			else
-																			{
-																				@Herramientas.Idiomas.BuscarTexto(idioma, "String12", "Index")
-																			}
-																		</span>
-																	</div>
-																</button>
-															}
-
-															<button @onclick="@(async e => { await ExcluirJuego(e, usuarioId, juego); })"
+													<div style="position: absolute; top: 35px; left: 0; background-color: var(--fondo); border: 1px solid var(--fondoCodigo); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); z-index: 1000; width: fit-content; overflow: hidden; display: flex; flex-direction: column;">
+														@if (juego.DeseadoImportado == false)
+														{
+															<button @onclick="@(async e => { await CambiarEstadoDeseado(e, usuarioId, juego, juego.DRM); })"
 																	style="width: 100%; padding: 10px 12px; text-align: left; border: none; cursor: pointer; border-bottom: 1px solid var(--fondoCodigo); background-color: var(--fondoBotonPequeño); transition: background-color 0.2s;"
 																	onmouseover="this.style.backgroundColor='var(--fondoBotonPequeñoHover)'"
 																	onmouseout="this.style.backgroundColor='var(--fondoBotonPequeño)'">
 																<div style="display: flex; align-items: center; gap: 10px;">
 																	<div style="width: 20px; height: 20px; display: flex; fill: var(--colorTexto);">
-																		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-																			<path d="M431.2 476.5L163.5 208.8C141.1 240.2 128 278.6 128 320C128 426 214 512 320 512C361.5 512 399.9 498.9 431.2 476.5zM476.5 431.2C498.9 399.8 512 361.4 512 320C512 214 426 128 320 128C278.5 128 240.1 141.1 208.8 163.5L476.5 431.2zM64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576C178.6 576 64 461.4 64 320z" />
-																		</svg>
+																		@if (juego.DeseadoWeb == true)
+																		{
+																			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+																				<path d="M183.1 137.4C170.6 124.9 150.3 124.9 137.8 137.4C125.3 149.9 125.3 170.2 137.8 182.7L275.2 320L137.9 457.4C125.4 469.9 125.4 490.2 137.9 502.7C150.4 515.2 170.7 515.2 183.2 502.7L320.5 365.3L457.9 502.6C470.4 515.1 490.7 515.1 503.2 502.6C515.7 490.1 515.7 469.8 503.2 457.3L365.8 320L503.1 182.6C515.6 170.1 515.6 149.8 503.1 137.3C490.6 124.8 470.3 124.8 457.8 137.3L320.5 274.7L183.1 137.4z" />
+																			</svg>
+																		}
+																		else
+																		{
+																			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+																				<path d="M341.5 45.1C337.4 37.1 329.1 32 320.1 32C311.1 32 302.8 37.1 298.7 45.1L225.1 189.3L65.2 214.7C56.3 216.1 48.9 222.4 46.1 231C43.3 239.6 45.6 249 51.9 255.4L166.3 369.9L141.1 529.8C139.7 538.7 143.4 547.7 150.7 553C158 558.3 167.6 559.1 175.7 555L320.1 481.6L464.4 555C472.4 559.1 482.1 558.3 489.4 553C496.7 547.7 500.4 538.8 499 529.8L473.7 369.9L588.1 255.4C594.5 249 596.7 239.6 593.9 231C591.1 222.4 583.8 216.1 574.8 214.7L415 189.3L341.5 45.1z" />
+																			</svg>
+																		}
 																	</div>
 
 																	<span style="color: var(--colorTexto); font-size: 16px;">
-																		@Herramientas.Idiomas.BuscarTexto(idioma, "String16", "Index")
+																		@if (juego.DeseadoWeb == true)
+																		{
+																			@Herramientas.Idiomas.BuscarTexto(idioma, "String13", "Index")
+																		}
+																		else
+																		{
+																			@Herramientas.Idiomas.BuscarTexto(idioma, "String12", "Index")
+																		}
 																	</span>
 																</div>
 															</button>
-														</div>
-													}
+														}
+
+														<button @onclick="@(async e => { await ExcluirJuego(e, usuarioId, juego); })"
+																style="width: 100%; padding: 10px 12px; text-align: left; border: none; cursor: pointer; border-bottom: 1px solid var(--fondoCodigo); background-color: var(--fondoBotonPequeño); transition: background-color 0.2s;"
+																onmouseover="this.style.backgroundColor='var(--fondoBotonPequeñoHover)'"
+																onmouseout="this.style.backgroundColor='var(--fondoBotonPequeño)'">
+															<div style="display: flex; align-items: center; gap: 10px;">
+																<div style="width: 20px; height: 20px; display: flex; fill: var(--colorTexto);">
+																	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+																		<path d="M431.2 476.5L163.5 208.8C141.1 240.2 128 278.6 128 320C128 426 214 512 320 512C361.5 512 399.9 498.9 431.2 476.5zM476.5 431.2C498.9 399.8 512 361.4 512 320C512 214 426 128 320 128C278.5 128 240.1 141.1 208.8 163.5L476.5 431.2zM64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576C178.6 576 64 461.4 64 320z" />
+																	</svg>
+																</div>
+
+																<span style="color: var(--colorTexto); font-size: 16px;">
+																	@Herramientas.Idiomas.BuscarTexto(idioma, "String16", "Index")
+																</span>
+															</div>
+														</button>
+													</div>
 												}
-											</div>
-										}
+											}
+										</div>
 									}
-								</div>
+								}
 							</div>
 						</div>
 
@@ -658,6 +661,8 @@
 @code {
 
 	#nullable disable
+
+	[CascadingParameter] private Herramientas.ContextoUsuarioDatos datos { get; set; }
 
 	private string idioma = "en";
 	private string usuarioId = null;
@@ -690,11 +695,9 @@
 	[PersistentState] public Bundles2.Bundle bundle { get; set; }
 
 	private string enlaceBundle = string.Empty;
-	private string fondo = string.Empty;
 
 	protected override async Task OnInitializedAsync()
 	{
-		Herramientas.ContextoUsuarioDatos datos = Herramientas.ContextoUsuario.Leer(Contexto);
 		idioma = datos.Idioma;
 		usuarioId = datos.UsuarioId;
 		userAgent = datos.UserAgent;
@@ -702,6 +705,17 @@
 		usuarioRegion = datos.Region;
 		usuarioTiendasNoOficial = datos.NoOficial;
 		usuarioTiendasMarketplace = datos.Marketplace;
+
+		diseñoElegido = datos.DiseñoBundle;
+
+		if (diseñoElegido == Bundles2.BundleDiseño.Cuadricula)
+		{
+			await MostrarCuadricula(false);
+		}
+		else if (diseñoElegido == Bundles2.BundleDiseño.Lista)
+		{
+			await MostrarLista(false);
+		}
 
 		if (string.IsNullOrEmpty(usuarioId) == false)
 		{
@@ -809,7 +823,6 @@
 							if (reseñasJuego > reseñas)
 							{
 								reseñas = reseñasJuego;
-								fondo = encontrado.Imagenes?.Library_1920x620;
 							}
 						}
 					}
@@ -1023,4 +1036,38 @@
 
 		return unido;
 	}
+
+	#region Cambio Diseños
+
+	public Bundles2.BundleDiseño diseñoElegido = Bundles2.BundleDiseño.Cuadricula;
+
+	private string fondoCuadricula = "background: transparent;";
+
+	private async Task MostrarCuadricula(bool guardar)
+	{
+		fondoCuadricula = "background: var(--botonSeleccionado);";
+		fondoLista = "background: transparent;";
+
+		if (guardar == true)
+		{
+			diseñoElegido = Bundles2.BundleDiseño.Cuadricula;
+			await ServicioDiseñoBundle.AsignarDiseño(diseñoElegido);
+		}
+	}
+
+	private string fondoLista = "background: transparent;";
+
+	private async Task MostrarLista(bool guardar)
+	{
+		fondoCuadricula = "background: transparent;";
+		fondoLista = "background: var(--botonSeleccionado);";
+
+		if (guardar == true)
+		{
+			diseñoElegido = Bundles2.BundleDiseño.Lista;
+			await ServicioDiseñoBundle.AsignarDiseño(diseñoElegido);
+		}
+	}
+
+	#endregion
 }

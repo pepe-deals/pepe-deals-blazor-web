@@ -1,15 +1,23 @@
-﻿<Router AppAssembly="typeof(Program).Assembly">
-    <Found Context="routeData">
-        <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout)">
-            <NotAuthorized>
-                <pepeizqs_deals_blazor_web.Componentes.Cuenta.RedireccionLogin />
-            </NotAuthorized>
-        </AuthorizeRouteView>
-        @* <FocusOnNavigate RouteData="routeData" Selector="h1" /> *@
-    </Found>
-@*     <NotFound>
+﻿<CascadingValue Value="Datos">
+    <Router AppAssembly="typeof(Program).Assembly">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout)">
+                <NotAuthorized>
+                    <pepeizqs_deals_blazor_web.Componentes.Cuenta.RedireccionLogin />
+                </NotAuthorized>
+            </AuthorizeRouteView>
+            @* <FocusOnNavigate RouteData="routeData" Selector="h1" /> *@
+        </Found>
+        @*     <NotFound>
         <LayoutView>
             <Error/>
         </LayoutView>
     </NotFound> *@
-</Router>
+    </Router>
+</CascadingValue>
+
+@code {
+    #nullable disable
+
+    [Parameter] public Herramientas.ContextoUsuarioDatos Datos { get; set; }
+}

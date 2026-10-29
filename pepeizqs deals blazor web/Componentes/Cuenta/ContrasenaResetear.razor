@@ -6,7 +6,6 @@
 @using pepeizqs_deals_web.Data
 @using System.Text
 
-@inject IHttpContextAccessor Contexto
 @inject UserManager<Usuario> UserManager
 
 @if (string.IsNullOrEmpty(code) == false)
@@ -71,6 +70,8 @@
 
     #nullable disable
 
+    [CascadingParameter] private Herramientas.ContextoUsuarioDatos datos { get; set; }
+
     private string idioma = "en";
 
     [SupplyParameterFromQuery]
@@ -90,7 +91,6 @@
 
     protected override void OnInitialized()
     {
-        Herramientas.ContextoUsuarioDatos datos = Herramientas.ContextoUsuario.Leer(Contexto);
         idioma = datos.Idioma;
 
         if (string.IsNullOrEmpty(code) == false)

@@ -14,7 +14,6 @@
 @using Suscripciones2
 @using pepeizqs_deals_blazor_web.Componentes.Interfaz
 
-@inject IHttpContextAccessor Contexto
 @inject IJSRuntime JavaScript
 @inject NavigationManager Navegacion
 
@@ -585,6 +584,8 @@
 
 	#nullable disable
 
+	[CascadingParameter] private Herramientas.ContextoUsuarioDatos datos { get; set; }
+
 	private string idioma = "en";
 	private string usuarioId = null;
 	private string userAgent = null;
@@ -632,7 +633,6 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		Herramientas.ContextoUsuarioDatos datos = Herramientas.ContextoUsuario.Leer(Contexto);
 		idioma = datos.Idioma;
 		usuarioId = datos.UsuarioId;
 		userAgent = datos.UserAgent;

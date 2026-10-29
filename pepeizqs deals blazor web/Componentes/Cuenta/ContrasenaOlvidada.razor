@@ -7,7 +7,6 @@
 @using System.ComponentModel.DataAnnotations
 @using System.Text
 
-@inject IHttpContextAccessor Contexto
 @inject UserManager<Usuario> UserManager
 
 @{
@@ -57,6 +56,8 @@
 
     #nullable disable
 
+    [CascadingParameter] private Herramientas.ContextoUsuarioDatos datos { get; set; }
+
     private string idioma = "en";
     private string dominio = null;
 
@@ -66,7 +67,6 @@
 
     protected override void OnInitialized()
     {
-        Herramientas.ContextoUsuarioDatos datos = Herramientas.ContextoUsuario.Leer(Contexto);
         idioma = datos.Idioma;
         dominio = datos.Dominio;
     }

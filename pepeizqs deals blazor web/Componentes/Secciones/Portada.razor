@@ -11,7 +11,6 @@
 @using pepeizqs_deals_web.Data
 @using System.Text.Json
 
-@inject IHttpContextAccessor Contexto
 @inject IConfiguration Configuracion
 @inject Servicios.Opciones ServicioOpciones
 
@@ -957,6 +956,8 @@ else
 
 	#nullable disable
 
+	[CascadingParameter] private Herramientas.ContextoUsuarioDatos datos { get; set; }
+
 	private string idioma = "en";
 	private string usuarioId = null;
 	private string userAgent = null;
@@ -985,7 +986,6 @@ else
 
 	protected override async Task OnInitializedAsync()
 	{
-		Herramientas.ContextoUsuarioDatos datos = Herramientas.ContextoUsuario.Leer(Contexto);
 		idioma = datos.Idioma;
 		usuarioId = datos.UsuarioId;
 		userAgent = datos.UserAgent;

@@ -204,6 +204,7 @@ builder.Services.AddScoped<Servicios.TiendaNoOficial>();
 builder.Services.AddScoped<Servicios.Marketplace>();
 builder.Services.AddScoped<Servicios.Moneda>();
 builder.Services.AddScoped<Servicios.Opciones>();
+builder.Services.AddScoped<Servicios.DiseñoBundle>();
 
 #endregion
 

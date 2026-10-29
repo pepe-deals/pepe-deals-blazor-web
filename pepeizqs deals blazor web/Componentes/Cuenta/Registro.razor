@@ -111,6 +111,8 @@
 
     #nullable disable
 
+    [CascadingParameter] private Herramientas.ContextoUsuarioDatos datos { get; set; }
+
     private string idioma = "en";
     private string usuarioId = null;
     private string userAgent = null;
@@ -133,7 +135,6 @@
     {
         Input ??= new();
 
-        Herramientas.ContextoUsuarioDatos datos = Herramientas.ContextoUsuario.Leer(Contexto);
         idioma = datos.Idioma;
         usuarioId = datos.UsuarioId;
         userAgent = datos.UserAgent;

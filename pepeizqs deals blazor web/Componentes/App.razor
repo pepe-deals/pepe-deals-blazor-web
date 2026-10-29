@@ -1,6 +1,8 @@
 ﻿@using System.Security.Claims
 @using pepeizqs_deals_blazor_web.Componentes.Interfaz
 
+@inject IHttpContextAccessor Acceso
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -91,7 +93,7 @@
 </head>
 
 <body id="cuerpazo" style="background-color: var(--fondoCuerpo); color: var(--colorTexto); position: relative; margin: 0px;">
-    <Routes @rendermode="renderizacion" />
+    <Routes @rendermode="renderizacion" datos="datosUsuario" />
 
     <PiePagina idioma="@idioma" usuarioId="@usuarioId"/>
 
@@ -124,6 +126,8 @@
     [CascadingParameter]
     private HttpContext contexto { get; set; } = default!;
 
+    private Herramientas.ContextoUsuarioDatos datosUsuario;
+
     private IComponentRenderMode renderizacion => (contexto.AcceptsInteractiveRouting() && Herramientas.Bots.UserAgentEsBot(userAgent) == false) ? InteractiveServer : null;
 
     private string enlace = null;
@@ -140,10 +144,12 @@
     {
         if (contexto != null)
         {
-            usuarioId = contexto?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            idioma = contexto?.Request?.Headers["Accept-Language"].ToString().Split(";").FirstOrDefault()?.Split(",").FirstOrDefault();
-            userAgent = contexto?.Request?.Headers.UserAgent.ToString();
-            dominio = contexto?.Request?.Host.Value;
+            datosUsuario = Herramientas.ContextoUsuario.Leer(Acceso);
+
+            usuarioId = datosUsuario.UsuarioId;
+            idioma = datosUsuario.Idioma;
+            userAgent = datosUsuario.UserAgent;
+            dominio = datosUsuario.Dominio;
 
             if (string.IsNullOrEmpty(usuarioId) == false)
             {

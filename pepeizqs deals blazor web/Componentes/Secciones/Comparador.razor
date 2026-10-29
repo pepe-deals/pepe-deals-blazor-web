@@ -11,7 +11,6 @@
 @using pepeizqs_deals_blazor_web.Componentes.Interfaz
 @using pepeizqs_deals_web.Data
 
-@inject IHttpContextAccessor Contexto
 @inject IJSRuntime JavaScript
 
 @{
@@ -1319,6 +1318,8 @@
 
 	#nullable disable
 
+	[CascadingParameter] private Herramientas.ContextoUsuarioDatos datos { get; set; }
+
 	private string idioma = "en";
 	private string usuarioId = null;
 	private string dominio = null;
@@ -1356,7 +1357,6 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		Herramientas.ContextoUsuarioDatos datos = Herramientas.ContextoUsuario.Leer(Contexto);
 		idioma = datos.Idioma;
 		usuarioId = datos.UsuarioId;
 		dominio = datos.Dominio;

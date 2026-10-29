@@ -63,6 +63,8 @@
 
     #nullable disable
 
+    [CascadingParameter] private Herramientas.ContextoUsuarioDatos datos { get; set; }
+
     private string idioma = "en";
     private string userAgent = null;
     private string dominio = null;
@@ -79,7 +81,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Herramientas.ContextoUsuarioDatos datos = Herramientas.ContextoUsuario.Leer(Contexto);
         idioma = datos.Idioma;
         userAgent = datos.UserAgent;
         dominio = datos.Dominio;
