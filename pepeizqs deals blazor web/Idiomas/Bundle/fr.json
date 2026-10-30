@@ -19,7 +19,7 @@
   "String18": "Il n'y a aucun forfait disponible à l'achat",
   "String20": "par unité",
   "String21": "jeu",
-  "String22": "Pack de jeux PC de {0} à {1}. Découvrez cette offre mise à jour avec plusieurs jeux. Bénéficiez de la réduction maintenant !",
+  "String22": "Pack de jeux PC de {0} à {1}. Découvrez cette offre mise à jour avec plusieurs jeux. Bénéficiez de la réduction maintenant!",
   "String24": "Première fois dans le bundle",
   "String25": "Historical Low:",
   "String26": "Bundle ouvert",
@@ -37,5 +37,6 @@
   "String38": "Niveau {0}",
   "String39": "Total",
   "String40": "{0} Archives de packs",
-  "String41": "Archive des bundles de jeux PC de {0}. Explorez toutes les offres et packs publiés. Historique complet des remises et des offres."
+  "String41": "Archive des bundles de jeux PC de {0}. Explorez toutes les offres et packs publiés. Historique complet des remises et des offres.",
+  "String42": "Temps restant:"
 }

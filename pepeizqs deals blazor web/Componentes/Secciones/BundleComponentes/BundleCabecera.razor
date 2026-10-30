@@ -1,0 +1,164 @@
+﻿@inject IJSRuntime JavaScript
+
+@if (DateTime.Now < bundle.FechaTermina)
+{
+	<div class="cuerpo-ancho" style="background-color: var(--fondoSubcabecera); border: 2px solid rgba(0,0,0,.5); border-radius: 10px; margin-top: 40px; margin-bottom: 20px;">
+		<div style="display: flex; align-items: center; flex-wrap: nowrap; border-radius: inherit;">
+			<a href="@enlaceBundle" target="_blank" style="border-radius: inherit;">
+				<div style="border-top-left-radius: inherit; border-bottom-left-radius: inherit; overflow: hidden;">
+					<img src="@bundle.ImagenNoticia" style="max-width: 300px; max-height: 300px; display: block;" alt="@Bundles2.BundlesCargar.DevolverBundle(bundle.BundleTipo).Tienda" />
+				</div>
+			</a>
+
+			<div style="display: flex; flex-direction: column; width: 100%; gap: 20px; padding: 30px;">
+				<h1 style="font-size: 20px; margin: 0px; line-height: 30px;">
+					@bundle.Nombre
+				</h1>
+
+				<div style="display: flex; align-items: center; gap: 30px;">
+					<a href="/bundles/@bundle.BundleTipo.ToString().ToLower()/" class="boton-pequeño" style="width: fit-content; display: flex; align-items: center; gap: 20px; padding: 10px 15px;">
+						<div>
+							<img src="@Bundles2.BundlesCargar.DevolverBundle(bundle.BundleTipo).ImagenIcono" style="max-width: 18px; max-height: 18px; display: block;" alt="@Bundles2.BundlesCargar.DevolverBundle(bundle.BundleTipo).Tienda" />
+						</div>
+
+						<div>
+							@Bundles2.BundlesCargar.DevolverBundle(bundle.BundleTipo).Tienda
+						</div>
+					</a>
+
+					<div style="font-size: 16px;">
+						<span id="contador-bundle-texto">@MostrarFecha(bundle.FechaEmpieza, bundle.FechaTermina)</span>
+
+						<span id="contador-bundle-caja" hidden>
+							<span style="display: flex; align-items: center; gap: 15px;">
+								@Herramientas.Idiomas.BuscarTexto(idioma, "String42", "Bundle") <span id="contador-bundle" data-fin="@bundle.FechaTermina.ToUniversalTime().ToString("o")" style="font-variant-numeric: tabular-nums; background: rgba(0,0,0,.3); padding: 10px;"></span>
+							</span>
+						</span>
+					</div>
+				</div>
+			</div>
+
+			@if (OnCerrar.HasDelegate == true)
+			{
+				<button @onclick="OnCerrar" @onmouseenter="_ => usuarioEncimaCerrar = true" @onmouseleave="_ => usuarioEncimaCerrar = false" style="@(usuarioEncimaCerrar == true ? "background: var(--fondoBotonPequeñoHover);" : "background: var(--fondoBotonPequeño);") padding: 8px 10px; border: 0px; margin: 30px;">
+					<div style="width: 30px; height: 30px;">
+						<svg class="svg-icono" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="fill: var(--colorTexto); transform: rotate(@(usuarioEncimaCerrar == true ? "180deg" : "0deg")); transition: transform 0.2s;">
+							<path d="M183.1 137.4C170.6 124.9 150.3 124.9 137.8 137.4C125.3 149.9 125.3 170.2 137.8 182.7L275.2 320L137.9 457.4C125.4 469.9 125.4 490.2 137.9 502.7C150.4 515.2 170.7 515.2 183.2 502.7L320.5 365.3L457.9 502.6C470.4 515.1 490.7 515.1 503.2 502.6C515.7 490.1 515.7 469.8 503.2 457.3L365.8 320L503.1 182.6C515.6 170.1 515.6 149.8 503.1 137.3C490.6 124.8 470.3 124.8 457.8 137.3L320.5 274.7L183.1 137.4z" />
+						</svg>
+					</div>
+				</button>
+			}
+		</div>
+	</div>
+}
+else
+{
+	<div class="cuerpo-ancho" style="background-color: var(--fondoSubcabecera); border: 2px solid rgba(0,0,0,.5); border-radius: 10px; margin-top: 40px; margin-bottom: 20px;">
+		<div style="display: flex; align-items: center; gap: 20px; flex-wrap: nowrap; border-radius: inherit; margin: 20px 30px;">
+			<div>
+				<img src="@Bundles2.BundlesCargar.DevolverBundle(bundle.BundleTipo).ImagenIcono" style="max-width: 20px; max-height: 20px; display: block;" alt="@Bundles2.BundlesCargar.DevolverBundle(bundle.BundleTipo).Tienda" />
+			</div>
+			
+			<h1 style="font-size: 20px; margin: 0px; line-height: 30px;">
+				@bundle.Nombre
+			</h1>
+
+			<div style="margin-left: auto; display: flex; align-items: center; gap: 20px;">
+				<div>
+					@bundle.FechaEmpieza.Day.ToString()/@bundle.FechaEmpieza.Month.ToString()/@bundle.FechaEmpieza.Year.ToString() • @bundle.FechaTermina.Day.ToString()/@bundle.FechaTermina.Month.ToString()/@bundle.FechaTermina.Year.ToString()
+				</div>
+				
+				@if (OnCerrar.HasDelegate == true)
+				{
+					<button @onclick="OnCerrar" @onmouseenter="_ => usuarioEncimaCerrar = true" @onmouseleave="_ => usuarioEncimaCerrar = false" style="@(usuarioEncimaCerrar == true ? "background: var(--fondoBotonPequeñoHover);" : "background: var(--fondoBotonPequeño);") padding: 8px 10px; border: 0px; margin-left: 10px;">
+						<div style="width: 30px; height: 30px;">
+							<svg class="svg-icono" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="fill: var(--colorTexto); transform: rotate(@(usuarioEncimaCerrar == true ? "180deg" : "0deg")); transition: transform 0.2s;">
+								<path d="M183.1 137.4C170.6 124.9 150.3 124.9 137.8 137.4C125.3 149.9 125.3 170.2 137.8 182.7L275.2 320L137.9 457.4C125.4 469.9 125.4 490.2 137.9 502.7C150.4 515.2 170.7 515.2 183.2 502.7L320.5 365.3L457.9 502.6C470.4 515.1 490.7 515.1 503.2 502.6C515.7 490.1 515.7 469.8 503.2 457.3L365.8 320L503.1 182.6C515.6 170.1 515.6 149.8 503.1 137.3C490.6 124.8 470.3 124.8 457.8 137.3L320.5 274.7L183.1 137.4z" />
+							</svg>
+						</div>
+					</button>
+				}
+			</div>
+		</div>
+	</div>
+}
+
+@code {
+
+	#nullable disable
+
+	[Parameter]
+	public string idioma { get; set; }
+
+	[Parameter]
+	public Bundles2.Bundle bundle { get; set; }
+
+	[Parameter]
+	public string enlaceBundle { get; set; }
+
+	[Parameter]
+	public EventCallback OnCerrar { get; set; }
+
+	private IJSObjectReference moduloJs;
+	private bool contadorIniciado = false;
+
+	private bool usuarioEncimaCerrar = false;
+
+	protected override async Task OnAfterRenderAsync(bool primerRender)
+	{
+		if (primerRender == true)
+		{
+			try
+			{
+				moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/secciones/BundleComponentes/BundleCabecera.razor.js");
+			}
+			catch { }
+
+			if (contadorIniciado == false && moduloJs != null && bundle != null && DateTime.Now < bundle.FechaTermina)
+			{
+				contadorIniciado = true;
+
+				try
+				{
+					await moduloJs.InvokeVoidAsync("iniciarContador", "contador-bundle", "contador-bundle-texto", "contador-bundle-caja");
+				}
+				catch { }
+			}
+		}
+	}
+
+	public async ValueTask DisposeAsync()
+	{
+		if (moduloJs != null)
+		{
+			try
+			{
+				await moduloJs.DisposeAsync();
+			}
+			catch { }
+		}
+	}
+
+	private string MostrarFecha(DateTime fechaEmpieza, DateTime fechaTermina)
+	{
+		if (fechaTermina.Year > 2022)
+		{
+			TimeSpan diferenciaTiempo = fechaTermina.Subtract(DateTime.Now);
+
+			if (diferenciaTiempo.Days > 1)
+			{
+				return string.Format(Herramientas.Idiomas.BuscarTexto(idioma, "String4", "Bundle"), diferenciaTiempo.Days);
+			}
+			else if (diferenciaTiempo.Days == 1)
+			{
+				return string.Format(Herramientas.Idiomas.BuscarTexto(idioma, "String5", "Bundle"), diferenciaTiempo.Days);
+			}
+			else if (diferenciaTiempo.Days == 0 && diferenciaTiempo.Minutes > 0)
+			{
+				return string.Format(Herramientas.Idiomas.BuscarTexto(idioma, "String6", "Bundle"), diferenciaTiempo.Days);
+			}
+		}
+
+		return Herramientas.Idiomas.BuscarTexto(idioma, "String7", "Bundle") + " • " + fechaEmpieza.Day.ToString() + "/" + fechaEmpieza.Month.ToString() + "/" + fechaEmpieza.Year.ToString() + " • " + fechaTermina.Day.ToString() + "/" + fechaTermina.Month.ToString() + "/" + fechaTermina.Year.ToString();
+	}
+}

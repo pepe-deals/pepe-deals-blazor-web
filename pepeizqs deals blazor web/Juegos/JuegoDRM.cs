@@ -717,6 +717,7 @@ namespace Juegos
 					"h1z1",
 					"h2o",
 					"halo infinite",
+					"happy money korea",
 					"hard rock cafe",
 					"harry & david",
 					"harry potter: magic awakened",

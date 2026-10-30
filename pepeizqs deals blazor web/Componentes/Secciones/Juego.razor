@@ -3238,52 +3238,41 @@
                 {
                     string enlaceBundleSeleccionado = "/bundle/" + bundleSeleccionado.Id + "/" + Herramientas.EnlaceAdaptador.Nombre(bundleSeleccionado.Nombre) + "/";
                 
-                    <div style="@(bundleSeleccionado.Pick == false ? "margin-bottom: 30px;" : "")">
-                        <div style="@(bundleSeleccionado.Pick == false ? "border-radius: 20px; border: 2px solid var(--glaseadoBorde);" : "border-top-left-radius: 20px; border-top-right-radius: 20px; border: 2px solid var(--glaseadoBorde); border-bottom: 0px;") background-color: var(--fondoSubsubcabecera); padding: 20px 30px; display: flex; align-items: center; flex-direction: row;">
-                            <button @onclick="@(e => BundleCerrar(e))" class="boton-pequeño" style="width: fit-content; padding: 10px 15px;">
-                                <div style="max-width: 24px; max-height: 24px;">
-                                    <svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                                        <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
-                                    </svg>
-                                </div>
-                            </button>
+                    <div class="cuerpo-ancho" style="background-color: var(--fondoSubcabecera); border: 2px solid rgba(0,0,0,.5); border-radius: 10px; margin-bottom: 20px;">
+		                <div style="display: flex; align-items: center; gap: 20px; flex-wrap: nowrap; border-radius: inherit; margin: 20px 30px;">
+			                <div>
+				                <img src="@Bundles2.BundlesCargar.DevolverBundle(bundleSeleccionado.BundleTipo).ImagenIcono" style="max-width: 24px; max-height: 24px; display: block;" alt="@Bundles2.BundlesCargar.DevolverBundle(bundleSeleccionado.BundleTipo).Tienda" />
+			                </div>
+			
+			                <h1 style="font-size: 20px; margin: 0px; line-height: 30px;">
+				                @bundleSeleccionado.Nombre
+			                </h1>
 
-                            <div style="display: flex; align-items: center; flex-direction: row;">
-                                <a href="@enlaceBundleSeleccionado" style="width: auto;" target="_blank">
-                                    <div style="height: 60px; padding-left: 40px; padding-right: 20px;">
-                                        <img src="@Bundles2.BundlesCargar.DevolverBundle(bundleSeleccionado.BundleTipo).ImagenTienda" style="height: 100%; display: block;" alt="@bundleSeleccionado.Nombre"  />
+			                <div style="margin-left: auto; display: flex; align-items: center; gap: 20px;">
+                                <a href="@enlaceBundleSeleccionado" class="boton-pequeño" style="padding: 0px; width: fit-content; background-color: transparent; box-shadow: none;">
+                                    <div style="max-width: 24px; max-height: 24px;">
+                                        <svg class="svg-icono" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
+                                            <path d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z" />
+                                        </svg>
                                     </div>
                                 </a>
 
-                                <div style="padding-left: 20px; padding-right: 20px;">
-                                    <a href="@enlaceBundleSeleccionado" class="boton-pequeño" style="background-color: transparent; padding: 0px; font-size: 20px; margin-bottom: 10px; box-shadow: none;" target="_blank">
-                                        @bundleSeleccionado.Nombre
-                                    </a>
+				                <div>
+					                @bundleSeleccionado.FechaEmpieza.Day.ToString()/@bundleSeleccionado.FechaEmpieza.Month.ToString()/@bundleSeleccionado.FechaEmpieza.Year.ToString() • @bundleSeleccionado.FechaTermina.Day.ToString()/@bundleSeleccionado.FechaTermina.Month.ToString()/@bundleSeleccionado.FechaTermina.Year.ToString()
+				                </div>
+				
+				                <button @onclick="BundleCerrar" @onmouseenter="_ => usuarioEncimaCerrarBundle = true" @onmouseleave="_ => usuarioEncimaCerrarBundle = false" style="@(usuarioEncimaCerrarBundle == true ? "background: var(--fondoBotonPequeñoHover);" : "background: var(--fondoBotonPequeño);") padding: 8px 10px; border: 0px; margin-left: 10px;">
+						            <div style="width: 30px; height: 30px;">
+							            <svg class="svg-icono" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="fill: var(--colorTexto); transform: rotate(@(usuarioEncimaCerrarBundle == true ? "180deg" : "0deg")); transition: transform 0.2s;">
+								            <path d="M183.1 137.4C170.6 124.9 150.3 124.9 137.8 137.4C125.3 149.9 125.3 170.2 137.8 182.7L275.2 320L137.9 457.4C125.4 469.9 125.4 490.2 137.9 502.7C150.4 515.2 170.7 515.2 183.2 502.7L320.5 365.3L457.9 502.6C470.4 515.1 490.7 515.1 503.2 502.6C515.7 490.1 515.7 469.8 503.2 457.3L365.8 320L503.1 182.6C515.6 170.1 515.6 149.8 503.1 137.3C490.6 124.8 470.3 124.8 457.8 137.3L320.5 274.7L183.1 137.4z" />
+							            </svg>
+						            </div>
+					            </button>
+			                </div>
+		                </div>
+	                </div>
 
-                                    <div style="display: flex; align-items: center; gap: 20px; flex-direction: row; font-size: 14px;">
-                                        <a href="@enlaceBundleSeleccionado" class="boton-pequeño" style="padding: 0px; width: fit-content; background-color: transparent; box-shadow: none;">
-                                            <div style="max-width: 20px; max-height: 20px;">
-                                                <svg class="svg-icono" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
-                                                    <path d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z" />
-                                                </svg>
-                                            </div>
-                                        </a>
-
-                                        @bundleSeleccionado.FechaEmpieza.Day.ToString()/@bundleSeleccionado.FechaEmpieza.Month.ToString()/@bundleSeleccionado.FechaEmpieza.Year.ToString() • @bundleSeleccionado.FechaTermina.Day.ToString()/@bundleSeleccionado.FechaTermina.Month.ToString()/@bundleSeleccionado.FechaTermina.Year.ToString()
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        @if (DateTime.Today < bundleSeleccionado.FechaTermina)
-                        {
-                            <a href="@enlaceBundleSeleccionado" class="boton-pequeño" style="text-align: center; padding: 10px 15px; font-size: 18px;" target="_blank">
-                                @Herramientas.Idiomas.BuscarTexto(idioma, "String3", "Bundle")
-                            </a>
-                        }
-                    </div>
-
-                    <Bundle bundleId="@bundleId" tipo="@Bundle.Tipo.Juego"/>
+                    <Bundle bundleId="@bundleId" bundleYaCargado="@bundleSeleccionado" tipo="@Bundle.Tipo.Juego"/>
                 }
             }
         </div>		
@@ -5004,6 +4993,7 @@
     }
 
     private int bundleId = 0;
+    private bool usuarioEncimaCerrarBundle = false;
 
     private async Task BundleAbrir(MouseEventArgs e, int nuevoBundleId)
     {

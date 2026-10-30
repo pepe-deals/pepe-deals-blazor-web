@@ -129,17 +129,15 @@
 		<pepeizqs_deals_blazor_web.Componentes.Admin.Noticia idioma="@idioma" dominio="@dominio" noticiaId="@noticia.Id" />
 	}
 
-	string estiloCaja = "border-radius: 20px; box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.28),0px 0px 1px 0px rgba(0, 0, 0, 0.24);";
+	string estiloCaja = "border-radius: 10px;";
 
 	if (noticia.NoticiaTipo == NoticiaTipo.Bundles)
 	{
 		estiloCaja = string.Empty;
 	}
 
-	<img class="juego-fondo" src="@fondo" alt="Background" />
-
 	<div class="cuerpo-ancho" style="@estiloCaja">
-		<div style="background: color-mix(in srgb, var(--fondoSubcabecera) 45%, var(--fondoBotonPequeño)); border: 2px solid rgba(0,0,0,.2); border-top-left-radius: 20px; border-top-right-radius: 20px; margin-top: 40px;">
+		<div style="background: color-mix(in srgb, var(--fondoSubcabecera) 45%, var(--fondoBotonPequeño)); border: 2px solid rgba(0,0,0,.5); border-top-left-radius: 10px; border-top-right-radius: 10px; margin-top: 40px;">
 			<div style="display: flex; align-items: center; gap: 30px; flex-wrap: nowrap; padding: 30px 40px;">
 				@{
 					string imagenIcono = string.Empty;
@@ -187,7 +185,7 @@
 					if (bundle != null)
 					{
 						<div style="position: relative; display: flex; flex-direction: column;">
-							<Bundle bundleId="@bundle.Id" tipo="Bundle.Tipo.Noticia" />
+							<Bundle bundleId="@bundle.Id" bundleYaCargado="@bundle" tipo="Bundle.Tipo.Noticia" />
 						</div>
 					}
 				}
@@ -239,14 +237,9 @@
 										{
 											string enlaceJuego = Herramientas.EnlaceAcortador.Generar(gratis.Enlace, gratis.Tipo, usuarioPatreon, false);
 
-											<CajaJuego drmNoticia="@gratis.DRM"
-													   enlaceNoticia="@enlaceJuego"
-													   idioma="@idioma"
-													   juego="@juego"
-													   juegosUsuarioIndex="@juegosUsuarioIndex" usuarioDeseadosImportados="@deseadosImportadosIndex" usuarioDeseadosWeb="@deseadosWebIndex"
-													   tipo="CajaJuego.Tipo.Noticia"
-													   userAgent="@userAgent"
-													   tipoGratis="@gratis.Tipo" />
+											<CajaJuego drmNoticia="@gratis.DRM" enlaceNoticia="@enlaceJuego" idioma="@idioma"
+													   juego="@juego" juegosUsuarioIndex="@juegosUsuarioIndex" usuarioDeseadosImportados="@deseadosImportadosIndex" usuarioDeseadosWeb="@deseadosWebIndex"
+													   tipo="CajaJuego.Tipo.Noticia" userAgent="@userAgent" tipoGratis="@gratis.Tipo" />
 										}
 									}
 								}
@@ -298,15 +291,9 @@
 									{
 										string enlaceJuego = Herramientas.EnlaceAcortador.Generar(suscripcion.Enlace, suscripcion.Tipo, usuarioPatreon, false);
 
-										<CajaJuego drmNoticia="@suscripcion.DRM"
-												   enlaceNoticia="@enlaceJuego"
-												   idioma="@idioma"
-												   juego="@juego"
-												   juegosUsuarioIndex="@juegosUsuarioIndex" usuarioDeseadosImportados="@deseadosImportadosIndex" usuarioDeseadosWeb="@deseadosWebIndex"
-												   tipo="CajaJuego.Tipo.Noticia"
-												   userAgent="@userAgent"
-												   idSuscripcion="@suscripcion.Id"
-												   tipoSuscripcion="@suscripcion.Tipo" />
+										<CajaJuego drmNoticia="@suscripcion.DRM" enlaceNoticia="@enlaceJuego" idioma="@idioma"
+												   juego="@juego" juegosUsuarioIndex="@juegosUsuarioIndex" usuarioDeseadosImportados="@deseadosImportadosIndex" usuarioDeseadosWeb="@deseadosWebIndex"
+												   tipo="CajaJuego.Tipo.Noticia" userAgent="@userAgent" idSuscripcion="@suscripcion.Id" tipoSuscripcion="@suscripcion.Tipo" />
 									}
 								}
 							</div>
@@ -328,7 +315,7 @@
 			}
 		</div>
 
-		<div style="background: color-mix(in srgb, var(--fondoSubcabecera) 45%, var(--fondoBotonPequeño)); border: 2px solid rgba(0,0,0,.2); border-top: 0px; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; display: flex; align-items: center; gap: 15px; padding: 30px 40px; margin-bottom: 60px;">
+		<div style="background: color-mix(in srgb, var(--fondoSubcabecera) 45%, var(--fondoBotonPequeño)); border: 2px solid rgba(0,0,0,.5); border-top: 0px; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; display: flex; align-items: center; gap: 15px; padding: 30px 40px; margin-bottom: 60px;">
 			<div>
 				@Herramientas.Idiomas.BuscarTexto(idioma, "String11", "News"):
 			</div>
@@ -442,7 +429,7 @@
 
 	@if (noticiaAnterior != null || noticiaPosterior != null)
 	{
-		<div class="cuerpo-ancho" style="padding: 30px; display: flex; align-items: center; gap: 40px; background-color: var(--fondoSubsubcabecera); border: 1px solid rgba(0,0,0,.2); border-width: 2px 2px 0 2px; border-top-left-radius: 20px; border-top-right-radius: 20px;">
+		<div class="cuerpo-ancho" style="padding: 30px; display: flex; align-items: center; gap: 40px; background-color: var(--fondoSubsubcabecera); border: 2px solid rgba(0,0,0,.5); border-width: 2px 2px 0 2px; border-top-left-radius: 20px; border-top-right-radius: 20px;">
 			@if (noticiaAnterior?.Id > 0)
 			{
 				string enlaceAnterior = "/news/" + noticiaAnterior.Id + "/" + Herramientas.EnlaceAdaptador.Nombre(Herramientas.Idiomas.ElegirTexto(idioma, noticiaAnterior.TituloEn, noticiaAnterior.TituloEs)) + "/";
@@ -627,7 +614,6 @@
 	private string enlaceIngles = string.Empty;
 	private string enlaceEspañol = string.Empty;
 	private string video = string.Empty;
-	private string fondo = string.Empty;
 
 	[PersistentState] public List<Juegos.Juego> juegos { get; set; }
 
@@ -695,53 +681,11 @@
 					}
 				}
 
-				if (noticia.NoticiaTipo == NoticiaTipo.Suscripciones)
+				if (juegos?.Count == 1)
 				{
-					if (string.IsNullOrEmpty(Suscripciones2.SuscripcionesCargar.DevolverSuscripcion(noticia.SuscripcionTipo).ImagenFondo) == false)
+					if (juegos[0].Media?.Videos?.Count > 0)
 					{
-						fondo = Suscripciones2.SuscripcionesCargar.DevolverSuscripcion(noticia.SuscripcionTipo).ImagenFondo;
-					}
-				}
-				else if (noticia.NoticiaTipo == NoticiaTipo.Web)
-				{
-					fondo = "/logo/logofondoentrada.webp";
-				}
-
-				if (juegos != null)
-				{
-					if (juegos?.Count == 1)
-					{
-						if (juegos[0].Media?.Videos?.Count > 0)
-						{
-							video = juegos[0].Media?.Videos[0].Enlace;
-						}
-					}
-
-					if (string.IsNullOrEmpty(fondo) == true)
-					{
-						if (juegos?.Count > 0)
-						{
-							int reseñas = 0;
-
-							foreach (var juego in juegos)
-							{
-								if (juego.Analisis != null)
-								{
-									if (string.IsNullOrEmpty(juego.Analisis.Cantidad) == false)
-									{
-										string temp = juego.Analisis.Cantidad;
-										temp = temp.Replace(",", null);
-										int reseñasJuego = int.Parse(temp);
-
-										if (reseñasJuego > reseñas)
-										{
-											reseñas = reseñasJuego;
-											fondo = juego.Imagenes.Library_1920x620;
-										}
-									}
-								}
-							}
-						}
+						video = juegos[0].Media?.Videos[0].Enlace;
 					}
 				}
 

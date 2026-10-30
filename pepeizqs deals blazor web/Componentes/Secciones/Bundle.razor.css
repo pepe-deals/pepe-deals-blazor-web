@@ -49,7 +49,7 @@
 
 .caja-bundle-contenido {
     background-color: var(--fondoSubsubcabecera);
-    border: 2px solid rgba(0,0,0,.4);
+    border: 2px solid rgba(0,0,0,.5);
 }
 
 .caja-bundle-mensaje {
@@ -90,7 +90,7 @@
 .caja-bundle-diseños {
     background-blend-mode: overlay;
     border-radius: 10px;
-    border: 2px solid rgba(0,0,0,.4);
+    border: 2px solid rgba(0,0,0,.5);
     width: fit-content;
     background-color: var(--fondoSubsubcabecera);
     backdrop-filter: blur(25px);

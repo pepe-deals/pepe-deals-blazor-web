@@ -8,6 +8,7 @@
 @using Microsoft.JSInterop
 @using pepeizqs_deals_blazor_web.Componentes.Interfaz
 @using Tiendas2
+@using pepeizqs_deals_blazor_web.Componentes.Secciones.BundleComponentes
 
 @inject IJSRuntime JavaScript
 
@@ -448,41 +449,19 @@ else
 {
 	if (bundleSeleccionado != null)
 	{
-		<div class="cuerpo-ancho" style="background-color: var(--fondoSubcabecera); border: 2px solid var(--glaseadoBorde); border-top-left-radius: 20px; border-top-right-radius: 20px; margin-top: 40px;">
-			<div style="display: flex; align-items: center; gap: 30px; flex-wrap: nowrap; padding: 30px 40px;">
-				<button @onclick="@(e => CerrarBundle(e))" class="boton-pequeño" style="width: fit-content; padding: 10px 15px;">
-					<div style="max-width: 24px; max-height: 24px;">
-						<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-							<path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
-						</svg>
-					</div>
-				</button>
-				
-				<div>
-					<img src="@Bundles2.BundlesCargar.DevolverBundle(bundleSeleccionado.BundleTipo).ImagenIcono" style="max-width: 30px; max-height: 30px; display: block;" alt="Icon" />
-				</div>
+		string enlaceBundle = bundleSeleccionado.Enlace;
 
-				<h1 style="font-size: 20px; margin: 0px; line-height: 30px;">
-					@bundleSeleccionado.Nombre
-				</h1>
+		if (Herramientas.Bots.UserAgentEsBot(userAgent) == false)
+		{
+			enlaceBundle = Herramientas.EnlaceAcortador.Generar(usuarioRegion, bundleSeleccionado.Enlace, bundleSeleccionado.BundleTipo, usuarioPatreon, false);
+		}
 
-				<div style="margin-left: auto; display: flex; justify-content: right;">
-					@MostrarFecha(bundleSeleccionado.FechaEmpieza, bundleSeleccionado.FechaTermina)
-				</div>
-			</div>
-		</div>
+		<BundleCabecera idioma="@idioma" bundle="@bundleSeleccionado" enlaceBundle="@enlaceBundle" OnCerrar="CerrarBundle" />
 
 		if (DateTime.Now < bundleSeleccionado.FechaTermina)
 		{
-			string enlaceBundle = bundleSeleccionado.Enlace;
-
-			if (Herramientas.Bots.UserAgentEsBot(userAgent) == false)
-			{
-				enlaceBundle = Herramientas.EnlaceAcortador.Generar(usuarioRegion, bundleSeleccionado.Enlace, bundleSeleccionado.BundleTipo, usuarioPatreon, false);
-			}
-
 			<div class="cuerpo-ancho" style="position: sticky; top: var(--alturaCabecera); z-index: 1000;">
-				<a href="@enlaceBundle" target="_blank" class="boton-pequeño" style="text-align: center; padding: 20px; font-size: 20px; border: 1px solid rgba(0,255,255,0.15);">
+				<a href="@enlaceBundle" target="_blank" class="boton-pequeño" style="text-align: center; padding: 20px; font-size: 20px; border: 2px solid rgba(0,255,255,0.15);">
 					@Herramientas.Idiomas.BuscarTexto(idioma, "String3", "Bundle")
 				</a>
 			</div>
@@ -903,7 +882,7 @@ else
 		}
 	}
 
-	private async void CerrarBundle(MouseEventArgs e)
+	private async void CerrarBundle()
 	{
 		mostrarBundleSeleccionado = false;
 

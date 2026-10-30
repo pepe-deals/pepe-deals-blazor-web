@@ -113,16 +113,39 @@
                 <div>
                     @foreach (var juego in juegosBuscador)
                     {
-                        <div class="perfil-flexible-centrado perfil-espacio-top">
-                            <button @onclick="@(e => SeleccionarJuegoBuscador(e, juego.Id.ToString(), juego.Imagenes.Capsule_231x87, juego.Nombre))" class="boton-pequeño" style="padding: 2px;">
+                        string desactivadoEstado = "false";
+                        string desactivadoFondo = string.Empty;
+
+                        if (juegosIds.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Contains(juego.Id.ToString()) == true)
+                        {
+                            desactivadoEstado = "true";
+                            desactivadoFondo = "background-color: rgba(0,0,0,.3);";
+                        }
+
+                        <div class="perfil-flexible-centrado perfil-espacio-top" disabled="@desactivadoEstado">
+                            <button @onclick="@(e => AñadirJuegoDelBuscador(e, juego.Id.ToString(), juego.Imagenes.Capsule_231x87, juego.Nombre))" class="boton-pequeño" style="padding: 2px; @desactivadoFondo">
                                 <div class="perfil-flexible-centrado">
                                     <div style="width: 15%;">
-                                        <img src="@juego.Imagenes.Capsule_231x87" style="max-height:100%; max-width:100%; display: block;" />
+                                        <img src="@juego.Imagenes.Capsule_231x87" style="max-height: 100%; max-width: 100%; display: block;" />
                                     </div>
 
-                                    <div style="width: 85%; padding-left: 15px; padding-right: 15px;">
-                                        @juego.Nombre<br />
-                                        <span style="font-size: 13px;">@juego.Id.ToString()</span>
+                                    <div style="width: 85%; padding: 0px 15px; display: flex; align-items: center; gap: 10px;">
+                                        <div style="display: flex; flex-direction: column; gap: 5px;">
+                                            <div>
+                                                @juego.Nombre
+                                            </div>
+
+                                            <div style="font-size: 13px;">
+                                                @juego.Id.ToString()
+                                            </div>
+                                        </div>
+
+                                        @if (desactivadoEstado == "true")
+                                        {
+                                            <div style="margin-left: auto; padding: 5px 10px; font-size: 14px; background-color: var(--fondoAlerta); border: 1px solid rgba(255,255,255,0.2);">
+                                                Ya Añadido
+                                            </div>
+                                        }
                                     </div>
                                 </div>
                             </button>
@@ -226,7 +249,7 @@
 
             bundle = await BundlesCargar.SeleccionarBundle(enlace);
 
-            if (bundle.Juegos?.Count > 0)
+            if (bundle?.Juegos?.Count > 0)
             {
                 foreach (var juego in bundle.Juegos)
                 {
@@ -463,8 +486,16 @@
         }
     }
 
-    private async Task SeleccionarJuegoBuscador(MouseEventArgs e, string id, string imagen, string nombre)
+    private async Task AñadirJuegoDelBuscador(MouseEventArgs e, string id, string imagen, string nombre)
     {
+        if (string.IsNullOrEmpty(juegosIds) == false)
+        {
+            if (juegosIds.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Contains(id) == true)
+            {
+                return;
+            }
+        }
+
         textoBuscador = null;
         juegosBuscador = new List<global::Juegos.Juego>();
 
@@ -497,18 +528,13 @@
 
         bundle.Juegos.Add(juegoBundle);
 
-        juegosIds = null;
-
-        for (int i = 0; i < bundle.Juegos.Count; i += 1)
+        if (string.IsNullOrEmpty(juegosIds) == true)
         {
-            if (i == 0)
-            {
-                juegosIds = bundle.Juegos[i].JuegoId;
-            }
-            else
-            {
-                juegosIds = juegosIds + "," + bundle.Juegos[i].JuegoId;
-            }
+            juegosIds = id;
+        }
+        else
+        {
+            juegosIds = juegosIds + "," + id;
         }
 
         await BaseDatos.Portapapeles.Insertar.Ejecutar(bundle.Enlace, juegosIds);

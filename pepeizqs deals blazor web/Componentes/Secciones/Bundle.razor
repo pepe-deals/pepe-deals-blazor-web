@@ -6,9 +6,10 @@
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.JSInterop
 @using Microsoft.VisualBasic
-@using Tiendas2
 @using pepeizqs_deals_blazor_web.Componentes.Interfaz
+@using pepeizqs_deals_blazor_web.Componentes.Secciones.BundleComponentes
 @using pepeizqs_deals_web.Data
+@using Tiendas2
 
 @inject IJSRuntime JavaScript
 @inject Servicios.DiseñoBundle ServicioDiseñoBundle
@@ -185,58 +186,7 @@
 			<pepeizqs_deals_blazor_web.Componentes.Admin.Bundle idioma="@idioma" bundleId="@bundle.Id" />
 		}
 		
-		<div class="cuerpo-ancho" style="background-color: var(--fondoSubcabecera); border: 2px solid var(--glaseadoBorde); border-top-left-radius: 20px; border-top-right-radius: 20px; margin-top: 40px; @(DateTime.Now > bundle.FechaTermina ? "border-bottom: 0px;" : "")">
-			<div style="display: flex; align-items: center; flex-wrap: nowrap; border-top-left-radius: inherit;">
-				@if (DateTime.Now < bundle.FechaTermina)
-				{
-					<a href="@enlaceBundle" target="_blank" style="border-top-left-radius: inherit;">
-						<div style="box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.28),0px 0px 1px 0px rgba(0, 0, 0, 0.24); border-top-left-radius: inherit; overflow: hidden;">
-							<img src="@bundle.ImagenNoticia" style="max-width: 300px; max-height: 300px; display: block;" alt="@Bundles2.BundlesCargar.DevolverBundle(bundle.BundleTipo).Tienda" />
-						</div>
-					</a>
-				}
-
-				<div style="display: flex; flex-direction: column; width: 100%; @(DateTime.Now > bundle.FechaTermina ? "gap: 10px; padding: 30px 40px;" : "gap: 20px; padding: 30px;")">
-					<h1 style="font-size: 20px; margin: 0px; line-height: 30px;">
-						@bundle.Nombre
-					</h1>
-
-					<div style="display: flex; align-items: center; gap: 20px;">
-						@if (DateTime.Now < bundle.FechaTermina)
-						{
-							<a href="/bundles/@bundle.BundleTipo.ToString().ToLower()/" class="boton-pequeño" style="width: fit-content; display: flex; align-items: center; gap: 20px; padding: 10px 15px;">
-								<div>
-									<img src="@Bundles2.BundlesCargar.DevolverBundle(bundle.BundleTipo).ImagenIcono" style="max-width: 18px; max-height: 18px; display: block;" alt="@Bundles2.BundlesCargar.DevolverBundle(bundle.BundleTipo).Tienda" />
-								</div>
-
-								<div>
-									@Bundles2.BundlesCargar.DevolverBundle(bundle.BundleTipo).Tienda
-								</div>
-							</a>
-						}
-						else
-						{
-							<div>
-								<img src="@Bundles2.BundlesCargar.DevolverBundle(bundle.BundleTipo).ImagenIcono" style="max-width: 20px; max-height: 20px; display: block;" alt="@Bundles2.BundlesCargar.DevolverBundle(bundle.BundleTipo).Tienda" />
-							</div>
-						}
-
-						<div style="font-size: 16px;">
-							@if (DateTime.Now < bundle.FechaTermina)
-							{
-								@MostrarFecha(bundle.FechaEmpieza, bundle.FechaTermina)
-							}
-							else
-							{
-								<div>
-									@bundle.FechaEmpieza.Day.ToString()/@bundle.FechaEmpieza.Month.ToString()/@bundle.FechaEmpieza.Year.ToString() • @bundle.FechaTermina.Day.ToString()/@bundle.FechaTermina.Month.ToString()/@bundle.FechaTermina.Year.ToString()
-								</div>
-							}
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+		<BundleCabecera idioma="@idioma" bundle="@bundle" enlaceBundle="@enlaceBundle"/>
 
 		@if (DateTime.Now < bundle.FechaTermina)
 		{
@@ -360,7 +310,14 @@
 							{
 								if (i == 0)
 								{
-									bordesRedondeado = "border-radius: 10px;";
+									if (bundle.Tiers.Count == 1)
+									{
+										bordesRedondeado = "border-top-left-radius: 10px; border-top-right-radius: 10px;";
+									}
+									else
+									{
+										bordesRedondeado = "border-radius: 10px;";
+									}
 								}
 								else if (i == bundle.Tiers.Count - 1)
 								{
@@ -687,6 +644,9 @@
 	public int bundleId { get; set; }
 
 	[Parameter]
+	public Bundles2.Bundle bundleYaCargado { get; set; }
+
+	[Parameter]
 	public string bundleNombre { get; set; }
 
 	[Parameter]
@@ -767,6 +727,11 @@
 					usuarioTiendasMarketplace = opciones.Marketplace.Value;
 				}
 			}
+		}
+
+		if (bundleYaCargado != null)
+		{
+			bundle = bundleYaCargado;
 		}
 
 		bundle ??= await BaseDatos.Bundles.Buscar.UnBundle(bundleId);
@@ -929,29 +894,6 @@
 			await JavaScript.InvokeVoidAsync("open", enlace, "_blank");
 		}
 		catch { }
-	}
-
-	private string MostrarFecha(DateTime fechaEmpieza, DateTime fechaTermina)
-	{
-		if (fechaTermina.Year > 2022)
-		{
-			TimeSpan diferenciaTiempo = fechaTermina.Subtract(DateTime.Now);
-
-			if (diferenciaTiempo.Days > 1)
-			{
-				return string.Format(Herramientas.Idiomas.BuscarTexto(idioma, "String4", "Bundle"), diferenciaTiempo.Days);
-			}
-			else if (diferenciaTiempo.Days == 1)
-			{
-				return string.Format(Herramientas.Idiomas.BuscarTexto(idioma, "String5", "Bundle"), diferenciaTiempo.Days);
-			}
-			else if (diferenciaTiempo.Days == 0 && diferenciaTiempo.Minutes > 0)
-			{
-				return string.Format(Herramientas.Idiomas.BuscarTexto(idioma, "String6", "Bundle"), diferenciaTiempo.Days);
-			}
-		}
-
-		return Herramientas.Idiomas.BuscarTexto(idioma, "String7", "Bundle") + " • " + fechaEmpieza.Day.ToString() + "/" + fechaEmpieza.Month.ToString() + "/" + fechaEmpieza.Year.ToString() + " • " + fechaTermina.Day.ToString() + "/" + fechaTermina.Month.ToString() + "/" + fechaTermina.Year.ToString();
 	}
 
 	#region Desplegable
