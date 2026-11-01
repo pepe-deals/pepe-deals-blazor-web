@@ -3,12 +3,6 @@
     border: 2px solid var(--fondoSubcabecera);
 }
 
-.admin-busqueda-juego-derecha {
-    width: 150px;
-    min-width: 150px;
-    padding-left: 30px;
-}
-
 .entrada-texto {
     padding: 5px 10px;
     background-color: var(--fondoEntrada);

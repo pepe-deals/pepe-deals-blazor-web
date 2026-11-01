@@ -244,8 +244,17 @@
                             <div>
                                 @foreach (var item in pestaña.resultados)
                                 {
+                                    string desactivadoEstado = "false";
+                                    string desactivadoFondo = string.Empty;
+
+                                    if (idsPendiente.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Contains(item.Id.ToString()) == true)
+                                    {
+                                        desactivadoEstado = "true";
+                                        desactivadoFondo = "background-color: rgba(0,0,0,.3);";
+                                    }
+
                                     <hr />
-                                    <div class="perfil-flexible-centrado" style="flex-wrap: wrap;">
+                                    <div class="perfil-flexible-centrado" style="flex-wrap: wrap; @desactivadoFondo" disabled="@desactivadoEstado">
                                         <div style="width: 150px; min-width: 150px;">
                                             <button @onclick="@(e => ClickearIdPendientes(e, item))" class="boton-pequeño" style="text-align: center;">
                                                 Añadir ID
@@ -262,15 +271,24 @@
                                             </a>
                                         </div>
 
-                                        <div style="width: 100%; padding: 5px 10px; flex: 1;">
+                                        <div style="padding: 5px 10px;">
                                             @item.Nombre
                                         </div>
 
-                                        <div class="admin-busqueda-juego-derecha">
-                                            <button @onclick="@(e => ClickearBorrarPendientes(e, item.Id.ToString()))" class="boton-pequeño" style="background-color: var(--fondoPeligro); text-align: center;">
-                                                Borrar
-                                            </button>
-                                        </div>
+                                        @if (desactivadoEstado == "true")
+                                        {
+                                            <div style="margin-left: auto; padding: 5px 10px; font-size: 14px; background-color: var(--fondoAlerta); border: 1px solid rgba(255,255,255,0.2);">
+                                                Ya Añadido
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div style="margin-left: auto;">
+                                                <button @onclick="@(e => ClickearBorrarPendientes(e, item.Id.ToString()))" class="boton-pequeño" style="background-color: var(--fondoPeligro); text-align: center; padding: 10px 20px;">
+                                                    Borrar
+                                                </button>
+                                            </div>
+                                        }   
                                     </div>
                                 }
                             </div>
@@ -1267,36 +1285,46 @@
 
     private void AgregarIdPendiente(global::Juegos.Juego juego)
     {
-        idsPendientes.Add(juego.Id);
+        bool dejarAgregar = true;
 
-        if (idsPendientes.Count > 0)
+        if (idsPendiente.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Contains(juego.Id.ToString()) == true)
         {
-            idsPendiente = string.Join(",", idsPendientes);
-        }
-        else
-        {
-            idsPendiente = "0";
+            dejarAgregar = false;
         }
 
-        seleccionados.RemoveAll(s => idsPendientes.Contains(s.Id) == false);
-
-        bool añadirSeleccionados = true;
-
-        if (seleccionados?.Count > 0)
+        if (dejarAgregar == true)
         {
-            foreach (var seleccionado in seleccionados)
+            idsPendientes.Add(juego.Id);
+
+            if (idsPendientes.Count > 0)
             {
-                if (seleccionado.Id == juego.Id)
+                idsPendiente = string.Join(",", idsPendientes);
+            }
+            else
+            {
+                idsPendiente = "0";
+            }
+
+            seleccionados.RemoveAll(s => idsPendientes.Contains(s.Id) == false);
+
+            bool añadirSeleccionados = true;
+
+            if (seleccionados?.Count > 0)
+            {
+                foreach (var seleccionado in seleccionados)
                 {
-                    añadirSeleccionados = false;
-                    break;
+                    if (seleccionado.Id == juego.Id)
+                    {
+                        añadirSeleccionados = false;
+                        break;
+                    }
                 }
             }
-        }
 
-        if (añadirSeleccionados == true)
-        {
-            seleccionados.Add(juego);
+            if (añadirSeleccionados == true)
+            {
+                seleccionados.Add(juego);
+            }
         }
     }
 
