@@ -44,7 +44,8 @@ namespace Tiendas2
 				APIs.Gameseal.Tienda.Generar(),
 				APIs.Kinguin.Tienda.Generar(),
 				APIs.Driffle.Tienda.Generar(),
-				APIs.Eneba.Tienda.Generar()
+				APIs.Eneba.Tienda.Generar(),
+				APIs.Allyouplay.Tienda.Generar()
 			};
 
 			return tiendas;
@@ -187,6 +188,10 @@ namespace Tiendas2
 			else if (id == APIs.Eneba.Tienda.Generar().Id) 
 			{
 				await APIs.Eneba.Tienda.BuscarOfertas(region);
+			}
+			else if (id == APIs.Allyouplay.Tienda.Generar().Id)
+			{
+				await APIs.Allyouplay.Tienda.BuscarOfertas(region);
 			}
 		}
 

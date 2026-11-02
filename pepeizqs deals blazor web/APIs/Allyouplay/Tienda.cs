@@ -1,7 +1,9 @@
 ﻿#nullable disable
 
 using Herramientas;
+using Herramientas.Afiliados;
 using Juegos;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -23,175 +25,142 @@ namespace APIs.Allyouplay
 				Imagen300x80 = "/imagenes/tiendas/allyouplay_300x80.webp",
 				ImagenIcono = "/imagenes/tiendas/allyouplay_icono.webp",
 				Color = "#ff4081",
-				AdminUso = false,
-				UsuarioUso = false
+				AdminUso = true,
+				UsuarioUso = true
 			};
 
 			return tienda;
+		}
+
+		public static string LimpiarEnlace(string enlace)
+		{
+			if (string.IsNullOrEmpty(enlace) == true)
+			{
+				return enlace;
+			}
+
+			int posicionU = enlace.IndexOf("&u=", StringComparison.OrdinalIgnoreCase);
+
+			if (posicionU == -1)
+			{
+				return enlace;
+			}
+
+			string despuesDeU = enlace[(posicionU + 3)..];
+			int posicionAmpersand = despuesDeU.IndexOf('&');
+			string urlCodificada = posicionAmpersand >= 0 ? despuesDeU[..posicionAmpersand] : despuesDeU;
+			string urlDecodificada = WebUtility.UrlDecode(urlCodificada);
+
+			int posicionInterrogacion = urlDecodificada.IndexOf('?');
+
+			if (posicionInterrogacion >= 0)
+			{
+				urlDecodificada = urlDecodificada[..posicionInterrogacion];
+			}
+
+			return urlDecodificada;
+		}
+
+		public static string Referido(TiendaRegion region, string enlace)
+		{
+			if (string.IsNullOrEmpty(enlace) == true)
+			{
+				return enlace;
+			}
+
+			string campaignId = string.Empty;
+			string moneda = string.Empty;
+			string intsrc = string.Empty;
+
+			if (region == TiendaRegion.Europa)
+			{
+				campaignId = "1382810";
+				moneda = "eur";
+				intsrc = "CATF_22827";
+			}
+			//else if (region == TiendaRegion.EstadosUnidos)
+			//{
+			//	campaignId = "3834946";
+			//	moneda = "usd";
+			//	intsrc = "CATF_32047";
+			//}
+
+			string destino = $"{enlace}?__currency={moneda}";
+			string destinoCodificado = WebUtility.UrlEncode(destino);
+
+			return $"https://anandadigitalbv.sjv.io/c/1382810/{campaignId}/30655?u={destinoCodificado}&intsrc={intsrc}";
 		}
 
 		public static async Task BuscarOfertas(TiendaRegion region)
 		{
 			await BaseDatos.Admin.Actualizar.Tiendas(region, Generar().Id, DateTime.Now, 0);
 
-			int juegos2 = 0;
+			List<ImpactCatalogItem> resultados = new List<ImpactCatalogItem>();
 
-			int i = 1;
-			int total = 10;
-			while (i < total)
+			if (region == TiendaRegion.Europa)
 			{
-				HttpClient cliente = new HttpClient();
-				cliente.BaseAddress = new Uri("https://www.allyouplay.com");
-				cliente.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				resultados = await Impact.ObtenerCatalogo("22827");
+			}
+			//else if (region == TiendaRegion.EstadosUnidos)
+			//{
+			//	resultados = await Impact.ObtenerCatalogo("32047");
+			//}
 
-				string peticionEnBruto = "{\"page_number\":" + i.ToString() + ",\"page_size\":24,\"specification_option_ids\":[4]}";
+			if (resultados?.Count > 0)
+			{
+				List<JuegoPrecio> ofertas = new List<JuegoPrecio>();
 
-				HttpRequestMessage peticion = new HttpRequestMessage(HttpMethod.Post, "https://sefim.allyouplay.com/api-frontend/Catalog/GetCategory/69")
+				foreach (var resultado in resultados)
 				{
-					Content = new StringContent(peticionEnBruto, Encoding.UTF8, "application/json"),
-					Headers = { { "POST", "/api-frontend/Catalog/GetCategory/69" },
-								{ "Host", "sefim.allyouplay.com" },
-								{ "User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:133.0) Gecko/20100101 Firefox/133.0" },
-								{ "Accept", "application/json, text/plain, */*" },
-								{ "Accept-Language", "es-ES,es;q=0.8,en-US;q=0.5,en;q=0.3"},
-								{ "Origin", "https://allyouplay.com" },
-								{ "DNT", "1" },
-								{ "Sec-GPC", "1" },
-								{ "Connection", "keep-alive" },
-								{ "Referer", "https://allyouplay.com/" },
-								{ "Sec-Fetch-Dest", "empty" },
-								{ "Sec-Fetch-Mode", "cors" },
-								{ "Pragma", "no-cache" },
-								{ "Cache-Control", "no-cache" }
-					}
-				}; 
-
-				HttpResponseMessage respuesta = await cliente.SendAsync(peticion);
-
-				string html = string.Empty;
-
-				try
-				{
-					html = await respuesta.Content.ReadAsStringAsync();
-				}
-				catch { }
-
-				if (string.IsNullOrEmpty(html) == false)
-				{
-					AllyouplayAPI datos = JsonSerializer.Deserialize<AllyouplayAPI>(html);
-
-					if (datos != null)
+					if (string.IsNullOrEmpty(resultado.Nombre) == false)
 					{
-						if (datos.Datos != null)
+						string enlaceJuego = LimpiarEnlace(resultado.Url);
+
+						JuegoDRM drmJuego = AsignarDRM(resultado.Nombre, enlaceJuego);
+
+						if (drmJuego != JuegoDRM.NoEspecificado && string.IsNullOrEmpty(resultado.Disponibilidad) == false && resultado.Disponibilidad == "in stock")
 						{
-							if (datos.Datos.Catalogo != null)
-							{
-								total = datos.Datos.Catalogo.Paginas;
-
-								foreach (var juego in datos.Datos.Catalogo.Juegos)
-								{
-									if (juego.Precios != null)
-									{
-										if (juego.Precios.PrecioRebajado != null && juego.Precios.PrecioBase != null)
-										{
-											decimal precioBase = juego.Precios.PrecioBase.Value;
-											decimal precioRebajado = juego.Precios.PrecioRebajado.Value;
-
-											int descuento = Calculadora.SacarDescuento(precioBase, precioRebajado);
-
-											if (descuento > 0)
-											{
-												JuegoPrecio oferta = new JuegoPrecio
-												{
-													Nombre = juego.Nombre,
-													Enlace = "https://allyouplay.com/" + juego.Slug,
-													Imagen = juego.Imagen,
-													Moneda = JuegoMoneda.Euro,
-													Precio = precioRebajado,
-													Descuento = descuento,
-													Tienda = Generar().Id,
-													DRM = JuegoDRM.Steam,
-													FechaDetectado = DateTime.Now,
-													FechaActualizacion = DateTime.Now
-												};
-
-												try
-												{
-													await BaseDatos.Tiendas.Comprobar.Resto(region, oferta);
-												}
-												catch (Exception ex)
-												{
-													BaseDatos.Errores.Insertar.Mensaje(Generar().Id, ex);
-												}
-
-												juegos2 += 1;
-
-												try
-												{
-													await BaseDatos.Admin.Actualizar.Tiendas(region, Generar().Id, DateTime.Now, juegos2);
-												}
-												catch (Exception ex)
-												{
-													BaseDatos.Errores.Insertar.Mensaje(Generar().Id, ex);
-												}
-											}
-										}
-									}
-								}
-							}
+							BaseDatos.Errores.Insertar.Mensaje("test", System.Text.Json.JsonSerializer.Serialize(resultado));
+							break;
 						}
 					}
 				}
-
-				i += 1;
 			}
 		}
-	}
 
-	public class AllyouplayAPI
-	{
-		[JsonPropertyName("category_model_dto")]
-		public AllyouplayAPIDatos Datos { get; set; }
-	}
+		private static JuegoDRM AsignarDRM(string nombre, string enlace)
+		{
+			nombre = nombre.ToLower();
 
-	public class AllyouplayAPIDatos
-	{
-		[JsonPropertyName("catalog_products_model")]
-		public AllyouplayAPICatalogo Catalogo { get; set; }
-	}
+			JuegoDRM drmJuego = JuegoDRM.Steam;
 
-	public class AllyouplayAPICatalogo
-	{
-		[JsonPropertyName("products")]
-		public List<AllyouplayAPIJuego> Juegos { get; set; }
+			if (nombre.Contains("win10") == true || nombre.Contains("xbox") == true)
+			{
+				drmJuego = JuegoDRM.NoEspecificado;
+			}
 
-		[JsonPropertyName("total_pages")]
-		public int Paginas { get; set; }
-	}
+			if (enlace.Contains("win10") == true || enlace.Contains("xbox") == true || enlace.Contains("age-of-empires-2-definitive-edition") == true)
+			{
+				drmJuego = JuegoDRM.NoEspecificado;
+			}
 
-	public class AllyouplayAPIJuego
-	{
-		[JsonPropertyName("name")]
-		public string Nombre { get; set; }
+			if (nombre.Contains("(epic)") == true)
+			{
+				drmJuego = JuegoDRM.Epic;
+			}
 
-		[JsonPropertyName("se_name")]
-		public string Slug { get; set; }
+			if (enlace.Contains("tchia") == true || enlace.Contains("mythforce") == true)
+			{
+				drmJuego = JuegoDRM.Epic;
+			}
 
-		[JsonPropertyName("image_url")]
-		public string Imagen { get; set; }
+			if (enlace.Contains("max-payne-3") == true || enlace.Contains("la-noire") == true || enlace.Contains("red-dead-redemption-2") == true ||
+				enlace.Contains("bully-scholarship-edition") == true || enlace.Contains("grand-theft-auto-v") == true)
+			{
+				drmJuego = JuegoDRM.Rockstar;
+			}
 
-		#nullable enable
-		[JsonPropertyName("product_price")]
-		public AllyouplayAPIJuegoPrecios? Precios { get; set; }
-		#nullable disable
-	}
-
-	public class AllyouplayAPIJuegoPrecios
-	{
-		[JsonPropertyName("old_price_value")]
-		public decimal? PrecioBase { get; set; }
-
-		[JsonPropertyName("price_value")]
-		public decimal? PrecioRebajado { get; set; }
+			return drmJuego;
+		}
 	}
 }

@@ -362,6 +362,15 @@ namespace Tareas
 									siguienteComprobacion = TimeSpan.FromHours(3);
 								}
 							}
+							else if (tienda.Id == APIs.Allyouplay.Tienda.Generar().Id)
+							{
+								siguienteComprobacion = TimeSpan.FromHours(5);
+
+								if (DateTime.Now.Hour == 19)
+								{
+									siguienteComprobacion = TimeSpan.FromHours(6);
+								}
+							}
 							else if (tienda.Id == APIs.Loaded.Tienda.Generar().Id)
 							{
 								siguienteComprobacion = TimeSpan.FromHours(4);

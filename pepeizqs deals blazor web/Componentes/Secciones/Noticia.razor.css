@@ -8,7 +8,7 @@
     box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.28),0px 0px 1px 0px rgba(0, 0, 0, 0.24);
     background-blend-mode: overlay;
     border-radius: 100px;
-    border: 2px solid var(--glaseadoBorde);
+    border: 2px solid rgba(0,0,0,.5);
     width: fit-content;
     background-color: var(--glaseadoFondo);
     backdrop-filter: blur(25px);
@@ -44,8 +44,8 @@
 
 .caja-noticia-contenido {
     background-color: var(--fondoSubsubcabecera);
-    border-left: 2px solid var(--glaseadoBorde);
-    border-right: 2px solid var(--glaseadoBorde);
+    border-left: 2px solid rgba(0,0,0,.5);
+    border-right: 2px solid rgba(0,0,0,.5);
     padding: 40px;
 }
 
