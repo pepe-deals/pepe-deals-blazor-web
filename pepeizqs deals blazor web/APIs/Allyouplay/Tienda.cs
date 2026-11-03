@@ -5,6 +5,7 @@ using Herramientas.Afiliados;
 using Juegos;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Runtime.Intrinsics.Arm;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -118,10 +119,75 @@ namespace APIs.Allyouplay
 
 						JuegoDRM drmJuego = AsignarDRM(resultado.Nombre, enlaceJuego);
 
-						if (drmJuego != JuegoDRM.NoEspecificado && string.IsNullOrEmpty(resultado.Disponibilidad) == false && resultado.Disponibilidad == "in stock")
+						if (drmJuego != JuegoDRM.NoEspecificado && string.IsNullOrEmpty(resultado.Disponibilidad) == false && resultado.Disponibilidad == "InStock")
 						{
-							BaseDatos.Errores.Insertar.Mensaje("test", System.Text.Json.JsonSerializer.Serialize(resultado));
-							break;
+							if (string.IsNullOrEmpty(resultado.PrecioActualTexto) == false && string.IsNullOrEmpty(resultado.PrecioOriginalTexto) == false)
+							{
+								int descuento = Herramientas.Calculadora.SacarDescuento(decimal.Parse(resultado.PrecioOriginalTexto), decimal.Parse(resultado.PrecioActualTexto));
+
+								if (descuento > 0)
+								{
+									string nombre = WebUtility.HtmlDecode(resultado.Nombre);
+
+									JuegoPrecio oferta = new JuegoPrecio
+									{
+										Nombre = nombre,
+										Enlace = enlaceJuego,
+										Imagen = resultado.ImagenUrl,
+										Moneda = JuegoMoneda.Euro,
+										Precio = resultado.PrecioActual.Value,
+										Descuento = descuento,
+										Tienda = Generar().Id,
+										DRM = drmJuego,
+										FechaDetectado = DateTime.Now,
+										FechaActualizacion = DateTime.Now
+									};
+
+									if (region == TiendaRegion.EstadosUnidos)
+									{
+										oferta.Moneda = JuegoMoneda.Dolar;
+									}
+
+									ofertas.Add(oferta);
+								}
+							}
+						}
+					}
+				}
+
+				if (ofertas?.Count > 0)
+				{
+					ofertas = ofertas.GroupBy(o => o.Enlace, StringComparer.OrdinalIgnoreCase).Select(g => g.First()).ToList();
+
+					int juegos2 = 0;
+
+					int tamaño = 500;
+					var lotes = ofertas
+						.Select((oferta, indice) => new { oferta, indice })
+						.GroupBy(x => x.indice / tamaño)
+						.Select(g => g.Select(x => x.oferta).ToList())
+						.ToList();
+
+					foreach (var lote in lotes)
+					{
+						try
+						{
+							await BaseDatos.Tiendas.Comprobar.Resto(region, lote);
+						}
+						catch (Exception ex)
+						{
+							BaseDatos.Errores.Insertar.Mensaje(Generar().Id, ex);
+						}
+
+						juegos2 += lote.Count;
+
+						try
+						{
+							await BaseDatos.Admin.Actualizar.Tiendas(region, Generar().Id, DateTime.Now, juegos2);
+						}
+						catch (Exception ex)
+						{
+							BaseDatos.Errores.Insertar.Mensaje(Generar().Id, ex);
 						}
 					}
 				}
