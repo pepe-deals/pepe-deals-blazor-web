@@ -4,11 +4,6 @@ using Herramientas;
 using Herramientas.Afiliados;
 using Juegos;
 using System.Net;
-using System.Net.Http.Headers;
-using System.Runtime.Intrinsics.Arm;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using Tiendas2;
 
 namespace APIs.Allyouplay
@@ -24,7 +19,7 @@ namespace APIs.Allyouplay
 				Tipo = TiendaTipo.Oficial,
 				ImagenLogo = "/imagenes/tiendas/allyouplay_logo.webp",
 				Imagen300x80 = "/imagenes/tiendas/allyouplay_300x80.webp",
-				ImagenIcono = "/imagenes/tiendas/allyouplay_icono.webp",
+				ImagenIcono = "/imagenes/tiendas/allyouplay_icono.ico",
 				Color = "#ff4081",
 				AdminUso = true,
 				UsuarioUso = true
@@ -75,16 +70,16 @@ namespace APIs.Allyouplay
 
 			if (region == TiendaRegion.Europa)
 			{
-				campaignId = "1382810";
+				campaignId = "2866230";
 				moneda = "eur";
 				intsrc = "CATF_22827";
 			}
-			//else if (region == TiendaRegion.EstadosUnidos)
-			//{
-			//	campaignId = "3834946";
-			//	moneda = "usd";
-			//	intsrc = "CATF_32047";
-			//}
+			else if (region == TiendaRegion.EstadosUnidos)
+			{
+				campaignId = "3433719";
+				moneda = "usd";
+				intsrc = "CATF_29429";
+			}
 
 			string destino = $"{enlace}?__currency={moneda}";
 			string destinoCodificado = WebUtility.UrlEncode(destino);
@@ -102,10 +97,10 @@ namespace APIs.Allyouplay
 			{
 				resultados = await Impact.ObtenerCatalogo("22827");
 			}
-			//else if (region == TiendaRegion.EstadosUnidos)
-			//{
-			//	resultados = await Impact.ObtenerCatalogo("32047");
-			//}
+			else if (region == TiendaRegion.EstadosUnidos)
+			{
+				resultados = await Impact.ObtenerCatalogo("29429");
+			}
 
 			if (resultados?.Count > 0)
 			{
@@ -128,6 +123,12 @@ namespace APIs.Allyouplay
 								if (descuento > 0)
 								{
 									string nombre = WebUtility.HtmlDecode(resultado.Nombre);
+									nombre = nombre.Replace(" - Early Access", null);
+									nombre = nombre.Replace(" - Pre-Order", null);
+									nombre = nombre.Replace("(Steam)", null);
+									nombre = nombre.Replace("(US)", null);
+									nombre = nombre.Replace("(US/CA)", null);
+									nombre = nombre.Trim();
 
 									JuegoPrecio oferta = new JuegoPrecio
 									{
@@ -210,7 +211,7 @@ namespace APIs.Allyouplay
 				drmJuego = JuegoDRM.NoEspecificado;
 			}
 
-			if (nombre.Contains("(epic)") == true)
+			if (nombre.Contains("(epic)") == true || nombre.Contains("[epic]") == true)
 			{
 				drmJuego = JuegoDRM.Epic;
 			}

@@ -159,26 +159,34 @@ namespace Herramientas
 
 			if (noOficial == true)
 			{
+				JuegoPrecio candidato = null;
+
 				if (region == TiendaRegion.Europa && juego.PreciosHistoricosNoOficialesEU?.Count > 0)
 				{
-					historico = juego.PreciosHistoricosNoOficialesEU.FirstOrDefault(h => h.DRM == drm);
+					candidato = juego.PreciosHistoricosNoOficialesEU.FirstOrDefault(h => h.DRM == drm);
 				}
 				else if (region == TiendaRegion.EstadosUnidos && juego.PreciosHistoricosNoOficialesUS?.Count > 0)
 				{
-					historico = juego.PreciosHistoricosNoOficialesUS.FirstOrDefault(h => h.DRM == drm);
+					candidato = juego.PreciosHistoricosNoOficialesUS.FirstOrDefault(h => h.DRM == drm);
 				}
+
+				historico = MasBarato(historico, candidato, region);
 			}
 
 			if (marketplace == true)
 			{
+				JuegoPrecio candidato = null;
+
 				if (region == TiendaRegion.Europa && juego.PreciosHistoricosMarketplacesEU?.Count > 0)
 				{
-					historico = juego.PreciosHistoricosMarketplacesEU.FirstOrDefault(h => h.DRM == drm);
+					candidato = juego.PreciosHistoricosMarketplacesEU.FirstOrDefault(h => h.DRM == drm);
 				}
 				else if (region == TiendaRegion.EstadosUnidos && juego.PreciosHistoricosMarketplacesUS?.Count > 0)
 				{
-					historico = juego.PreciosHistoricosMarketplacesUS.FirstOrDefault(h => h.DRM == drm);
+					candidato = juego.PreciosHistoricosMarketplacesUS.FirstOrDefault(h => h.DRM == drm);
 				}
+
+				historico = MasBarato(historico, candidato, region);
 			}
 
 			if (historico != null && OfertaActiva.Verificar(historico) && ExisteEnActuales(historico, juego, drm, region, oficial, noOficial, marketplace))
@@ -648,6 +656,24 @@ namespace Herramientas
 			}
 
 			return false;
+		}
+
+		private static decimal ValorComparable(JuegoPrecio p, TiendaRegion region)
+		{
+			JuegoMoneda monedaRegion = region == TiendaRegion.Europa ? JuegoMoneda.Euro : JuegoMoneda.Dolar;
+
+			return p.PrecioCambiado > 0 && p.Moneda != monedaRegion ? p.PrecioCambiado : p.Precio;
+		}
+
+		private static JuegoPrecio MasBarato(JuegoPrecio actual, JuegoPrecio candidato, TiendaRegion region)
+		{
+			if (candidato == null)
+				return actual;
+
+			if (actual == null)
+				return candidato;
+
+			return ValorComparable(candidato, region) < ValorComparable(actual, region) ? candidato : actual;
 		}
 	}
 

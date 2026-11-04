@@ -164,6 +164,10 @@ namespace Herramientas
 					{
 						enlace = APIs.Eneba.Tienda.Referido(enlace);
 					}
+					else if (tienda == APIs.Allyouplay.Tienda.Generar().Id)
+					{
+						enlace = APIs.Allyouplay.Tienda.Referido(region, enlace);
+					}
 				}
 			}
 			
