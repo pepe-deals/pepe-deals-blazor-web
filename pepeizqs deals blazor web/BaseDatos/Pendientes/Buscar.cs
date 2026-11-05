@@ -62,7 +62,7 @@ namespace BaseDatos.Pendientes
 
 		public static async Task<int> Cantidad()
 		{
-			var sentencias = new List<string>();
+			List<string> sentencias = new List<string>();
 
 			// Tiendas
 			foreach (var tienda in Tiendas2.TiendasCargar.GenerarListado())
@@ -101,17 +101,16 @@ namespace BaseDatos.Pendientes
 				return 0;
 			}
 
-			string sql = string.Join(Environment.NewLine + "UNION ALL" + Environment.NewLine, sentencias)
-						 + " OPTION (MAXDOP 8);";
+			string sql = "SELECT SUM(t) FROM (" + Environment.NewLine
+				+ string.Join(Environment.NewLine + "UNION ALL" + Environment.NewLine, sentencias)
+				+ Environment.NewLine + ") AS x(t)";
 
 			try
 			{
-				var resultados = await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.BaseDatos.Select(async conexion =>
 				{
-					return (await conexion.QueryAsync<int>(sql)).ToList();
+					return await conexion.ExecuteScalarAsync<int?>(sql) ?? 0;
 				});
-
-				return resultados.Sum();
 			}
 			catch (Exception ex)
 			{

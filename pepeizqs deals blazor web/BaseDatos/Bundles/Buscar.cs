@@ -99,7 +99,31 @@ namespace BaseDatos.Bundles
 			}
 			catch (Exception ex)
 			{
-				BaseDatos.Errores.Insertar.Mensaje("Bundle Varios", ex);
+				BaseDatos.Errores.Insertar.Mensaje("Bundle Varios 1", ex);
+			}
+
+			return null;
+		}
+
+		public static async Task<List<Bundle>> VariosBundles(List<int> ids)
+		{
+			if (ids == null || ids.Count == 0)
+			{
+				return null;
+			}
+
+			string busqueda = "SELECT * FROM Bundles WHERE Id IN @Ids";
+
+			try
+			{
+				return await Herramientas.BaseDatos.Select(async conexion =>
+				{
+					return (await conexion.QueryAsync<Bundle>(busqueda, new { Ids = ids })).ToList();
+				});
+			}
+			catch (Exception ex)
+			{
+				BaseDatos.Errores.Insertar.Mensaje("Bundle Varios 2", ex);
 			}
 
 			return null;

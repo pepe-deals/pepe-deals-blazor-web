@@ -1,0 +1,23 @@
+﻿<div style="display: flex; flex-direction: column; gap: 20px;">
+    <textarea class="entrada-texto" rows="1" @bind="titulo" oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px';" />
+
+    <textarea class="entrada-texto" rows="8" @bind="contenido" oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px';" />
+
+    <button @onclick="@(e => AñadirNoticia(e))" class="boton-pequeño" style="text-align: center; width: fit-content; padding: 10px 40px; font-size: 20px;">
+        Añadir Noticia
+    </button>
+</div>
+
+@code {
+
+    #nullable disable
+
+    private string titulo = string.Empty;
+    private string contenido = string.Empty;
+
+    private async Task AñadirNoticia(MouseEventArgs e)
+    {
+        
+    }
+
+}

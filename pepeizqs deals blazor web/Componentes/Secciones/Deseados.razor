@@ -428,15 +428,17 @@
 						<div>
 							<Virtualize Context="juego" Items="deseadosSuscripciones">
 								<ItemContent>
-									@if (juego.IdSuscripcion > 0 && suscripcionesCache.TryGetValue(juego.IdSuscripcion, out var suscripcion) && suscripcion != null)
+									@if (juego != null)
 									{
-										string enlaceSuscripcion = Herramientas.EnlaceAcortador.Generar(suscripcion.Enlace, suscripcion.Tipo, usuarioPatreon, false);
+										var suscripcion = Suscripciones2.SuscripcionesCargar.DevolverSuscripcion(juego.IdSuscripcion);
+
+										string enlaceSuscripcion = Herramientas.EnlaceAcortador.Generar(suscripcion.Enlace, suscripcion.Id, usuarioPatreon, false);
 
 										string iconoDRM = Juegos.JuegoDRM2.SacarImagen(juego.DRM);
 										string iconoDRM1 = iconoDRM.Replace(".webp", "-sm.webp");
 										string iconoDRM2 = iconoDRM.Replace(".webp", "-md.webp");
 
-										string iconoSuscripcion = Suscripciones2.SuscripcionesCargar.DevolverSuscripcion(suscripcion.Tipo).ImagenIcono;
+										string iconoSuscripcion = suscripcion.ImagenIcono;
 										string iconoSuscripcion1 = iconoSuscripcion.Replace(".webp", "-sm.webp");
 										string iconoSuscripcion2 = iconoSuscripcion.Replace(".webp", "-md.webp");
 
@@ -475,7 +477,7 @@
 
 													<div style="display: flex; align-items: center; justify-content: center; min-width: 175px; font-size: 18px;">
 														<div style="padding: 5px 15px; text-align: center; font-size: 18px;">
-															@Herramientas.Precios.Euro((decimal)Suscripciones2.SuscripcionesCargar.DevolverSuscripcion(suscripcion.Tipo).Precio)
+															@Herramientas.Precios.Euro((decimal)suscripcion.Precio)
 														</div>
 													</div>
 												</div>
@@ -703,15 +705,11 @@
 	[PersistentState] public List<JuegoDeseadoMostrar> deseadosBundles { get; set; }
 	[PersistentState] public List<JuegoDeseadoMostrar> deseadosSuscripciones { get; set; }
 
-	public List<Bundles2.Bundle> bundlesActuales { get; set; }
-	public List<JuegoSuscripcion> suscripcionesActuales { get; set; }
-
 	private string ordenamientoElegido = string.Empty;
 
 	private bool cargado = false;
 
 	[PersistentState] public Dictionary<int, Bundles2.Bundle> bundlesCache { get; set; }
-	[PersistentState] public Dictionary<int, JuegoSuscripcion> suscripcionesCache { get; set; }
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -720,7 +718,7 @@
 		dominio = datos.Dominio;
 		usuarioRegion = datos.Region;
 		usuarioTiendasNoOficial = datos.NoOficial;
-        usuarioTiendasMarketplace = datos.Marketplace;
+		usuarioTiendasMarketplace = datos.Marketplace;
 
 		if (string.IsNullOrEmpty(usuarioId) == false)
 		{
@@ -744,20 +742,16 @@
 				usuarioTiendasNoOficial = opciones.NoOfficial.Value;
 			}
 
-            if (opciones?.Marketplace.HasValue == true)
-            {
-                usuarioTiendasMarketplace = opciones.Marketplace.Value;
-            }
+			if (opciones?.Marketplace.HasValue == true)
+			{
+				usuarioTiendasMarketplace = opciones.Marketplace.Value;
+			}
 
-			Task<List<Bundles2.Bundle>> tareaBundles = (bundlesActuales != null) ? Task.FromResult(bundlesActuales) : BaseDatos.Bundles.Buscar.Actuales();
-			Task<List<JuegoSuscripcion>> tareaSuscripciones = (suscripcionesActuales != null) ? Task.FromResult(suscripcionesActuales) : BaseDatos.Suscripciones.Buscar.Actuales();
-			Task<List<JuegoDeseadoMostrar>> tareaDeseados = (deseadosGestor != null) ? Task.FromResult(deseadosGestor) : Herramientas.Deseados.LeerJuegos(usuarioTiendasNoOficial, usuarioTiendasMarketplace, usuarioRegion, usuarioId);
+			Task<List<JuegoDeseadoMostrar>> tareaDeseados = (deseadosGestor != null) ? Task.FromResult(deseadosGestor) : Herramientas.Deseados.LeerJuegos(usuarioTiendasNoOficial, usuarioTiendasMarketplace, usuarioRegion, opciones);
 
-			await Task.WhenAll(tareaDeseados, tareaBundles, tareaSuscripciones);
+			await Task.WhenAll(tareaDeseados);
 
 			deseadosGestor = tareaDeseados.Result;
-			bundlesActuales = tareaBundles.Result;
-			suscripcionesActuales = tareaSuscripciones.Result;
 
 			if (string.IsNullOrEmpty(perfilUsuarioId) == true)
 			{
@@ -784,11 +778,8 @@
 
 				await ElegirOrdenamiento();
 
-				bundlesCache ??= new Dictionary<int, Bundles2.Bundle>();
-				suscripcionesCache ??= new Dictionary<int, JuegoSuscripcion>();
-
-				await CargarBundles(bundlesActuales ?? new List<Bundles2.Bundle>(), deseadosGestor);
-				await CargarSuscripciones(suscripcionesActuales ?? new List<JuegoSuscripcion>(), deseadosGestor);
+				await CargarBundles(deseadosGestor);
+				await CargarSuscripciones(deseadosGestor);
 
 				ServicioOpciones.OnMostrarOpcionesChanged += StateHasChanged;
 			}
@@ -835,112 +826,106 @@
 
 	#region Inicio
 
-	private async Task CargarBundles(List<Bundles2.Bundle> bundles, List<JuegoDeseadoMostrar> deseados)
+	private async Task CargarBundles(List<JuegoDeseadoMostrar> deseados)
 	{
 		deseadosBundles ??= new List<JuegoDeseadoMostrar>();
 		bundlesCache ??= new Dictionary<int, Bundles2.Bundle>();
 
-		if (bundles?.Count == 0) 
+		List<int> listaBundlesConsultar = new List<int>();
+
+		if (deseados?.Count > 0)
 		{
-			return;
-		}
-
-		deseadosBundles.Clear();
-
-		HashSet<int> bundlesCargar = new HashSet<int>();
-
-		foreach (var bundle in bundles)
-		{
-			foreach (var bundleJuego in bundle.Juegos)
+			foreach (var deseado in deseados)
 			{
-				JuegoDeseadoMostrar deseado = deseados.FirstOrDefault(d => d.Id.ToString() == bundleJuego.JuegoId && d.DRM == bundleJuego.DRM);
-
-				if (deseado != null)
+				if (deseado.BundlesActuales?.Count > 0)
 				{
-					JuegoDeseadoMostrar nuevoDeseado = new JuegoDeseadoMostrar
-					{
-						Id = deseado.Id,
-						Nombre = deseado.Nombre,
-						IdBundle = bundle.Id,
-						DRM = deseado.DRM,
-						Imagen = deseado.Imagen,
-						Importado = deseado.Importado
-					};
+					bool yaAñadido = false;
 
-					if (deseadosBundles.Any(x => x.Id == nuevoDeseado.Id && x.DRM == nuevoDeseado.DRM && x.IdBundle == nuevoDeseado.IdBundle) == false)
+					if (listaBundlesConsultar?.Count > 0)
 					{
-						deseadosBundles.Add(nuevoDeseado);
-						bundlesCargar.Add(bundle.Id);
+						yaAñadido = listaBundlesConsultar.Any(x => x == deseado.BundlesActuales.FirstOrDefault().id);
+					}
+
+					if (bundlesCache?.ContainsKey(deseado.BundlesActuales.FirstOrDefault().id) == true)
+					{
+						yaAñadido = true;
+					}
+
+					if (yaAñadido == false)
+					{
+						listaBundlesConsultar.Add(deseado.BundlesActuales.FirstOrDefault().id);
 					}
 				}
 			}
 		}
 
-		if (bundlesCargar.Count > 0)
+		if (listaBundlesConsultar.Count > 0)
 		{
-			int[] idsSinCache = bundlesCargar.Where(id => bundlesCache.ContainsKey(id) == false).ToArray();
+			List<Bundles2.Bundle> resultados = await BaseDatos.Bundles.Buscar.VariosBundles(listaBundlesConsultar);
 
-			if (idsSinCache.Length > 0)
+			foreach (var bundle in resultados)
 			{
-				List<Bundles2.Bundle> resultados = await BaseDatos.Bundles.Buscar.VariosBundles(idsSinCache);
+				bundlesCache[bundle.Id] = bundle;
 
-				foreach (var bundle in resultados)
+				foreach (var bundleJuego in bundle.Juegos)
 				{
-					bundlesCache[bundle.Id] = bundle;
+					JuegoDeseadoMostrar deseado = deseados.FirstOrDefault(d => d.Id.ToString() == bundleJuego.JuegoId && d.DRM == bundleJuego.DRM);
+
+					if (deseado != null)
+					{
+						JuegoDeseadoMostrar nuevoDeseado = new JuegoDeseadoMostrar
+						{
+							Id = deseado.Id,
+							Nombre = deseado.Nombre,
+							IdBundle = bundle.Id,
+							DRM = deseado.DRM,
+							Imagen = deseado.Imagen,
+							Importado = deseado.Importado
+						};
+
+						if (deseadosBundles.Any(x => x.Id == nuevoDeseado.Id && x.DRM == nuevoDeseado.DRM && x.IdBundle == nuevoDeseado.IdBundle) == false)
+						{
+							deseadosBundles.Add(nuevoDeseado);
+						}
+					}
 				}
 			}
 		}
 	}
 
-	private async Task CargarSuscripciones(List<JuegoSuscripcion> suscripciones, List<JuegoDeseadoMostrar> deseados)
+	private async Task CargarSuscripciones(List<JuegoDeseadoMostrar> deseados)
 	{
 		deseadosSuscripciones ??= new List<JuegoDeseadoMostrar>();
-		suscripcionesCache ??= new Dictionary<int, JuegoSuscripcion>();
 
-		if (suscripciones?.Count == 0) 
+		if (deseados?.Count > 0)
 		{
-			return;
-		}
-
-		deseadosSuscripciones.Clear();
-
-		HashSet<int> suscripcionesCargar = new HashSet<int>();
-
-		foreach (var juegoSuscripcion in suscripciones)
-		{
-			JuegoDeseadoMostrar deseado = deseados.FirstOrDefault(d => d.Id == juegoSuscripcion.JuegoId && d.DRM == juegoSuscripcion.DRM);
-
-			if (deseado != null && Suscripciones2.SuscripcionesCargar.DevolverSuscripcion(juegoSuscripcion.Tipo).ParaSiempre == true)
+			foreach (var deseado in deseados)
 			{
-				JuegoDeseadoMostrar nuevoDeseado = new JuegoDeseadoMostrar
+				if (deseado.SuscripcionesActuales?.Count > 0)
 				{
-					Id = deseado.Id,
-					Nombre = deseado.Nombre,
-					IdSuscripcion = juegoSuscripcion.Id,
-					DRM = deseado.DRM,
-					Imagen = deseado.Imagen,
-					Importado = deseado.Importado
-				};
+					foreach (var juegoSuscripcion in deseado.SuscripcionesActuales)
+					{
+						foreach (var suscripcion in Suscripciones2.SuscripcionesCargar.CargarSuscripciones())
+						{
+							if (juegoSuscripcion.suscripcion == (int)suscripcion && Suscripciones2.SuscripcionesCargar.DevolverSuscripcion(suscripcion).ParaSiempre == true)
+							{
+								JuegoDeseadoMostrar nuevoDeseado = new JuegoDeseadoMostrar
+								{
+									Id = deseado.Id,
+									Nombre = deseado.Nombre,
+									IdSuscripcion = (int)suscripcion,
+									DRM = deseado.DRM,
+									Imagen = deseado.Imagen,
+									Importado = deseado.Importado
+								};
 
-				if (deseadosSuscripciones.Any(x => x.Id == nuevoDeseado.Id && x.DRM == nuevoDeseado.DRM && x.IdSuscripcion == nuevoDeseado.IdSuscripcion) == false)
-				{
-					deseadosSuscripciones.Add(nuevoDeseado);
-					suscripcionesCargar.Add(juegoSuscripcion.Id);
-				}
-			}
-		}
-
-		if (suscripcionesCargar.Count > 0)
-		{
-			var idsArray = suscripcionesCargar.ToArray();
-			var tareasSuscripcion = idsArray.Select(id => BaseDatos.Suscripciones.Buscar.Id(id)).ToList();
-			var resultados = await Task.WhenAll(tareasSuscripcion);
-
-			for (int i = 0; i < idsArray.Length; i++)
-			{
-				if (resultados[i] != null)
-				{
-					suscripcionesCache[idsArray[i]] = resultados[i];
+								if (deseadosSuscripciones.Any(x => x.Id == nuevoDeseado.Id && x.DRM == nuevoDeseado.DRM && x.IdSuscripcion == nuevoDeseado.IdSuscripcion) == false)
+								{
+									deseadosSuscripciones.Add(nuevoDeseado);
+								}
+							}
+						}
+					}
 				}
 			}
 		}
@@ -1058,6 +1043,11 @@
 		if (deseadosSuscripciones.Count > 0)
 		{
 			deseadosSuscripciones.Remove(juegoMostrar);
+		}
+
+		if (deseadosGestor.Count > 0)
+		{
+			deseadosGestor.Remove(juegoMostrar);
 		}
 
 		await InvokeAsync(StateHasChanged);

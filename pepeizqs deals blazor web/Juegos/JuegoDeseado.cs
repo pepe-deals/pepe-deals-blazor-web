@@ -25,6 +25,8 @@ namespace Juegos
 		public bool Importado { get; set; }
 		public int IdBundle { get; set; }
 		public int IdSuscripcion { get; set; }
+		public List<JuegoBundlesActuales> BundlesActuales { get; set; }
+		public List<JuegoSuscripcionActuales> SuscripcionesActuales { get; set; }
 	}
 
 	public class JuegoDeseadoExportar

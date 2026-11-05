@@ -150,6 +150,8 @@ builder.Services.AddAuthentication(opciones =>
 var conexionTexto = builder.Configuration.GetConnectionString("pepeizqs_deals_webContextConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 Herramientas.BaseDatos.cadenaConexion = conexionTexto;
 
+Herramientas.BaseDatosPepeizqapps.cadenaConexion = builder.Configuration.GetConnectionString("pepeizqs_apps_webContextConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
 PeticionInterna.Clave = builder.Configuration["AntiCaptcha:Key"];
 
 APIs.Steam.Cuenta.ApiKey = builder.Configuration.GetValue<string>("SteamAPI:Key");

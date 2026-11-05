@@ -3,7 +3,6 @@
 using Dapper;
 using Noticias;
 using System.Net;
-using System.Text.Json;
 
 namespace BaseDatos.Noticias
 {
@@ -11,9 +10,9 @@ namespace BaseDatos.Noticias
 	{
 		public static async Task<int> Ejecutar(Noticia noticia)
 		{
-			var campos = new List<string>();
-			var valores = new List<string>();
-			var p = new DynamicParameters();
+			List<string> campos = new List<string>();
+			List<string> valores = new List<string>();
+			DynamicParameters p = new DynamicParameters();
 
 			campos.Add("noticiaTipo");
 			valores.Add("@noticiaTipo");

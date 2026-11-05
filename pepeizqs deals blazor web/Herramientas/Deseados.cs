@@ -9,6 +9,17 @@ namespace Herramientas
 {
 	public static class Deseados
 	{
+		public static async Task<List<JuegoDeseadoMostrar>> LeerJuegos(bool noOficial, bool marketplace, TiendaRegion region, Usuario deseadosUsuario)
+		{
+			Task<List<JuegoDeseadoMostrar>> tareaSteam = CargarDeseadosSteam(deseadosUsuario, noOficial, marketplace, region);
+			Task<List<JuegoDeseadoMostrar>> tareaWeb = CargarDeseadosWeb(deseadosUsuario, noOficial, marketplace, region);
+			Task<List<JuegoDeseadoMostrar>> tareaGog = CargarDeseadosGog(deseadosUsuario, noOficial, marketplace, region);
+
+			await Task.WhenAll(tareaSteam, tareaWeb, tareaGog);
+
+			return tareaSteam.Result.Concat(tareaWeb.Result).Concat(tareaGog.Result).ToList();
+		}
+
 		public static async Task<List<JuegoDeseadoMostrar>> LeerJuegos(bool noOficial, bool marketplace, TiendaRegion region, string usuarioId)
 		{
 			Usuario deseadosUsuario = await global::BaseDatos.Usuarios.Buscar.DeseadosTiene(usuarioId);
@@ -204,6 +215,16 @@ namespace Herramientas
 					Historico = true,
 					Importado = importado
 				};
+
+				if (juego.BundlesActuales?.Count > 0)
+				{
+					nuevoDeseado.BundlesActuales = juego.BundlesActuales;
+				}
+
+				if (juego.SuscripcionesActuales?.Count > 0)
+				{
+					nuevoDeseado.SuscripcionesActuales = juego.SuscripcionesActuales;
+				}
 			}
 
 			JuegoPrecio precioFinal = null;
@@ -310,6 +331,16 @@ namespace Herramientas
 					Historico = false,
 					Importado = importado
 				};
+
+				if (juego.BundlesActuales?.Count > 0)
+				{
+					nuevoDeseado.BundlesActuales = juego.BundlesActuales;
+				}
+
+				if (juego.SuscripcionesActuales?.Count > 0)
+				{
+					nuevoDeseado.SuscripcionesActuales = juego.SuscripcionesActuales;
+				}
 
 				JuegoPrecio minimo = null;
 

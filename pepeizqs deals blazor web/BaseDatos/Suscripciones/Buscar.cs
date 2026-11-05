@@ -143,12 +143,12 @@ ORDER BY sub.Nombre DESC";
 		public static async Task<JuegoSuscripcion> Id(int id)
 		{
 			string busqueda = @"
-SELECT sub.*
-FROM (
-    SELECT *, suscripcion AS Tipo
-    FROM suscripciones
-    WHERE id = @Id
-) AS sub";
+				SELECT sub.*
+				FROM (
+					SELECT *, suscripcion AS Tipo
+					FROM suscripciones
+					WHERE id = @Id
+				) AS sub";
 
 			try
 			{
@@ -193,46 +193,46 @@ FROM (
 		public static async Task<List<JuegoSuscripcion>> UltimasAñadidas()
 		{
 			string busqueda = @"
-SELECT 
-    sub.*,
-    j.*,
-	(
-        SELECT g.gratis
-        FROM gratis g
-        WHERE g.juegoId = j.id
-          AND g.fechaEmpieza <= GETDATE()
-          AND g.fechaTermina >= GETDATE()
-        FOR JSON PATH
-    ) AS GratisActuales,
-	(
-        SELECT g.gratis
-        FROM gratis g
-        WHERE g.juegoId = j.id
-          AND g.fechaTermina < GETDATE()
-        FOR JSON PATH
-    ) AS GratisPasados,
-    (
-        SELECT s.suscripcion
-        FROM suscripciones s
-        WHERE s.juegoId = j.id
-          AND s.FechaEmpieza <= GETDATE()
-          AND s.FechaTermina >= GETDATE()
-        FOR JSON PATH
-    ) AS SuscripcionesActuales,
-    (
-        SELECT s.suscripcion
-        FROM suscripciones s
-        WHERE s.juegoId = j.id
-          AND s.FechaTermina < GETDATE()
-        FOR JSON PATH
-    ) AS SuscripcionesPasados
-FROM (
-    SELECT *, suscripcion AS Tipo
-    FROM suscripciones
-    WHERE fechaEmpieza >= DATEADD(day, -30, GETDATE())
-) AS sub
-INNER JOIN juegos j ON j.id = sub.juegoid
-ORDER BY fechaEmpieza DESC";
+				SELECT 
+					sub.*,
+					j.*,
+					(
+						SELECT g.gratis
+						FROM gratis g
+						WHERE g.juegoId = j.id
+						  AND g.fechaEmpieza <= GETDATE()
+						  AND g.fechaTermina >= GETDATE()
+						FOR JSON PATH
+					) AS GratisActuales,
+					(
+						SELECT g.gratis
+						FROM gratis g
+						WHERE g.juegoId = j.id
+						  AND g.fechaTermina < GETDATE()
+						FOR JSON PATH
+					) AS GratisPasados,
+					(
+						SELECT s.suscripcion
+						FROM suscripciones s
+						WHERE s.juegoId = j.id
+						  AND s.FechaEmpieza <= GETDATE()
+						  AND s.FechaTermina >= GETDATE()
+						FOR JSON PATH
+					) AS SuscripcionesActuales,
+					(
+						SELECT s.suscripcion
+						FROM suscripciones s
+						WHERE s.juegoId = j.id
+						  AND s.FechaTermina < GETDATE()
+						FOR JSON PATH
+					) AS SuscripcionesPasados
+				FROM (
+					SELECT *, suscripcion AS Tipo
+					FROM suscripciones
+					WHERE fechaEmpieza >= DATEADD(day, -30, GETDATE())
+				) AS sub
+				INNER JOIN juegos j ON j.id = sub.juegoid
+				ORDER BY fechaEmpieza DESC";
 			
 			try
 			{

@@ -1,0 +1,12 @@
+.entrada-texto {
+    padding: 5px 10px;
+    background-color: var(--fondoEntrada);
+    border: 0px;
+    color: var(--colorTexto);
+    display: block;
+    width: 100%;
+    min-width: 100%;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--fondoEntrada);
+    font-size: 16px;
+}

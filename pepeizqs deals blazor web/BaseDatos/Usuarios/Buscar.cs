@@ -314,7 +314,7 @@ namespace BaseDatos.Usuarios
 				return null;
 			}
 
-			string busqueda = "SELECT Currency, NoOfficial, Marketplace, WishlistSort, WishlistOption3, WishlistOption4, WishlistPosition, WishlistData FROM AspNetUsers WHERE Id=@Id";
+			string busqueda = "SELECT Currency, NoOfficial, Marketplace, WishlistSort, WishlistOption3, WishlistOption4, WishlistPosition, WishlistData, SteamWishlist, Wishlist, GogWishlist FROM AspNetUsers WHERE Id=@Id";
 
 			try
 			{

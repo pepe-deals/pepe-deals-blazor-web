@@ -76,6 +76,7 @@
                 <div class="caja-admin-indice">
                     <button class="boton-pestañas" @onclick="MostrarRecompensas" style="@estiloRecompensas;">Recompensas</button>
                     <button class="boton-pestañas" @onclick="MostrarCupones" style="@estiloCupones;">Cupones</button>
+                    <button class="boton-pestañas" @onclick="MostrarPepeizqapps" style="@estiloPepeizqapps;">pepeizqapps</button>
                 </div>
             </div>
 
@@ -148,6 +149,11 @@
                 @if (mostrarCupones == true)
                 {
                     <Cupones/>
+                }
+
+                @if (mostrarPepeizqapps == true)
+                {
+                    <Pepeizqapps />
                 }
             </div>
         </div>
@@ -315,6 +321,10 @@
                 {
                     MostrarCupones();
                 }
+                else if (subpagina == subpaginaPepeizqapps)
+                {
+                    MostrarPepeizqapps();
+                }
 
                 if (nuevosErroresCantidad == 0 && nuevosDuplicadosCantidad == 0 && nuevosPendientesCantidad == 0 && nuevosDLCsCantidad == 0)
                 {
@@ -362,6 +372,7 @@
         mostrarSuscripciones = false;
         mostrarRecompensas = false;
         mostrarCupones = false;
+        mostrarPepeizqapps = false;
 
         estiloEnlaces = null;
         estiloDuplicados = fondoAlerta;
@@ -377,6 +388,7 @@
         estiloSuscripciones = null;
         estiloRecompensas = null;
         estiloCupones = null;
+        estiloPepeizqapps = null;
     }
 
     #region Enlaces
@@ -553,6 +565,8 @@
             }
             catch { }
         }
+
+        await InvokeAsync(StateHasChanged);
     }
 
     #endregion
@@ -718,6 +732,30 @@
             try
             {
                 await moduloJs.InvokeVoidAsync("cambiarEnlace", "/admin/" + subpaginaCupones + "/");
+            }
+            catch { }
+        }
+    }
+
+    #endregion
+
+    #region pepeizqapps
+
+    private bool mostrarPepeizqapps = false;
+    private string estiloPepeizqapps = null;
+    private string subpaginaPepeizqapps = "pepeizqapps";
+
+    private async void MostrarPepeizqapps()
+    {
+        CerrarPestañas();
+        mostrarPepeizqapps = true;
+        estiloPepeizqapps = fondo;
+
+        if (moduloJs != null)
+        {
+            try
+            {
+                await moduloJs.InvokeVoidAsync("cambiarEnlace", "/admin/" + subpaginaPepeizqapps + "/");
             }
             catch { }
         }
