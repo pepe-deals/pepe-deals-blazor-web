@@ -245,7 +245,7 @@
 
 													@if (string.IsNullOrEmpty(perfilUsuarioId) == true)
 													{
-														if (ultimaVisita < DateTime.Now && ultimaVisita < juego.Precio.FechaDetectado && juego.Historico == true)
+														if (ultimaVisita < juego.Precio.FechaDetectado && juego.Historico == true)
 														{
 															<div style="text-align: center; font-size: 14px; padding: 5px 15px; background-color: var(--fondoAlerta);">
 																@Herramientas.Idiomas.BuscarTexto(idioma, "String13", "Wishlist")

@@ -18,6 +18,10 @@ namespace BaseDatos.Pepeizqapps
 			valores.Add("@contenido");
 			p.Add("@contenido", contenido);
 
+			campos.Add("fecha");
+			valores.Add("@fecha");
+			p.Add("@fecha", DateTime.Now);
+
 			string sql = $@"INSERT INTO noticias ({string.Join(",", campos)})
                 VALUES ({string.Join(",", valores)});
                 SELECT SCOPE_IDENTITY();";
