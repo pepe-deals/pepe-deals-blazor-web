@@ -49,6 +49,7 @@ public static class PrefijosSospechosos
 		"161.120.",
 		"180.153.",
 		"188.34.",
+		"2.31.",
 		"20.83.",
 		"221.8.",
 		"3.210.",
