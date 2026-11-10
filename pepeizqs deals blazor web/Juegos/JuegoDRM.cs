@@ -602,6 +602,7 @@ namespace Juegos
 					"download_drm",
 					"dr.web",
 					"driver",
+					"drivermax",
 					"drivethrurpg",
 					"dungeon defenders",
 					"dunkin’",
