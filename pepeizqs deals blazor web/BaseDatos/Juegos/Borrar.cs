@@ -8,7 +8,7 @@ namespace BaseDatos.Juegos
 		{
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync("DELETE FROM juegos WHERE id=@id", new { id }, transaction: sentencia);
 				});

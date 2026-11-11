@@ -14,7 +14,7 @@ namespace BaseDatos.JuegosActualizar
 
 			try
 			{
-				int valor = await Herramientas.BaseDatos.Select(async conexion =>
+				int valor = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.ExecuteScalarAsync<int>(sql, new
 					{
@@ -38,7 +38,7 @@ namespace BaseDatos.JuegosActualizar
 		{
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<JuegoActualizar>("SELECT * FROM fichasActualizar")).ToList();
 				});

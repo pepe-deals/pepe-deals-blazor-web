@@ -28,7 +28,7 @@ FROM(
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<JuegoGratis>(busqueda)).ToList();
 				});
@@ -55,7 +55,7 @@ ORDER BY sub.nombre DESC;
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<JuegoGratis>(busqueda, new { año })).ToList();
 				});
@@ -80,7 +80,7 @@ ORDER BY sub.ID DESC;";
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<JuegoGratis>(busqueda, new { juegoId });
 				});
@@ -104,7 +104,7 @@ FROM (
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<JuegoGratis>(busqueda, new { id });
 				});
@@ -129,7 +129,7 @@ FROM (
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<JuegoGratis>(busqueda, new { cantidad })).ToList();
 				});

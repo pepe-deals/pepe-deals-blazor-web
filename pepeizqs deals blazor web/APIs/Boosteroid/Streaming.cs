@@ -107,7 +107,7 @@ namespace APIs.Boosteroid
 
 										try
 										{
-											encontrado = await Herramientas.BaseDatos.Select(async conexion =>
+											encontrado = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 											{
 												return await conexion.QueryFirstOrDefaultAsync<bool>(sqlBuscar, new { id = juego.Id });
 											});
@@ -127,7 +127,7 @@ namespace APIs.Boosteroid
 
 											try
 											{
-												await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+												await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 												{
 													return await conexion.ExecuteAsync(sqlActualizar, new { 
 														id = juego.Id, 
@@ -150,7 +150,7 @@ namespace APIs.Boosteroid
 
 											try
 											{
-												await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+												await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 												{
 													return await conexion.ExecuteAsync(sqlInsertar, new
 													{

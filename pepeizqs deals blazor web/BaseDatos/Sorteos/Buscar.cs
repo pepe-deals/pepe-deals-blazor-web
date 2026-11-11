@@ -1,5 +1,6 @@
 ﻿#nullable disable
 
+using Herramientas.Conexiones;
 using Microsoft.Data.SqlClient;
 using System.Globalization;
 using System.Text.Json;
@@ -10,7 +11,7 @@ namespace BaseDatos.Sorteos
 	{
         public static List<Sorteos2.Sorteo> Todos()
         {
-            SqlConnection conexion = Herramientas.BaseDatos.Conectar();
+            SqlConnection conexion = Herramientas.Conexiones.Pepedeals.Conectar();
 
             using (conexion)
             {
@@ -68,7 +69,7 @@ namespace BaseDatos.Sorteos
 
         public static Sorteos2.Sorteo Uno(string id)
         {
-            SqlConnection conexion = Herramientas.BaseDatos.Conectar();
+            SqlConnection conexion = Herramientas.Conexiones.Pepedeals.Conectar();
 
             using (conexion)
             {

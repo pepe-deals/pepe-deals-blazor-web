@@ -14,7 +14,7 @@ namespace BaseDatos.Admin
 		{
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<int>("SELECT contenido FROM adminDatos WHERE id=@id", new { id });
 				});
@@ -31,7 +31,7 @@ namespace BaseDatos.Admin
 		{
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<DateTime?>("SELECT fecha FROM adminFechas WHERE id=@id", new { id });
 				});
@@ -48,7 +48,7 @@ namespace BaseDatos.Admin
 		{
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<DateTime>("SELECT fecha FROM adminTareas WHERE id=@id", new { id });
 				});
@@ -65,7 +65,7 @@ namespace BaseDatos.Admin
 		{
 			try
 			{
-				DateTime? fecha = await Herramientas.BaseDatos.Select(async conexion =>
+				DateTime? fecha = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<DateTime?>("SELECT fecha FROM adminTiendas WHERE id=@id", new { id = tiendaId });
 				});
@@ -89,7 +89,7 @@ namespace BaseDatos.Admin
 		{
 			try
 			{
-				DateTime? fecha = await Herramientas.BaseDatos.Select(async conexion =>
+				DateTime? fecha = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<DateTime?>("SELECT fecha FROM adminTiendasUS WHERE id=@id", new { id = tiendaId });
 				});
@@ -113,7 +113,7 @@ namespace BaseDatos.Admin
 		{
 			try
 			{
-				List<AdminTarea> tiendas = await Herramientas.BaseDatos.Select(async conexion =>
+				List<AdminTarea> tiendas = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<AdminTarea>("SELECT id, fecha FROM adminTiendas UNION ALL SELECT id, fecha FROM adminTiendasUS ORDER BY fecha DESC")).ToList();
 				});
@@ -182,7 +182,7 @@ namespace BaseDatos.Admin
 
 			try
 			{
-				var fila = await Herramientas.BaseDatos.Select(async conexion =>
+				var fila = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync($"SELECT * FROM {tabla} WHERE id=@id", new { id });
 				});
@@ -231,7 +231,7 @@ namespace BaseDatos.Admin
 
 				if (string.IsNullOrEmpty(sql) == false)
 				{
-					return await Herramientas.BaseDatos.Select(async conexion =>
+					return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 					{
 						return (await conexion.QueryAsync<AdminTarea>(sql)).ToList();
 					});
@@ -269,7 +269,7 @@ namespace BaseDatos.Admin
 
 				if (string.IsNullOrEmpty(sql) == false)
 				{
-					return await Herramientas.BaseDatos.Select(async conexion =>
+					return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 					{
 						return (await conexion.QueryAsync<AdminTarea>(sql)).ToList();
 					});
@@ -307,7 +307,7 @@ namespace BaseDatos.Admin
 
 				if (string.IsNullOrEmpty(sql) == false)
 				{
-					return await Herramientas.BaseDatos.Select(async conexion =>
+					return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 					{
 						return (await conexion.QueryAsync<AdminTarea>(sql)).ToList();
 					});
@@ -342,7 +342,7 @@ namespace BaseDatos.Admin
 
 				if (string.IsNullOrEmpty(sql) == false)
 				{
-					return await Herramientas.BaseDatos.Select(async conexion =>
+					return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 					{
 						return (await conexion.QueryAsync<AdminTarea>(sql)).ToList();
 					});
@@ -391,7 +391,7 @@ namespace BaseDatos.Admin
 					sql = sql + ")";
 				}
 
-				List<AdminTarea> nuevas = await Herramientas.BaseDatos.Select(async conexion =>
+				List<AdminTarea> nuevas = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<AdminTarea>(sql)).ToList();
 				});
@@ -414,7 +414,7 @@ namespace BaseDatos.Admin
 		{
 			try
 			{
-				DateTime? fecha = await Herramientas.BaseDatos.Select(async conexion =>
+				DateTime? fecha = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<DateTime?>("SELECT fecha FROM adminTareas WHERE id=@id", new { id });
 				}); 
@@ -438,7 +438,7 @@ namespace BaseDatos.Admin
 		{
 			try
 			{
-				int enUso = await Herramientas.BaseDatos.Select(async conexion =>
+				int enUso = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<int>("SELECT COUNT(*) FROM adminTiendas WHERE fecha > DATEADD(SECOND, -60, GETDATE())");
 				}); 
@@ -457,7 +457,7 @@ namespace BaseDatos.Admin
 		{
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<int>("SELECT COUNT(*) FROM errores");
 				});

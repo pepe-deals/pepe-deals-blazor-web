@@ -12,7 +12,7 @@ namespace BaseDatos.Pendientes
 			{
 				string busqueda1 = "SELECT id FROM juegos WHERE nombre=@nombre OR REPLACE(nombreCodigo, ' ', '')=@nombreLimpio";
 
-				List<int> ids = (await Herramientas.BaseDatos.Select(async conexion =>
+				List<int> ids = (await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryAsync<int>(busqueda1, new
 					{
@@ -35,7 +35,7 @@ namespace BaseDatos.Pendientes
 			{
 				string busqueda2 = "SELECT ids FROM juegosIDs WHERE nombre=@nombre OR REPLACE(nombreCodigo, ' ', '')=@nombreLimpio";
 
-				List<string> ids = (await Herramientas.BaseDatos.Select(async conexion =>
+				List<string> ids = (await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryAsync<string>(busqueda2, new
 					{
@@ -107,7 +107,7 @@ namespace BaseDatos.Pendientes
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.ExecuteScalarAsync<int?>(sql) ?? 0;
 				});
@@ -127,7 +127,7 @@ namespace BaseDatos.Pendientes
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<Pendiente>(sql)).ToList();
 				});
@@ -147,7 +147,7 @@ namespace BaseDatos.Pendientes
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<Pendiente>(sql)).ToList();
 				});
@@ -172,7 +172,7 @@ namespace BaseDatos.Pendientes
 
 			try
 			{
-				var filas = await Herramientas.BaseDatos.Select(async conexion =>
+				var filas = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<Pendiente>(sql)).ToList();
 				});
@@ -205,7 +205,7 @@ namespace BaseDatos.Pendientes
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<Pendiente>(sql)).ToList();
 				});
@@ -222,7 +222,7 @@ namespace BaseDatos.Pendientes
 		{
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Pendiente>($"SELECT TOP 1 * FROM tienda{tiendaId} WHERE (idJuegos = '0' AND descartado = 0) OR (idJuegos = '0' AND descartado IS NULL) OR (idJuegos IS NULL AND descartado IS NULL)");
 				});
@@ -239,7 +239,7 @@ namespace BaseDatos.Pendientes
         {
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Pendiente>($"SELECT TOP 1 * FROM temporal{suscripcionId}");
 				});
@@ -263,7 +263,7 @@ namespace BaseDatos.Pendientes
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Pendiente>(sql);
 				});
@@ -280,7 +280,7 @@ namespace BaseDatos.Pendientes
 		{
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Pendiente>($"SELECT TOP 1 * FROM temporal{plataformaId}juegos");
 				});

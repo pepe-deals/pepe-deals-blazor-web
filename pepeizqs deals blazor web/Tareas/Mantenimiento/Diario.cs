@@ -73,32 +73,32 @@ namespace Tareas.Mantenimiento
 
 							#endregion
 
-							await Herramientas.BaseDatos.Select(async (conexion) =>
+							await Herramientas.Conexiones.Pepedeals.Select(async (conexion) =>
 							{
 								return await conexion.ExecuteAsync("TRUNCATE TABLE seccionMinimos");
 							});
 
-							await Herramientas.BaseDatos.Select(async (conexion) =>
+							await Herramientas.Conexiones.Pepedeals.Select(async (conexion) =>
 							{
 								return await conexion.ExecuteAsync("TRUNCATE TABLE seccionMinimosUS");
 							});
 
-							await Herramientas.BaseDatos.Select(async (conexion) =>
+							await Herramientas.Conexiones.Pepedeals.Select(async (conexion) =>
 							{
 								return await conexion.ExecuteAsync("TRUNCATE TABLE seccionMinimosNoOficialesEU");
 							});
 
-							await Herramientas.BaseDatos.Select(async (conexion) =>
+							await Herramientas.Conexiones.Pepedeals.Select(async (conexion) =>
 							{
 								return await conexion.ExecuteAsync("TRUNCATE TABLE seccionMinimosNoOficialesUS");
 							});
 
-							await Herramientas.BaseDatos.Select(async (conexion) =>
+							await Herramientas.Conexiones.Pepedeals.Select(async (conexion) =>
 							{
 								return await conexion.ExecuteAsync("TRUNCATE TABLE seccionMinimosMarketplacesEU");
 							});
 
-							await Herramientas.BaseDatos.Select(async (conexion) =>
+							await Herramientas.Conexiones.Pepedeals.Select(async (conexion) =>
 							{
 								return await conexion.ExecuteAsync("TRUNCATE TABLE seccionMinimosMarketplacesUS");
 							});

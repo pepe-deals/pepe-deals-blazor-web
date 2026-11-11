@@ -114,7 +114,7 @@ namespace APIs.AmazonLuna
 
 			try 
 			{
-				var filas = await Herramientas.BaseDatos.Select(async conexion =>
+				var filas = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<AmazonLunaFila>(
 						"SELECT contenido FROM temporallunastandardjson"
@@ -139,7 +139,7 @@ namespace APIs.AmazonLuna
 					{
 						bool encontrado = false;
 
-						string idJuegosTexto = await Herramientas.BaseDatos.Select(async conexion =>
+						string idJuegosTexto = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 						{
 							return await conexion.QueryFirstOrDefaultAsync<string>($"SELECT idJuegos FROM {GenerarPremium().TablaPendientes} WHERE enlace=@enlace", new { enlace = juego.Id });
 						});
@@ -209,7 +209,7 @@ namespace APIs.AmazonLuna
 
 				try 
 				{
-					await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+					await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 					{
 						return await conexion.ExecuteAsync("DELETE FROM temporallunastandardjson WHERE enlace='1'", transaction: sentencia);
 					});
@@ -232,7 +232,7 @@ namespace APIs.AmazonLuna
 
 			try
 			{
-				var filas = await Herramientas.BaseDatos.Select(async conexion =>
+				var filas = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<AmazonLunaFila>("SELECT contenido FROM temporallunapremiumjson")).ToList();
 				});
@@ -255,7 +255,7 @@ namespace APIs.AmazonLuna
 					{
 						bool encontrado = false;
 
-						string idJuegosTexto = await Herramientas.BaseDatos.Select(async conexion =>
+						string idJuegosTexto = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 						{
 							return await conexion.QueryFirstOrDefaultAsync<string>($"SELECT idJuegos FROM {GenerarPremium().TablaPendientes} WHERE enlace=@enlace", new { enlace = juego.Id });
 						});
@@ -325,7 +325,7 @@ namespace APIs.AmazonLuna
 
 				try
 				{
-					await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+					await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 					{
 						return await conexion.ExecuteAsync("DELETE FROM temporallunapremiumjson WHERE enlace='1'", transaction: sentencia);
 					});

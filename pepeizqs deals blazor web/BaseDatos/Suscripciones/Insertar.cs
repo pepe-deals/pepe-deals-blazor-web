@@ -13,7 +13,7 @@ namespace BaseDatos.Suscripciones
 
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(sqlInsertar, new
 					{
@@ -41,7 +41,7 @@ namespace BaseDatos.Suscripciones
 
 			try
 			{
-				var resultado = await Herramientas.BaseDatos.Select(async conexion =>
+				var resultado = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QuerySingleOrDefaultAsync(sqlBuscar, new { enlace });
 				});
@@ -51,7 +51,7 @@ namespace BaseDatos.Suscripciones
 					string sqlInsertar = $"INSERT INTO temporal{nombreTabla} (enlace, nombre, imagen) " +
 									 "VALUES (@enlace, @nombre, @imagen)";
 
-					await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+					await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 					{
 						return await conexion.ExecuteAsync(sqlInsertar, new
 						{
@@ -89,7 +89,7 @@ COMMIT TRAN;
 
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(sql, new
 					{

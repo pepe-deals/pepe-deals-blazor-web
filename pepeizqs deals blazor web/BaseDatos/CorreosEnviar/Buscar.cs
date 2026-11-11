@@ -12,7 +12,7 @@ namespace BaseDatos.CorreosEnviar
 			{
 				string busqueda = "SELECT * FROM correosEnviar";
 
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<CorreoPendienteEnviar>(busqueda)).ToList();
 				});
@@ -31,7 +31,7 @@ namespace BaseDatos.CorreosEnviar
 			{
 				string busqueda = "SELECT COUNT(*) FROM correosEnviar";
 
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<int>(busqueda);
 				});

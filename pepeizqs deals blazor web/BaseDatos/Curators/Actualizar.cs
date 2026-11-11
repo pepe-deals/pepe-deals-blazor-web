@@ -18,7 +18,7 @@ namespace BaseDatos.Curators
 
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync($@"UPDATE curators SET nombre=@nombre, imagen=@imagen, descripcion=@descripcion, slug=@slug, steamIds=@steamIds, web=@web, fecha=@fecha {añadirImagenFondo} WHERE idSteam=@idSteam", new
 					{
@@ -44,7 +44,7 @@ namespace BaseDatos.Curators
 		{
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync("UPDATE curators SET imagenFondo=@imagenFondo WHERE idSteam=@idSteam", new
 					{

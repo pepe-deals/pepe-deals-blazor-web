@@ -40,7 +40,7 @@ namespace BaseDatos.RedesSociales
 			{
 				try
 				{
-					return await Herramientas.BaseDatos.Select(async conexion =>
+					return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 					{
 						return (await conexion.QueryAsync<Juego>(busqueda, new { drm })).ToList();
 					});
@@ -77,7 +77,7 @@ namespace BaseDatos.RedesSociales
 			{
 				try
 				{
-					return await Herramientas.BaseDatos.Select(async conexion =>
+					return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 					{
 						return (await conexion.QueryAsync<Juego>(busqueda, new { drm })).ToList();
 					});
@@ -98,7 +98,7 @@ namespace BaseDatos.RedesSociales
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<Bundle>(busqueda)).ToList();
 				});
@@ -126,7 +126,7 @@ namespace BaseDatos.RedesSociales
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<JuegoGratis>(busqueda)).ToList();
 				});
@@ -185,7 +185,7 @@ namespace BaseDatos.RedesSociales
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					var resultado = await conexion.QueryAsync<JuegoSuscripcion, Juego, JuegoSuscripcion>(
 						busqueda,

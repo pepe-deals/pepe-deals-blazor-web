@@ -13,7 +13,7 @@ namespace BaseDatos.Reseñas
 		{
 			try
 			{
-				var fila = await Herramientas.BaseDatos.Select(async conexion =>
+				var fila = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync($"SELECT contenido{idioma} as Contenido, positivos{idioma} as CantidadPositivos, negativos{idioma} as CantidadNegativos FROM juegosAnalisis WHERE id=@id", new { id });
 				});
@@ -45,7 +45,7 @@ namespace BaseDatos.Reseñas
 		{
 			try
 			{
-				DateTime? fechaRegistrada = await Herramientas.BaseDatos.Select(async conexion =>
+				DateTime? fechaRegistrada = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.ExecuteScalarAsync<DateTime?>($"SELECT fecha{idioma} FROM juegosAnalisis WHERE id=@id", new { id });
 				});

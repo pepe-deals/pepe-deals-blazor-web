@@ -10,7 +10,7 @@ namespace BaseDatos.Reseñas
 		{
 			try
 			{
-				bool existe = await Herramientas.BaseDatos.Select(async conexion =>
+				bool existe = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.ExecuteScalarAsync<int>("SELECT COUNT(1) FROM juegosAnalisis WHERE id=@id", new { id }) > 0;
 				});
@@ -24,7 +24,7 @@ namespace BaseDatos.Reseñas
 				{
 					string sqlInsertar = $@"INSERT INTO juegosAnalisis (id, {positivosCol}, {negativosCol}, {fechaCol}, {contenidoCol}) VALUES (@id, @positivos, @negativos, @fecha, @contenido)";
 
-					await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+					await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 					{
 						return await conexion.ExecuteAsync(sqlInsertar, new { id, positivos, negativos, fecha = DateTime.Now, contenido }, transaction: sentencia);
 					});
@@ -33,7 +33,7 @@ namespace BaseDatos.Reseñas
 				{
 					string sqlActualizar = $@"UPDATE juegosAnalisis SET {positivosCol}=@positivos, {negativosCol}=@negativos, {fechaCol}=@fecha, {contenidoCol}=@contenido WHERE id=@id";
 
-					await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+					await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 					{
 						return await conexion.ExecuteAsync(sqlActualizar, new { id, positivos, negativos, fecha = DateTime.Now, contenido }, transaction: sentencia);
 					});

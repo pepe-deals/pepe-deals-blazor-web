@@ -106,7 +106,7 @@ namespace APIs.Humble
 			{
 				List<JuegoPrecio> ofertas = new List<JuegoPrecio>();
 
-				IEnumerable<dynamic> filas = await Herramientas.BaseDatos.Select(async conexion =>
+				IEnumerable<dynamic> filas = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryAsync(busqueda);
 				});
@@ -232,7 +232,7 @@ namespace APIs.Humble
 					{
 						string limpieza = "DELETE FROM temporalhumble WHERE enlace=@enlace";
 
-						await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+						await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 						{
 							return await conexion.ExecuteAsync(limpieza, new { enlace = fila.enlace }, transaction: sentencia);
 						});

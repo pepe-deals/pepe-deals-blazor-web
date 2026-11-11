@@ -43,7 +43,7 @@ namespace APIs.IndiePass
 
 			try
 			{
-				var filas = await Herramientas.BaseDatos.Select(async conexion =>
+				var filas = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<IndiePassFila>(
 						"SELECT contenido FROM temporalindiepassjson"
@@ -68,7 +68,7 @@ namespace APIs.IndiePass
 					{
 						bool encontrado = false;
 
-						string idJuegosTexto = await Herramientas.BaseDatos.Select(async conexion =>
+						string idJuegosTexto = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 						{
 							return await conexion.QueryFirstOrDefaultAsync<string>($"SELECT idJuegos FROM {Generar().TablaPendientes} WHERE enlace=@enlace", new { enlace = juego.id });
 						});
@@ -138,7 +138,7 @@ namespace APIs.IndiePass
 
 				try
 				{
-					await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+					await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 					{
 						return await conexion.ExecuteAsync("DELETE FROM temporalindiepassjson WHERE enlace='1'", transaction: sentencia);
 					});

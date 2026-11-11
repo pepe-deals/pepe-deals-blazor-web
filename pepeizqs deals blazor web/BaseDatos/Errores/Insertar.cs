@@ -24,7 +24,7 @@ namespace BaseDatos.Errores
 
 			sqlInsertar = string.Format(sqlInsertar, columnasExtra, valoresExtra);
 
-			await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+			await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 			{
 				return await conexion.ExecuteAsync(sqlInsertar, new
 				{
@@ -57,7 +57,7 @@ namespace BaseDatos.Errores
                 VALUES (@seccion, @mensaje, @stacktrace, @fecha)
             ";
 
-			await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+			await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 			{
 				return await conexion.ExecuteAsync(sql, new
 				{
@@ -89,7 +89,7 @@ namespace BaseDatos.Errores
 				VALUES (@seccion, @mensaje, @stacktrace, @fecha, @enlace);
 			";
 
-			await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+			await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 			{
 				return await conexion.ExecuteAsync(sql, new
 				{
@@ -130,7 +130,7 @@ namespace BaseDatos.Errores
 				VALUES (@seccion, @mensaje, @stacktrace, @fecha);
 			";
 
-			await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+			await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 			{
 				return await conexion.ExecuteAsync(sql, new
 				{

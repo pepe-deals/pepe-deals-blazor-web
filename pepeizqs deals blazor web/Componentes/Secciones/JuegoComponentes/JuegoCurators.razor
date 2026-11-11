@@ -25,52 +25,33 @@
                                 </div>
                             </div>
                         </a>
-                    </div>
 
-                    <div style="padding: 30px; display: flex; align-items: center; justify-content: space-between; gap: 20px;">
                         @if (juegosSteam?.Count > 4)
                         {
-                            <div class="tooltip-juego" style="position: absolute; left: -80px;" onmousemove="enseñarTooltip(event, 'tooltip-curator-back-@curator.Curator.Id.ToString()')">
-                                <button @onclick="@(e => CuratorAtras(e, curator))" class="boton-pequeño" style="width: auto; text-align: center; font-size: 23px; padding: 12px 15px;" title="@Herramientas.Idiomas.BuscarTexto(idioma, "String114", "Game")">
-                                    <div style="max-width: 24px;">
+                            <div style="margin-left: auto; display: flex; gap: 10px;">
+                                <button @onclick="@(e => CuratorAtras(e, curator))" disabled="@cargando.Contains(curator.Curator.Id)" class="boton-pequeño" style="width: auto; text-align: center; padding: 8px 12px;" title="@Herramientas.Idiomas.BuscarTexto(idioma, "String114", "Game")">
+                                    <div style="width: 18px;">
                                         <svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                                             <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
                                         </svg>
                                     </div>
                                 </button>
 
-                                <div id="tooltip-curator-back-@curator.Curator.Id.ToString()" class="tooltip-relleno">
-                                    <div style="margin: 8px; max-width: 300px; font-size: 14px;">
-                                        @Herramientas.Idiomas.BuscarTexto(idioma, "String114", "Game")
-                                    </div>
-                                </div>
-                            </div>
-                        }
-
-                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 30px; width: 100%;">
-                            @foreach (var juegoCurator in curator.JuegosMostrar)
-                            {
-                                <CajaJuego idCurator="@curator.Curator.Id" noOficial="@tiendasNoOficial" marketplace="@tiendasMarketplace" idioma="@idioma" juego="@juegoCurator" juegosUsuarioIndex="@juegosUsuarioIndex" usuarioDeseadosImportados="@usuarioDeseadosImportados" usuarioDeseadosWeb="@usuarioDeseadosWeb" tipo="CajaJuego.Tipo.CuratorJuego" userAgent="@userAgent" />
-                            }
-                        </div>
-
-                        @if (juegosSteam?.Count > 4)
-                        {
-                            <div class="tooltip-juego" style="position: absolute; right: -80px;" onmousemove="enseñarTooltip(event, 'tooltip-curator-next-@curator.Curator.Id.ToString()')">
-                                <button @onclick="@(e => CuratorAdelante(e, curator))" class="boton-pequeño" style="width: auto; text-align: center; font-size: 23px; padding: 12px 15px;" title="@Herramientas.Idiomas.BuscarTexto(idioma, "String113", "Game")">
-                                    <div style="max-width: 24px;">
+                                <button @onclick="@(e => CuratorAdelante(e, curator))" disabled="@cargando.Contains(curator.Curator.Id)" class="boton-pequeño" style="width: auto; text-align: center; padding: 8px 12px;" title="@Herramientas.Idiomas.BuscarTexto(idioma, "String113", "Game")">
+                                    <div style="width: 18px;">
                                         <svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                                             <path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z" />
                                         </svg>
                                     </div>
                                 </button>
-
-                                <div id="tooltip-curator-next-@curator.Curator.Id.ToString()" class="tooltip-relleno">
-                                    <div style="margin: 8px; max-width: 300px; font-size: 14px;">
-                                        @Herramientas.Idiomas.BuscarTexto(idioma, "String113", "Game")
-                                    </div>
-                                </div>
                             </div>
+                        }
+                    </div>
+
+                    <div @key="curator.JuegosMostrar.FirstOrDefault()?.Id" class="@(animaciones.GetValueOrDefault(curator.Curator.Id))" style="overflow: hidden; padding: 30px; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 30px;">
+                        @foreach (var juegoCurator in curator.JuegosMostrar)
+                        {
+                            <CajaJuego idCurator="@curator.Curator.Id" noOficial="@tiendasNoOficial" marketplace="@tiendasMarketplace" idioma="@idioma" juego="@juegoCurator" juegosUsuarioIndex="@juegosUsuarioIndex" usuarioDeseadosImportados="@usuarioDeseadosImportados" usuarioDeseadosWeb="@usuarioDeseadosWeb" tipo="CajaJuego.Tipo.CuratorJuego" userAgent="@userAgent" />
                         }
                     </div>
                 </div>
@@ -130,6 +111,8 @@
     public Herramientas.UsuarioDeseadosWebIndex usuarioDeseadosWeb { get; set; }
 
     [PersistentState] public List<global::BaseDatos.Curators.CuratorFicha> curators { get; set; }
+    private Dictionary<int, string> animaciones = new();
+    private HashSet<int> cargando = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -137,9 +120,9 @@
 
         if (Herramientas.Bots.UserAgentEsBot(userAgent) == false)
         {
-            ExtractorCurators(juego.Caracteristicas?.Desarrolladores2, curatorsBuscar);
-            ExtractorCurators(juego.Caracteristicas?.Editores2, curatorsBuscar);
-            ExtractorCurators(juego.Caracteristicas?.Franquicias, curatorsBuscar);
+            ExtraerCurators(juego.Caracteristicas?.Desarrolladores2, curatorsBuscar);
+            ExtraerCurators(juego.Caracteristicas?.Editores2, curatorsBuscar);
+            ExtraerCurators(juego.Caracteristicas?.Franquicias, curatorsBuscar);
 
             if (curatorsBuscar?.Count > 0)
             {
@@ -161,7 +144,7 @@
 
     #region Inicio
 
-    private void ExtractorCurators(List<JuegoCaracteristicasCurator> items, List<string> curatorsBuscar)
+    private void ExtraerCurators(List<JuegoCaracteristicasCurator> items, List<string> curatorsBuscar)
     {
         if (items?.Count > 0)
         {
@@ -247,33 +230,59 @@
 
     private async Task CuratorAtras(MouseEventArgs e, global::BaseDatos.Curators.CuratorFicha curator)
     {
-        curator.Posicion = curator.Posicion - 4;
-
-        if (curator.Posicion < -3)
+        if (cargando.Add(curator.Curator.Id) == false)
         {
-            curator.Posicion = curator.Curator.SteamIds.Count - 4;
-        }
-        else if (curator.Posicion < 0)
-        {
-            curator.Posicion = 0;
+            return;
         }
 
-        curator.JuegosMostrar = await global::BaseDatos.Juegos.Buscar.MultiplesJuegosSteam3(tiendasNoOficial, tiendasMarketplace, region, curator.Curator.SteamIds.GetRange(curator.Posicion, 4));
+        try
+        {
+            curator.Posicion = curator.Posicion - 4;
+
+            if (curator.Posicion < -3)
+            {
+                curator.Posicion = curator.Curator.SteamIds.Count - 4;
+            }
+            else if (curator.Posicion < 0)
+            {
+                curator.Posicion = 0;
+            }
+
+            curator.JuegosMostrar = await global::BaseDatos.Juegos.Buscar.MultiplesJuegosSteam3(tiendasNoOficial, tiendasMarketplace, region, curator.Curator.SteamIds.GetRange(curator.Posicion, 4));
+            animaciones[curator.Curator.Id] = "curator-grid-izquierda";
+        }
+        finally
+        {
+            cargando.Remove(curator.Curator.Id);
+        }  
     }
 
     private async Task CuratorAdelante(MouseEventArgs e, global::BaseDatos.Curators.CuratorFicha curator)
     {
-        curator.Posicion = curator.Posicion + 4;
-
-        if (curator.Posicion > curator.Curator.SteamIds.Count - 1)
+        if (cargando.Add(curator.Curator.Id) == false)
         {
-            curator.Posicion = 0;
-        }
-        else if (curator.Posicion > curator.Curator.SteamIds.Count - 3)
-        {
-            curator.Posicion = curator.Curator.SteamIds.Count - 4;
+            return;
         }
 
-        curator.JuegosMostrar = await global::BaseDatos.Juegos.Buscar.MultiplesJuegosSteam3(tiendasNoOficial, tiendasMarketplace, region, curator.Curator.SteamIds.GetRange(curator.Posicion, 4));
+        try
+        {
+            curator.Posicion = curator.Posicion + 4;
+
+            if (curator.Posicion > curator.Curator.SteamIds.Count - 1)
+            {
+                curator.Posicion = 0;
+            }
+            else if (curator.Posicion > curator.Curator.SteamIds.Count - 3)
+            {
+                curator.Posicion = curator.Curator.SteamIds.Count - 4;
+            }
+
+            curator.JuegosMostrar = await global::BaseDatos.Juegos.Buscar.MultiplesJuegosSteam3(tiendasNoOficial, tiendasMarketplace, region, curator.Curator.SteamIds.GetRange(curator.Posicion, 4));
+            animaciones[curator.Curator.Id] = "curator-grid-derecha";
+        }
+        finally
+        {
+            cargando.Remove(curator.Curator.Id);
+        }
     }
 }

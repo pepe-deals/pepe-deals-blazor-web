@@ -33,7 +33,7 @@ namespace BaseDatos.Recompensas
 
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(insertar, new
 					{
@@ -59,7 +59,7 @@ namespace BaseDatos.Recompensas
 			{
 				string busqueda = "SELECT * FROM recompensasJuegos WHERE usuarioId IS NULL AND (fechaCaduca IS NULL OR fechaCaduca > GETDATE()) ORDER BY juegoNombre";
 
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<RecompensaJuego>(busqueda)).ToList();
 				});
@@ -82,7 +82,7 @@ WHERE usuarioId IS NULL
   AND (fechaCaduca IS NULL OR fechaCaduca > GETDATE())
 ORDER BY NEWID();";
 
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<RecompensaJuego>(busqueda)).ToList();
 				});
@@ -102,7 +102,7 @@ ORDER BY NEWID();";
 				string actualizar = "UPDATE recompensasJuegos " +
 					"SET usuarioId=@usuarioId WHERE id=@id";
 
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(actualizar, new { id, usuarioId }, transaction: sentencia);
 				});
@@ -119,7 +119,7 @@ ORDER BY NEWID();";
 			{
 				string busqueda = "SELECT * FROM recompensasJuegos WHERE usuarioId=@usuarioId ORDER BY juegoNombre";
 
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<RecompensaJuego>(busqueda, new { usuarioId })).ToList();
 				});

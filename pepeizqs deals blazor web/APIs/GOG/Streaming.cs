@@ -65,7 +65,7 @@ namespace APIs.GOG
 
 								try
 								{
-									encontrado = await Herramientas.BaseDatos.Select(async conexion =>
+									encontrado = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 									{
 										var resultado = await conexion.QueryFirstOrDefaultAsync<bool?>(
 											sqlBuscar,
@@ -108,7 +108,7 @@ namespace APIs.GOG
 
 									try
 									{
-										await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+										await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 										{
 											return await conexion.ExecuteAsync(sqlActualizar, new
 											{
@@ -132,7 +132,7 @@ namespace APIs.GOG
 
 									try
 									{
-										await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+										await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 										{
 											return await conexion.ExecuteAsync(sqlInsertar, new
 											{

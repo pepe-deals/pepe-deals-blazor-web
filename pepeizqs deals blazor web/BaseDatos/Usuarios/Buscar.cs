@@ -20,7 +20,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				string rol = await Herramientas.BaseDatos.Select(async conexion =>
+				string rol = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<string>(sql, new { Id = id });
 				});
@@ -54,7 +54,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				string idiomaBD = await Herramientas.BaseDatos.Select(async conexion =>
+				string idiomaBD = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<string>(sql, new { Id = usuarioId });
 				});
@@ -85,7 +85,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				string idiomaBD = await Herramientas.BaseDatos.Select(async conexion =>
+				string idiomaBD = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<string>(sql, new { Id = usuarioId });
 				});
@@ -124,7 +124,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -148,7 +148,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<DateTime?>(busqueda, new { Id = usuarioId });
 				});
@@ -172,7 +172,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -196,7 +196,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -222,7 +222,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -246,7 +246,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -270,7 +270,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -294,7 +294,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -318,7 +318,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -342,7 +342,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -366,7 +366,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -390,7 +390,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -414,7 +414,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -439,7 +439,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -465,7 +465,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -491,7 +491,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -517,7 +517,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -543,7 +543,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -568,7 +568,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -593,7 +593,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -618,7 +618,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -643,7 +643,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -668,7 +668,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -693,7 +693,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -717,7 +717,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -741,7 +741,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -765,7 +765,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -789,7 +789,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -813,7 +813,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -837,7 +837,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -861,7 +861,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -885,7 +885,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -909,7 +909,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -933,7 +933,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { Id = usuarioId });
 				});
@@ -952,7 +952,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				List<Usuario> usuarios = await Herramientas.BaseDatos.Select(async conexion =>
+				List<Usuario> usuarios = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<Usuario>(busqueda)).ToList();
 				});
@@ -988,7 +988,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				int resultados = await Herramientas.BaseDatos.Select(async conexion =>
+				int resultados = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.ExecuteScalarAsync<int>(busqueda, new { Email = correo });
 				});
@@ -1046,7 +1046,7 @@ namespace BaseDatos.Usuarios
 			{
 				try
 				{
-					string resultado = await Herramientas.BaseDatos.Select(async conexion =>
+					string resultado = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 					{
 						return await conexion.QueryFirstOrDefaultAsync<string>(busqueda, new { id = usuarioId, juegoId });
 					});
@@ -1073,7 +1073,7 @@ namespace BaseDatos.Usuarios
 			{
 				string busqueda = "SELECT " + seccion + " AS Notificaciones, EmailConfirmed, Email, Currency FROM AspNetUsers WHERE Id=@Id";
 
-				var datos = await Herramientas.BaseDatos.Select(async conexion =>
+				var datos = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync(busqueda, new { id = usuarioId });
 				});
@@ -1106,7 +1106,7 @@ namespace BaseDatos.Usuarios
 			{
 				string busqueda = "SELECT Id FROM AspNetUsers WHERE SteamId=@SteamId";
 
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<string>(busqueda, new { SteamId = id64Steam });
 				});
@@ -1125,7 +1125,7 @@ namespace BaseDatos.Usuarios
 			{
 				string busqueda = "SELECT Id FROM AspNetUsers WHERE GogId=@GogId AND Id!=@UsuarioId";
 
-				var resultado = await Herramientas.BaseDatos.Select(async conexion =>
+				var resultado = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<string>(busqueda, new { GogId = idGog, UsuarioId = idUsuario });
 				});
@@ -1151,7 +1151,7 @@ namespace BaseDatos.Usuarios
 			{
 				string busqueda = "SELECT Id FROM AspNetUsers WHERE Nickname=@Nickname";
 
-				var id = await Herramientas.BaseDatos.Select(async conexion =>
+				var id = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<string>(busqueda, new { Nickname = nombre });
 				});
@@ -1177,7 +1177,7 @@ namespace BaseDatos.Usuarios
 			{
 				string busqueda = "SELECT Id FROM AspNetUsers WHERE ProfileNickname=@ProfileNickname";
 
-				var id = await Herramientas.BaseDatos.Select(async conexion =>
+				var id = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<string>(busqueda, new { ProfileNickname = nombre });
 				});
@@ -1203,7 +1203,7 @@ namespace BaseDatos.Usuarios
 			{
 				string busqueda = "SELECT Id, ProfileNickname2, ProfileAvatar, ProfileSteamAccount, ProfileGogAccount, ProfileLastPlayed, ProfileGames, ProfileWishlist FROM AspNetUsers WHERE ProfileNickname=@ProfileNickname AND ProfileShow='true'";
 
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Usuario>(busqueda, new { ProfileNickname = nombre });
 				});
@@ -1227,7 +1227,7 @@ namespace BaseDatos.Usuarios
 			{
 				string busqueda = "SELECT SteamAccount FROM AspNetUsers WHERE Id=@Id";
 
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<string>(busqueda, new { Id = id });
 				});
@@ -1251,7 +1251,7 @@ namespace BaseDatos.Usuarios
 			{
 				string busqueda = "SELECT GogAccount FROM AspNetUsers WHERE Id=@Id";
 
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<string>(busqueda, new { Id = id });
 				});
@@ -1302,7 +1302,7 @@ namespace BaseDatos.Usuarios
 			{
 				try
 				{
-					return await Herramientas.BaseDatos.Select(async conexion =>
+					return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 					{
 						return await conexion.ExecuteScalarAsync<int>(busqueda, new { juegoId });
 					});
@@ -1354,7 +1354,7 @@ namespace BaseDatos.Usuarios
 			{
 				try
 				{
-					return await Herramientas.BaseDatos.Select(async conexion =>
+					return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 					{
 						return await conexion.ExecuteScalarAsync<int>(busqueda, new { juegoId });
 					});
@@ -1446,7 +1446,7 @@ namespace BaseDatos.Usuarios
 
 				try
 				{
-					return await Herramientas.BaseDatos.Select(async conexion =>
+					return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 					{
 						return (await conexion.QueryAsync<string>(busqueda, new { juegoId })).ToList();
 					});
@@ -1473,7 +1473,7 @@ namespace BaseDatos.Usuarios
 				{
 					string busqueda = $"SELECT {valor} FROM AspNetUsers WHERE id=@Id";
 
-					return await Herramientas.BaseDatos.Select(async conexion =>
+					return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 					{
 						return await conexion.QueryFirstOrDefaultAsync<string>(busqueda, new { Id = usuarioId });
 					});
@@ -1500,7 +1500,7 @@ namespace BaseDatos.Usuarios
 				{
 					string busqueda = $"SELECT {valor} FROM AspNetUsers WHERE id=@Id AND Currency=@Currency";
 
-					return await Herramientas.BaseDatos.Select(async conexion =>
+					return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 					{
 						return await conexion.QueryFirstOrDefaultAsync<string>(busqueda, new { Id = usuarioId, Currency = (int)region });
 					});
@@ -1527,7 +1527,7 @@ namespace BaseDatos.Usuarios
 				{
 					string busqueda = $"SELECT {valor} FROM AspNetUsers WHERE id=@Id";
 
-					return await Herramientas.BaseDatos.Select(async conexion =>
+					return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 					{
 						return await conexion.QueryFirstOrDefaultAsync<int>(busqueda, new { Id = usuarioId });
 					});
@@ -1554,7 +1554,7 @@ namespace BaseDatos.Usuarios
 				{
 					string busqueda = $"SELECT {valor} FROM AspNetUsers WHERE id=@Id";
 
-					bool? resultado = await Herramientas.BaseDatos.Select(async conexion =>
+					bool? resultado = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 					{
 						return await conexion.QueryFirstOrDefaultAsync<bool?>(busqueda, new { Id = usuarioId });
 					});
@@ -1583,7 +1583,7 @@ namespace BaseDatos.Usuarios
 				{
 					string busqueda = $"SELECT {valor} FROM AspNetUsers WHERE id=@Id AND Currency=@Currency";
 
-					return await Herramientas.BaseDatos.Select(async conexion =>
+					return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 					{
 						return await conexion.QueryFirstOrDefaultAsync<bool?>(busqueda, new { Id = usuarioId, Currency = (int)region });
 					}) ?? false;
@@ -1608,7 +1608,7 @@ namespace BaseDatos.Usuarios
 			{
 				string busqueda = "SELECT BundlesSort FROM AspNetUsers WHERE id=@Id";
 
-				var resultado = await Herramientas.BaseDatos.Select(async conexion =>
+				var resultado = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<int?>(busqueda, new { Id = usuarioId });
 				});
@@ -1634,7 +1634,7 @@ namespace BaseDatos.Usuarios
 			{
 				string busqueda = "SELECT GamesExcluded FROM AspNetUsers WHERE Id=@Id";
 
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<string>(busqueda, new { Id = id });
 				});

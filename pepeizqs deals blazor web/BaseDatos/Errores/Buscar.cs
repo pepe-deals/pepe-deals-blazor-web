@@ -10,7 +10,7 @@ namespace BaseDatos.Errores
         {
 			string busqueda = "SELECT * FROM errores ORDER BY fecha DESC";
 
-			return await Herramientas.BaseDatos.Select(async conexion =>
+			return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 			{
 				return (await conexion.QueryAsync<Error>(busqueda)).ToList();
 			});

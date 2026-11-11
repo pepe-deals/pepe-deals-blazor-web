@@ -8,7 +8,7 @@ namespace BaseDatos.Errores
     {
 		public static async void Ejecutar()
         {
-			await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+			await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 			{
 				return await conexion.ExecuteAsync("TRUNCATE TABLE errores", transaction: sentencia);
 			});

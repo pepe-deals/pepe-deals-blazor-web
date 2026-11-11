@@ -49,7 +49,7 @@ namespace BaseDatos.Bundles
 
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(sqlInsertar, parametros, transaction: sentencia);
 				});
@@ -61,7 +61,7 @@ namespace BaseDatos.Bundles
 
 			try
 			{
-				int id = await Herramientas.BaseDatos.Select(async conexion =>
+				int id = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QuerySingleOrDefaultAsync<int>("SELECT MAX(id) FROM bundles");
 				});
@@ -113,7 +113,7 @@ namespace BaseDatos.Bundles
 						bundles = JsonConvert.SerializeObject(juego2.Bundles)
 					};
 
-					await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+					await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 					{
 						return await conexion.ExecuteAsync(sqlActualizarJuego, parametrosJuego, transaction: sentencia);
 					});

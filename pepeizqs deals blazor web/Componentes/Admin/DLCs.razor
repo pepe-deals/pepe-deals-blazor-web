@@ -45,6 +45,8 @@
 
     #nullable disable
 
+    [Parameter] public EventCallback<int> cantidadDLCsCambiada { get; set; }
+
     private List<global::Juegos.Juego> dlcsPendientes = new List<global::Juegos.Juego>();
     private global::Juegos.Juego dlcMostrar = new global::Juegos.Juego();
     private DateTime dlcsComprobacionUltimaVez = DateTime.MinValue;
@@ -64,7 +66,7 @@
 
         foreach (var dlcPendiente in dlcsPendientes)
         {
-			dlcMostrar = dlcPendiente;
+            dlcMostrar = dlcPendiente;
 
             global::Juegos.Juego nuevoJuego = await APIs.Steam.Juego.CargarDatosJuego(dlcPendiente.IdSteam.ToString());
 
@@ -82,8 +84,9 @@
                 }
             }
 
+            await cantidadDLCsCambiada.InvokeAsync(dlcsPendientes.Count);
             await InvokeAsync(StateHasChanged);
-		}
+        }
     }
 
     private async Task DescartarDlcMaestro()
@@ -95,5 +98,7 @@
 
         dlcsPendientes.Remove(dlcMostrar);
         dlcMostrar = dlcsPendientes.FirstOrDefault();
+
+        await cantidadDLCsCambiada.InvokeAsync(dlcsPendientes.Count);
 	}
 }

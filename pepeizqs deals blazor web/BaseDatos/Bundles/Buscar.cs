@@ -35,7 +35,7 @@ namespace BaseDatos.Bundles
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<Bundle>(busqueda)).ToList();
 				});
@@ -54,7 +54,7 @@ namespace BaseDatos.Bundles
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<Bundle>(busqueda)).ToList();
 				});
@@ -73,7 +73,7 @@ namespace BaseDatos.Bundles
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Bundle>(busqueda, new { id = bundleId });
 				});
@@ -92,7 +92,7 @@ namespace BaseDatos.Bundles
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<Bundle>(busqueda, new { Ids = ids })).ToList();
 				});
@@ -116,7 +116,7 @@ namespace BaseDatos.Bundles
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<Bundle>(busqueda, new { Ids = ids })).ToList();
 				});
@@ -135,7 +135,7 @@ namespace BaseDatos.Bundles
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<Bundle>(busqueda)).ToList();
 				});
@@ -154,7 +154,7 @@ namespace BaseDatos.Bundles
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<Bundle>(busqueda)).ToList();
 				});

@@ -37,7 +37,7 @@ namespace Tareas.Mantenimiento
 					{
 						await BaseDatos.Admin.Actualizar.TareaUso("encoger", DateTime.Now);
 
-						await Herramientas.BaseDatos.Select(async (conexion) =>
+						await Herramientas.Conexiones.Pepedeals.Select(async (conexion) =>
 						{
 							return await conexion.ExecuteAsync("EXEC dbo.EmergenciaShrinkYRebuild");
 						});

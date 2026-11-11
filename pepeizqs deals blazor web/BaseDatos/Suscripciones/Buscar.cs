@@ -90,7 +90,7 @@ ORDER BY j.Nombre DESC";
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					var resultado = await conexion.QueryAsync<JuegoSuscripcion, Juego, JuegoSuscripcion>(
 						busqueda,
@@ -127,7 +127,7 @@ ORDER BY sub.Nombre DESC";
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<JuegoSuscripcion>(busqueda, new { año })).ToList();
 				});
@@ -152,7 +152,7 @@ ORDER BY sub.Nombre DESC";
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<JuegoSuscripcion>(busqueda, new { Id = id });
 				});
@@ -177,7 +177,7 @@ ORDER BY sub.Nombre DESC";
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<JuegoSuscripcion>(busqueda, new { JuegoId = id })).ToList();
 				});
@@ -236,7 +236,7 @@ ORDER BY sub.Nombre DESC";
 			
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					var resultado = await conexion.QueryAsync<JuegoSuscripcion, Juego, JuegoSuscripcion>(
 						busqueda,
@@ -271,7 +271,7 @@ ORDER BY sub.Nombre DESC";
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<JuegoSuscripcion>(busqueda)).ToList();
 				});
@@ -292,7 +292,7 @@ ORDER BY sub.Nombre DESC";
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<int>(busqueda, new { idPaquete })).ToList();
 				});

@@ -10,7 +10,7 @@ namespace BaseDatos.CorreosEnviar
 		{
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync("DELETE FROM correosEnviar WHERE id=@id", new { id }, transaction: sentencia);
 				});

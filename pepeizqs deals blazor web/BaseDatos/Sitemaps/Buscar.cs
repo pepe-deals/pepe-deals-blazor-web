@@ -12,7 +12,7 @@ namespace BaseDatos.Sitemaps
 		{
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.ExecuteScalarAsync<int>($"SELECT COUNT(*) FROM {tabla}");
 				});
@@ -31,7 +31,7 @@ namespace BaseDatos.Sitemaps
 
 			try
 			{
-				var resultados = await Herramientas.BaseDatos.Select(async conexion =>
+				var resultados = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync(buscar, new { Id1 = id1, Id2 = id2 })).ToList();
 				});
@@ -76,7 +76,7 @@ namespace BaseDatos.Sitemaps
 
 			try
 			{
-				var resultados = await Herramientas.BaseDatos.Select(async conexion =>
+				var resultados = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync(buscar, new { Id1 = id1, Id2 = id2 })).ToList();
 				});
@@ -121,7 +121,7 @@ namespace BaseDatos.Sitemaps
 
 			try
 			{
-				var resultados = await Herramientas.BaseDatos.Select(async conexion =>
+				var resultados = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync(buscar, new { Id1 = id1, Id2 = id2 })).ToList();
 				});
@@ -166,7 +166,7 @@ namespace BaseDatos.Sitemaps
 
 			try
 			{
-				var resultados = await Herramientas.BaseDatos.Select(async conexion =>
+				var resultados = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync(buscar, new { id1 = id1, id2 = id2 })).ToList();
 				});
@@ -213,7 +213,7 @@ namespace BaseDatos.Sitemaps
 
 			try
 			{
-				var resultados = await Herramientas.BaseDatos.Select(async conexion =>
+				var resultados = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync(buscar)).ToList();
 				});
@@ -296,7 +296,7 @@ namespace BaseDatos.Sitemaps
 
 			try
 			{
-				var resultados = await Herramientas.BaseDatos.Select(async conexion =>
+				var resultados = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync(buscar, new { id1 = id1, id2 = id2 })).ToList();
 				});
@@ -343,7 +343,7 @@ namespace BaseDatos.Sitemaps
 
 			try
 			{
-				var resultados = await Herramientas.BaseDatos.Select(async conexion =>
+				var resultados = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync(buscar, new { id1 = id1, id2 = id2 })).ToList();
 				});
@@ -390,7 +390,7 @@ namespace BaseDatos.Sitemaps
 
 			try
 			{
-				var resultados = await Herramientas.BaseDatos.Select(async conexion =>
+				var resultados = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync(buscar, new { id1 = id1, id2 = id2 })).ToList();
 				});

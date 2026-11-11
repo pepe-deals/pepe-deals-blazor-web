@@ -90,7 +90,7 @@ FROM juegos j";
 			{
 				try
 				{
-					return await Herramientas.BaseDatos.Select(async conexion =>
+					return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 					{
 						return await conexion.QueryFirstOrDefaultAsync<Juego>(sqlBuscar + " WHERE id=@id", new { id });
 					});
@@ -106,7 +106,7 @@ FROM juegos j";
 				{
 					try
 					{
-						return await Herramientas.BaseDatos.Select(async conexion =>
+						return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 						{
 							return await conexion.QueryFirstOrDefaultAsync<Juego>(sqlBuscar + " WHERE idSteam=@idSteam", new { idSteam });
 						});
@@ -122,7 +122,7 @@ FROM juegos j";
 					{
 						try
 						{
-							return await Herramientas.BaseDatos.Select(async conexion =>
+							return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 							{
 								return await conexion.QueryFirstOrDefaultAsync<Juego>(sqlBuscar + " WHERE slugGog=@slugGog", new { slugGog = idGog });
 							});
@@ -138,7 +138,7 @@ FROM juegos j";
 						{
 							try
 							{
-								return await Herramientas.BaseDatos.Select(async conexion =>
+								return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 								{
 									return await conexion.QueryFirstOrDefaultAsync<Juego>(sqlBuscar + " WHERE slugEpic=@slugEpic", new { slugEpic = idEpic });
 								});
@@ -212,7 +212,7 @@ FROM juegos j";
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Juego>(busqueda, new { id });
 				});
@@ -297,7 +297,7 @@ WHERE id=@id AND j.tipo=0";
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Juego>(busqueda, new { id });
 				});
@@ -357,7 +357,7 @@ WHERE id=@id AND j.tipo=0";
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 					(await conexion.QueryAsync<Juego>(sqlBuscar, new { Ids = idsBaseDatos })).ToList()
 				);
 			}
@@ -386,7 +386,7 @@ WHERE id=@id AND j.tipo=0";
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 					(await conexion.QueryAsync<Juego>(sqlBuscar, new { Ids = idsBaseDatos })).ToList()
 				);
 			}
@@ -545,7 +545,7 @@ WHERE id=@id AND j.tipo=0";
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 					(await conexion.QueryAsync<Juego>(sqlBuscar, new { Ids = idsBaseDatos })).ToList()
 				);
 			}
@@ -682,7 +682,7 @@ WHERE id=@id AND j.tipo=0";
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 					(await conexion.QueryAsync<Juego>(sqlBuscar, new { Ids = idsBaseDatos })).ToList()
 				);
 			}
@@ -844,7 +844,7 @@ WHERE id=@id AND j.tipo=0";
 				{
 					List<int> lote = ids.Skip(i).Take(loteTamaño).ToList();
 
-					List<Juego> juegosDeLote = await Herramientas.BaseDatos.Select(async conexion =>
+					List<Juego> juegosDeLote = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 						(await conexion.QueryAsync<Juego>(sqlBuscar, new { Ids = lote })).ToList()
 					);
 
@@ -967,7 +967,7 @@ WHERE id=@id AND j.tipo=0";
 				{
 					List<int> lote = ids.Skip(i).Take(loteTamaño).ToList();
 
-					List<Juego> juegosDeLote = await Herramientas.BaseDatos.Select(async conexion =>
+					List<Juego> juegosDeLote = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 						(await conexion.QueryAsync<Juego>(sqlBuscar, new { Ids = lote })).ToList()
 					);
 
@@ -1008,7 +1008,7 @@ END DESC";
 
 				foreach (var lote in lotes)
 				{
-					var loteResultados = await Herramientas.BaseDatos.Select(async conexion =>
+					var loteResultados = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 					{
 						return (await conexion.QueryAsync<int>(sqlBuscar, new { Ids = lote })).ToList();
 					});
@@ -1155,7 +1155,7 @@ END DESC";
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 					(await conexion.QueryAsync<Juego>(sqlBuscar, new { Ids = idsBaseDatos })).ToList()
 				);
 			}
@@ -1230,7 +1230,7 @@ END DESC";
 					{
 						try
 						{
-							var resultados = await Herramientas.BaseDatos.Select(async conexion =>
+							var resultados = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 							{
 								return (await conexion.QueryAsync<(int id, string nombre, string imagen, object drmValor)>(sqlBuscar)).ToList();
 							});
@@ -1468,7 +1468,7 @@ END DESC";
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<Juego>(busquedaFinal, parametros)).ToList();
 				});
@@ -1674,7 +1674,7 @@ END DESC";
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					using var multi = await conexion.QueryMultipleAsync(busqueda, parametros);
 
@@ -1769,7 +1769,7 @@ END DESC";
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<Juego>(busqueda, new { cantidad = cantidadResultados })).ToList();
 				});
@@ -1871,7 +1871,7 @@ END DESC";
 
 				try
 				{
-					return await Herramientas.BaseDatos.Select(async conexion =>
+					return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 					{
 						return (await conexion.QueryAsync<Juego>(busqueda)).ToList();
 					});
@@ -2336,7 +2336,7 @@ END DESC";
 
 			try
 			{
-				var filas = await Herramientas.BaseDatos.Select(async conexion =>
+				var filas = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryAsync(busqueda, parametros);
 				});
@@ -2634,7 +2634,7 @@ END DESC";
 
 			try
 			{
-				var filas = await Herramientas.BaseDatos.Select(async conexion =>
+				var filas = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryAsync(busqueda, parametros);
 				});
@@ -2739,7 +2739,7 @@ END DESC";
 		{
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<Juego>("SELECT TOP (" + cantidad + ") * FROM " + tabla + " ORDER BY id DESC")).ToList();
 				});
@@ -2774,7 +2774,7 @@ END DESC";
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<Juego>(busqueda)).ToList();
 				});
@@ -2791,7 +2791,7 @@ END DESC";
 		{
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QuerySingleAsync<int>("SELECT COUNT(*) FROM juegos WHERE (maestro IS NULL OR maestro = 'no') AND tipo IN ('1','3')");
 				});
@@ -3076,7 +3076,7 @@ END DESC";
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<Juego>(busqueda, parametros)).ToList();
 				});
@@ -3099,7 +3099,7 @@ END DESC";
 			{
 				try
 				{
-					return await Herramientas.BaseDatos.Select(async conexion =>
+					return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 					{
 						return (await conexion.QueryAsync<Juego>(busqueda)).ToList();
 					});
@@ -3133,7 +3133,7 @@ END DESC";
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<Juego>(sql, new { enlaceSteam = id })).ToList();
 				});
@@ -3165,7 +3165,7 @@ END DESC";
 			{
 				try
 				{
-					return await Herramientas.BaseDatos.Select(async conexion =>
+					return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 					{
 						return (await conexion.QueryAsync<Juego>(sqlBase)).ToList();
 					});
@@ -3178,7 +3178,7 @@ END DESC";
 
 			try
 			{
-				var resultados = await Herramientas.BaseDatos.Select(async conexion =>
+				var resultados = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync(sqlFecha)).ToList();
 				});

@@ -159,7 +159,7 @@ namespace BaseDatos.Juegos
 
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(sqlInsertar, parametros, transaction: sentencia);
 				});
@@ -175,7 +175,7 @@ namespace BaseDatos.Juegos
 		{
 			try
 			{
-				int? idJuegoBD = await Herramientas.BaseDatos.Select(async conexion =>
+				int? idJuegoBD = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<int?>("SELECT * FROM gogReferencias2 WHERE idReferencia=@idReferencia", new { idReferencia });
 				}); 
@@ -200,7 +200,7 @@ namespace BaseDatos.Juegos
 
 				try
 				{
-					await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+					await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 					{
 						return await conexion.ExecuteAsync(sqlInsert, new
 						{

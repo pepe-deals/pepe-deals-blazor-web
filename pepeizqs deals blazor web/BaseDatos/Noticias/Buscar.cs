@@ -13,7 +13,7 @@ namespace BaseDatos.Noticias
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Noticia>(sql, new { id });
 				});
@@ -32,7 +32,7 @@ namespace BaseDatos.Noticias
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Noticia>(sql, new { id });
 				});
@@ -65,7 +65,7 @@ namespace BaseDatos.Noticias
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<Noticia>(busqueda)).ToList();
 				});
@@ -84,7 +84,7 @@ namespace BaseDatos.Noticias
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<Noticia>(busqueda)).ToList();
 				});
@@ -103,7 +103,7 @@ namespace BaseDatos.Noticias
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<Noticia>(busqueda)).ToList();
 				});
@@ -122,7 +122,7 @@ namespace BaseDatos.Noticias
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<Noticia>(busqueda, new { noticiaTipo = tipo })).ToList();
 				});
@@ -141,7 +141,7 @@ namespace BaseDatos.Noticias
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<Noticia>(busqueda)).ToList();
 				});

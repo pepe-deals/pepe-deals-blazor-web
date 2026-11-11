@@ -14,7 +14,7 @@ namespace BaseDatos.Noticias
 
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(actualizar, new { id, tituloEn = titulo }, transaction: sentencia);
 				});
@@ -33,7 +33,7 @@ namespace BaseDatos.Noticias
 
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(actualizar, new { id, tituloEs = titulo }, transaction: sentencia);
 				});
@@ -52,7 +52,7 @@ namespace BaseDatos.Noticias
 
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(actualizar, new { id, imagen }, transaction: sentencia);
 				});
@@ -71,7 +71,7 @@ namespace BaseDatos.Noticias
 
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(actualizar, new { id, enlace }, transaction: sentencia);
 				});
@@ -90,7 +90,7 @@ namespace BaseDatos.Noticias
 
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(actualizar, new { id, fechaTermina = nuevaFecha }, transaction: sentencia);
 				});
@@ -109,7 +109,7 @@ namespace BaseDatos.Noticias
 
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(actualizar, new { id, noticiaTipo = nuevoTipo }, transaction: sentencia);
 				});
@@ -128,7 +128,7 @@ namespace BaseDatos.Noticias
 
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(actualizar, new { id, contenidoEn = nuevoContenido }, transaction: sentencia);
 				});
@@ -147,7 +147,7 @@ namespace BaseDatos.Noticias
 
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(actualizar, new { id, contenidoEs = nuevoContenido }, transaction: sentencia);
 				});
@@ -166,7 +166,7 @@ namespace BaseDatos.Noticias
 
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(actualizar, new { id, bundleId = nuevoValor }, transaction: sentencia);
 				});
@@ -185,7 +185,7 @@ namespace BaseDatos.Noticias
 
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(actualizar, new { id, gratisIds = nuevoValor }, transaction: sentencia);
 				});
@@ -204,7 +204,7 @@ namespace BaseDatos.Noticias
 
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(actualizar, new { id, suscripcionesIds = nuevoValor }, transaction: sentencia);
 				});
@@ -223,7 +223,7 @@ namespace BaseDatos.Noticias
 
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(actualizar, new {
 						id = noticia.Id,

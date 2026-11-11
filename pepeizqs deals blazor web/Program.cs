@@ -148,9 +148,9 @@ builder.Services.AddAuthentication(opciones =>
 }).AddIdentityCookies();
 
 var conexionTexto = builder.Configuration.GetConnectionString("pepeizqs_deals_webContextConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-Herramientas.BaseDatos.cadenaConexion = conexionTexto;
+Herramientas.Conexiones.Pepedeals.cadenaConexion = conexionTexto;
 
-Herramientas.BaseDatosPepeizqapps.cadenaConexion = builder.Configuration.GetConnectionString("pepeizqs_apps_webContextConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+Herramientas.Conexiones.Pepeizqapps.cadenaConexion = builder.Configuration.GetConnectionString("pepeizqs_apps_webContextConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 PeticionInterna.Clave = builder.Configuration["AntiCaptcha:Key"];
 

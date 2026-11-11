@@ -111,7 +111,7 @@ namespace BaseDatos.Noticias
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.ExecuteScalarAsync<int>(sql, p);
 				});

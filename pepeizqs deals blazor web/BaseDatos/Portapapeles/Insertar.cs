@@ -14,7 +14,7 @@ namespace BaseDatos.Portapapeles
 
 				try
 				{
-					await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+					await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 					{
 						return await conexion.ExecuteAsync(insertar, new { id, contenido }, transaction: sentencia);
 					});
@@ -30,7 +30,7 @@ namespace BaseDatos.Portapapeles
 
 				try
 				{
-					await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+					await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 					{
 						return await conexion.ExecuteAsync(actualizar, new { id, contenido }, transaction: sentencia);
 					});

@@ -28,7 +28,7 @@ namespace BaseDatos.Pepeizqapps
 
 			try
 			{
-				return await Herramientas.BaseDatosPepeizqapps.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepeizqapps.Select(async conexion =>
 				{
 					return await conexion.ExecuteScalarAsync<int>(sql, p);
 				});

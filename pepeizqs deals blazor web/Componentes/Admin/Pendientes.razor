@@ -306,6 +306,8 @@
 
     private bool ocupado = false;
 
+    [Parameter] public EventCallback<int> cantidadPendientesCambiada { get; set; }
+
     private List<PendientesTienda> pendientesTiendas = new List<PendientesTienda>();
     private List<PendientesSuscripcion> pendientesSuscripciones = new List<PendientesSuscripcion>();
     private List<PendientesStreaming> pendientesStreamings = new List<PendientesStreaming>();
@@ -883,6 +885,7 @@
             await ClickearPlataformaPendientes(idPlataformaPendiente, true);
         }
 
+        await NotificarCantidad();
         nombrePendienteSeleccionado = null;
         ocupado = false;
     }
@@ -988,6 +991,7 @@
             await ClickearPlataformaPendientes(idPlataformaPendiente, true);
         }
 
+        await NotificarCantidad();
         ocupado = false;
     }
 
@@ -1426,4 +1430,14 @@
     }
 
     #endregion
+
+    private async Task NotificarCantidad()
+    {
+        int total = pendientesTiendas.Sum(p => p.Pendientes.Count) +
+                    pendientesSuscripciones.Sum(p => p.Pendientes.Count) +
+                    pendientesStreamings.Sum(p => p.Pendientes.Count) +
+                    pendientesPlataformas.Sum(p => p.Pendientes.Count);
+
+        await cantidadPendientesCambiada.InvokeAsync(total);
+    }
 }

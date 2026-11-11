@@ -297,7 +297,7 @@ namespace BaseDatos.Extension
 
 			try
 			{
-				var fila2 = await Herramientas.BaseDatos.Select(async conexion =>
+				var fila2 = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<dynamic>(sentenciaSql);
 				});

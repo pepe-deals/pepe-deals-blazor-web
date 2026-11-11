@@ -1,5 +1,6 @@
 ﻿#nullable disable
 
+using Herramientas.Conexiones;
 using Microsoft.Data.SqlClient;
 
 namespace BaseDatos.Foro
@@ -42,13 +43,13 @@ namespace BaseDatos.Foro
 		{
 			if (conexion == null)
 			{
-				conexion = Herramientas.BaseDatos.Conectar();
+				conexion = Herramientas.Conexiones.Pepedeals.Conectar();
 			}
 			else
 			{
 				if (conexion.State != System.Data.ConnectionState.Open)
 				{
-					conexion = Herramientas.BaseDatos.Conectar();
+					conexion = Herramientas.Conexiones.Pepedeals.Conectar();
 				}
 			}
 
@@ -82,13 +83,13 @@ namespace BaseDatos.Foro
 		{
 			if (conexion == null)
 			{
-				conexion = Herramientas.BaseDatos.Conectar();
+				conexion = Herramientas.Conexiones.Pepedeals.Conectar();
 			}
 			else
 			{
 				if (conexion.State != System.Data.ConnectionState.Open)
 				{
-					conexion = Herramientas.BaseDatos.Conectar();
+					conexion = Herramientas.Conexiones.Pepedeals.Conectar();
 				}
 			}
 
@@ -116,13 +117,13 @@ namespace BaseDatos.Foro
 		{
 			if (conexion == null)
 			{
-				conexion = Herramientas.BaseDatos.Conectar();
+				conexion = Herramientas.Conexiones.Pepedeals.Conectar();
 			}
 			else
 			{
 				if (conexion.State != System.Data.ConnectionState.Open)
 				{
-					conexion = Herramientas.BaseDatos.Conectar();
+					conexion = Herramientas.Conexiones.Pepedeals.Conectar();
 				}
 			}
 
@@ -153,13 +154,13 @@ namespace BaseDatos.Foro
 		{
 			if (conexion == null)
 			{
-				conexion = Herramientas.BaseDatos.Conectar();
+				conexion = Herramientas.Conexiones.Pepedeals.Conectar();
 			}
 			else
 			{
 				if (conexion.State != System.Data.ConnectionState.Open)
 				{
-					conexion = Herramientas.BaseDatos.Conectar();
+					conexion = Herramientas.Conexiones.Pepedeals.Conectar();
 				}
 			}
 
@@ -201,13 +202,13 @@ ORDER BY fecha DESC";
 		{
 			if (conexion == null)
 			{
-				conexion = Herramientas.BaseDatos.Conectar();
+				conexion = Herramientas.Conexiones.Pepedeals.Conectar();
 			}
 			else
 			{
 				if (conexion.State != System.Data.ConnectionState.Open)
 				{
-					conexion = Herramientas.BaseDatos.Conectar();
+					conexion = Herramientas.Conexiones.Pepedeals.Conectar();
 				}
 			}
 
@@ -284,13 +285,13 @@ END DESC";
 		{
 			if (conexion == null)
 			{
-				conexion = Herramientas.BaseDatos.Conectar();
+				conexion = Herramientas.Conexiones.Pepedeals.Conectar();
 			}
 			else
 			{
 				if (conexion.State != System.Data.ConnectionState.Open)
 				{
-					conexion = Herramientas.BaseDatos.Conectar();
+					conexion = Herramientas.Conexiones.Pepedeals.Conectar();
 				}
 			}
 
@@ -349,13 +350,13 @@ END DESC";
 		{
 			if (conexion == null)
 			{
-				conexion = Herramientas.BaseDatos.Conectar();
+				conexion = Herramientas.Conexiones.Pepedeals.Conectar();
 			}
 			else
 			{
 				if (conexion.State != System.Data.ConnectionState.Open)
 				{
-					conexion = Herramientas.BaseDatos.Conectar();
+					conexion = Herramientas.Conexiones.Pepedeals.Conectar();
 				}
 			}
 

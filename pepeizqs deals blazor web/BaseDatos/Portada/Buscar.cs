@@ -122,7 +122,7 @@ namespace BaseDatos.Portada
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<JuegoMinimoTarea>(busqueda, parametros)).ToList();
 				});
@@ -281,7 +281,7 @@ namespace BaseDatos.Portada
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					var filas = await conexion.QueryAsync(busqueda, parametros);
 
@@ -569,7 +569,7 @@ namespace BaseDatos.Portada
 
 			try
 			{
-				var filas = await Herramientas.BaseDatos.Select(async conexion =>
+				var filas = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryAsync(busqueda, parametros);
 				});
@@ -693,7 +693,7 @@ ORDER BY CONVERT(datetime2, JSON_VALUE(caracteristicas, '$.FechaLanzamientoSteam
 
 			try
 			{
-				var filas = await Herramientas.BaseDatos.Select(async conexion =>
+				var filas = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync(busqueda)).ToList();
 				});

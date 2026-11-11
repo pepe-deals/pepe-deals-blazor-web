@@ -1,5 +1,6 @@
 ﻿#nullable disable
 
+using Herramientas.Conexiones;
 using Microsoft.Data.SqlClient;
 
 namespace BaseDatos.Foro
@@ -10,13 +11,13 @@ namespace BaseDatos.Foro
 		{
 			if (conexion == null)
 			{
-				conexion = Herramientas.BaseDatos.Conectar();
+				conexion = Herramientas.Conexiones.Pepedeals.Conectar();
 			}
 			else
 			{
 				if (conexion.State != System.Data.ConnectionState.Open)
 				{
-					conexion = Herramientas.BaseDatos.Conectar();
+					conexion = Herramientas.Conexiones.Pepedeals.Conectar();
 				}
 			}
 
@@ -36,13 +37,13 @@ namespace BaseDatos.Foro
 		{
 			if (conexion == null)
 			{
-				conexion = Herramientas.BaseDatos.Conectar();
+				conexion = Herramientas.Conexiones.Pepedeals.Conectar();
 			}
 			else
 			{
 				if (conexion.State != System.Data.ConnectionState.Open)
 				{
-					conexion = Herramientas.BaseDatos.Conectar();
+					conexion = Herramientas.Conexiones.Pepedeals.Conectar();
 				}
 			}
 
@@ -62,13 +63,13 @@ WHERE id=@id";
 		{
 			if (conexion == null)
 			{
-				conexion = Herramientas.BaseDatos.Conectar();
+				conexion = Herramientas.Conexiones.Pepedeals.Conectar();
 			}
 			else
 			{
 				if (conexion.State != System.Data.ConnectionState.Open)
 				{
-					conexion = Herramientas.BaseDatos.Conectar();
+					conexion = Herramientas.Conexiones.Pepedeals.Conectar();
 				}
 			}
 

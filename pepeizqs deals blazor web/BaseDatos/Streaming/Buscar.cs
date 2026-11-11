@@ -14,7 +14,7 @@ namespace BaseDatos.Streaming
 
 			try
 			{
-				var resultados = await Herramientas.BaseDatos.Select(async conexion =>
+				var resultados = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<string>(busqueda, new { idJuego })).ToList();
 				});
@@ -85,7 +85,7 @@ ORDER BY j.Nombre";
 ORDER BY j.Nombre DESC";
 				}
 
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<JuegoStreaming>(busqueda)).ToList();
 				});

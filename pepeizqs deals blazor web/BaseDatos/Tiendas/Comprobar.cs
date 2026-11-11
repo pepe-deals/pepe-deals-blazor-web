@@ -59,7 +59,7 @@ namespace BaseDatos.Tiendas
 
 			try
 			{
-				var datos = await Herramientas.BaseDatos.Select(async conexion =>
+				var datos = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<dynamic>(buscarJuegos, new { idsSteam })).ToList();
 				});
@@ -226,7 +226,7 @@ namespace BaseDatos.Tiendas
 							indiceGlobal++;
 						}
 
-						await Herramientas.BaseDatos.RestoOperaciones(async (conexion, transaccion) =>
+						await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, transaccion) =>
 						{
 							return await conexion.ExecuteAsync(sqlBatch.ToString(), parametrosBatch, transaction: transaccion);
 						});
@@ -335,7 +335,7 @@ namespace BaseDatos.Tiendas
 
 			try
 			{
-				resultados = await Herramientas.BaseDatos.Select(async conexion =>
+				resultados = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync(sqlBuscar, new
 					{
@@ -451,7 +451,7 @@ namespace BaseDatos.Tiendas
 							indiceGlobal++;
 						}
 
-						await Herramientas.BaseDatos.RestoOperaciones(async (conexion, transaccion) =>
+						await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, transaccion) =>
 						{
 							return await conexion.ExecuteAsync(sqlBatch.ToString(), parametrosBatch, transaction: transaccion);
 						});
@@ -481,7 +481,7 @@ namespace BaseDatos.Tiendas
 
 				try
 				{
-					await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+					await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 					{
 						return await conexion.ExecuteAsync(sqlInsertar, new
 						{
@@ -612,7 +612,7 @@ namespace BaseDatos.Tiendas
 
 						try
 						{
-							resultados = await Herramientas.BaseDatos.Select(async conexion =>
+							resultados = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 							{
 								return (await conexion.QueryAsync(sqlBuscar, parametros)).ToList();
 							});
@@ -907,7 +907,7 @@ namespace BaseDatos.Tiendas
 
 							try
 							{
-								await Herramientas.BaseDatos.RestoOperaciones(async (conexion, transaccion) =>
+								await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, transaccion) =>
 								{
 									return await conexion.ExecuteAsync(sqlBatch.ToString(), parametrosBatch, transaction: transaccion);
 								});
@@ -938,7 +938,7 @@ namespace BaseDatos.Tiendas
 
 							try
 							{
-								await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+								await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 								{
 									return await conexion.ExecuteAsync(sqlMergear, new
 									{

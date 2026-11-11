@@ -39,7 +39,7 @@ namespace BaseDatos.Cupones
 					precioRebaja = (precioRebaja.HasValue && precioRebaja > 0) ? precioRebaja : null
 				};
 
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(sql, parametros, transaction: sentencia);
 				});

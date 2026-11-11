@@ -41,7 +41,7 @@ namespace APIs.EpicGames
 
 			string busqueda = "SELECT * FROM temporalepictienda";
 
-			IEnumerable<dynamic> filas = await Herramientas.BaseDatos.Select(async conexion =>
+			IEnumerable<dynamic> filas = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 			{
 				return await conexion.QueryAsync(busqueda);
 			});
@@ -177,7 +177,7 @@ namespace APIs.EpicGames
 
 												try
 												{
-													await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+													await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 													{
 														return await conexion.ExecuteAsync(limpieza, new { fila.id }, transaction: sentencia);
 													});

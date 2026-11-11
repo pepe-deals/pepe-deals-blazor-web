@@ -26,7 +26,7 @@ namespace BaseDatos.Divisas
 
 				try
 				{
-					return Herramientas.BaseDatos.Select(conexion =>
+					return Herramientas.Conexiones.Pepedeals.Select(conexion =>
 					{
 						return conexion.QueryFirstOrDefault<Divisa>(sqlBuscar, new { id });
 					});
@@ -46,7 +46,7 @@ namespace BaseDatos.Divisas
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<Divisa>(sqlBuscar)).ToList();
 				});

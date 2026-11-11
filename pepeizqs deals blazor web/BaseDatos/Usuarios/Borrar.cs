@@ -12,7 +12,7 @@ namespace BaseDatos.Usuarios
 			{
 				string borrar = "DELETE FROM usuariosNotificaciones WHERE usuarioId=@usuarioId";
 
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(borrar, new { usuarioId }, transaction: sentencia);
 				});

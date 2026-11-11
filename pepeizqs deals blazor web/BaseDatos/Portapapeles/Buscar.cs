@@ -12,7 +12,7 @@ namespace BaseDatos.Portapapeles
 			{
 				string sql = "SELECT COUNT(*) FROM portapapeles WHERE id=@id";
 
-				int resultado = await Herramientas.BaseDatos.Select(async conexion =>
+				int resultado = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.ExecuteScalarAsync<int>(sql, new { id });
 				});
@@ -33,7 +33,7 @@ namespace BaseDatos.Portapapeles
 			{
 				string sql = "SELECT contenido FROM portapapeles WHERE id=@id";
 
-				string contenido = await Herramientas.BaseDatos.Select(async conexion =>
+				string contenido = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.ExecuteScalarAsync<string>(sql, new { id });
 				});

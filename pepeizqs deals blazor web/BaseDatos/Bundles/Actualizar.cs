@@ -14,7 +14,7 @@ namespace BaseDatos.Bundles
 
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(sqlActualizar, new { id, nombre }, transaction: sentencia);
 				});
@@ -33,7 +33,7 @@ namespace BaseDatos.Bundles
 
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(sqlActualizar, new { id, fechaEmpieza }, transaction: sentencia);
 				});
@@ -52,7 +52,7 @@ namespace BaseDatos.Bundles
 
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(sqlActualizar, new { id, fechaTermina }, transaction: sentencia);
 				});
@@ -71,7 +71,7 @@ namespace BaseDatos.Bundles
 
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(sqlActualizar, new { id, imagen }, transaction: sentencia);
 				});
@@ -90,7 +90,7 @@ namespace BaseDatos.Bundles
 
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(sqlActualizar, new { id, imagenNoticia = imagen }, transaction: sentencia);
 				});
@@ -109,7 +109,7 @@ namespace BaseDatos.Bundles
 
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(sqlActualizar, new { id, juegos }, transaction: sentencia);
 				});
@@ -128,7 +128,7 @@ namespace BaseDatos.Bundles
 
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(sqlActualizar, new { id, tiers }, transaction: sentencia);
 				});

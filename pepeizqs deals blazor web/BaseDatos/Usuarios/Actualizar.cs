@@ -15,7 +15,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				id = await Herramientas.BaseDatos.Select(async conexion =>
+				id = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<string>(busqueda, new
 					{
@@ -38,7 +38,7 @@ namespace BaseDatos.Usuarios
 
 				try
 				{
-					await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+					await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 					{
 						return await conexion.ExecuteAsync(actualizar, new
 						{
@@ -62,7 +62,7 @@ namespace BaseDatos.Usuarios
 
 			try
 			{
-				id = await Herramientas.BaseDatos.Select(async conexion =>
+				id = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<string>(busqueda, new
 					{
@@ -82,7 +82,7 @@ namespace BaseDatos.Usuarios
 
 				try
 				{
-					await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+					await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 					{
 						return await conexion.ExecuteAsync(actualizar, new
 						{
@@ -106,7 +106,7 @@ namespace BaseDatos.Usuarios
 		{
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync("UPDATE AspNetUsers SET " + variable + "='" + valor + "' WHERE Id='" + usuarioId + "'", transaction: sentencia);
 				});
@@ -121,7 +121,7 @@ namespace BaseDatos.Usuarios
 		{
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync($"UPDATE AspNetUsers SET {variable}=@valor WHERE Id=@usuarioId", new { valor, usuarioId }, transaction: sentencia);
 				});
@@ -136,7 +136,7 @@ namespace BaseDatos.Usuarios
 		{
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync("UPDATE AspNetUsers SET " + variable + "='" + valor + "' WHERE Id='" + usuarioId + "'", transaction: sentencia);
 				});
@@ -151,7 +151,7 @@ namespace BaseDatos.Usuarios
 		{
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync("UPDATE AspNetUsers SET " + variable + "='" + valor + "' WHERE Id='" + usuarioId + "'", transaction: sentencia);
 				});
@@ -166,7 +166,7 @@ namespace BaseDatos.Usuarios
 		{
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync("UPDATE AspNetUsers SET " + variable + "='" + valor + "' WHERE Id='" + usuarioId + "'", transaction: sentencia);
 				});
@@ -181,7 +181,7 @@ namespace BaseDatos.Usuarios
 		{
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(@"UPDATE AspNetUsers 
 														SET SteamGames = @SteamGames, 
@@ -218,7 +218,7 @@ namespace BaseDatos.Usuarios
 		{
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(@"UPDATE AspNetUsers 
 														SET GogGames = @GogGames, 
@@ -247,7 +247,7 @@ namespace BaseDatos.Usuarios
 		{
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(@"UPDATE AspNetUsers 
 														SET AmazonGames = @AmazonGames, 
@@ -270,7 +270,7 @@ namespace BaseDatos.Usuarios
 		{
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(@"UPDATE AspNetUsers 
 														SET EpicGames = @EpicGames, 
@@ -293,7 +293,7 @@ namespace BaseDatos.Usuarios
 		{
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(@"UPDATE AspNetUsers 
 														SET EaGames = @EaGames, 
@@ -316,7 +316,7 @@ namespace BaseDatos.Usuarios
 		{
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(@"UPDATE AspNetUsers 
 														SET UbisoftGames = @UbisoftGames, 

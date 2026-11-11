@@ -93,7 +93,7 @@
 
                 @if (mostrarErrores == true)
                 {
-                    <Errores/>
+                    <Errores cantidadErroresCambiada="AlCambiarErrores"/>
                 }
 
                 @if (mostrarTareas == true)
@@ -108,12 +108,12 @@
 
                 @if (mostrarDLCs == true)
                 {
-                    <DLCs/>
+                    <DLCs cantidadDLCsCambiada="AlCambiarDLCs"/>
                 }
 
                 @if (mostrarPendientes == true)
                 {
-                    <Pendientes/>
+                    <Pendientes cantidadPendientesCambiada="AlCambiarPendientes" />
                 }
 
                 @if (mostrarJuegos == true)
@@ -258,7 +258,7 @@
                 moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/cuenta/cuenta/Indice.razor.js");
             }
             catch { }
-            
+
             if (string.IsNullOrEmpty(subpagina) == true)
             {
                 MostrarEnlaces();
@@ -447,6 +447,20 @@
     private string subpaginaErrores = "errores";
     [PersistentState] public int? nuevosErroresCantidad { get; set; }
 
+    private async Task AlCambiarErrores(int cantidad)
+    {
+        nuevosErroresCantidad = cantidad;
+
+        if (nuevosPendientesCantidad > 0)
+        {
+            await MostrarPendientes();
+        }
+        else if (nuevosPendientesCantidad == 0 && nuevosErroresCantidad == 0)
+        {
+            MostrarEnlaces();
+        }
+    }
+
     private async Task MostrarErrores()
     {
         CerrarPestañas();
@@ -522,6 +536,16 @@
     private string subpaginaDLCs = "dlcs";
     [PersistentState] public int? nuevosDLCsCantidad { get; set; }
 
+    private void AlCambiarDLCs(int cantidad)
+    {
+        nuevosDLCsCantidad = cantidad;
+
+        if (nuevosDLCsCantidad == 0)
+        {
+            MostrarEnlaces();
+        }
+    }
+
     private async Task MostrarDLCs()
     {
         CerrarPestañas();
@@ -548,6 +572,20 @@
     private string estiloPendientes = null;
     private string subpaginaPendientes = "pendientes";
     [PersistentState] public int? nuevosPendientesCantidad { get; set; }
+
+    private async Task AlCambiarPendientes(int cantidad)
+    {
+        nuevosPendientesCantidad = cantidad;
+
+        if (nuevosErroresCantidad > 0)
+        {
+            await MostrarErrores();
+        }
+        else if (nuevosErroresCantidad == 0 && nuevosPendientesCantidad == 0)
+        {
+            MostrarEnlaces();
+        }
+    }
 
     private async Task MostrarPendientes()
     {

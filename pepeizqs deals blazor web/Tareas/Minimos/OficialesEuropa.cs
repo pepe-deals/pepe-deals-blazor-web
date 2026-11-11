@@ -92,7 +92,7 @@ namespace Tareas.Minimos
 								DynamicParameters parametros = new DynamicParameters();
 								parametros.Add("@Datos", tabla.AsTableValuedParameter("dbo.SeccionMinimosType"));
 
-								await Herramientas.BaseDatos.Select(async conexion =>
+								await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 								{
 									return await conexion.ExecuteAsync(
 										"dbo.UpsertSeccionMinimosBatch",

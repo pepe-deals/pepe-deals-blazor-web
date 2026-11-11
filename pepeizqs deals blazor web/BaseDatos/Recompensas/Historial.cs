@@ -22,7 +22,7 @@ namespace BaseDatos.Recompensas
 				   "(usuarioId, coins, razon, fecha) VALUES " +
 				   "(@usuarioId, @coins, @razon, @fecha) ";
 
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(insertar, new
 					{
@@ -52,7 +52,7 @@ namespace BaseDatos.Recompensas
 
 				busqueda = busqueda + " ORDER BY fecha DESC";
 
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return (await conexion.QueryAsync<RecompensaHistorial>(busqueda, new { usuarioId })).ToList();
 				});

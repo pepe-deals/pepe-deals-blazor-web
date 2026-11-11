@@ -67,7 +67,7 @@ namespace APIs.PlayStation
 
 									try
 									{
-										string idJuegosTexto = await Herramientas.BaseDatos.Select(async conexion =>
+										string idJuegosTexto = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 										{
 											return await conexion.QueryFirstOrDefaultAsync<string>(sqlBuscar, new { juego.Enlace });
 										});

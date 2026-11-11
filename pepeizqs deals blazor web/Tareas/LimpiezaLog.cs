@@ -33,7 +33,7 @@ namespace Tareas
 				{
 					try
 					{
-						await Herramientas.BaseDatos.Select(async (conexion) =>
+						await Herramientas.Conexiones.Pepedeals.Select(async (conexion) =>
 						{
 							return await conexion.ExecuteAsync(@"DECLARE @tamañoMB DECIMAL(10,2), @usadoMB DECIMAL(10,2), @libreMB DECIMAL(10,2);
 

@@ -32,7 +32,7 @@ namespace BaseDatos.CorreosEnviar
 					json
 				};
 
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(sql, parametros, transaction: sentencia);
 				});
@@ -61,7 +61,7 @@ namespace BaseDatos.CorreosEnviar
 					correoHacia
 				};
 
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(sql, parametros, transaction: sentencia);
 				});

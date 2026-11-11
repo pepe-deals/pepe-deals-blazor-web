@@ -18,7 +18,7 @@ namespace BaseDatos.Cupones
 
 			try
 			{
-				return await Herramientas.BaseDatos.Select(async conexion =>
+				return await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<Cupon>(sql, new { tienda });
 				});

@@ -73,6 +73,8 @@
 
     #nullable disable
 
+    [Parameter] public EventCallback<int> cantidadErroresCambiada { get; set; }
+
     public List<BaseDatos.Errores.Error> listaErrores = new List<BaseDatos.Errores.Error>();
     public BaseDatos.Errores.Error errorSeleccionado = null;
 
@@ -107,12 +109,14 @@
         }
     }
 
-    private void LimpiarErrores(MouseEventArgs e)
+    private async Task LimpiarErrores(MouseEventArgs e)
     {
         BaseDatos.Errores.Limpiar.Ejecutar();
 
         listaErrores = new List<BaseDatos.Errores.Error>();
         errorSeleccionado = null;
+
+        await cantidadErroresCambiada.InvokeAsync(0);
     }
 
     private async void AmpliarError(MouseEventArgs e, BaseDatos.Errores.Error error)

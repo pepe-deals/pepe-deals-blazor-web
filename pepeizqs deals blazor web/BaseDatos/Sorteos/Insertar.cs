@@ -1,5 +1,6 @@
 ﻿#nullable disable
 
+using Herramientas.Conexiones;
 using Microsoft.Data.SqlClient;
 using Sorteos2;
 
@@ -9,7 +10,7 @@ namespace BaseDatos.Sorteos
 	{
 		public static void Ejecutar(Sorteo sorteo)
 		{
-			SqlConnection conexion = Herramientas.BaseDatos.Conectar();
+			SqlConnection conexion = Herramientas.Conexiones.Pepedeals.Conectar();
 
 			using (conexion)
 			{

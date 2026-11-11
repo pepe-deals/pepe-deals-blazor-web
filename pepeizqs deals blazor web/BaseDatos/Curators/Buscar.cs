@@ -15,7 +15,7 @@ namespace BaseDatos.Curators
 		{
 			try
 			{
-				var fila = await Herramientas.BaseDatos.Select(async conexion =>
+				var fila = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync("SELECT * FROM curators WHERE idSteam=@idSteam", new { idSteam });
 				});
@@ -59,7 +59,7 @@ namespace BaseDatos.Curators
 		{
 			try
 			{
-				var fila = await Herramientas.BaseDatos.Select(async conexion =>
+				var fila = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync("SELECT * FROM curators WHERE slug=@slug", new { slug });
 				});

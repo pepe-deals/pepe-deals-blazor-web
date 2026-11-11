@@ -21,7 +21,7 @@ namespace APIs.EpicGames
 
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(sql, new
 					{
@@ -46,7 +46,7 @@ namespace APIs.EpicGames
 
 			try
 			{
-				await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+				await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 				{
 					return await conexion.ExecuteAsync(sql, new
 					{
@@ -68,7 +68,7 @@ namespace APIs.EpicGames
 
 			try
 			{
-				var ids = await Herramientas.BaseDatos.Select(async conexion =>
+				var ids = await Herramientas.Conexiones.Pepedeals.Select(async conexion =>
 				{
 					return await conexion.QueryFirstOrDefaultAsync<string>(sql2, new { enlace = enlaceBuscar });
 				});
@@ -85,7 +85,7 @@ namespace APIs.EpicGames
 							SET exeEpic=@exeEpic
 							WHERE id=@id";
 
-					await Herramientas.BaseDatos.RestoOperaciones(async (conexion, sentencia) =>
+					await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
 					{
 						return await conexion.ExecuteAsync(sql3, new
 						{
