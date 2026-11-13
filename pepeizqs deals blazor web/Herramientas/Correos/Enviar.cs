@@ -1,5 +1,6 @@
 ﻿#nullable disable
 
+using MailKit;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
@@ -15,7 +16,7 @@ namespace Herramientas.Correos
 				string.IsNullOrEmpty(correoDesde) == false &&
 				string.IsNullOrEmpty(correoHacia) == false)
 			{
-				await global::BaseDatos.CorreosEnviar.Insertar.Registro(html, titulo, correoHacia);
+				await BaseDatos.CorreosEnviar.Insertar.Registro(html, titulo, correoHacia);
 
 				string host = configuracion.GetValue<string>("WebmasterDeals:CorreoBot");
 				string contraseña = configuracion.GetValue<string>("WebmasterDeals:CorreoBotContraseña");

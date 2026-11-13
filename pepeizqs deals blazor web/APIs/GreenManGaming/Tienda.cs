@@ -108,7 +108,7 @@ namespace APIs.GreenManGaming
 
 						foreach (GreenManGamingJuego juego in listaJuegos.Juegos)
 						{
-							if (int.Parse(juego.Stock) > 0)
+							if (int.Parse(juego.Stock) > 0 && juego.Enlace.Contains("-xbox/") == false)
 							{
 								decimal precioBase = decimal.Parse(juego.PrecioBase);
 								decimal precioRebajado = decimal.Parse(juego.PrecioRebajado);

@@ -1094,17 +1094,17 @@ app.MapGet("/login-steam/callback", async (HttpContext contexto, UserManager<Usu
 app.MapGet("/verify", (string returnUrl, IConfiguration config) =>
 {
 	string html = $"""
-	<!DOCTYPE html>
-	<html><head><meta charset="utf-8"><meta name="robots" content="noindex"><title>Verificación</title>
-	<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script></head>
-	<body>
-		<form method="post" action="/verify">
-			<input type="hidden" name="returnUrl" value="{WebUtility.HtmlEncode(returnUrl ?? "/")}" />
-			<div class="cf-turnstile" data-sitekey="{config["Turnstile:SiteKey"]}"></div>
-			<button type="submit">Continue</button>
-		</form>
-	</body></html>
-	""";
+		<!DOCTYPE html>
+		<html><head><meta charset="utf-8"><meta name="robots" content="noindex"><title>Verify</title>
+		<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script></head>
+		<body>
+			<form method="post" action="/verify">
+				<input type="hidden" name="returnUrl" value="{WebUtility.HtmlEncode(returnUrl ?? "/")}" />
+				<div class="cf-turnstile" data-sitekey="{config["Turnstile:SiteKey"]}"></div>
+				<button type="submit">Continue</button>
+			</form>
+		</body></html>
+		""";
 
 	return Results.Content(html, "text/html");
 });

@@ -116,6 +116,7 @@ namespace APIs.Loaded
 								"PC (Steam) (EU & UK)",
 								"PC (North America)",
 								"PC (Europe & UK)",
+								"PC (Europe or UK)",
 								"PC (EU & UK) (Steam)",
 								"PC (EU & UK)",
 								"PC (EU)",
@@ -126,6 +127,7 @@ namespace APIs.Loaded
 								"PC-DLC",
 								"(PC)",
 								"PC",
+								"(Europe & UK)",
 								"(EN)"
 							};
 

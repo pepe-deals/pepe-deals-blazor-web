@@ -7,7 +7,7 @@
     background-color: color-mix(in srgb, var(--fondoOscuro) 80%, var(--fondoCuerpo));
     font-size: var(--tamañoTexto);
     color: var(--colorTexto);
-    border-top: 1px solid var(--colorBordePie);
+    border-top: 2px solid var(--colorBordePie);
 }
 
 .subir-arriba2 {

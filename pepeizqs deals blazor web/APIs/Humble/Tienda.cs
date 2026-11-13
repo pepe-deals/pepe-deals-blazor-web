@@ -122,38 +122,38 @@ namespace APIs.Humble
 							PropertyNameCaseInsensitive = true
 						};
 
-						var nuevosJuegos = JsonSerializer.Deserialize<HumbleJuegos>(jsonReal, opciones);
+						HumbleBusqueda nuevosJuegos = JsonSerializer.Deserialize<HumbleBusqueda>(jsonReal, opciones);
 
-						if (nuevosJuegos?.Resultados?.Count > 0)
+						if (nuevosJuegos?.Productos?.Count > 0)
 						{
-							foreach (var juego in nuevosJuegos.Resultados)
+							foreach (var juego in nuevosJuegos.Productos)
 							{
 								string nombre = WebUtility.HtmlDecode(juego.Nombre);
 
-								string imagen = WebUtility.HtmlDecode(juego.ImagenGrande);
+								string imagen = WebUtility.HtmlDecode(juego.Imagen);
 
 								string enlace = "https://www.humblebundle.com/store/" + juego.Enlace;
 
-								if (juego.PrecioBase != null && juego.PrecioRebajado != null)
+								if (juego.Precio?.PrecioBase?.Cantidad != null && juego.Precio?.PrecioRebajado?.Cantidad != null)
 								{
-									decimal precioRebajado = decimal.Parse(juego.PrecioRebajado.Cantidad.ToString());
+									decimal precioRebajado = juego.Precio.PrecioRebajado.Cantidad;
 
-									int descuento = Calculadora.SacarDescuento(decimal.Parse(juego.PrecioBase.Cantidad.ToString()), precioRebajado);
+									int descuento = Calculadora.SacarDescuento(juego.Precio.PrecioBase.Cantidad, precioRebajado);
 
 									if (descuento > 0)
 									{
 										bool añadirChoice = true;
 
-										if (juego.CosasIncompatibles?.Count > 0)
-										{
-											foreach (var cosa in juego.CosasIncompatibles)
-											{
-												if (cosa == "subscriber-discount-coupons")
-												{
-													añadirChoice = false;
-												}
-											}
-										}
+										//if (juego.CosasIncompatibles?.Count > 0)
+										//{
+										//	foreach (var cosa in juego.CosasIncompatibles)
+										//	{
+										//		if (cosa == "subscriber-discount-coupons")
+										//		{
+										//			añadirChoice = false;
+										//		}
+										//	}
+										//}
 
 										foreach (string drmTexto in juego.DRMs)
 										{
@@ -173,54 +173,63 @@ namespace APIs.Humble
 												FechaActualizacion = DateTime.Now
 											};
 
-											if (juego.FechaTermina > 0)
-											{
-												DateTime fechaTermina = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-												fechaTermina = fechaTermina.AddSeconds(juego.FechaTermina);
-												fechaTermina = fechaTermina.ToLocalTime();
+											//if (juego.Precio.FechaTermina > 0)
+											//{
+											//	DateTime fechaTermina = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+											//	fechaTermina = fechaTermina.AddSeconds(juego.FechaTermina);
+											//	fechaTermina = fechaTermina.ToLocalTime();
 
-												oferta.FechaTermina = fechaTermina;
-											}
+											//	oferta.FechaTermina = fechaTermina;
+											//}
 
 											ofertas.Add(oferta);
 
-											if (añadirChoice == true)
-											{
-												decimal tempChoice = decimal.Parse(juego.PrecioRebajado.Cantidad.ToString()) * Convert.ToDecimal(DescuentoChoice(juego.DescuentoChoice));
 
-												decimal precioChoice = decimal.Parse(juego.PrecioRebajado.Cantidad.ToString()) - tempChoice;
-												precioChoice = Math.Round(precioChoice, 2);
 
-												if (precioChoice < precioRebajado)
-												{
-													int descuentoChoice = Calculadora.SacarDescuento(decimal.Parse(juego.PrecioBase.Cantidad.ToString()), precioChoice);
+											//if (añadirChoice == true)
+											//{
+											//	decimal tempChoice = decimal.Parse(juego.PrecioRebajado.Cantidad.ToString()) * Convert.ToDecimal(DescuentoChoice(juego.DescuentoChoice));
 
-													JuegoPrecio choice = new JuegoPrecio
-													{
-														Nombre = nombre,
-														Enlace = enlace,
-														Imagen = imagen,
-														Moneda = JuegoMoneda.Euro,
-														Precio = precioChoice,
-														Descuento = descuentoChoice,
-														Tienda = GenerarChoice().Id,
-														DRM = drm,
-														FechaDetectado = DateTime.Now,
-														FechaActualizacion = DateTime.Now
-													};
+											//	decimal precioChoice = decimal.Parse(juego.PrecioRebajado.Cantidad.ToString()) - tempChoice;
+											//	precioChoice = Math.Round(precioChoice, 2);
 
-													if (juego.FechaTermina > 0)
-													{
-														DateTime fechaTermina = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-														fechaTermina = fechaTermina.AddSeconds(juego.FechaTermina);
-														fechaTermina = fechaTermina.ToLocalTime();
+											//	if (precioChoice < precioRebajado)
+											//	{
+											//		int descuentoChoice = Calculadora.SacarDescuento(decimal.Parse(juego.PrecioBase.Cantidad.ToString()), precioChoice);
 
-														choice.FechaTermina = fechaTermina;
-													}
+											//		JuegoPrecio choice = new JuegoPrecio
+											//		{
+											//			Nombre = nombre,
+											//			Enlace = enlace,
+											//			Imagen = imagen,
+											//			Moneda = JuegoMoneda.Euro,
+											//			Precio = precioChoice,
+											//			Descuento = descuentoChoice,
+											//			Tienda = GenerarChoice().Id,
+											//			DRM = drm,
+											//			FechaDetectado = DateTime.Now,
+											//			FechaActualizacion = DateTime.Now
+											//		};
 
-													ofertas.Add(choice);
-												}
-											}
+											//		if (juego.FechaTermina > 0)
+											//		{
+											//			DateTime fechaTermina = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+											//			fechaTermina = fechaTermina.AddSeconds(juego.FechaTermina);
+											//			fechaTermina = fechaTermina.ToLocalTime();
+
+											//			choice.FechaTermina = fechaTermina;
+											//		}
+
+											//		ofertas.Add(choice);
+											//	}
+											//}
+										}
+
+										if (ofertas?.Count > 0)
+										{
+											BaseDatos.Errores.Insertar.Mensaje("test 1", JsonSerializer.Serialize(ofertas[0]));
+											BaseDatos.Errores.Insertar.Mensaje("test 2", JsonSerializer.Serialize(juego));
+											break;
 										}
 									}
 								}
@@ -228,51 +237,51 @@ namespace APIs.Humble
 						}
 					}
 
-					if (fila.enlace != null)
-					{
-						string limpieza = "DELETE FROM temporalhumble WHERE enlace=@enlace";
+					//if (fila.enlace != null)
+					//{
+					//	string limpieza = "DELETE FROM temporalhumble WHERE enlace=@enlace";
 
-						await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
-						{
-							return await conexion.ExecuteAsync(limpieza, new { enlace = fila.enlace }, transaction: sentencia);
-						});
-					}
+					//	await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
+					//	{
+					//		return await conexion.ExecuteAsync(limpieza, new { enlace = fila.enlace }, transaction: sentencia);
+					//	});
+					//}
 				}
 
-				if (ofertas?.Count > 0)
-				{
-					int juegos2 = 0;
+				//if (ofertas?.Count > 0)
+				//{
+				//	int juegos2 = 0;
 
-					int tamaño = 500;
-					var lotes = ofertas
-						.Select((oferta, indice) => new { oferta, indice })
-						.GroupBy(x => x.indice / tamaño)
-						.Select(g => g.Select(x => x.oferta).ToList())
-						.ToList();
+				//	int tamaño = 500;
+				//	var lotes = ofertas
+				//		.Select((oferta, indice) => new { oferta, indice })
+				//		.GroupBy(x => x.indice / tamaño)
+				//		.Select(g => g.Select(x => x.oferta).ToList())
+				//		.ToList();
 
-					foreach (var lote in lotes)
-					{
-						try
-						{
-							await BaseDatos.Tiendas.Comprobar.Resto(region, lote);
-						}
-						catch (Exception ex)
-						{
-							BaseDatos.Errores.Insertar.Mensaje(Generar().Id, ex);
-						}
+				//	foreach (var lote in lotes)
+				//	{
+				//		try
+				//		{
+				//			await BaseDatos.Tiendas.Comprobar.Resto(region, lote);
+				//		}
+				//		catch (Exception ex)
+				//		{
+				//			BaseDatos.Errores.Insertar.Mensaje(Generar().Id, ex);
+				//		}
 
-						juegos2 += lote.Count;
+				//		juegos2 += lote.Count;
 
-						try
-						{
-							await BaseDatos.Admin.Actualizar.Tiendas(region, Generar().Id, DateTime.Now, juegos2);
-						}
-						catch (Exception ex)
-						{
-							BaseDatos.Errores.Insertar.Mensaje(Generar().Id, ex);
-						}
-					}
-				}
+				//		try
+				//		{
+				//			await BaseDatos.Admin.Actualizar.Tiendas(region, Generar().Id, DateTime.Now, juegos2);
+				//		}
+				//		catch (Exception ex)
+				//		{
+				//			BaseDatos.Errores.Insertar.Mensaje(Generar().Id, ex);
+				//		}
+				//	}
+				//}
 			}
 			catch (Exception ex)
 			{
@@ -309,60 +318,93 @@ namespace APIs.Humble
 		}
 	}
 
-	public class HumbleJuegos
+	public class HumbleBusqueda
 	{
-		[JsonPropertyName("num_pages")]
-		public int Numero { get; set; }
+		[JsonPropertyName("products")]
+		public List<HumbleProducto> Productos { get; set; }
 
-		[JsonPropertyName("results")]
-		public List<HumbleJuego> Resultados { get; set; }
+		[JsonPropertyName("pagination")]
+		public HumblePaginacion Paginacion { get; set; }
+
+		[JsonPropertyName("success")]
+		public bool Exito { get; set; }
 	}
 
-	public class HumbleJuego
+	public class HumblePaginacion
 	{
-		[JsonPropertyName("human_name")]
-		public string Nombre { get; set; }
+		[JsonPropertyName("total")]
+		public int Total { get; set; }
 
-		[JsonPropertyName("machine_name")]
+		[JsonPropertyName("page")]
+		public int Pagina { get; set; }
+
+		[JsonPropertyName("totalPages")]
+		public int TotalPaginas { get; set; }
+	}
+
+	public class HumbleProducto
+	{
+		[JsonPropertyName("id")]
 		public string Id { get; set; }
 
-		[JsonPropertyName("standard_carousel_image")]
-		public string ImagenPequeña { get; set; }
+		[JsonPropertyName("productKey")]
+		public string Clave { get; set; }
 
-		[JsonPropertyName("large_capsule")]
-		public string ImagenGrande { get; set; }
+		[JsonPropertyName("slug")]
+		public string Slug { get; set; }
 
-		[JsonPropertyName("current_price")]
-		public HumbleJuegoPrecio PrecioRebajado { get; set; }
-
-		[JsonPropertyName("full_price")]
-		public HumbleJuegoPrecio PrecioBase { get; set; }
-
-		[JsonPropertyName("human_url")]
+		[JsonPropertyName("url")]
 		public string Enlace { get; set; }
 
-		[JsonPropertyName("delivery_methods")]
+		[JsonPropertyName("title")]
+		public string Nombre { get; set; }
+
+		[JsonPropertyName("thumbnail")]
+		public string Imagen { get; set; }
+
+		[JsonPropertyName("deliveryMethods")]
 		public List<string> DRMs { get; set; }
 
 		[JsonPropertyName("platforms")]
 		public List<string> Sistemas { get; set; }
 
-		[JsonPropertyName("sale_end")]
-		public double FechaTermina { get; set; }
+		[JsonPropertyName("displayPrice")]
+		public HumblePrecioBloque Precio { get; set; }
 
-		[JsonPropertyName("rewards_split")]
-		public double DescuentoChoice { get; set; }
-
-		[JsonPropertyName("incompatible_features")]
-		public List<string> CosasIncompatibles { get; set; }
+		[JsonPropertyName("productType")]
+		public string Tipo { get; set; }
 	}
 
-	public class HumbleJuegoPrecio
+	public class HumblePrecioBloque
 	{
-		[JsonPropertyName("currency")]
+		[JsonPropertyName("currentPrice")]
+		public HumblePrecio PrecioRebajado { get; set; }
+
+		[JsonPropertyName("basePrice")]
+		public HumblePrecio PrecioBase { get; set; }
+
+		[JsonPropertyName("isSale")]
+		public bool EnOferta { get; set; }
+
+		[JsonPropertyName("validUntil")]
+		public string FechaTermina { get; set; }
+
+		[JsonPropertyName("choiceDiscountEligible")]
+		public bool ElegibleChoice { get; set; }
+	}
+
+	public class HumblePrecio
+	{
+		[JsonPropertyName("centAmount")]
+		public int Centimos { get; set; }
+
+		[JsonPropertyName("currencyCode")]
 		public string Moneda { get; set; }
 
-		[JsonPropertyName("amount")]
-		public object Cantidad { get; set; }
+		[JsonPropertyName("fractionDigits")]
+		public int Decimales { get; set; }
+
+		[JsonIgnore]
+		public decimal Cantidad => Centimos / (decimal)Math.Pow(10, Decimales);
 	}
 }

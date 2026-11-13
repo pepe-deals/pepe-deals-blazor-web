@@ -474,10 +474,6 @@ namespace Tareas
 									{
 										await APIs.IndiePass.Suscripcion.Buscar();
 									}
-									else if (suscripcion.Id == APIs.PlayStation.Suscripcion.Generar().Id)
-									{
-										await APIs.PlayStation.Suscripcion.Buscar();
-									}
 									else if (suscripcion.Id == APIs.Ubisoft.Suscripcion.Generar().Id)
 									{
 										await APIs.Ubisoft.Suscripcion.Buscar();

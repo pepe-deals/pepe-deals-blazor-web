@@ -772,6 +772,7 @@ namespace Juegos
 					"jossandmain.com",
 					"jottacloud",
 					"jtv.com",
+					"kabasakal",
 					"kaizen",
 					"kammelna",
 					"kaspersky",

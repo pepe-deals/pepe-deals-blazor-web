@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using System.Text.RegularExpressions;
 
 namespace BaseDatos.Pepeizqapps
 {
@@ -22,6 +23,16 @@ namespace BaseDatos.Pepeizqapps
 			valores.Add("@fecha");
 			p.Add("@fecha", DateTime.Now);
 
+			string imagenDetectada = Regex.Match(contenido ?? "",
+				@"https?://[^\s""'<>)]+?\.(?:jpe?g|png|webp|avif|bmp)(?:\?[^\s""'<>)]*)?", RegexOptions.IgnoreCase).Value;
+
+			if (string.IsNullOrEmpty(imagenDetectada) == false && imagenDetectada.Length <= 256)
+			{
+				campos.Add("imagen");
+				valores.Add("@imagen");
+				p.Add("@imagen", imagenDetectada);
+			}
+
 			string sql = $@"INSERT INTO noticias ({string.Join(",", campos)})
                 VALUES ({string.Join(",", valores)});
                 SELECT SCOPE_IDENTITY();";
@@ -35,7 +46,7 @@ namespace BaseDatos.Pepeizqapps
 			}
 			catch (Exception ex)
 			{
-				Errores.Insertar.Mensaje("Noticias Insertar pepeizqapps", ex);
+				Errores.Insertar.Mensaje("Noticias Insertar - pepeizq's apps", ex);
 				return 0;
 			}
 		}

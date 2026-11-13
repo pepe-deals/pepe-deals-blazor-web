@@ -21,7 +21,7 @@ namespace APIs.Xbox
                 Id = Suscripciones2.SuscripcionTipo.PCGamePass,
                 Nombre = "PC Game Pass",
                 ImagenLogo = "/imagenes/suscripciones/pcgamepass_logo.webp",
-				ImagenIcono = "/imagenes/suscripciones/pcgamepass_icono.webp",
+				ImagenIcono = "/imagenes/suscripciones/pcgamepass_icono.ico",
 				ImagenFondo = "/imagenes/suscripciones/pcgamepass_fondo.webp",
 				ColorDestacado = "rgba(46, 71, 3, 0.3)",
 				Enlace = "https://www.xbox.com/xbox-game-pass/pc-game-pass",

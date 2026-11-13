@@ -1,8 +1,11 @@
 ﻿#nullable disable
 
 using Herramientas;
+using HtmlAgilityPack;
 using Microsoft.VisualBasic;
+using System.Globalization;
 using System.Net;
+using System.Text.RegularExpressions;
 
 namespace APIs.Humble
 {
@@ -28,7 +31,8 @@ namespace APIs.Humble
 
 			DateTime fechaTermina = DateTime.Now;
 			fechaTermina = fechaTermina.AddDays(21);
-			fechaTermina = new DateTime(fechaTermina.Year, fechaTermina.Month, fechaTermina.Day, 23, 0, 0);
+			fechaTermina = fechaTermina.AddHours(10);
+			fechaTermina = new DateTime(fechaTermina.Year, fechaTermina.Month, fechaTermina.Day, fechaTermina.Hour, 0, 0);
 
 			bundle.FechaTermina = fechaTermina;
 
@@ -48,196 +52,53 @@ namespace APIs.Humble
 
 				if (string.IsNullOrEmpty(html) == false)
 				{
-					if (html.Contains("<script type=" + Strings.ChrW(34) + "application/ld+json" + Strings.ChrW(34) + ">") == true)
+					HtmlDocument doc = new HtmlDocument();
+					doc.LoadHtml(html);
+
+					bundle.Nombre = doc.DocumentNode.SelectSingleNode("//h1")?.InnerText.Trim();
+
+					string imagen = doc.DocumentNode.SelectSingleNode("//meta[@property='og:image']")?.GetAttributeValue("content", "");
+
+					bundle.Imagen = imagen;
+					bundle.ImagenNoticia = imagen;
+
+					string json = html.Replace("\\\"", "\"");
+
+					MatchCollection tiers = Regex.Matches(json,
+						@"""price"":\{""amount"":([\d.]+),""currencyCode"":""([A-Z]{3})""\},""totalMsrpValue"":\{""amount"":([\d.]+)");
+
+					List<Bundles2.BundleTier> tiers2 = new List<Bundles2.BundleTier>();
+
+					foreach (Match tier in tiers)
 					{
-						int int1 = html.IndexOf("<script type=" + Strings.ChrW(34) + "application/ld+json" + Strings.ChrW(34) + ">");
-						string temp1 = html.Remove(0, int1 + 10);
+						decimal precio = decimal.Parse(tier.Groups[1].Value, CultureInfo.InvariantCulture);					
 
-						int int2 = temp1.IndexOf("</script>");
-						string temp2 = temp1.Remove(int2, temp1.Length - int2);
-
-						int int3 = temp2.IndexOf(Strings.ChrW(34) + "name" + Strings.ChrW(34));
-
-						if (int3 > -1)
+						Bundles2.BundleTier tierNuevo = new Bundles2.BundleTier
 						{
-							//Nuevos
+							Posicion = (tiers2.Count + 1),
+							Precio = precio.ToString()
+						};
 
-							#region Nombre
+						bool añadir = true;
 
-							string temp3 = temp2.Remove(0, int3 + 7);
-
-							int int4 = temp3.IndexOf(Strings.ChrW(34));
-							string temp4 = temp3.Remove(0, int4 + 1);
-
-							int int5 = temp4.IndexOf(Strings.ChrW(34));
-							string temp5 = temp4.Remove(int5, temp4.Length - int5);
-
-							bundle.Nombre = WebUtility.HtmlDecode(temp5.Trim());
-
-							#endregion
-
-							#region ImagenLogo
-
-							int int6 = temp2.IndexOf(Strings.ChrW(34) + "image" + Strings.ChrW(34));
-							string temp6 = temp2.Remove(0, int6 + 8);
-
-							int int7 = temp6.IndexOf(Strings.ChrW(34));
-							string temp7 = temp6.Remove(0, int7 + 1);
-
-							int int8 = temp7.IndexOf(Strings.ChrW(34));
-							string temp8 = temp7.Remove(int8, temp7.Length - int8);
-
-							bundle.Imagen = WebUtility.HtmlDecode(temp8.Trim());
-
-							#endregion
-
-							List<Bundles2.BundleTier> tiers = new List<Bundles2.BundleTier>();
-
-							#region Tier1
-
-							int int9 = temp2.IndexOf(Strings.ChrW(34) + "highPrice" + Strings.ChrW(34));
-							string temp9 = temp2.Remove(0, int9 + 11);
-
-							int int10 = temp9.IndexOf(Strings.ChrW(34));
-							string temp10 = temp9.Remove(0, int10 + 1);
-
-							int int11 = temp10.IndexOf(Strings.ChrW(34));
-							string temp11 = temp10.Remove(int11, temp10.Length - int11);
-
-							Bundles2.BundleTier tier1 = new Bundles2.BundleTier
+						if (tiers.Count > 0)
+						{
+							foreach (var tier2 in tiers2)
 							{
-								Posicion = 1,
-								Precio = temp11.Trim()
-							};
-
-							tiers.Add(tier1);
-
-							#endregion
-
-							#region TierUltimo
-
-							int int12 = temp2.IndexOf(Strings.ChrW(34) + "offerCount" + Strings.ChrW(34));
-							string temp12 = temp2.Remove(0, int12 + 13);
-
-							int int13 = temp12.IndexOf(Strings.ChrW(34));
-							string temp13 = temp12.Remove(0, int13 + 1);
-
-							int int14 = temp13.IndexOf(Strings.ChrW(34));
-							string temp14 = temp13.Remove(int14, temp13.Length - int14);
-
-							int int15 = temp2.IndexOf(Strings.ChrW(34) + "lowPrice" + Strings.ChrW(34));
-							string temp15 = temp2.Remove(0, int15 + 11);
-
-							int int16 = temp15.IndexOf(Strings.ChrW(34));
-							string temp16 = temp15.Remove(0, int16 + 1);
-
-							int int17 = temp16.IndexOf(Strings.ChrW(34));
-							string temp17 = temp16.Remove(int17, temp16.Length - int17);
-
-							Bundles2.BundleTier tier2 = new Bundles2.BundleTier
-							{
-								Posicion = int.Parse(temp14.Trim()),
-								Precio = temp17.Trim()
-							};
-
-							bool añadir = true;
-
-							if (tiers.Count > 0)
-							{
-								foreach (var tier in tiers)
+								if (tierNuevo.Precio == tier2.Precio)
 								{
-									if (tier.Precio == tier2.Precio)
-									{
-										añadir = false;
-									}
+									añadir = false;
 								}
 							}
-
-							if (añadir == true)
-							{
-								tiers.Add(tier2);
-							}
-
-							#endregion
-
-							bundle.Tiers = tiers;
-
-							#region ImagenNoticia
-
-							int int18 = html.IndexOf("itemprop=" + Strings.ChrW(34) + "image" + Strings.ChrW(34));
-
-							if (int18 != -1)
-							{
-								string temp18 = html.Remove(int18, html.Length - int18);
-
-								int int19 = temp18.LastIndexOf("<meta content=");
-								string temp19 = temp18.Remove(0, int19 + 2);
-
-								int int20 = temp19.IndexOf(Strings.ChrW(34));
-								string temp20 = temp19.Remove(0, int20 + 1);
-
-								temp20 = temp20.Replace(Strings.ChrW(34).ToString(), null);
-								temp20 = temp20.Trim();
-
-								bundle.ImagenNoticia = temp20;
-							}
-
-							#endregion
 						}
-						else
+
+						if (añadir == true)
 						{
-							//Antiguos
-
-							#region Nombre
-
-							int int4 = html.IndexOf("<title>");
-							string temp4 = html.Remove(0, int4 + 7);
-
-							int int5 = temp4.IndexOf("</title>");
-							string temp5 = temp4.Remove(int5, temp4.Length - int5);
-
-							bundle.Nombre = WebUtility.HtmlDecode(temp5.Trim());
-
-							#endregion
-
-							#region ImagenLogo
-
-							int int6 = html.IndexOf(Strings.ChrW(34) + "overpage-logo" + Strings.ChrW(34));
-							string temp6 = html.Remove(0, int6 + 8);
-
-							int int7 = temp6.IndexOf("src=");
-							string temp7 = temp6.Remove(0, int7 + 5);
-
-							int int8 = temp7.IndexOf(Strings.ChrW(34));
-							string temp8 = temp7.Remove(int8, temp7.Length - int8);
-
-							bundle.Imagen = WebUtility.HtmlDecode(temp8.Trim());
-
-							#endregion
-
-							#region ImagenNoticia
-
-							int int18 = html.IndexOf("itemprop=" + Strings.ChrW(34) + "image" + Strings.ChrW(34));
-
-							if (int18 != -1)
-							{
-								string temp18 = html.Remove(int18, html.Length - int18);
-
-								int int19 = temp18.LastIndexOf("<meta content=");
-								string temp19 = temp18.Remove(0, int19 + 2);
-
-								int int20 = temp19.IndexOf(Strings.ChrW(34));
-								string temp20 = temp19.Remove(0, int20 + 1);
-
-								temp20 = temp20.Replace(Strings.ChrW(34).ToString(), null);
-								temp20 = temp20.Trim();
-
-								bundle.ImagenNoticia = temp20;
-							}
-
-							#endregion
+							tiers2.Add(tierNuevo);
 						}
 					}
+
+					bundle.Tiers = tiers2;
 				}
 			}
 
