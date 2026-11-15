@@ -110,6 +110,7 @@
 .destacado-precio-descuento {
     padding: 15px;
     font-size: 22px;
+    border: 1px solid rgba(255,255,255,.1);
 }
 
 .destacado-icono {

@@ -76,6 +76,7 @@ namespace APIs.Driffle
 								nombre = nombre.Replace("(Europe) (PC / Linux)", null);
 								nombre = nombre.Replace("(Global) (PC / Mac / Linux)", null);
 								nombre = nombre.Replace("(Europe) (PC / Mac / Linux)", null);
+								nombre = nombre.Replace("(EN/FR/JP/KR/CN)", null);
 								nombre = nombre.Trim();
 
 								if (nombre.EndsWith(" DLC") == true)

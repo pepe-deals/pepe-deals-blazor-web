@@ -1,5 +1,6 @@
 ﻿#nullable disable
 
+using BaseDatos.Juegos;
 using Herramientas;
 using HtmlAgilityPack;
 using Microsoft.VisualBasic;
@@ -99,6 +100,17 @@ namespace APIs.Humble
 					}
 
 					bundle.Tiers = tiers2;
+
+					if (bundle.Tiers.Count == 0)
+					{
+						Bundles2.BundleTier tierNuevo = new Bundles2.BundleTier
+						{
+							Posicion = 1,
+							Precio = "0.00"
+						};
+
+						bundle.Tiers.Add(tierNuevo);
+					}
 				}
 			}
 

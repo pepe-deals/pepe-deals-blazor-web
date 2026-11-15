@@ -8,6 +8,7 @@
 using Dapper;
 using Herramientas;
 using Juegos;
+using System.Globalization;
 using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -122,17 +123,17 @@ namespace APIs.Humble
 							PropertyNameCaseInsensitive = true
 						};
 
-						HumbleBusqueda nuevosJuegos = JsonSerializer.Deserialize<HumbleBusqueda>(jsonReal, opciones);
+						List<HumbleProducto> nuevosJuegos = JsonSerializer.Deserialize<List<HumbleProducto>>(jsonReal, opciones);
 
-						if (nuevosJuegos?.Productos?.Count > 0)
+						if (nuevosJuegos?.Count > 0)
 						{
-							foreach (var juego in nuevosJuegos.Productos)
+							foreach (var juego in nuevosJuegos)
 							{
 								string nombre = WebUtility.HtmlDecode(juego.Nombre);
 
 								string imagen = WebUtility.HtmlDecode(juego.Imagen);
 
-								string enlace = "https://www.humblebundle.com/store/" + juego.Enlace;
+								string enlace = "https://www.humblebundle.com" + juego.Enlace;
 
 								if (juego.Precio?.PrecioBase?.Cantidad != null && juego.Precio?.PrecioRebajado?.Cantidad != null)
 								{
@@ -173,18 +174,15 @@ namespace APIs.Humble
 												FechaActualizacion = DateTime.Now
 											};
 
-											//if (juego.Precio.FechaTermina > 0)
-											//{
-											//	DateTime fechaTermina = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-											//	fechaTermina = fechaTermina.AddSeconds(juego.FechaTermina);
-											//	fechaTermina = fechaTermina.ToLocalTime();
+											if (string.IsNullOrEmpty(juego.Precio.FechaTermina) == false)
+											{
+												DateTime fechaTermina = DateTime.Parse(juego.Precio.FechaTermina, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal);
+												fechaTermina = fechaTermina.AddHours(1);
 
-											//	oferta.FechaTermina = fechaTermina;
-											//}
+												oferta.FechaTermina = fechaTermina;
+											}
 
 											ofertas.Add(oferta);
-
-
 
 											//if (añadirChoice == true)
 											//{
@@ -224,64 +222,57 @@ namespace APIs.Humble
 											//	}
 											//}
 										}
-
-										if (ofertas?.Count > 0)
-										{
-											BaseDatos.Errores.Insertar.Mensaje("test 1", JsonSerializer.Serialize(ofertas[0]));
-											BaseDatos.Errores.Insertar.Mensaje("test 2", JsonSerializer.Serialize(juego));
-											break;
-										}
 									}
 								}
 							}
 						}
 					}
 
-					//if (fila.enlace != null)
-					//{
-					//	string limpieza = "DELETE FROM temporalhumble WHERE enlace=@enlace";
+					if (fila.enlace != null)
+					{
+						string limpieza = "DELETE FROM temporalhumble WHERE enlace=@enlace";
 
-					//	await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
-					//	{
-					//		return await conexion.ExecuteAsync(limpieza, new { enlace = fila.enlace }, transaction: sentencia);
-					//	});
-					//}
+						await Herramientas.Conexiones.Pepedeals.RestoOperaciones(async (conexion, sentencia) =>
+						{
+							return await conexion.ExecuteAsync(limpieza, new { enlace = fila.enlace }, transaction: sentencia);
+						});
+					}
 				}
 
-				//if (ofertas?.Count > 0)
-				//{
-				//	int juegos2 = 0;
+				if (ofertas?.Count > 0)
+				{
+					int juegos2 = 0;
 
-				//	int tamaño = 500;
-				//	var lotes = ofertas
-				//		.Select((oferta, indice) => new { oferta, indice })
-				//		.GroupBy(x => x.indice / tamaño)
-				//		.Select(g => g.Select(x => x.oferta).ToList())
-				//		.ToList();
+					int tamaño = 500;
+					var lotes = ofertas
+						.Select((oferta, indice) => new { oferta, indice })
+						.GroupBy(x => x.indice / tamaño)
+						.Select(g => g.Select(x => x.oferta).ToList())
+						.ToList();
 
-				//	foreach (var lote in lotes)
-				//	{
-				//		try
-				//		{
-				//			await BaseDatos.Tiendas.Comprobar.Resto(region, lote);
-				//		}
-				//		catch (Exception ex)
-				//		{
-				//			BaseDatos.Errores.Insertar.Mensaje(Generar().Id, ex);
-				//		}
+					foreach (var lote in lotes)
+					{
+						try
+						{
+							await BaseDatos.Tiendas.Comprobar.Resto(region, lote);
+						}
+						catch (Exception ex)
+						{
+							BaseDatos.Errores.Insertar.Mensaje(Generar().Id, ex);
+						}
 
-				//		juegos2 += lote.Count;
+						juegos2 += lote.Count;
 
-				//		try
-				//		{
-				//			await BaseDatos.Admin.Actualizar.Tiendas(region, Generar().Id, DateTime.Now, juegos2);
-				//		}
-				//		catch (Exception ex)
-				//		{
-				//			BaseDatos.Errores.Insertar.Mensaje(Generar().Id, ex);
-				//		}
-				//	}
-				//}
+						try
+						{
+							await BaseDatos.Admin.Actualizar.Tiendas(region, Generar().Id, DateTime.Now, juegos2);
+						}
+						catch (Exception ex)
+						{
+							BaseDatos.Errores.Insertar.Mensaje(Generar().Id, ex);
+						}
+					}
+				}
 			}
 			catch (Exception ex)
 			{
