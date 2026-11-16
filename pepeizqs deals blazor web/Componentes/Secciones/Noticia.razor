@@ -573,7 +573,7 @@
 
 	[CascadingParameter] private Herramientas.ContextoUsuarioDatos datos { get; set; }
 
-	private string idioma = "en";
+	[PersistentState] public string idioma { get; set; }
 	private string usuarioId = null;
 	private string userAgent = null;
 	private string dominio = null;

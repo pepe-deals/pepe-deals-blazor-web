@@ -124,6 +124,19 @@
     filter: drop-shadow(0 0 8px rgba(0,0,0,.5));
 }
 
+.destacado-dropdown {
+    padding: 10px;
+}
+
+.destacado-hueco2 {
+    margin-left: 30px;
+}
+
+.destacado-dropdown-icono {
+    width: 34px;
+    height: 34px;
+}
+
 @media (max-width: 1000px) {
     .portada-espacio {
         margin: 0px auto;
@@ -154,6 +167,19 @@
     .destacado-icono {
         width: 24px;
         height: 24px;
+    }
+
+    .destacado-dropdown {
+        padding: 5px;
+    }
+
+    .destacado-hueco2 {
+        margin-left: 10px;
+    }
+
+    .destacado-dropdown-icono {
+        width: 31px;
+        height: 31px;
     }
 }
 

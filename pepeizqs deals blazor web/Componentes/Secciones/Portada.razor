@@ -187,13 +187,13 @@
 											drmDeseado = destacadoActual?.Juego?.PrecioMinimosHistoricosUS?[0].DRM ?? JuegoDRM.NoEspecificado;
 										}
 
-										<div @onclick:preventDefault style="margin-left: 30px;"
+										<div @onclick:preventDefault class="destacado-hueco2"
 											 @onmouseenter="@(e => AbrirDropdownHover("destacado", destacadoActual?.Juego?.Id ?? 0, drmDeseado))"
 											 @onmouseleave="@(e => CerrarDropdownHover("destacado", destacadoActual?.Juego?.Id ?? 0, drmDeseado))">
 
-											<button class="boton-pequeño" style="width: fit-content; padding: 10px; background-color: @destacadoActual?.Color;">
+											<button class="boton-pequeño destacado-dropdown" style="width: fit-content; background-color: @destacadoActual?.Color; border: 1px solid rgba(255,255,255,.1);">
 												<div class="svg-boton" style="display: flex;">
-													<svg style="width: 34px; height: 34px; transform: rotate(@(dropdownAbierto == "destacado" + (destacadoActual?.Juego?.Id ?? 0).ToString() + "-" + ((int)drmDeseado).ToString() ? "0deg" : "180deg")); transition: transform 0.2s;"
+													<svg class="destacado-dropdown-icono" style="transform: rotate(@(dropdownAbierto == "destacado" + (destacadoActual?.Juego?.Id ?? 0).ToString() + "-" + ((int)drmDeseado).ToString() ? "180deg" : "0deg")); transition: transform 0.2s;"
 														 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
 														<path d="M297.4 438.6C309.9 451.1 330.2 451.1 342.7 438.6L502.7 278.6C515.2 266.1 515.2 245.8 502.7 233.3C490.2 220.8 469.9 220.8 457.4 233.3L320 370.7L182.6 233.4C170.1 220.9 149.8 220.9 137.3 233.4C124.8 245.9 124.8 266.2 137.3 278.7L297.3 438.7z" />
 													</svg>
@@ -205,12 +205,12 @@
 												<div @onclick:preventDefault
 													 @onmouseenter="@(e => MantenerDropdownAbierto("destacado", destacadoActual?.Juego?.Id ?? 0, drmDeseado))"
 													 @onmouseleave="@(e => CerrarAlSalirDelMenu("destacado", destacadoActual?.Juego?.Id ?? 0, drmDeseado))"
-													 style="position: absolute; bottom: 55px; right: 0; background-color: @destacadoActual?.Color; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); z-index: 1000; overflow: hidden; display: flex; flex-direction: column;">
+													 class="destacado-dropdown-caja" style="position: absolute; right: 0; bottom: 55px; background-color: @destacadoActual?.Color; border: 1px solid rgba(255, 255, 255, 0.2); z-index: 1000; overflow: hidden; display: flex; flex-direction: column;">
 
 													@if (destacadoActual?.DeseadoImportado == false)
 													{
 														<button @onclick="@(async e => { await CambiarEstadoDeseado(e, usuarioId, destacadoActual, drmDeseado); })"
-																style="width: 100%; padding: 10px 15px; text-align: left; border: none; cursor: pointer; background-color: @destacadoActual?.Color; border-bottom: 1px solid rgba(255, 255, 255, 0.1); transition: background-color 0.2s;"
+																style="width: 100%; padding: 10px 15px; text-align: left; border: none; cursor: pointer; background-color: @destacadoActual?.Color; transition: background-color 0.2s;"
 																onmouseover="this.style.backgroundColor='rgba(0, 0, 0, 0.2)'"
 																onmouseout="this.style.backgroundColor='@destacadoActual?.Color'">
 															<div style="display: flex; align-items: center; gap: 10px; justify-content: right;">
@@ -243,7 +243,7 @@
 													}
 
 													<button @onclick="@(async e => { await ExcluirJuego(e, "destacado", usuarioId, destacadoActual); })"
-															style="width: 100%; padding: 10px 15px; text-align: left; border: none; cursor: pointer; border-bottom: 1px solid var(--fondoCodigo); background-color: var(--fondoBotonPequeño); transition: background-color 0.2s;"
+															style="width: 100%; padding: 10px 15px; text-align: left; border: none; cursor: pointer; background-color: var(--fondoBotonPequeño); transition: background-color 0.2s;"
 															onmouseover="this.style.backgroundColor='var(--fondoBotonPequeñoHover)'"
 															onmouseout="this.style.backgroundColor='var(--fondoBotonPequeño)'">
 														<div style="display: flex; align-items: center; gap: 10px; justify-content: right;">
@@ -958,7 +958,7 @@ else
 
 	[CascadingParameter] private Herramientas.ContextoUsuarioDatos datos { get; set; }
 
-	private string idioma = "en";
+	[PersistentState] public string idioma { get; set; }
 	private string usuarioId = null;
 	private string userAgent = null;
 	private string dominio = null;
