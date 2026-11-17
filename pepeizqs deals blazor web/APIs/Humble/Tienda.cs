@@ -117,6 +117,7 @@ namespace APIs.Humble
 					if (fila.contenido != null && string.IsNullOrEmpty((string)fila.contenido) == false)
 					{
 						string jsonReal = Regex.Unescape((string)fila.contenido);
+						jsonReal = Regex.Replace(jsonReal, @"[\x00-\x1F]", " ");
 
 						var opciones = new JsonSerializerOptions
 						{

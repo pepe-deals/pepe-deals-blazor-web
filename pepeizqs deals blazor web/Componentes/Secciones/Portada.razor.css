@@ -137,6 +137,10 @@
     height: 34px;
 }
 
+.destacado-dropdown-caja {
+    bottom: 55px;
+}
+
 @media (max-width: 1000px) {
     .portada-espacio {
         margin: 0px auto;
@@ -180,6 +184,10 @@
     .destacado-dropdown-icono {
         width: 31px;
         height: 31px;
+    }
+
+    .destacado-dropdown-caja {
+        bottom: 40px; 
     }
 }
 

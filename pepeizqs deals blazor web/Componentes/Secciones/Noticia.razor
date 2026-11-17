@@ -9,15 +9,15 @@
 @using Microsoft.JSInterop
 @using Microsoft.VisualBasic
 @using Noticias
-@using System.Net
+@using pepeizqs_deals_blazor_web.Componentes.Interfaz
 @using pepeizqs_deals_web.Data
 @using Suscripciones2
-@using pepeizqs_deals_blazor_web.Componentes.Interfaz
+@using System.Net
 
 @inject IJSRuntime JavaScript
 @inject NavigationManager Navegacion
 
-@if (noticia != null)
+@if (noticia != null && string.IsNullOrEmpty(titulo) == false)
 {
 	string descripcion = string.Empty;
 
@@ -99,7 +99,7 @@
 	contenidoJson = contenidoJson.Replace("@fecha", noticia.FechaEmpieza.ToString("yyyy-MM-ddTHH:mm:ss"));
 	contenidoJson = contenidoJson.Replace("@descripcion", descripcionJson);
 
-	<Titulo tipo="@Titulo.Tipo.Noticia" idioma="@idioma" dominio="@dominio" tituloNoticia="@titulo" descripcionNoticia="@descripcion" 
+	<Titulo @key="@noticia.Id" tipo="@Titulo.Tipo.Noticia" idioma="@idioma" dominio="@dominio" tituloNoticia="@titulo" descripcionNoticia="@descripcion"
 			enlaceEnNoticia="@enlaceIngles" enlaceEsNoticia="@enlaceEspañol" keywords="@keywords" contenidoJsonNoticia="@contenidoJson"/>
 }
 
@@ -426,15 +426,14 @@
 		</div>
 	</div>
 
-
-	@if (noticiaAnterior != null || noticiaPosterior != null)
+	@if (noticiaAnterior != null || noticiaSiguiente != null)
 	{
 		<div class="cuerpo-ancho" style="padding: 30px; display: flex; align-items: center; gap: 40px; background-color: var(--fondoSubsubcabecera); border: 2px solid rgba(0,0,0,.5); border-width: 2px 2px 0 2px; border-top-left-radius: 20px; border-top-right-radius: 20px;">
 			@if (noticiaAnterior?.Id > 0)
 			{
 				string enlaceAnterior = "/news/" + noticiaAnterior.Id + "/" + Herramientas.EnlaceAdaptador.Nombre(Herramientas.Idiomas.ElegirTexto(idioma, noticiaAnterior.TituloEn, noticiaAnterior.TituloEs)) + "/";
 
-				<a href="@enlaceAnterior" @onclick="(e => AbrirNoticia(e, enlaceAnterior, false))" class="boton-pequeño" style="color: var(--colorTextoVisitado); background-color: var(--fondoBotonPequeño); border: 0px; padding: 12px 20px; text-decoration: none; width: 50%; display: flex; align-items: center; gap: 15px; justify-content: flex-end;">
+				<a href="@enlaceAnterior" class="boton-pequeño" style="color: var(--colorTextoVisitado); background-color: var(--fondoBotonPequeño); border: 0px; padding: 12px 20px; text-decoration: none; width: 50%; display: flex; align-items: center; gap: 15px; justify-content: flex-end;">
 					<div style="max-width: 16px;">
 						<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
 							<path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z" />
@@ -445,12 +444,12 @@
 				</a>
 			}
 
-			@if (noticiaPosterior?.Id > 0)
+			@if (noticiaSiguiente?.Id > 0)
 			{
-				string enlacePosterior = "/news/" + noticiaPosterior.Id + "/" + Herramientas.EnlaceAdaptador.Nombre(Herramientas.Idiomas.ElegirTexto(idioma, noticiaPosterior.TituloEn, noticiaPosterior.TituloEs)) + "/";
+				string enlaceSiguiente = "/news/" + noticiaSiguiente.Id + "/" + Herramientas.EnlaceAdaptador.Nombre(Herramientas.Idiomas.ElegirTexto(idioma, noticiaSiguiente.TituloEn, noticiaSiguiente.TituloEs)) + "/";
 
-				<a href="@enlacePosterior" @onclick="(e => AbrirNoticia(e, enlacePosterior, false))" class="boton-pequeño" style="color: var(--colorTextoVisitado); background-color: var(--fondoBotonPequeño); border: 0px; padding: 12px 20px; text-decoration: none; width: 50%; display: flex; align-items: center; gap: 15px; justify-content: flex-end;">
-					@Herramientas.Idiomas.ElegirTexto(idioma, noticiaPosterior.TituloEn, noticiaPosterior.TituloEs)
+				<a href="@enlaceSiguiente" class="boton-pequeño" style="color: var(--colorTextoVisitado); background-color: var(--fondoBotonPequeño); border: 0px; padding: 12px 20px; text-decoration: none; width: 50%; display: flex; align-items: center; gap: 15px; justify-content: flex-end;">
+					@Herramientas.Idiomas.ElegirTexto(idioma, noticiaSiguiente.TituloEn, noticiaSiguiente.TituloEs)
 
 					<div style="max-width: 16px;">
 						<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
@@ -608,18 +607,17 @@
 
 	[PersistentState] public Noticias.Noticia noticia { get; set; }
 	[PersistentState] public Noticias.Noticia noticiaAnterior { get; set; }
-	[PersistentState] public Noticias.Noticia noticiaPosterior { get; set; }
+	[PersistentState] public Noticias.Noticia noticiaSiguiente { get; set; }
 
 	private string titulo = string.Empty;
 	private string enlaceIngles = string.Empty;
 	private string enlaceEspañol = string.Empty;
-	private string video = string.Empty;
 
 	[PersistentState] public List<Juegos.Juego> juegos { get; set; }
 
 	protected override async Task OnInitializedAsync()
 	{
-		idioma = datos.Idioma;
+		idioma ??= datos.Idioma;
 		usuarioId = datos.UsuarioId;
 		userAgent = datos.UserAgent;
 		dominio = datos.Dominio;
@@ -634,7 +632,11 @@
 
 			await Task.WhenAll(tareaIdioma, tareaJuegos, tareaDeseados, tareaPatreon, tareaAdmin);
 
-			idioma = tareaIdioma.Result;
+			if (string.IsNullOrEmpty(tareaIdioma.Result) == false)
+			{
+				idioma = tareaIdioma.Result;
+			}
+
 			juegosUsuario = tareaJuegos.Result;
 			deseadosUsuario = tareaDeseados.Result;
 			usuarioPatreon = Herramientas.Patreon.VerificarActivo(tareaPatreon.Result);
@@ -656,6 +658,11 @@
 			}
 		}
 
+		await CargarNoticia();
+	}
+
+	private async Task CargarNoticia()
+	{
 		if (id > 0)
 		{
 			noticia ??= await BaseDatos.Noticias.Buscar.UnaNoticia(id);
@@ -671,26 +678,8 @@
 				enlaceIngles = "https://" + dominio + "/news/" + id.ToString() + "/" + Herramientas.EnlaceAdaptador.Nombre(noticia.TituloEn) + "/";
 				enlaceEspañol = "https://" + dominio + "/news/" + id.ToString() + "/" + Herramientas.EnlaceAdaptador.Nombre(noticia.TituloEs) + "/";
 
-				if (string.IsNullOrEmpty(noticia.Juegos) == false)
-				{
-					var listaJuegos = Herramientas.Listados.Generar(noticia.Juegos);
-
-					if (listaJuegos?.Count > 0)
-					{
-						juegos ??= await BaseDatos.Juegos.Buscar.MultiplesJuegos(listaJuegos);
-					}
-				}
-
-				if (juegos?.Count == 1)
-				{
-					if (juegos[0].Media?.Videos?.Count > 0)
-					{
-						video = juegos[0].Media?.Videos[0].Enlace;
-					}
-				}
-
-				noticiaAnterior ??= await BaseDatos.Noticias.Buscar.UnaNoticia(id - 1);
-				noticiaPosterior ??= await BaseDatos.Noticias.Buscar.UnaNoticia(id + 1);
+				noticiaAnterior ??= await BaseDatos.Noticias.Buscar.UnaNoticiaTitulos(id - 1);
+				noticiaSiguiente ??= await BaseDatos.Noticias.Buscar.UnaNoticiaTitulos(id + 1);
 			}
 			else
 			{
@@ -709,10 +698,20 @@
 
 	protected override async Task OnParametersSetAsync()
 	{
-		bundleCache = null;
+		if (noticia != null && noticia.Id != id)
+		{
+			noticia = null;
+			noticiaAnterior = null;
+			noticiaSiguiente = null;
+			juegos = null;
+
+			await CargarNoticia();
+		}
 
 		if (noticia != null)
 		{
+			bundleCache = null;
+
 			if (noticia.BundleId > 0)
 			{
 				bundleCache = await BaseDatos.Bundles.Buscar.UnBundle(noticia.BundleId);

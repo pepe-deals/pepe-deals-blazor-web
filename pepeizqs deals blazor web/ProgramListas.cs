@@ -40,6 +40,7 @@ public static class PrefijosSospechosos
 		"113.4.",
 		"113.44.",
 		"116.204.",
+		"117.34.",
 		"119.8.",
 		"119.12.",
 		"119.13.",
@@ -58,6 +59,7 @@ public static class PrefijosSospechosos
 		"192.42.",
 		"2.31.",
 		"20.83.",
+		"213.209.",
 		"221.8.",
 		"23.21.",
 		"3.210.",
@@ -72,6 +74,7 @@ public static class PrefijosSospechosos
 		"49.232.",
 		"52.54.",
 		"54.",
+		"61.84.",
 		"79.106.",
 		"88.249.",
 		"93.123."

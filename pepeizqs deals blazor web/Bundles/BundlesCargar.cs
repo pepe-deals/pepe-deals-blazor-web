@@ -12,7 +12,8 @@ namespace Bundles2
 		Itchio,
         GreenManGaming,
 		Digiphile,
-		PlanetPlay
+		PlanetPlay,
+		XsollaMall
     }
 
 	public class BundlesCargar
@@ -29,7 +30,8 @@ namespace Bundles2
 				APIs.itchio.Bundle.Generar(),
 				APIs.GreenManGaming.Bundle.Generar(),
 				APIs.Digiphile.Bundle.Generar(),
-				APIs.PlanetPlay.Bundle.Generar()
+				APIs.PlanetPlay.Bundle.Generar(),
+				APIs.Xsolla.Bundle.Generar()
             };
 
 			return bundles;

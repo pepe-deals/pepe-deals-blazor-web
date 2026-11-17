@@ -52,7 +52,7 @@ self.addEventListener('fetch', event => {
                         event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.put(request, clone)));
                     }
                     return fetchResponse;
-                });
+                }).catch(() => Response.error());
             })
         );
         return;

@@ -6,10 +6,10 @@
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.AspNetCore.Components.Web.Virtualization
 @using Noticias
-@using Tiendas2
 @using pepeizqs_deals_blazor_web.Componentes.Interfaz
 @using pepeizqs_deals_web.Data
 @using System.Text.Json
+@using Tiendas2
 
 @inject IConfiguration Configuracion
 @inject Servicios.Opciones ServicioOpciones
@@ -205,12 +205,12 @@
 												<div @onclick:preventDefault
 													 @onmouseenter="@(e => MantenerDropdownAbierto("destacado", destacadoActual?.Juego?.Id ?? 0, drmDeseado))"
 													 @onmouseleave="@(e => CerrarAlSalirDelMenu("destacado", destacadoActual?.Juego?.Id ?? 0, drmDeseado))"
-													 class="destacado-dropdown-caja" style="position: absolute; right: 0; bottom: 55px; background-color: @destacadoActual?.Color; border: 1px solid rgba(255, 255, 255, 0.2); z-index: 1000; overflow: hidden; display: flex; flex-direction: column;">
+													 class="destacado-dropdown-caja" style="position: absolute; right: 0; background-color: @destacadoActual?.Color; border: 1px solid rgba(255, 255, 255, 0.2); z-index: 1000; overflow: hidden; display: flex; flex-direction: column;">
 
 													@if (destacadoActual?.DeseadoImportado == false)
 													{
 														<button @onclick="@(async e => { await CambiarEstadoDeseado(e, usuarioId, destacadoActual, drmDeseado); })"
-																style="width: 100%; padding: 10px 15px; text-align: left; border: none; cursor: pointer; background-color: @destacadoActual?.Color; transition: background-color 0.2s;"
+																style="width: 100%; padding: 10px 15px; text-align: left; border: 1px solid rgba(255, 255, 255, 0.1); cursor: pointer; background-color: @destacadoActual?.Color; transition: background-color 0.2s;"
 																onmouseover="this.style.backgroundColor='rgba(0, 0, 0, 0.2)'"
 																onmouseout="this.style.backgroundColor='@destacadoActual?.Color'">
 															<div style="display: flex; align-items: center; gap: 10px; justify-content: right;">
@@ -243,7 +243,7 @@
 													}
 
 													<button @onclick="@(async e => { await ExcluirJuego(e, "destacado", usuarioId, destacadoActual); })"
-															style="width: 100%; padding: 10px 15px; text-align: left; border: none; cursor: pointer; background-color: var(--fondoBotonPequeño); transition: background-color 0.2s;"
+															style="width: 100%; padding: 10px 15px; text-align: left; border: 1px solid rgba(255, 255, 255, 0.1); cursor: pointer; background-color: var(--fondoBotonPequeño); transition: background-color 0.2s;"
 															onmouseover="this.style.backgroundColor='var(--fondoBotonPequeñoHover)'"
 															onmouseout="this.style.backgroundColor='var(--fondoBotonPequeño)'">
 														<div style="display: flex; align-items: center; gap: 10px; justify-content: right;">
@@ -367,6 +367,22 @@ else
 
 				<RedesSociales region="@usuarioRegion" idioma="@idioma" />
 			</div>
+
+			@if (ultimaActualizacion != null)
+			{
+				string enlaceActualizacion = "https://pepeizqapps.com/updates/" + ultimaActualizacion.Id + "/" + Herramientas.EnlaceAdaptador.Nombre(ultimaActualizacion.Titulo) + "/";
+
+				<div style="display: flex; align-items: center; gap: 10px; justify-content: center; margin-top: 30px; background-color: rgba(0,0,0,.15);
+							width: fit-content; padding: 15px 25px; margin-left: auto; margin-right: auto; border: 1px solid rgba(0,0,0,.3);">
+					<div>
+						Última Actualización:
+					</div>
+
+					<a href="@enlaceActualizacion" target="_blank" style="text-decoration: none;">
+						@ultimaActualizacion.Titulo
+					</a>
+				</div>
+			}			
 		</div>
 	</div>
 }
@@ -981,12 +997,13 @@ else
 	private bool usuarioMarketplace = false;
 
 	[PersistentState] public Usuario opciones { get; set; }
+	[PersistentState] public BaseDatos.Pepeizqapps.Noticia ultimaActualizacion { get; set; }
 
 	private string videoDestacado = string.Empty;
 
 	protected override async Task OnInitializedAsync()
 	{
-		idioma = datos.Idioma;
+		idioma ??= datos.Idioma;
 		usuarioId = datos.UsuarioId;
 		userAgent = datos.UserAgent;
 		dominio = datos.Dominio;
@@ -1007,7 +1024,11 @@ else
 
 			await Task.WhenAll(tareaIdioma, tareaJuegos, tareaDeseados, tareaPatreon, tareaAdmin, tareaRegion, tareaIdiomaJuego, tareaOpciones);
 
-			idioma = tareaIdioma.Result;
+			if (string.IsNullOrEmpty(tareaIdioma.Result) == false)
+			{
+				idioma = tareaIdioma.Result;
+			}
+
 			juegosUsuario =  tareaJuegos.Result;
 			deseadosUsuario = tareaDeseados.Result;
 			usuarioPatreon = Herramientas.Patreon.VerificarActivo(tareaPatreon.Result);
@@ -1035,9 +1056,11 @@ else
 
 			if (opciones != null)
 			{
+				#region Opciones
+
 				if (opciones.Currency.HasValue == true)
 				{
-					usuarioRegion = (TiendaRegion)opciones.Currency.Value;		
+					usuarioRegion = (TiendaRegion)opciones.Currency.Value;
 				}
 
 				if (opciones.NoOfficial.HasValue == true)
@@ -1049,8 +1072,6 @@ else
 				{
 					usuarioMarketplace = opciones.Marketplace.Value;
 				}
-
-				#region Opciones
 
 				if (opciones.IndexOption1.HasValue == true && opciones.IndexOption1.Value == true)
 				{
@@ -1169,6 +1190,11 @@ else
 				}
 
 				#endregion
+			}
+
+			if (Herramientas.Idiomas.SacarIdiomaUsuarioWeb(idioma) == "es")
+			{
+				ultimaActualizacion = await BaseDatos.Pepeizqapps.Buscar.UltimaActualizacion();
 			}
 
 			ServicioOpciones.OnMostrarOpcionesChanged += StateHasChanged;
