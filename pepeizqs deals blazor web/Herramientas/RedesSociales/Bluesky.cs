@@ -37,61 +37,68 @@ namespace Herramientas.RedesSociales
 
 				Uri enlaceFinal = new Uri(enlace);
 
-				bool error = false;
+				//bool error = false;
 
-				try
-				{
-					string tituloEn = noticia.TituloEn;
-					tituloEn = tituloEn.Replace("'", null);
-					tituloEn = tituloEn.Replace(":", null);
+				//try
+				//{
+				//	string tituloEn = noticia.TituloEn;
+				//	tituloEn = tituloEn.Replace("'", null);
+				//	tituloEn = tituloEn.Replace(":", null);
 
-					string imagenEnlace = noticia.Imagen;
-					HttpClient clienteWeb = new HttpClient();
+				//	string imagenEnlace = noticia.Imagen;
+				//	HttpClient clienteWeb = new HttpClient();
 
-					using (HttpResponseMessage respuesta = await clienteWeb.GetAsync(imagenEnlace, HttpCompletionOption.ResponseContentRead))
-					{
-						byte[] imageBytes = await respuesta.Content.ReadAsByteArrayAsync();
+				//	using (HttpResponseMessage respuesta = await clienteWeb.GetAsync(imagenEnlace, HttpCompletionOption.ResponseContentRead))
+				//	{
+				//		byte[] imageBytes = await respuesta.Content.ReadAsByteArrayAsync();
+				//		string tipo = respuesta.Content.Headers.ContentType?.MediaType;
 
-						if (imageBytes != null)
-						{
-							if (imageBytes.Length > 0)
-							{
-								Image imagen = new Image
-								{
-									Content = imageBytes,
-									Alt = tituloEn,
-									MimeType = "image/jpeg"
-								};
+				//		if (respuesta.IsSuccessStatusCode == false || tipo != "image/jpeg" || imageBytes?.Length > 950000)
+				//		{
+				//			BaseDatos.Errores.Insertar.Mensaje("Bluesky imagen", $"Estado {(int)respuesta.StatusCode}, tipo {tipo}, bytes {imageBytes.Length}, url {imagenEnlace}");
+				//			error = true;
+				//		}
+				//		else
+				//		{
+				//			if (imageBytes?.Length > 0)
+				//			{
+				//				Image imagen = new Image
+				//				{
+				//					Content = imageBytes,
+				//					Alt = tituloEn,
+				//					MimeType = "image/jpeg"
+				//				};
 
-								var post = new Post
-								{
-									Text = tituloEn + Environment.NewLine + Environment.NewLine + enlaceFinal,
-									Images = new[]
-									{
-										imagen
-									},
-									Url = enlaceFinal,
-									Languages = new[] { "en" },
-									GenerateCardForUrl = true  
-								};
+				//				var post = new Post
+				//				{
+				//					Text = tituloEn + Environment.NewLine + Environment.NewLine + enlaceFinal,
+				//					Images = new[]
+				//					{
+				//						imagen
+				//					},
+				//					Url = enlaceFinal,
+				//					Languages = new[] { "en" }
+				//				};
 
-								await cliente.Post(post);
-						
-								return true;
-							}
-						}
+				//				await cliente.Post(post);
 
-						error = true;
-					}
-				}
-				catch (Exception ex)
-				{
-					global::BaseDatos.Errores.Insertar.Mensaje("Bluesky enviar imagen", ex);
-					error = true;
-				}
+				//				return true;
+				//			}
 
-				if (error == true)
-				{
+				//			return true;
+				//		}
+
+				//		error = true;
+				//	}
+				//}
+				//catch (Exception ex)
+				//{
+				//	BaseDatos.Errores.Insertar.Mensaje("Bluesky enviar imagen", ex);
+				//	error = true;
+				//}
+
+				//if (error == true)
+				//{
 					try
 					{
 						await cliente.Post(noticia.TituloEn + Environment.NewLine + Environment.NewLine + enlaceFinal);
@@ -99,10 +106,10 @@ namespace Herramientas.RedesSociales
 					}
 					catch (Exception ex)
 					{
-						global::BaseDatos.Errores.Insertar.Mensaje("Bluesky enviar texto", ex);
+						BaseDatos.Errores.Insertar.Mensaje("Bluesky enviar texto", ex);
 						return false;
 					}
-				}
+				//}
 			}
 
 			return false;

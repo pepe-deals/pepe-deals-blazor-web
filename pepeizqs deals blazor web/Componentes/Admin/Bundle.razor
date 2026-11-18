@@ -2,8 +2,8 @@
 
 @if (bundle != null)
 {
-	<div class="caja-admin-bundle cuerpo-ancho" style="display: flex; flex-direction: column; gap: 20px; margin-bottom: 50px;">
-		<div style="display: flex; align-items: center; justify-content: space-between;">
+	<div class="caja-admin-bundle cuerpo-ancho" style="margin-bottom: 50px;">
+		<div style="padding: 15px 20px; background-color: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: space-between;">
 			<div>
 				Admin Editar • @bundle.Nombre
 			</div>
@@ -15,91 +15,93 @@
 			</div>
 		</div>
 
-		<div style="display: flex; align-items: center;">
-			<div style="width: 15%; padding-right: 20px; text-align: right;">
-				Nombre
+		<div style="padding: 20px; display: flex; flex-direction: column; gap: 20px;">
+			<div style="display: flex; align-items: center;">
+				<div style="width: 15%; padding-right: 20px; text-align: right;">
+					Nombre
+				</div>
+
+				<div style="width: 85%;">
+					<textarea @onchange="(e => TextoCambiaNombre(e))" class="entrada-texto" rows="1">@textoNombre</textarea>
+				</div>
 			</div>
 
-			<div style="width: 85%;">
-				<textarea @onchange="(e => TextoCambiaNombre(e))" class="entrada-texto" rows="1">@textoNombre</textarea>
-			</div>
-		</div>
+			<div style="display: flex; align-items: start;">
+				<div style="width: 15%; padding-right: 20px; text-align: right; margin-top: 5px;">
+					Imagen Bundle
+				</div>
 
-		<div style="display: flex; align-items: start;">
-			<div style="width: 15%; padding-right: 20px; text-align: right; margin-top: 5px;">
-				Imagen Bundle
-			</div>
-
-			<div style="width: 85%;">
-				<textarea @onchange="(e => TextoCambiaImagenBundle(e))" class="entrada-texto" rows="1">@textoImagenBundle</textarea>
-				<img src="@textoImagenBundle" style="max-width: 250px; max-height: 250px; margin-top: 5px;"/>
-			</div>
-		</div>
-
-		<div style="display: flex; align-items: start;">
-			<div style="width: 15%; padding-right: 20px; text-align: right; margin-top: 5px;">
-				Imagen Noticia
+				<div style="width: 85%;">
+					<textarea @onchange="(e => TextoCambiaImagenBundle(e))" class="entrada-texto" rows="1">@textoImagenBundle</textarea>
+					<img src="@textoImagenBundle" style="max-width: 250px; max-height: 250px; margin-top: 5px;" />
+				</div>
 			</div>
 
-			<div style="width: 85%;">
-				<textarea @onchange="(e => TextoCambiaImagenNoticia(e))" class="entrada-texto" rows="1">@textoImagenNoticia</textarea>
-				<img src="@textoImagenNoticia" style="max-width: 250px; max-height: 250px; margin-top: 5px;" />
-			</div>
-		</div>
+			<div style="display: flex; align-items: start;">
+				<div style="width: 15%; padding-right: 20px; text-align: right; margin-top: 5px;">
+					Imagen Noticia
+				</div>
 
-		<div style="display: flex; align-items: center;">
-			<div style="width: 15%; padding-right: 20px; text-align: right;">
-				Fecha Empieza
-			</div>
-
-			<div style="width: 85%;">
-				<textarea @onchange="(e => TextoCambiaFechaEmpieza(e))" class="entrada-texto" rows="1">@textoFechaEmpieza</textarea>
-			</div>
-		</div>
-
-		<div style="display: flex; align-items: center;">
-			<div style="width: 15%; padding-right: 20px; text-align: right;">
-				Fecha Termina
+				<div style="width: 85%;">
+					<textarea @onchange="(e => TextoCambiaImagenNoticia(e))" class="entrada-texto" rows="1">@textoImagenNoticia</textarea>
+					<img src="@textoImagenNoticia" style="max-width: 250px; max-height: 250px; margin-top: 5px;" />
+				</div>
 			</div>
 
-			<div style="width: 85%;">
-				<textarea @onchange="(e => TextoCambiaFechaTermina(e))" class="entrada-texto" rows="1">@textoFechaTermina</textarea>
-			</div>
-		</div>
+			<div style="display: flex; align-items: center;">
+				<div style="width: 15%; padding-right: 20px; text-align: right;">
+					Fecha Empieza
+				</div>
 
-		<div style="display: flex; align-items: start;">
-			<div style="width: 15%; padding-right: 20px; text-align: right; margin-top: 5px;">
-				Juegos
-			</div>
-
-			<div style="width: 85%;">
-				<textarea @onchange="(e => TextoCambiaJuegos(e))" class="entrada-texto" rows="5">@textoJuegos</textarea>
-			</div>
-		</div>
-
-		<div style="display: flex; align-items: start;">
-			<div style="width: 15%; padding-right: 20px; text-align: right; margin-top: 5px;">
-				Añadir Juego
+				<div style="width: 85%;">
+					<textarea @onchange="(e => TextoCambiaFechaEmpieza(e))" class="entrada-texto" rows="1">@textoFechaEmpieza</textarea>
+				</div>
 			</div>
 
-			<div style="width: 85%; display: flex; align-items: start; gap: 15px;">
-				<input type="text" @onchange="(e => TextoCambiaAñadirJuegoID(e))" class="entrada-texto" placeholder="ID Juego" style="width: fit-content; min-width: 50px;"/>
+			<div style="display: flex; align-items: center;">
+				<div style="width: 15%; padding-right: 20px; text-align: right;">
+					Fecha Termina
+				</div>
 
-				<input type="text" @onchange="(e => TextoCambiaAñadirJuegoTier(e))" class="entrada-texto" placeholder="Tier" style="width: fit-content; min-width: 50px;"/>
-
-				<button class="boton-pequeño" @onclick="(e => ClickAñadirJuego(e))" style="width: fit-content; padding: 10px 15px;">
-					Añadir para Steam
-				</button>
-			</div>
-		</div>
-
-		<div style="display: flex; align-items: start;">
-			<div style="width: 15%; padding-right: 20px; text-align: right; margin-top: 5px;">
-				Tiers
+				<div style="width: 85%;">
+					<textarea @onchange="(e => TextoCambiaFechaTermina(e))" class="entrada-texto" rows="1">@textoFechaTermina</textarea>
+				</div>
 			</div>
 
-			<div style="width: 85%;">
-				<textarea @onchange="(e => TextoCambiaTiers(e))" class="entrada-texto" rows="2">@textoTiers</textarea>
+			<div style="display: flex; align-items: start;">
+				<div style="width: 15%; padding-right: 20px; text-align: right; margin-top: 5px;">
+					Juegos
+				</div>
+
+				<div style="width: 85%;">
+					<textarea @onchange="(e => TextoCambiaJuegos(e))" class="entrada-texto" rows="5">@textoJuegos</textarea>
+				</div>
+			</div>
+
+			<div style="display: flex; align-items: start;">
+				<div style="width: 15%; padding-right: 20px; text-align: right; margin-top: 5px;">
+					Añadir Juego
+				</div>
+
+				<div style="width: 85%; display: flex; align-items: start; gap: 15px;">
+					<input type="text" @onchange="(e => TextoCambiaAñadirJuegoID(e))" class="entrada-texto" placeholder="ID Juego" style="width: fit-content; min-width: 50px;" />
+
+					<input type="text" @onchange="(e => TextoCambiaAñadirJuegoTier(e))" class="entrada-texto" placeholder="Tier" style="width: fit-content; min-width: 50px;" />
+
+					<button class="boton-pequeño" @onclick="(e => ClickAñadirJuego(e))" style="width: fit-content; padding: 10px 15px;">
+						Añadir para Steam
+					</button>
+				</div>
+			</div>
+
+			<div style="display: flex; align-items: start;">
+				<div style="width: 15%; padding-right: 20px; text-align: right; margin-top: 5px;">
+					Tiers
+				</div>
+
+				<div style="width: 85%;">
+					<textarea @onchange="(e => TextoCambiaTiers(e))" class="entrada-texto" rows="2">@textoTiers</textarea>
+				</div>
 			</div>
 		</div>
 	</div>

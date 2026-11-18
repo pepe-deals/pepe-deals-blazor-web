@@ -5,7 +5,7 @@ namespace BaseDatos.Pepeizqapps
 {
 	public static class Insertar
 	{
-		public static async Task<int> Ejecutar(string titulo, string contenido)
+		public static async Task<int> Actualizacion(string titulo, string contenido)
 		{
 			List<string> campos = new List<string>();
 			List<string> valores = new List<string>();
@@ -46,7 +46,43 @@ namespace BaseDatos.Pepeizqapps
 			}
 			catch (Exception ex)
 			{
-				Errores.Insertar.Mensaje("Noticias Insertar - pepeizq's apps", ex);
+				Errores.Insertar.Mensaje("Actualización Insertar - pepeizq's apps", ex);
+				return 0;
+			}
+		}
+
+		public static async Task<int> ImporteCoste(string concepto, decimal cantidad, DateTime fecha)
+		{
+			List<string> campos = new List<string>();
+			List<string> valores = new List<string>();
+			DynamicParameters p = new DynamicParameters();
+
+			campos.Add("concepto");
+			valores.Add("@concepto");
+			p.Add("@concepto", concepto);
+
+			campos.Add("importe");
+			valores.Add("@importe");
+			p.Add("@importe", cantidad);
+
+			campos.Add("fecha");
+			valores.Add("@fecha");
+			p.Add("@fecha", fecha);
+
+			string sql = $@"INSERT INTO costespepedeals ({string.Join(",", campos)})
+                VALUES ({string.Join(",", valores)});
+                SELECT SCOPE_IDENTITY();";
+
+			try
+			{
+				return await Herramientas.Conexiones.Pepeizqapps.Select(async conexion =>
+				{
+					return await conexion.ExecuteScalarAsync<int>(sql, p);
+				});
+			}
+			catch (Exception ex)
+			{
+				Errores.Insertar.Mensaje("Costes Insertar - pepeizq's apps", ex);
 				return 0;
 			}
 		}

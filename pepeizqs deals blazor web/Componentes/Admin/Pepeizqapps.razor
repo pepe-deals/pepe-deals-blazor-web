@@ -1,26 +1,77 @@
-﻿<div style="display: flex; flex-direction: column; gap: 20px;">
-    <textarea class="entrada-texto" rows="1" @bind="titulo" oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px';" />
-
-    <textarea class="entrada-texto" rows="8" @bind="contenido" oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px';" />
-
-    <button @onclick="@(e => AñadirNoticia(e))" class="boton-pequeño" style="text-align: center; width: fit-content; padding: 10px 40px; font-size: 20px;">
-        Añadir Noticia
+﻿<div style="display: flex; align-items: start; gap: 10px;">
+    <button @onclick="(e => MostrarPestaña(e, 1))" class="boton-pequeño" style="@(pestañaMostrar == 1 ? "" : "background: transparent;") padding: 10px 15px; width: fit-content; box-shadow: none;">
+        Actualización
     </button>
+    
+    <button @onclick="(e => MostrarPestaña(e, 2))" class="boton-pequeño" style="@(pestañaMostrar == 2 ? "" : "background: transparent;") padding: 10px 15px; width: fit-content; box-shadow: none;">
+        Coste
+    </button>
+</div>
+
+<div style="padding: 5px; background-color: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); display: flex; flex-direction: column; gap: 20px;">
+    @if (pestañaMostrar == 1)
+    {
+        <textarea class="entrada-texto" rows="1" @bind="actualizacionTitulo" oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px';" />
+
+        <textarea class="entrada-texto" rows="8" @bind="actualizacionContenido" oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px';" />
+
+        <button @onclick="@(e => AñadirActualizacion(e))" class="boton-pequeño" style="text-align: center; width: fit-content; padding: 10px 40px; font-size: 20px;">
+            Añadir Actualización
+        </button>
+    }
+    else if (pestañaMostrar == 2)
+    {
+        <textarea class="entrada-texto" rows="1" @bind="costeConcepto" oninput="this.style.height = 'auto'; this.style.height = (this.scrollHeight) + 'px';" />
+
+        <input type="number" class="entrada-texto" step="0.01" @bind="costeImporte" />
+
+        <input type="datetime-local" class="entrada-texto" @bind="costeFecha" />
+
+        <button @onclick="@(e => AñadirCoste(e))" class="boton-pequeño" style="text-align: center; width: fit-content; padding: 10px 40px; font-size: 20px;">
+            Añadir Coste
+        </button>
+    }
 </div>
 
 @code {
 
     #nullable disable
 
-    private string titulo = string.Empty;
-    private string contenido = string.Empty;
+    private int pestañaMostrar = 1;
 
-    private async Task AñadirNoticia(MouseEventArgs e)
+    private void MostrarPestaña(MouseEventArgs e, int nuevaPestaña)
     {
-        await BaseDatos.Pepeizqapps.Insertar.Ejecutar(titulo, contenido);
-
-        titulo = string.Empty;
-        contenido = string.Empty;
+        if (nuevaPestaña == pestañaMostrar)
+        {
+            pestañaMostrar = 0;
+        }
+        else
+        {
+            pestañaMostrar = nuevaPestaña;
+        }
     }
 
+    private string actualizacionTitulo = string.Empty;
+    private string actualizacionContenido = string.Empty;
+
+    private async Task AñadirActualizacion(MouseEventArgs e)
+    {
+        await BaseDatos.Pepeizqapps.Insertar.Actualizacion(actualizacionTitulo, actualizacionContenido);
+
+        actualizacionTitulo = string.Empty;
+        actualizacionContenido = string.Empty;
+    }
+
+    private string costeConcepto = string.Empty;
+    private decimal costeImporte = 0;
+    private DateTime costeFecha = DateTime.UtcNow;
+
+    private async Task AñadirCoste(MouseEventArgs e)
+    {
+        await BaseDatos.Pepeizqapps.Insertar.ImporteCoste(costeConcepto, costeImporte, costeFecha);
+
+        costeConcepto = string.Empty;
+        costeImporte = 0;
+        costeFecha = DateTime.UtcNow;
+    }
 }

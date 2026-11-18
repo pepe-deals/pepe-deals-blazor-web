@@ -5,8 +5,8 @@
 
 @if (noticia != null)
 {
-	<div class="caja-admin-noticia cuerpo-ancho" style="display: flex; flex-direction: column; gap: 20px; margin-bottom: 50px;">
-		<div style="display: flex; align-items: center; justify-content: space-between;">
+	<div class="caja-admin-noticia cuerpo-ancho" style="margin-bottom: 50px;">
+		<div style="padding: 15px 20px; background-color: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: space-between;">
 			<div>
 				Admin Editar • @noticia.TituloEs
 			</div>
@@ -18,166 +18,168 @@
 			</div>
 		</div>
 
-		<div style="display: flex; align-items: start; gap: 20px;">
-			<div style="width: 15%; text-align: right; margin-top: 5px;">
-				Titulo EN
+		<div style="padding: 20px; display: flex; flex-direction: column; gap: 20px;">
+			<div style="display: flex; align-items: start; gap: 20px;">
+				<div style="width: 15%; text-align: right; margin-top: 5px;">
+					Titulo EN
+				</div>
+
+				<div style="width: 85%;">
+					<textarea @onchange="(e => TextoCambiaTituloEn(e))" class="entrada-texto" rows="1">@textoTituloEn</textarea>
+				</div>
 			</div>
 
-			<div style="width: 85%;">
-				<textarea @onchange="(e => TextoCambiaTituloEn(e))" class="entrada-texto" rows="1">@textoTituloEn</textarea>
-			</div>
-		</div>
+			<div style="display: flex; align-items: start; gap: 20px;">
+				<div style="width: 15%; text-align: right; margin-top: 5px;">
+					Titulo ES
+				</div>
 
-		<div style="display: flex; align-items: start; gap: 20px;">
-			<div style="width: 15%; text-align: right; margin-top: 5px;">
-				Titulo ES
-			</div>
-
-			<div style="width: 85%;">
-				<textarea @onchange="(e => TextoCambiaTituloEs(e))" class="entrada-texto" rows="1">@textoTituloEs</textarea>
-			</div>
-		</div>
-
-		<div style="display: flex; align-items: start; gap: 20px;">
-			<div style="width: 15%;text-align: right; margin-top: 5px;">
-				Imagen
+				<div style="width: 85%;">
+					<textarea @onchange="(e => TextoCambiaTituloEs(e))" class="entrada-texto" rows="1">@textoTituloEs</textarea>
+				</div>
 			</div>
 
-			<div style="width: 85%; display: flex; flex-direction: column; gap: 10px;">
-				<textarea @onchange="(e => TextoCambiaImagen(e))" class="entrada-texto" rows="1">@textoImagen</textarea>
-				<img src="@textoImagen" style="max-height: 200px; width: fit-content;" />
-			</div>
-		</div>
+			<div style="display: flex; align-items: start; gap: 20px;">
+				<div style="width: 15%;text-align: right; margin-top: 5px;">
+					Imagen
+				</div>
 
-		<div style="display: flex; align-items: start; gap: 20px;">
-			<div style="width: 15%; text-align: right; margin-top: 5px;">
-				Tipo
-			</div>
-
-			<div style="width: 85%;">
-				<textarea @onchange="(e => TextoCambiaTipo(e))" class="entrada-texto" rows="1">@textoTipo</textarea>
-			</div>
-		</div>
-
-		<div style="display: flex; align-items: center; gap: 20px;">
-			<div style="width: 15%; text-align: right;">
-				Enlace
+				<div style="width: 85%; display: flex; flex-direction: column; gap: 10px;">
+					<textarea @onchange="(e => TextoCambiaImagen(e))" class="entrada-texto" rows="1">@textoImagen</textarea>
+					<img src="@textoImagen" style="max-height: 200px; width: fit-content;" />
+				</div>
 			</div>
 
-			<div style="width: 85%;">
-				<textarea @onchange="(e => TextoCambiaEnlace(e))" class="entrada-texto" rows="1">@textoEnlace</textarea>
-			</div>
-		</div>
+			<div style="display: flex; align-items: start; gap: 20px;">
+				<div style="width: 15%; text-align: right; margin-top: 5px;">
+					Tipo
+				</div>
 
-		<div style="display: flex; align-items: center; gap: 20px;">
-			<div style="width: 15%; text-align: right;">
-				Fecha Termina
-			</div>
-
-			<div style="width: 85%;">
-				<textarea @onchange="(e => TextoCambiaFechaTermina(e))" class="entrada-texto" rows="1">@textoFechaTermina</textarea>
-			</div>
-		</div>
-
-		<div style="display: flex; align-items: center; gap: 20px;">
-			<div style="width: 15%; text-align: right;">
-				Contenido EN
+				<div style="width: 85%;">
+					<textarea @onchange="(e => TextoCambiaTipo(e))" class="entrada-texto" rows="1">@textoTipo</textarea>
+				</div>
 			</div>
 
-			<div style="width: 85%;">
-				<textarea @onchange="(e => TextoCambiaContenidoEn(e))" class="entrada-texto" rows="10">@textoContenidoEn</textarea>
-			</div>
-		</div>
+			<div style="display: flex; align-items: center; gap: 20px;">
+				<div style="width: 15%; text-align: right;">
+					Enlace
+				</div>
 
-		<div style="display: flex; align-items: center; gap: 20px;">
-			<div style="width: 15%; text-align: right;">
-				Contenido ES
-			</div>
-
-			<div style="width: 85%;">
-				<textarea @onchange="(e => TextoCambiaContenidoEs(e))" class="entrada-texto" rows="10">@textoContenidoEs</textarea>
-			</div>
-		</div>
-
-		<div style="display: flex; align-items: center; gap: 20px;">
-			<div style="width: 15%; text-align: right;">
-				Bundle Id
+				<div style="width: 85%;">
+					<textarea @onchange="(e => TextoCambiaEnlace(e))" class="entrada-texto" rows="1">@textoEnlace</textarea>
+				</div>
 			</div>
 
-			<div style="width: 85%;">
-				<textarea @onchange="(e => TextoCambiaBundleId(e))" class="entrada-texto" rows="1">@textoBundleId</textarea>
-			</div>
-		</div>
+			<div style="display: flex; align-items: center; gap: 20px;">
+				<div style="width: 15%; text-align: right;">
+					Fecha Termina
+				</div>
 
-		<div style="display: flex; align-items: center; gap: 20px;">
-			<div style="width: 15%; text-align: right;">
-				Gratis Ids
-			</div>
-
-			<div style="width: 85%;">
-				<textarea @onchange="(e => TextoCambiaGratisIds(e))" class="entrada-texto" rows="1">@textoGratisIds</textarea>
-			</div>
-		</div>
-
-		<div style="display: flex; align-items: center; gap: 20px;">
-			<div style="width: 15%; text-align: right;">
-				Suscripciones Ids
+				<div style="width: 85%;">
+					<textarea @onchange="(e => TextoCambiaFechaTermina(e))" class="entrada-texto" rows="1">@textoFechaTermina</textarea>
+				</div>
 			</div>
 
-			<div style="width: 85%;">
-				<textarea @onchange="(e => TextoCambiaSuscripcionesIds(e))" class="entrada-texto" rows="1">@textoSuscripcionesIds</textarea>
-			</div>
-		</div>
+			<div style="display: flex; align-items: center; gap: 20px;">
+				<div style="width: 15%; text-align: right;">
+					Contenido EN
+				</div>
 
-		<div style="display: flex; align-items: center; gap: 20px;">
-			<div style="width: 15%; text-align: right;">
-				Correo de Prueba
-			</div>
-
-			<div style="width: 85%; display: flex; align-items: center; gap: 20px;">
-				<button @onclick="(e => EnviarCorreoPruebaMsn(e))" class="boton-pequeño" style="width: fit-content; padding: 10px 20px;">
-					Enviar (Msn)
-				</button>
-
-				<button @onclick="(e => EnviarCorreoPruebaGmail(e))" class="boton-pequeño" style="width: fit-content; padding: 10px 20px;">
-					Enviar (Gmail)
-				</button>
-			</div>
-		</div>
-
-		<div style="display: flex; align-items: center; gap: 20px;">
-			<div style="width: 15%; text-align: right;">
-				Redes Sociales
+				<div style="width: 85%;">
+					<textarea @onchange="(e => TextoCambiaContenidoEn(e))" class="entrada-texto" rows="10">@textoContenidoEn</textarea>
+				</div>
 			</div>
 
-			<div style="width: 85%; display: flex; align-items: center; gap: 20px;">
-				<button @onclick="(e => EnviarBlueSky(e))" class="boton-pequeño" style="width: auto; padding: 10px 20px;">
-					BlueSky
-				</button>
+			<div style="display: flex; align-items: center; gap: 20px;">
+				<div style="width: 15%; text-align: right;">
+					Contenido ES
+				</div>
 
-				<button @onclick="(e => EnviarTelegram(e))" class="boton-pequeño" style="width: auto; padding: 10px 20px;">
-					Telegram
-				</button>
-
-				<button @onclick="(e => EnviarReddit(e))" class="boton-pequeño" style="width: auto; padding: 10px 20px;">
-					Reddit
-				</button>
-
-				<button @onclick="(e => EnviarNotificacionesPush(e))" class="boton-pequeño" style="width: auto; padding: 10px 20px;">
-					Notificaciones Push
-				</button>
-			</div>
-		</div>
-
-		<div style="display: flex; align-items: center; gap: 20px;">
-			<div style="width: 15%; text-align: right;">
-				Steam
+				<div style="width: 85%;">
+					<textarea @onchange="(e => TextoCambiaContenidoEs(e))" class="entrada-texto" rows="10">@textoContenidoEs</textarea>
+				</div>
 			</div>
 
-			<div style="width: 85%; display: flex; align-items: center; gap: 20px;">
-				<button @onclick="ActualizarSteam" class="boton-pequeño" style="width: fit-content; padding: 10px 20px;">
-					Actualizar
-				</button>
+			<div style="display: flex; align-items: center; gap: 20px;">
+				<div style="width: 15%; text-align: right;">
+					Bundle Id
+				</div>
+
+				<div style="width: 85%;">
+					<textarea @onchange="(e => TextoCambiaBundleId(e))" class="entrada-texto" rows="1">@textoBundleId</textarea>
+				</div>
+			</div>
+
+			<div style="display: flex; align-items: center; gap: 20px;">
+				<div style="width: 15%; text-align: right;">
+					Gratis Ids
+				</div>
+
+				<div style="width: 85%;">
+					<textarea @onchange="(e => TextoCambiaGratisIds(e))" class="entrada-texto" rows="1">@textoGratisIds</textarea>
+				</div>
+			</div>
+
+			<div style="display: flex; align-items: center; gap: 20px;">
+				<div style="width: 15%; text-align: right;">
+					Suscripciones Ids
+				</div>
+
+				<div style="width: 85%;">
+					<textarea @onchange="(e => TextoCambiaSuscripcionesIds(e))" class="entrada-texto" rows="1">@textoSuscripcionesIds</textarea>
+				</div>
+			</div>
+
+			<div style="display: flex; align-items: center; gap: 20px;">
+				<div style="width: 15%; text-align: right;">
+					Correo de Prueba
+				</div>
+
+				<div style="width: 85%; display: flex; align-items: center; gap: 20px;">
+					<button @onclick="(e => EnviarCorreoPruebaMsn(e))" class="boton-pequeño" style="width: fit-content; padding: 10px 20px;">
+						Enviar (Msn)
+					</button>
+
+					<button @onclick="(e => EnviarCorreoPruebaGmail(e))" class="boton-pequeño" style="width: fit-content; padding: 10px 20px;">
+						Enviar (Gmail)
+					</button>
+				</div>
+			</div>
+
+			<div style="display: flex; align-items: center; gap: 20px;">
+				<div style="width: 15%; text-align: right;">
+					Redes Sociales
+				</div>
+
+				<div style="width: 85%; display: flex; align-items: center; gap: 20px;">
+					<button @onclick="(e => EnviarBlueSky(e))" class="boton-pequeño" style="width: auto; padding: 10px 20px;">
+						BlueSky
+					</button>
+
+					<button @onclick="(e => EnviarTelegram(e))" class="boton-pequeño" style="width: auto; padding: 10px 20px;">
+						Telegram
+					</button>
+
+					<button @onclick="(e => EnviarReddit(e))" class="boton-pequeño" style="width: auto; padding: 10px 20px;">
+						Reddit
+					</button>
+
+					<button @onclick="(e => EnviarNotificacionesPush(e))" class="boton-pequeño" style="width: auto; padding: 10px 20px;">
+						Notificaciones Push
+					</button>
+				</div>
+			</div>
+
+			<div style="display: flex; align-items: center; gap: 20px;">
+				<div style="width: 15%; text-align: right;">
+					Steam
+				</div>
+
+				<div style="width: 85%; display: flex; align-items: center; gap: 20px;">
+					<button @onclick="ActualizarSteam" class="boton-pequeño" style="width: fit-content; padding: 10px 20px;">
+						Actualizar
+					</button>
+				</div>
 			</div>
 		</div>
 	</div>

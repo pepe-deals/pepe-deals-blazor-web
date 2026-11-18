@@ -928,6 +928,7 @@ namespace Juegos
 					"other",
 					"other drm",
 					"other-",
+					"other_",
 					"oura ring",
 					"overstock.com",
 					"ovo cash indonesia",

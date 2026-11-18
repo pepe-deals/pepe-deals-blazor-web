@@ -445,7 +445,6 @@
 		Bundles,
 		Comparador,
 		Contacto,
-		Coste,
 		Curator,
 		Deseados,
 		Filtro,
@@ -527,14 +526,6 @@
 			enlace ??= "https://" + dominio + "/contact/";
 			imagen ??= "https://" + dominio + "/logo/logoentrada.webp";
 			keywords2 ??= keywordsVacias;
-		}
-		else if (tipo == Tipo.Coste)
-		{
-			titulo ??= Herramientas.Idiomas.BuscarTexto(idioma, "Title", "CostWeb");
-			descripcion ??= descripcionCoste;
-			enlace ??= "https://" + dominio + "/cost-web";
-			imagen ??= "https://" + dominio + "/logo/logoentrada.webp";
-			keywords2 ??= keywords;
 		}
 		else if (tipo == Tipo.Curator)
 		{

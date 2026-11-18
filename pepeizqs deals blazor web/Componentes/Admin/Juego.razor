@@ -8,7 +8,7 @@
 @inject IConfiguration Configuracion
 
 <div class="caja-admin-juego cuerpo-ancho" style="margin-bottom: 50px;">
-	<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+	<div style="padding: 15px 20px; background-color: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: space-between;">
 		<div>
 			Admin Editar • @juego.Nombre
 		</div>
@@ -31,155 +31,62 @@
 		</div>
 	</div>
 
-	<div style="display: flex; align-items: start; gap: 20px;">
-		<div style="width: auto;">
-			<button @onclick="(e => MostrarPestaña(e, 1))" class="boton-pequeño" style="padding: 10px 15px;">
+	<div style="display: flex; flex-direction: column; gap: 20px; padding: 20px;">
+		<div style="display: flex; align-items: start; gap: 15px; flex-wrap: wrap;">
+			<button @onclick="(e => MostrarPestaña(e, 1))" class="boton-pequeño" style="@(pestañaMostrar == 1 ? "" : "background: transparent;") padding: 10px 15px; box-shadow: none; width: fit-content;">
 				Imagenes
 			</button>
 
-			@if (pestañaMostrar == 1)
-			{
-				<div style="background: color-mix(in srgb, var(--colorTexto) 50%, transparent); padding: 2px;">
-				</div>
-			}
-		</div>
-
-		<div style="width: auto;">
-			<button @onclick="(e => MostrarPestaña(e, 2))" class="boton-pequeño" style="padding: 10px 15px;">
+			<button @onclick="(e => MostrarPestaña(e, 2))" class="boton-pequeño" style="@(pestañaMostrar == 2 ? "" : "background: transparent;") padding: 10px 15px; box-shadow: none; width: fit-content;">
 				Precios
 			</button>
 
-			@if (pestañaMostrar == 2)
-			{
-				<div style="background: color-mix(in srgb, var(--colorTexto) 50%, transparent); padding: 2px;">
-				</div>
-			}
-		</div>
-
-		<div style="width: auto;">
-			<button @onclick="(e => MostrarPestaña(e, 3))" class="boton-pequeño" style="padding: 10px 15px;">
+			<button @onclick="(e => MostrarPestaña(e, 3))" class="boton-pequeño" style="@(pestañaMostrar == 3 ? "" : "background: transparent;") padding: 10px 15px; box-shadow: none; width: fit-content;">
 				Bundles
 			</button>
 
-			@if (pestañaMostrar == 3)
-			{
-				<div style="background: color-mix(in srgb, var(--colorTexto) 50%, transparent); padding: 2px;">
-				</div>
-			}
-		</div>
-
-		<div style="width: auto;">
-			<button @onclick="(e => MostrarPestaña(e, 4))" class="boton-pequeño" style="padding: 10px 15px;">
+			<button @onclick="(e => MostrarPestaña(e, 4))" class="boton-pequeño" style="@(pestañaMostrar == 4 ? "" : "background: transparent;") padding: 10px 15px; box-shadow: none; width: fit-content;">
 				Gratis
 			</button>
 
-			@if (pestañaMostrar == 4)
-			{
-				<div style="background: color-mix(in srgb, var(--colorTexto) 50%, transparent); padding: 2px;">
-				</div>
-			}
-		</div>
-
-		<div style="width: auto;">
-			<button @onclick="(e => MostrarPestaña(e, 5))" class="boton-pequeño" style="padding: 10px 15px;">
+			<button @onclick="(e => MostrarPestaña(e, 5))" class="boton-pequeño" style="@(pestañaMostrar == 5 ? "" : "background: transparent;") padding: 10px 15px; box-shadow: none; width: fit-content;">
 				Suscripciones
 			</button>
 
-			@if (pestañaMostrar == 5)
-			{
-				<div style="background: color-mix(in srgb, var(--colorTexto) 50%, transparent); padding: 2px;">
-				</div>
-			}
-		</div>
-
-		<div style="width: auto;">
-			<button @onclick="(e => MostrarPestaña(e, 6))" class="boton-pequeño" style="padding: 10px 15px;">
+			<button @onclick="(e => MostrarPestaña(e, 6))" class="boton-pequeño" style="@(pestañaMostrar == 6 ? "" : "background: transparent;") padding: 10px 15px; box-shadow: none; width: fit-content;">
 				Datos
 			</button>
 
-			@if (pestañaMostrar == 6)
-			{
-				<div style="background: color-mix(in srgb, var(--colorTexto) 50%, transparent); padding: 2px;">
-				</div>
-			}
-		</div>
-
-		<div style="width: auto;">
-			<button @onclick="(e => MostrarPestaña(e, 7))" class="boton-pequeño" style="padding: 10px 15px;">
+			<button @onclick="(e => MostrarPestaña(e, 7))" class="boton-pequeño" style="@(pestañaMostrar == 7 ? "" : "background: transparent;") padding: 10px 15px; box-shadow: none; width: fit-content;">
 				Históricos
 			</button>
-
-			@if (pestañaMostrar == 7)
-			{
-				<div style="background: color-mix(in srgb, var(--colorTexto) 50%, transparent); padding: 2px;">
-				</div>
-			}
 		</div>
-	</div>
 
-	@if (pestañaMostrar > 0)
-	{
-		<hr/>
-
-		if (pestañaMostrar == 1)
+		@if (pestañaMostrar > 0)
 		{
-			<div style="display: flex; align-items: start; gap: 30px;">
-				<div style="display: flex; flex-direction: column; gap: 10px; width: 20%;">
-					@{
-						string borde1 = string.Empty;
-
-						if (pestañaMostrarImagenes == 1)
-						{
-							borde1 = "border-right: 5px solid color-mix(in srgb, var(--colorTexto) 50%, transparent);";
-						}
-
-						<button @onclick="(e => MostrarPestañaImagenes(e, 1))" class="boton-pequeño" style="padding: 10px 15px; @borde1">
+			if (pestañaMostrar == 1)
+			{
+				<div style="display: flex; align-items: start; gap: 30px;">
+					<div style="display: flex; flex-direction: column; gap: 5px; width: 20%;">
+						<button @onclick="(e => MostrarPestañaImagenes(e, 1))" class="boton-pequeño" style="@(pestañaMostrarImagenes == 1 ? "" : "background: transparent;") padding: 10px 15px; box-shadow: none;">
 							Capsule_231x87
 						</button>
 
-						string borde2 = string.Empty;
-
-						if (pestañaMostrarImagenes == 2)
-						{
-							borde2 = "border-right: 5px solid color-mix(in srgb, var(--colorTexto) 50%, transparent);";
-						}
-
-						<button @onclick="(e => MostrarPestañaImagenes(e, 2))" class="boton-pequeño" style="padding: 10px 15px; @borde2">
+						<button @onclick="(e => MostrarPestañaImagenes(e, 2))" class="boton-pequeño" style="@(pestañaMostrarImagenes == 2 ? "" : "background: transparent;") padding: 10px 15px; box-shadow: none;">
 							Header_460x215
 						</button>
 
-						if (juego.Tipo == JuegoTipo.Game)
+						@if (juego.Tipo == JuegoTipo.Game)
 						{
-							string borde3 = string.Empty;
-
-							if (pestañaMostrarImagenes == 3)
-							{
-								borde3 = "border-right: 5px solid color-mix(in srgb, var(--colorTexto) 50%, transparent);";
-							}
-
-							<button @onclick="(e => MostrarPestañaImagenes(e, 3))" class="boton-pequeño" style="padding: 10px 15px; @borde3">
+							<button @onclick="(e => MostrarPestañaImagenes(e, 3))" class="boton-pequeño" style="@(pestañaMostrarImagenes == 3 ? "" : "background: transparent;") padding: 10px 15px; box-shadow: none;">
 								Library_600x900
 							</button>
 
-							string borde4 = string.Empty;
-
-							if (pestañaMostrarImagenes == 4)
-							{
-								borde4 = "border-right: 5px solid color-mix(in srgb, var(--colorTexto) 50%, transparent);";
-							}
-
-							<button @onclick="(e => MostrarPestañaImagenes(e, 4))" class="boton-pequeño" style="padding: 10px 15px; @borde4">
+							<button @onclick="(e => MostrarPestañaImagenes(e, 4))" class="boton-pequeño" style="@(pestañaMostrarImagenes == 4 ? "" : "background: transparent;") padding: 10px 15px; box-shadow: none;">
 								Library_1920x620
 							</button>
 
-							string borde5 = string.Empty;
-
-							if (pestañaMostrarImagenes == 5)
-							{
-								borde5 = "border-right: 5px solid color-mix(in srgb, var(--colorTexto) 50%, transparent);";
-							}
-
-							<button @onclick="(e => MostrarPestañaImagenes(e, 5))" class="boton-pequeño" style="padding: 10px 15px; @borde5">
+							<button @onclick="(e => MostrarPestañaImagenes(e, 5))" class="boton-pequeño" style="@(pestañaMostrarImagenes == 5 ? "" : "background: transparent;") padding: 10px 15px; box-shadow: none;">
 								Logo
 							</button>
 						}
@@ -189,472 +96,433 @@
 								Abrir SteamGridDB
 							</a>
 
-                            @if (juego.IdSteam > 0)
-                            {
-                                <a target="_blank" href="https://steamdb.info/app/@juego.IdSteam/info/">
-								    Abrir SteamDB
-							    </a>
-                            }
+							@if (juego.IdSteam > 0)
+							{
+								<a target="_blank" href="https://steamdb.info/app/@juego.IdSteam/info/">
+									Abrir SteamDB
+								</a>
+							}
 						</div>
-					}
-				</div>
+					</div>
 
-				<div style="width: 80%; background-color: var(--fondoSubcabecera); border: 1px solid var(--fondoBotonPequeño); padding: 20px;">
-					<div style="margin-bottom: 10px;">Imagen Origen:</div>
+					<div style="width: 80%; background-color: rgba(0,0,0,.3); border: 1px solid rgba(0,0,0,.4); padding: 20px;">
+						<div style="margin-bottom: 10px;">Imagen Origen:</div>
 
-					<input type="text" @oninput="TextoCambiaImagenOrigen" class="entrada-texto" style="margin-bottom: 20px;" value="@imagenOrigen" />
-					<img src="@imagenOrigen" style="max-width: 300px; max-height: 300px;" />
+						<input type="text" @oninput="TextoCambiaImagenOrigen" class="entrada-texto" style="margin-bottom: 20px;" value="@imagenOrigen" />
+						<img src="@imagenOrigen" style="max-width: 300px; max-height: 300px;" />
+					</div>
 				</div>
-			</div>
 			
-		}
-		else if (pestañaMostrar == 2)
-		{
-			<div style="display: flex; align-items: start; gap: 30px;">
-				<div style="display: flex; flex-direction: column; gap: 10px; width: 20%;">
-					@{
-						string borde1 = string.Empty;
-
-						if (pestañaMostrarPrecios == 1)
-						{
-							borde1 = "border-right: 5px solid color-mix(in srgb, var(--colorTexto) 50%, transparent);";
-						}
-
-						<button @onclick="(e => MostrarPestañaPrecios(e, 1))" class="boton-pequeño" style="display: flex; align-items: center; gap: 15px; padding: 10px 15px; @borde1">                           
-                            <img src="/imagenes/banderas/europe.svg" style="width: 20px; height: 20px;" />
-
-                            <div>
-                                Actuales
-                            </div>	
-						</button>
-
-						string borde2 = string.Empty;
-
-						if (pestañaMostrarPrecios == 2)
-						{
-							borde2 = "border-right: 5px solid color-mix(in srgb, var(--colorTexto) 50%, transparent);";
-						}
-
-						<button @onclick="(e => MostrarPestañaPrecios(e, 2))" class="boton-pequeño" style="display: flex; align-items: center; gap: 15px; padding: 10px 15px; @borde2">
-                            <img src="/imagenes/banderas/europe.svg" style="width: 20px; height: 20px;" />
-
-                            <div>
-                                Historicos
-                            </div>	
-						</button>
-
-                        string borde3 = string.Empty;
-
-						if (pestañaMostrarPrecios == 3)
-						{
-							borde3 = "border-right: 5px solid color-mix(in srgb, var(--colorTexto) 50%, transparent);";
-						}
-
-						<button @onclick="(e => MostrarPestañaPrecios(e, 3))" class="boton-pequeño" style="display: flex; align-items: center; gap: 15px; padding: 10px 15px; @borde3">
-                            <img src="/imagenes/banderas/english.svg" style="width: 20px; height: 20px;" />
-
-                            <div>
-                                Actuales
-                            </div>	
-						</button>
-
-                        string borde4 = string.Empty;
-
-						if (pestañaMostrarPrecios == 4)
-						{
-							borde4 = "border-right: 5px solid color-mix(in srgb, var(--colorTexto) 50%, transparent);";
-						}
-
-						<button @onclick="(e => MostrarPestañaPrecios(e, 4))" class="boton-pequeño" style="display: flex; align-items: center; gap: 15px; padding: 10px 15px; @borde4">
-                            <img src="/imagenes/banderas/english.svg" style="width: 20px; height: 20px;" />
-
-                            <div>
-                                Historicos
-                            </div>	
-						</button>
-					}
-				</div>
-
-				<div style="width: 80%;">
-					<textarea @onchange="(e => TextoCambiaPrecios(e))" class="entrada-texto" rows="16">@textoPrecios</textarea>
-				</div>
-			</div>
-		}
-		else if (pestañaMostrar == 3)
-		{
-			<textarea @onchange="(e => TextoCambiaBundles(e))" class="entrada-texto" rows="16">@textoBundles</textarea>
-		}
-		else if (pestañaMostrar == 4)
-		{
-			<textarea @onchange="(e => TextoCambiaGratis(e))" class="entrada-texto" rows="16">@textoGratis</textarea>
-		}
-		else if (pestañaMostrar == 5)
-		{
-			<textarea @onchange="(e => TextoCambiaSuscripciones(e))" class="entrada-texto" rows="16">@textoSuscripciones</textarea>
-		}
-		else if (pestañaMostrar == 6)
-		{
-			<div style="display: flex; flex-direction: column; gap: 20px;">
-				@if (juego.Tipo == global::Juegos.JuegoTipo.DLC || juego.Tipo == global::Juegos.JuegoTipo.Music)
-				{
-					string fondo = "var(--fondoDlc)";
-
-					if (juego.Tipo == global::Juegos.JuegoTipo.Music)
-					{
-						fondo = "var(--fondoBandaSonora)";
-					};
-
-					<div style="display: flex; align-items: center; gap: 20px; background: color-mix(in srgb, @fondo 50%, transparent); border: 1px solid var(--fondoBotonPequeño); padding: 20px 40px;">
-						<div>
-							Juego Maestro
-						</div>
-
-						<div style="min-width: 200px; width: fit-content;">
-							<input type="text" @oninput="TextoCambiaDlcMaestro" class="entrada-texto" value="@textoDlcMaestro" />
-						</div>
-
-						<button @onclick="(async () => await ActualizarSteamApi())" class="boton-pequeño" style="padding: 10px 15px; width: fit-content;">
-							Buscar
-						</button>
-					</div>
-				}
-
-				<div style="background-color: var(--fondoSubcabecera); border: 1px solid var(--fondoBotonPequeño); display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; justify-items: left; padding: 20px 40px;">
-					<div style="display: flex; align-items: center; gap: 20px;">
-						<div>
-							FreeToPlay
-						</div>
-						<div class="checkbox-caja" style="height: 24px;">
-							<input type="checkbox" class="checkbox-interior" checked="@textoF2P" @onchange="@(e => TextoCambiaF2P(e))">
-						</div>
-					</div>
-
-					<div style="display: flex; align-items: center; gap: 20px;">
-						<div>
-							Mayor Edad
-						</div>
-						<div class="checkbox-caja" style="height: 24px;">
-							<input type="checkbox" class="checkbox-interior" checked="@textoEdad" @onchange="@(e => TextoCambiaEdad(e))">
-						</div>
-					</div>
-
-					<div style="display: flex; align-items: center; gap: 20px;">
-						<div>
-							Tipo	
-						</div>
-
-						<div class="menu-dropdown" style="width: fit-content;">
-							<button class="boton-pequeño" style="display: flex; align-items: center; gap: 10px; justify-content: center; padding: 10px 20px; margin: 0; border: 0px; color: var(--colorTextoVisitado);">
-								<div style="color: var(--colorEnlace); margin-right: 5px;">
-									@if (tipo == "0")
-									{
-										<div>
-											Juego
-										</div>
-									}
-
-									@if (tipo == "1")
-									{
-										<div>
-											DLC
-										</div>
-									}
-
-									@if (tipo == "2")
-									{
-										<div>
-											Bundle
-										</div>
-									}
-
-									@if (tipo == "3")
-									{
-										<div>
-											Banda Sonora
-										</div>
-									}
-
-									@if (tipo == "4")
-									{
-										<div>
-											Software
-										</div>
-									}
-								</div>
-
-								<div style="max-width: 16px; max-height: 16px;">
-									<svg class="svg-icono" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-										<path d="M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8L32 192c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l128 128z" />
-									</svg>
-								</div>
-							</button>
+			}
+			else if (pestañaMostrar == 2)
+			{
+				<div style="display: flex; align-items: start; gap: 30px;">
+					<div style="display: flex; flex-direction: column; gap: 10px; width: 20%;">
+						<button @onclick="(e => MostrarPestañaPrecios(e, 1))" class="boton-pequeño" style="@(pestañaMostrarPrecios == 1 ? "" : "background: transparent;") display: flex; align-items: center; gap: 15px; padding: 10px 15px; box-shadow: none;">
+							<img src="/imagenes/banderas/europe.svg" style="width: 20px; height: 20px;" />
 
 							<div>
-								@{
-									string tipoJuego = "0";
-									string tipoDlc = "1";
-									string tipoBundle = "2";
-									string tipoBandaSonora = "3";
-									string tipoSoftware = "4";
-								}
-
-								<div class="menu-dropdown-contenido" style="left: 0; width: 100%; background-color: var(--fondoBotonPequeño);">
-									<button @onclick="(e => ActualizarTipo(e, tipoJuego))" class="texto-cabecera menu-dropdown-item" style="text-align: left; width: 100%; border: 0px;">
-										Juego
-									</button>
-									<button @onclick="(e => ActualizarTipo(e, tipoDlc))" class="texto-cabecera menu-dropdown-item" style="text-align: left; width: 100%; border: 0px;">
-										DLC
-									</button>
-									<button @onclick="(e => ActualizarTipo(e, tipoBundle))" class="texto-cabecera menu-dropdown-item" style="text-align: left; width: 100%; border: 0px;">
-										Bundle
-									</button>
-									<button @onclick="(e => ActualizarTipo(e, tipoBandaSonora))" class="texto-cabecera menu-dropdown-item" style="text-align: left; width: 100%; border: 0px;">
-										Banda Sonora
-									</button>
-									<button @onclick="(e => ActualizarTipo(e, tipoSoftware))" class="texto-cabecera menu-dropdown-item" style="text-align: left; width: 100%; border: 0px;">
-										Software
-									</button>
-								</div>
+								Actuales
 							</div>
-						</div>
-					</div>
+						</button>
 
-					<div style="display: flex; align-items: center; gap: 20px;">
-						<div>
-							Ocultar Portada
-						</div>
-						<div class="checkbox-caja" style="height: 24px;">
-							<input type="checkbox" class="checkbox-interior" checked="@textoOcultarPortada" @onchange="@(e => TextoCambiaOcultarPortada(e))">
-						</div>
-					</div>
-				</div>
-
-                <div style="background-color: var(--fondoSubcabecera); border: 1px solid var(--fondoBotonPequeño); padding: 20px 40px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
-                    <button @onclick="(e => ComprobarEnvioNotificaciones(e, juego.Id, juego.PrecioMinimosHistoricos, JuegoDRM.Steam))" class="boton-pequeño" style="padding: 10px 15px; width: fit-content;">
-                        Comprobar Envio Notificaciones Minimo (Steam)
-                    </button>
-                </div>
-
-				<div style="background-color: var(--fondoSubcabecera); border: 1px solid var(--fondoBotonPequeño); display: flex; flex-direction: column; gap: 20px; padding: 20px 40px;">
-					<div style="display: flex; align-items: center; gap: 30px;">
-						<div style="display: flex; align-items: center; gap: 10px;">
-							<img src="@APIs.Steam.Tienda.Generar().ImagenIcono" style="width: 24px; height: 24px;" />
+						<button @onclick="(e => MostrarPestañaPrecios(e, 2))" class="boton-pequeño" style="@(pestañaMostrarPrecios == 2 ? "" : "background: transparent;") display: flex; align-items: center; gap: 15px; padding: 10px 15px; box-shadow: none;">
+							<img src="/imagenes/banderas/europe.svg" style="width: 20px; height: 20px;" />
 
 							<div>
-								Steam
+								Historicos
+							</div>
+						</button>
+
+						<button @onclick="(e => MostrarPestañaPrecios(e, 3))" class="boton-pequeño" style="@(pestañaMostrarPrecios == 3 ? "" : "background: transparent;") display: flex; align-items: center; gap: 15px; padding: 10px 15px; box-shadow: none;">
+							<img src="/imagenes/banderas/english.svg" style="width: 20px; height: 20px;" />
+
+							<div>
+								Actuales
+							</div>
+						</button>
+
+						<button @onclick="(e => MostrarPestañaPrecios(e, 4))" class="boton-pequeño" style="@(pestañaMostrarPrecios == 4 ? "" : "background: transparent;") display: flex; align-items: center; gap: 15px; padding: 10px 15px; box-shadow: none;">
+							<img src="/imagenes/banderas/english.svg" style="width: 20px; height: 20px;" />
+
+							<div>
+								Historicos
+							</div>
+						</button>
+					</div>
+
+					<div style="width: 80%;">
+						<textarea @onchange="(e => TextoCambiaPrecios(e))" class="entrada-texto" rows="16">@textoPrecios</textarea>
+					</div>
+				</div>
+			}
+			else if (pestañaMostrar == 3)
+			{
+				<textarea @onchange="(e => TextoCambiaBundles(e))" class="entrada-texto" rows="16">@textoBundles</textarea>
+			}
+			else if (pestañaMostrar == 4)
+			{
+				<textarea @onchange="(e => TextoCambiaGratis(e))" class="entrada-texto" rows="16">@textoGratis</textarea>
+			}
+			else if (pestañaMostrar == 5)
+			{
+				<textarea @onchange="(e => TextoCambiaSuscripciones(e))" class="entrada-texto" rows="16">@textoSuscripciones</textarea>
+			}
+			else if (pestañaMostrar == 6)
+			{
+				<div style="display: flex; flex-direction: column; gap: 20px;">
+					@if (juego.Tipo == global::Juegos.JuegoTipo.DLC || juego.Tipo == global::Juegos.JuegoTipo.Music)
+					{
+						string fondo = "var(--fondoDlc)";
+
+						if (juego.Tipo == global::Juegos.JuegoTipo.Music)
+						{
+							fondo = "var(--fondoBandaSonora)";
+						}
+
+						<div style="display: flex; align-items: center; gap: 20px; background: color-mix(in srgb, @fondo 50%, transparent); border: 1px solid rgba(0,0,0.4); padding: 20px 40px;">
+							<div>
+								Juego Maestro
+							</div>
+
+							<div style="min-width: 200px; width: fit-content;">
+								<input type="text" @oninput="TextoCambiaDlcMaestro" class="entrada-texto" value="@textoDlcMaestro" />
+							</div>
+
+							<button @onclick="(async () => await ActualizarSteamApi())" class="boton-pequeño" style="padding: 10px 15px; width: fit-content;">
+								Buscar
+							</button>
+						</div>
+					}
+
+					<div style="background-color: rgba(0,0,0,.3); border: 1px solid rgba(0,0,0,.4); display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; justify-items: left; padding: 20px 40px;">
+						<div style="display: flex; align-items: center; gap: 20px;">
+							<div>
+								FreeToPlay
+							</div>
+							<div class="checkbox-caja" style="height: 24px;">
+								<input type="checkbox" class="checkbox-interior" checked="@textoF2P" @onchange="@(e => TextoCambiaF2P(e))">
 							</div>
 						</div>
 
 						<div style="display: flex; align-items: center; gap: 20px;">
 							<div>
-								Id
+								Mayor Edad
 							</div>
-							<div style="width: fit-content;">
-								<input type="text" @oninput="TextoCambiaIdSteam" class="entrada-texto" value="@idSteam" />
+							<div class="checkbox-caja" style="height: 24px;">
+								<input type="checkbox" class="checkbox-interior" checked="@textoEdad" @onchange="@(e => TextoCambiaEdad(e))">
 							</div>
 						</div>
-					</div>
 
-					@if (string.IsNullOrEmpty(idSteam) == false)
-					{
-						<div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
-							<button @onclick="(async () => await ActualizarSteamApi())" class="boton-pequeño" style="padding: 10px 15px; width: fit-content;">
-								Actualizar API
-							</button>
+						<div style="display: flex; align-items: center; gap: 20px;">
+							<div>
+								Tipo
+							</div>
 
-							<label>@Herramientas.Calculadora.DiferenciaTiempo(juego.FechaSteamAPIComprobacion, "es")</label>
+							<div class="menu-dropdown" style="width: fit-content;">
+								<button class="boton-pequeño" style="display: flex; align-items: center; gap: 10px; justify-content: center; padding: 10px 20px; margin: 0; border: 0px; color: var(--colorTextoVisitado);">
+									<div style="color: var(--colorEnlace); margin-right: 5px;">
+										@if (tipo == "0")
+										{
+											<div>
+												Juego
+											</div>
+										}
 
-							@if (juego.Tipo == JuegoTipo.Game)
-							{
-								<button @onclick="(async () => await ActualizarDeckSteamApi())" class="boton-pequeño" style="padding: 10px 15px; width: fit-content;">
-									Actualizar Deck
+										@if (tipo == "1")
+										{
+											<div>
+												DLC
+											</div>
+										}
+
+										@if (tipo == "2")
+										{
+											<div>
+												Bundle
+											</div>
+										}
+
+										@if (tipo == "3")
+										{
+											<div>
+												Banda Sonora
+											</div>
+										}
+
+										@if (tipo == "4")
+										{
+											<div>
+												Software
+											</div>
+										}
+									</div>
+
+									<div style="max-width: 16px; max-height: 16px;">
+										<svg class="svg-icono" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+											<path d="M137.4 374.6c12.5 12.5 32.8 12.5 45.3 0l128-128c9.2-9.2 11.9-22.9 6.9-34.9s-16.6-19.8-29.6-19.8L32 192c-12.9 0-24.6 7.8-29.6 19.8s-2.2 25.7 6.9 34.9l128 128z" />
+										</svg>
+									</div>
 								</button>
 
-								<label>@Herramientas.Calculadora.DiferenciaTiempo(juego.DeckComprobacion, "es")</label>
-							}
-						</div>
-					}
-				</div>
+								<div>
+									@{
+										string tipoJuego = "0";
+										string tipoDlc = "1";
+										string tipoBundle = "2";
+										string tipoBandaSonora = "3";
+										string tipoSoftware = "4";
+									}
 
-				<div style="background-color: var(--fondoSubcabecera); border: 1px solid var(--fondoBotonPequeño); display: flex; flex-direction: column; gap: 20px; padding: 20px 40px;">
-					<div style="display: flex; align-items: center; gap: 30px;">
-						<div style="display: flex; align-items: center; gap: 10px;">
-							<img src="@APIs.GOG.Tienda.Generar().ImagenIcono" style="width: 24px; height: 24px;" />
-
-							<div>
-								GOG
+									<div class="menu-dropdown-contenido" style="left: 0; width: 100%; background-color: var(--fondoBotonPequeño);">
+										<button @onclick="(e => ActualizarTipo(e, tipoJuego))" class="texto-cabecera menu-dropdown-item" style="text-align: left; width: 100%; border: 0px;">
+											Juego
+										</button>
+										<button @onclick="(e => ActualizarTipo(e, tipoDlc))" class="texto-cabecera menu-dropdown-item" style="text-align: left; width: 100%; border: 0px;">
+											DLC
+										</button>
+										<button @onclick="(e => ActualizarTipo(e, tipoBundle))" class="texto-cabecera menu-dropdown-item" style="text-align: left; width: 100%; border: 0px;">
+											Bundle
+										</button>
+										<button @onclick="(e => ActualizarTipo(e, tipoBandaSonora))" class="texto-cabecera menu-dropdown-item" style="text-align: left; width: 100%; border: 0px;">
+											Banda Sonora
+										</button>
+										<button @onclick="(e => ActualizarTipo(e, tipoSoftware))" class="texto-cabecera menu-dropdown-item" style="text-align: left; width: 100%; border: 0px;">
+											Software
+										</button>
+									</div>
+								</div>
 							</div>
 						</div>
 
 						<div style="display: flex; align-items: center; gap: 20px;">
 							<div>
-								Id
+								Ocultar Portada
 							</div>
-							<div style="width: fit-content;">
-								<input type="text" @oninput="TextoCambiaIdGOG" class="entrada-texto" value="@idGOG" />
-							</div>
-						</div>
-
-						<div style="display: flex; align-items: center; gap: 20px;">
-							<div>
-								Slug
-							</div>
-							<div style="width: fit-content;">
-								<input type="text" @oninput="TextoCambiaSlugGOG" class="entrada-texto" value="@slugGOG" />
+							<div class="checkbox-caja" style="height: 24px;">
+								<input type="checkbox" class="checkbox-interior" checked="@textoOcultarPortada" @onchange="@(e => TextoCambiaOcultarPortada(e))">
 							</div>
 						</div>
 					</div>
 
-					@if (string.IsNullOrEmpty(idGOG) == false)
-					{
-						<div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
-							<button @onclick="(async () => await ActualizarGogApi())" class="boton-pequeño" style="padding: 10px 15px; width: auto;">
-								Actualizar API
-							</button>
-
-							@if (juego.GalaxyGOG != null)
-							{
-								<label>@Herramientas.Calculadora.DiferenciaTiempo(juego.GalaxyGOG.Fecha, "es")</label>
-							}
-						</div>
-					}
-				</div>
-
-				<div style="background-color: var(--fondoSubcabecera); border: 1px solid var(--fondoBotonPequeño); display: flex; flex-direction: column; gap: 20px; padding: 20px 40px;">
-					<div style="display: flex; align-items: center; gap: 30px;">
-						<div style="display: flex; align-items: center; gap: 10px;">
-							<img src="@APIs.EpicGames.Tienda.Generar().ImagenIcono" style="width: 24px; height: 24px;" />
-
-							<div>
-								Epic Games
-							</div>
-						</div>
-
-						<div style="display: flex; align-items: center; gap: 20px;">
-							<div>
-								Slug
-							</div>
-							<div style="width: fit-content;">
-								<input type="text" @oninput="TextoCambiaSlugEpic" class="entrada-texto" value="@slugEpic" />
-							</div>
-						</div>
-
-						<div style="display: flex; align-items: center; gap: 20px;">
-							<div>
-								Exe
-							</div>
-							<div style="width: fit-content;">
-								<input type="text" @oninput="TextoCambiaExeEpic" class="entrada-texto" value="@exeEpic" />
-							</div>
-						</div>
+					<div style="background-color: rgba(0,0,0,.3); border: 1px solid rgba(0,0,0,.4); padding: 20px 40px; display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+						<button @onclick="(e => ComprobarEnvioNotificaciones(e, juego.Id, juego.PrecioMinimosHistoricos, JuegoDRM.Steam))" class="boton-pequeño" style="padding: 10px 15px; width: fit-content;">
+							Comprobar Envio Notificaciones Minimo (Steam)
+						</button>
 					</div>
 
-					@if (string.IsNullOrEmpty(slugEpic) == false)
-					{
-						<div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
-							<button @onclick="(async () => await ActualizarEpicGamesApi())" class="boton-pequeño" style="padding: 10px 15px; width: auto;">
-								Actualizar API
-							</button>
+					<div style="background-color: rgba(0,0,0,.3); border: 1px solid rgba(0,0,0,.4); display: flex; flex-direction: column; gap: 20px; padding: 20px 40px;">
+						<div style="display: flex; align-items: center; gap: 30px;">
+							<div style="display: flex; align-items: center; gap: 10px;">
+								<img src="@APIs.Steam.Tienda.Generar().ImagenIcono" style="width: 24px; height: 24px;" />
 
-							@if (juego.EpicGames != null)
-							{
-								<label>@Herramientas.Calculadora.DiferenciaTiempo(juego.EpicGames.Fecha, "es")</label>
-							}
-						</div>
-					}
-				</div>
+								<div>
+									Steam
+								</div>
+							</div>
 
-				<div style="background-color: var(--fondoSubcabecera); border: 1px solid var(--fondoBotonPequeño); display: flex; flex-direction: column; gap: 20px; padding: 20px 40px;">
-					<div style="display: flex; align-items: center; gap: 30px;">
-						<div style="display: flex; align-items: center; gap: 10px;">
-							<img src="@APIs.Xbox.Suscripcion.Generar().ImagenIcono" style="width: 24px; height: 24px;" />
-
-							<div>
-								Xbox
+							<div style="display: flex; align-items: center; gap: 20px;">
+								<div>
+									Id
+								</div>
+								<div style="width: fit-content;">
+									<input type="text" @oninput="TextoCambiaIdSteam" class="entrada-texto" value="@idSteam" />
+								</div>
 							</div>
 						</div>
 
-						<div style="display: flex; align-items: center; gap: 20px;">
-							<div>
-								Id
-							</div>
-							<div style="width: fit-content;">
-								<input type="text" @oninput="TextoCambiaIdXbox" class="entrada-texto" value="@idXbox" />
-							</div>
-						</div>
-					</div>
-
-					@if (string.IsNullOrEmpty(idXbox) == false)
-					{
-						<div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
-							<button @onclick="(async () => await ActualizarXboxApi())" class="boton-pequeño" style="padding: 10px 15px; width: auto;">
-								Actualizar API
-							</button>
-
-							@if (juego.Xbox != null)
-							{
-								<label>@Herramientas.Calculadora.DiferenciaTiempo(juego.Xbox.Fecha, "es")</label>
-							}
-						</div>
-					}
-				</div>
-
-				<div style="background-color: var(--fondoSubcabecera); border: 1px solid var(--fondoBotonPequeño); display: flex; flex-direction: column; gap: 20px; padding: 20px 40px;">
-					<div style="display: flex; align-items: center; gap: 30px;">
-						<div style="display: flex; align-items: center; gap: 10px;">
-							<img src="@Plataformas2.PlataformasCargar.GenerarListado()[0].ImagenIcono" style="width: 24px; height: 24px;" />
-
-							<div>
-								Amazon Games
-							</div>
-						</div>
-
-						<div style="display: flex; align-items: center; gap: 20px;">
-							<div>
-								Id
-							</div>
-							<div style="width: fit-content;">
-								<input type="text" @oninput="TextoCambiaIdAmazon" class="entrada-texto" value="@idAmazon" />
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div style="background-color: var(--fondoSubcabecera); border: 1px solid var(--fondoBotonPequeño); display: flex; flex-direction: column; gap: 20px; padding: 20px 40px;">
-					<div style="display: flex; align-items: center; gap: 30px;">
-						<div style="display: flex; align-items: center; gap: 10px;">
-							<img src="@APIs.Ubisoft.Tienda.Generar().ImagenIcono" style="width: 24px; height: 24px;" />
-
-							<div>
-								Ubisoft
-							</div>
-						</div>
-
-						<div style="display: flex; align-items: center; gap: 20px;">
-							<div>
-								Exe
-							</div>
-							<div style="width: fit-content;">
-								<input type="text" @oninput="TextoCambiaIdAmazon" class="entrada-texto" value="@idAmazon" />
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		}
-		else if (pestañaMostrar == 7)
-		{
-			<div style="display: flex; align-items: start; gap: 30px;">
-				<div style="display: flex; flex-direction: column; gap: 10px; width: 20%;">
-					@{
-						string borde1 = string.Empty;
-
-						if (pestañaMostrarHistoricos == 1)
+						@if (string.IsNullOrEmpty(idSteam) == false)
 						{
-							borde1 = "border-right: 5px solid color-mix(in srgb, var(--colorTexto) 50%, transparent);";
-						}
+							<div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+								<button @onclick="(async () => await ActualizarSteamApi())" class="boton-pequeño" style="padding: 10px 15px; width: fit-content;">
+									Actualizar API
+								</button>
 
-						<button @onclick="() => pestañaMostrarHistoricos = 1" class="boton-pequeño" style="display: flex; align-items: center; gap: 15px; padding: 10px 15px; @borde1">
+								<label>@Herramientas.Calculadora.DiferenciaTiempo(juego.FechaSteamAPIComprobacion, "es")</label>
+
+								@if (juego.Tipo == JuegoTipo.Game)
+								{
+									<button @onclick="(async () => await ActualizarDeckSteamApi())" class="boton-pequeño" style="padding: 10px 15px; width: fit-content;">
+										Actualizar Deck
+									</button>
+
+									<label>@Herramientas.Calculadora.DiferenciaTiempo(juego.DeckComprobacion, "es")</label>
+								}
+							</div>
+						}
+					</div>
+
+					<div style="background-color: rgba(0,0,0,.3); border: 1px solid rgba(0,0,0,.4); display: flex; flex-direction: column; gap: 20px; padding: 20px 40px;">
+						<div style="display: flex; align-items: center; gap: 30px;">
+							<div style="display: flex; align-items: center; gap: 10px;">
+								<img src="@APIs.GOG.Tienda.Generar().ImagenIcono" style="width: 24px; height: 24px;" />
+
+								<div>
+									GOG
+								</div>
+							</div>
+
+							<div style="display: flex; align-items: center; gap: 20px;">
+								<div>
+									Id
+								</div>
+								<div style="width: fit-content;">
+									<input type="text" @oninput="TextoCambiaIdGOG" class="entrada-texto" value="@idGOG" />
+								</div>
+							</div>
+
+							<div style="display: flex; align-items: center; gap: 20px;">
+								<div>
+									Slug
+								</div>
+								<div style="width: fit-content;">
+									<input type="text" @oninput="TextoCambiaSlugGOG" class="entrada-texto" value="@slugGOG" />
+								</div>
+							</div>
+						</div>
+
+						@if (string.IsNullOrEmpty(idGOG) == false)
+						{
+							<div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+								<button @onclick="(async () => await ActualizarGogApi())" class="boton-pequeño" style="padding: 10px 15px; width: auto;">
+									Actualizar API
+								</button>
+
+								@if (juego.GalaxyGOG != null)
+								{
+									<label>@Herramientas.Calculadora.DiferenciaTiempo(juego.GalaxyGOG.Fecha, "es")</label>
+								}
+							</div>
+						}
+					</div>
+
+					<div style="background-color: rgba(0,0,0,.3); border: 1px solid rgba(0,0,0,.4); display: flex; flex-direction: column; gap: 20px; padding: 20px 40px;">
+						<div style="display: flex; align-items: center; gap: 30px;">
+							<div style="display: flex; align-items: center; gap: 10px;">
+								<img src="@APIs.EpicGames.Tienda.Generar().ImagenIcono" style="width: 24px; height: 24px;" />
+
+								<div>
+									Epic Games
+								</div>
+							</div>
+
+							<div style="display: flex; align-items: center; gap: 20px;">
+								<div>
+									Slug
+								</div>
+								<div style="width: fit-content;">
+									<input type="text" @oninput="TextoCambiaSlugEpic" class="entrada-texto" value="@slugEpic" />
+								</div>
+							</div>
+
+							<div style="display: flex; align-items: center; gap: 20px;">
+								<div>
+									Exe
+								</div>
+								<div style="width: fit-content;">
+									<input type="text" @oninput="TextoCambiaExeEpic" class="entrada-texto" value="@exeEpic" />
+								</div>
+							</div>
+						</div>
+
+						@if (string.IsNullOrEmpty(slugEpic) == false)
+						{
+							<div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+								<button @onclick="(async () => await ActualizarEpicGamesApi())" class="boton-pequeño" style="padding: 10px 15px; width: auto;">
+									Actualizar API
+								</button>
+
+								@if (juego.EpicGames != null)
+								{
+									<label>@Herramientas.Calculadora.DiferenciaTiempo(juego.EpicGames.Fecha, "es")</label>
+								}
+							</div>
+						}
+					</div>
+
+					<div style="background-color: rgba(0,0,0,.3); border: 1px solid rgba(0,0,0,.4); display: flex; flex-direction: column; gap: 20px; padding: 20px 40px;">
+						<div style="display: flex; align-items: center; gap: 30px;">
+							<div style="display: flex; align-items: center; gap: 10px;">
+								<img src="@APIs.Xbox.Suscripcion.Generar().ImagenIcono" style="width: 24px; height: 24px;" />
+
+								<div>
+									Xbox
+								</div>
+							</div>
+
+							<div style="display: flex; align-items: center; gap: 20px;">
+								<div>
+									Id
+								</div>
+								<div style="width: fit-content;">
+									<input type="text" @oninput="TextoCambiaIdXbox" class="entrada-texto" value="@idXbox" />
+								</div>
+							</div>
+						</div>
+
+						@if (string.IsNullOrEmpty(idXbox) == false)
+						{
+							<div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+								<button @onclick="(async () => await ActualizarXboxApi())" class="boton-pequeño" style="padding: 10px 15px; width: auto;">
+									Actualizar API
+								</button>
+
+								@if (juego.Xbox != null)
+								{
+									<label>@Herramientas.Calculadora.DiferenciaTiempo(juego.Xbox.Fecha, "es")</label>
+								}
+							</div>
+						}
+					</div>
+
+					<div style="background-color: rgba(0,0,0,.3); border: 1px solid rgba(0,0,0,.4); display: flex; flex-direction: column; gap: 20px; padding: 20px 40px;">
+						<div style="display: flex; align-items: center; gap: 30px;">
+							<div style="display: flex; align-items: center; gap: 10px;">
+								<img src="@Plataformas2.PlataformasCargar.GenerarListado()[0].ImagenIcono" style="width: 24px; height: 24px;" />
+
+								<div>
+									Amazon Games
+								</div>
+							</div>
+
+							<div style="display: flex; align-items: center; gap: 20px;">
+								<div>
+									Id
+								</div>
+								<div style="width: fit-content;">
+									<input type="text" @oninput="TextoCambiaIdAmazon" class="entrada-texto" value="@idAmazon" />
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div style="background-color: rgba(0,0,0,.3); border: 1px solid rgba(0,0,0,.4); display: flex; flex-direction: column; gap: 20px; padding: 20px 40px;">
+						<div style="display: flex; align-items: center; gap: 30px;">
+							<div style="display: flex; align-items: center; gap: 10px;">
+								<img src="@APIs.Ubisoft.Tienda.Generar().ImagenIcono" style="width: 24px; height: 24px;" />
+
+								<div>
+									Ubisoft
+								</div>
+							</div>
+
+							<div style="display: flex; align-items: center; gap: 20px;">
+								<div>
+									Exe
+								</div>
+								<div style="width: fit-content;">
+									<input type="text" @oninput="TextoCambiaIdAmazon" class="entrada-texto" value="@idAmazon" />
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			}
+			else if (pestañaMostrar == 7)
+			{
+				<div style="display: flex; align-items: start; gap: 30px;">
+					<div style="display: flex; flex-direction: column; gap: 10px; width: 20%;">
+						<button @onclick="() => pestañaMostrarHistoricos = 1" class="boton-pequeño" style="@(pestañaMostrarHistoricos == 1 ? "" : "background: transparent;") display: flex; align-items: center; gap: 15px; padding: 10px 15px; box-shadow: none;">
 							<img src="/imagenes/banderas/europe.svg" style="width: 20px; height: 20px;" />
 
 							<div>
@@ -662,14 +530,7 @@
 							</div>
 						</button>
 
-						string borde2 = string.Empty;
-
-						if (pestañaMostrarHistoricos == 2)
-						{
-							borde2 = "border-right: 5px solid color-mix(in srgb, var(--colorTexto) 50%, transparent);";
-						}
-
-						<button @onclick="() => pestañaMostrarHistoricos = 2" class="boton-pequeño" style="display: flex; align-items: center; gap: 15px; padding: 10px 15px; @borde2">
+						<button @onclick="() => pestañaMostrarHistoricos = 2" class="boton-pequeño" style="@(pestañaMostrarHistoricos == 2 ? "" : "background: transparent;") display: flex; align-items: center; gap: 15px; padding: 10px 15px; box-shadow: none;">
 							<img src="/imagenes/banderas/english.svg" style="width: 20px; height: 20px;" />
 
 							<div>
@@ -677,14 +538,7 @@
 							</div>
 						</button>
 
-						string borde3 = string.Empty;
-
-						if (pestañaMostrarHistoricos == 3)
-						{
-							borde3 = "border-right: 5px solid color-mix(in srgb, var(--colorTexto) 50%, transparent);";
-						}
-
-						<button @onclick="() => pestañaMostrarHistoricos = 3" class="boton-pequeño" style="display: flex; align-items: center; gap: 15px; padding: 10px 15px; @borde3">
+						<button @onclick="() => pestañaMostrarHistoricos = 3" class="boton-pequeño" style="@(pestañaMostrarHistoricos == 3 ? "" : "background: transparent;") display: flex; align-items: center; gap: 15px; padding: 10px 15px; box-shadow: none;">
 							<img src="/imagenes/banderas/europe.svg" style="width: 20px; height: 20px;" />
 
 							<div>
@@ -692,14 +546,7 @@
 							</div>
 						</button>
 
-						string borde4 = string.Empty;
-
-						if (pestañaMostrarHistoricos == 4)
-						{
-							borde4 = "border-right: 5px solid color-mix(in srgb, var(--colorTexto) 50%, transparent);";
-						}
-
-						<button @onclick="() => pestañaMostrarHistoricos = 4" class="boton-pequeño" style="display: flex; align-items: center; gap: 15px; padding: 10px 15px; @borde4">
+						<button @onclick="() => pestañaMostrarHistoricos = 4" class="boton-pequeño" style="@(pestañaMostrarHistoricos == 4 ? "" : "background: transparent;") display: flex; align-items: center; gap: 15px; padding: 10px 15px; box-shadow: none;">
 							<img src="/imagenes/banderas/english.svg" style="width: 20px; height: 20px;" />
 
 							<div>
@@ -707,14 +554,7 @@
 							</div>
 						</button>
 
-						string borde5 = string.Empty;
-
-						if (pestañaMostrarHistoricos == 5)
-						{
-							borde5 = "border-right: 5px solid color-mix(in srgb, var(--colorTexto) 50%, transparent);";
-						}
-
-						<button @onclick="() => pestañaMostrarHistoricos = 5" class="boton-pequeño" style="display: flex; align-items: center; gap: 15px; padding: 10px 15px; @borde5">
+						<button @onclick="() => pestañaMostrarHistoricos = 5" class="boton-pequeño" style="@(pestañaMostrarHistoricos == 5 ? "" : "background: transparent;") display: flex; align-items: center; gap: 15px; padding: 10px 15px; box-shadow: none;">
 							<img src="/imagenes/banderas/europe.svg" style="width: 20px; height: 20px;" />
 
 							<div>
@@ -722,97 +562,90 @@
 							</div>
 						</button>
 
-						string borde6 = string.Empty;
-
-						if (pestañaMostrarHistoricos == 6)
-						{
-							borde6 = "border-right: 5px solid color-mix(in srgb, var(--colorTexto) 50%, transparent);";
-						}
-
-						<button @onclick="() => pestañaMostrarHistoricos = 6" class="boton-pequeño" style="display: flex; align-items: center; gap: 15px; padding: 10px 15px; @borde6">
+						<button @onclick="() => pestañaMostrarHistoricos = 6" class="boton-pequeño" style="@(pestañaMostrarHistoricos == 6 ? "" : "background: transparent;") display: flex; align-items: center; gap: 15px; padding: 10px 15px; box-shadow: none;">
 							<img src="/imagenes/banderas/english.svg" style="width: 20px; height: 20px;" />
 
 							<div>
 								Marketplaces US
 							</div>
 						</button>
-					}
-				</div>
+					</div>
 
-				<div style="width: 80%;">
-					@if (pestañaMostrarHistoricos > 0)
-					{
-						List<JuegoHistorico> historicosMostrar = new List<JuegoHistorico>();
-						TiendaTipo historicosTipo = TiendaTipo.Oficial;
-						TiendaRegion historicosRegion = TiendaRegion.Europa;
+					<div style="width: 80%;">
+						@if (pestañaMostrarHistoricos > 0)
+						{
+							List<JuegoHistorico> historicosMostrar = new List<JuegoHistorico>();
+							TiendaTipo historicosTipo = TiendaTipo.Oficial;
+							TiendaRegion historicosRegion = TiendaRegion.Europa;
 
-						if (pestañaMostrarHistoricos == 1)
-						{
-							historicosMostrar = juego.Historicos;
-							historicosTipo = TiendaTipo.Oficial;
-                            historicosRegion = TiendaRegion.Europa;
-						}
-						else if (pestañaMostrarHistoricos == 2)
-						{
-							historicosMostrar = juego.HistoricosUS;
-							historicosTipo = TiendaTipo.Oficial;
-							historicosRegion = TiendaRegion.EstadosUnidos;
-						}
-						else if (pestañaMostrarHistoricos == 3)
-						{
-							historicosMostrar = juego.HistoricosNoOficialesEU;
-							historicosTipo = TiendaTipo.NoOficial;
-							historicosRegion = TiendaRegion.Europa;
-						}
-						else if (pestañaMostrarHistoricos == 4)
-						{
-							historicosMostrar = juego.HistoricosNoOficialesUS;
-							historicosTipo = TiendaTipo.NoOficial;
-							historicosRegion = TiendaRegion.EstadosUnidos;
-						}
-						else if (pestañaMostrarHistoricos == 5)
-						{
-							historicosMostrar = juego.HistoricosMarketplacesEU;
-							historicosTipo = TiendaTipo.Marketplace;
-							historicosRegion = TiendaRegion.Europa;
-						}
-						else if (pestañaMostrarHistoricos == 6)
-						{
-							historicosMostrar = juego.HistoricosMarketplacesUS;
-							historicosTipo = TiendaTipo.Marketplace;
-							historicosRegion = TiendaRegion.EstadosUnidos;
-						}
-						
-						if (historicosMostrar?.Count > 0)
-						{
-							foreach (var historico in historicosMostrar)
+							if (pestañaMostrarHistoricos == 1)
 							{
-								string imagenTienda = Tiendas2.TiendasCargar.DevolverTienda(historico.Tienda).ImagenIcono;
-								string imagenDRM = global::Juegos.JuegoDRM2.SacarImagen(historico.DRM);
+								historicosMostrar = juego.Historicos;
+								historicosTipo = TiendaTipo.Oficial;
+								historicosRegion = TiendaRegion.Europa;
+							}
+							else if (pestañaMostrarHistoricos == 2)
+							{
+								historicosMostrar = juego.HistoricosUS;
+								historicosTipo = TiendaTipo.Oficial;
+								historicosRegion = TiendaRegion.EstadosUnidos;
+							}
+							else if (pestañaMostrarHistoricos == 3)
+							{
+								historicosMostrar = juego.HistoricosNoOficialesEU;
+								historicosTipo = TiendaTipo.NoOficial;
+								historicosRegion = TiendaRegion.Europa;
+							}
+							else if (pestañaMostrarHistoricos == 4)
+							{
+								historicosMostrar = juego.HistoricosNoOficialesUS;
+								historicosTipo = TiendaTipo.NoOficial;
+								historicosRegion = TiendaRegion.EstadosUnidos;
+							}
+							else if (pestañaMostrarHistoricos == 5)
+							{
+								historicosMostrar = juego.HistoricosMarketplacesEU;
+								historicosTipo = TiendaTipo.Marketplace;
+								historicosRegion = TiendaRegion.Europa;
+							}
+							else if (pestañaMostrarHistoricos == 6)
+							{
+								historicosMostrar = juego.HistoricosMarketplacesUS;
+								historicosTipo = TiendaTipo.Marketplace;
+								historicosRegion = TiendaRegion.EstadosUnidos;
+							}
+						
+							if (historicosMostrar?.Count > 0)
+							{
+								foreach (var historico in historicosMostrar)
+								{
+									string imagenTienda = Tiendas2.TiendasCargar.DevolverTienda(historico.Tienda).ImagenIcono;
+									string imagenDRM = global::Juegos.JuegoDRM2.SacarImagen(historico.DRM);
 
-								<div style="margin-bottom: 10px; padding: 10px; background: var(--fondoBotonPequeño); border: 1px solid var(--fondoBotonPequeño); display: flex; align-items: center; gap: 10px;">
-									<div>
-										Fecha: @historico.Fecha.ToString("dd/MM/yyyy HH:mm")
-									</div>
-									<div>
-										Precio: @historico.Precio€
-									</div>
-									<div>
-										<img src="@imagenTienda" style="width: 20px; height: 20px;" />
-									</div>
-									<div>
-										<img src="@imagenDRM" style="width: 20px; height: 20px;" />
-									</div>
+									<div style="margin-bottom: 10px; padding: 10px; background: var(--fondoBotonPequeño); border: 1px solid var(--fondoBotonPequeño); display: flex; align-items: center; gap: 10px;">
+										<div>
+											Fecha: @historico.Fecha.ToString("dd/MM/yyyy HH:mm")
+										</div>
+										<div>
+											Precio: @historico.Precio€
+										</div>
+										<div>
+											<img src="@imagenTienda" style="width: 20px; height: 20px;" />
+										</div>
+										<div>
+											<img src="@imagenDRM" style="width: 20px; height: 20px;" />
+										</div>
 
-									<button @onclick="(e => BorrarRegistroHistorico(e, historico, historicosRegion, historicosTipo))" class="boton-pequeño-peligro" style="background-color: var(--fondoPeligro); width: fit-content; padding: 5px 15px; margin-left: auto;">Borrar</button>
-								</div>
+										<button @onclick="(e => BorrarRegistroHistorico(e, historico, historicosRegion, historicosTipo))" class="boton-pequeño-peligro" style="background-color: var(--fondoPeligro); width: fit-content; padding: 5px 15px; margin-left: auto;">Borrar</button>
+									</div>
+								}
 							}
 						}
-					}
+					</div>
 				</div>
-			</div>
+			}
 		}
-	}
+	</div>
 </div>
 
 @code {
