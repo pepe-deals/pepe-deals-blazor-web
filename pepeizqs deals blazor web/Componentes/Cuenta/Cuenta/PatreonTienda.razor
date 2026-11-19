@@ -8,8 +8,8 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.AspNetCore.Identity
-@using System.Text.Json
 @using pepeizqs_deals_web.Data
+@using System.Text.Json
 
 @inject UserManager<Usuario> UserManager
 @inject IConfiguration Configuracion
@@ -22,7 +22,13 @@
 	<PageTitle>@titulo</PageTitle>
 </HeadContent>
 
-@if (usuarioPatreon == false)
+@if (cargandoInicial == true)
+{
+	<div style="min-height: 200px; display: flex; align-items: center; justify-content: space-around;">
+		<div class="cargando" />
+	</div>
+}
+else if (usuarioPatreon == false)
 {
 	<div class="caja-patreontienda" style="background-color: var(--noResultados); justify-content: center; margin: 40px auto; padding: 20px; border-radius: 30px; max-width: 600px; flex-direction: column;">
 		<div style="display: flex; align-items: center; gap: 30px;">
@@ -407,6 +413,8 @@ else
 
 	#nullable disable
 
+	private bool cargandoInicial = true;
+
 	[CascadingParameter] private Herramientas.ContextoUsuarioDatos datos { get; set; }
 
 	private string idioma = "en";
@@ -432,75 +440,82 @@ else
 
 	protected override async Task OnInitializedAsync()
 	{
-		enlacePatreon = Configuracion.GetValue<string>("RedesSociales:Patreon");
-
-		idioma = datos.Idioma;
-		usuarioId = datos.UsuarioId;
-		userAgent = datos.UserAgent;
-		dominio = datos.Dominio;
-
-		if (string.IsNullOrEmpty(usuarioId) == false)
+		try
 		{
-			Task<string> tareaIdioma = BaseDatos.Usuarios.Buscar.IdiomaSobreescribir(usuarioId);
-			Task<Herramientas.UsuarioListadosJuegos> tareaJuegos = Herramientas.UsuarioJuegos.Cargar(usuarioId);
-			Task<Usuario> tareaDeseados = BaseDatos.Usuarios.Buscar.DeseadosTiene(usuarioId);
-			Task<DateTime?> tareaPatreon = BaseDatos.Usuarios.Buscar.FechaPatreon(usuarioId);
-			Task<bool> tareaAdmin = BaseDatos.Usuarios.Buscar.RolDios(usuarioId);
-			Task<Usuario> tareaOpciones = BaseDatos.Usuarios.Buscar.OpcionesPatreon(usuarioId);
+			enlacePatreon = Configuracion.GetValue<string>("RedesSociales:Patreon");
 
-			await Task.WhenAll(tareaIdioma, tareaJuegos, tareaDeseados, tareaPatreon, tareaAdmin, tareaOpciones);
+			idioma = datos.Idioma;
+			usuarioId = datos.UsuarioId;
+			userAgent = datos.UserAgent;
+			dominio = datos.Dominio;
 
-			idioma = tareaIdioma.Result;
-			juegosUsuario = tareaJuegos.Result;
-			deseadosUsuario = tareaDeseados.Result;
-			usuarioPatreon = Herramientas.Patreon.VerificarActivo(tareaPatreon.Result);
-			usuarioAdmin = tareaAdmin.Result;
-			opciones = tareaOpciones.Result;
-
-			if (juegosUsuarioIndex == null)
+			if (string.IsNullOrEmpty(usuarioId) == false)
 			{
-				juegosUsuarioIndex = Herramientas.UsuarioJuegos.CrearIndex(juegosUsuario);
-			}
+				Task<string> tareaIdioma = BaseDatos.Usuarios.Buscar.IdiomaSobreescribir(usuarioId);
+				Task<Herramientas.UsuarioListadosJuegos> tareaJuegos = Herramientas.UsuarioJuegos.Cargar(usuarioId);
+				Task<Usuario> tareaDeseados = BaseDatos.Usuarios.Buscar.DeseadosTiene(usuarioId);
+				Task<DateTime?> tareaPatreon = BaseDatos.Usuarios.Buscar.FechaPatreon(usuarioId);
+				Task<bool> tareaAdmin = BaseDatos.Usuarios.Buscar.RolDios(usuarioId);
+				Task<Usuario> tareaOpciones = BaseDatos.Usuarios.Buscar.OpcionesPatreon(usuarioId);
 
-			if (deseadosImportadosIndex == null)
-			{
-				deseadosImportadosIndex = Herramientas.Deseados.CrearImportadosIndex(deseadosUsuario);
-			}
+				await Task.WhenAll(tareaIdioma, tareaJuegos, tareaDeseados, tareaPatreon, tareaAdmin, tareaOpciones);
 
-			if (deseadosWebIndex == null)
-			{
-				deseadosWebIndex = Herramientas.Deseados.CrearWebIndex(deseadosUsuario);
-			}
+				idioma = tareaIdioma.Result;
+				juegosUsuario = tareaJuegos.Result;
+				deseadosUsuario = tareaDeseados.Result;
+				usuarioPatreon = Herramientas.Patreon.VerificarActivo(tareaPatreon.Result);
+				usuarioAdmin = tareaAdmin.Result;
+				opciones = tareaOpciones.Result;
 
-			if (opciones != null)
-			{
-				if (entradas == null)
+				if (juegosUsuarioIndex == null)
 				{
-					entradas = await BaseDatos.Recompensas.Historial.Leer(usuarioId);
+					juegosUsuarioIndex = Herramientas.UsuarioJuegos.CrearIndex(juegosUsuario);
 				}
+
+				if (deseadosImportadosIndex == null)
+				{
+					deseadosImportadosIndex = Herramientas.Deseados.CrearImportadosIndex(deseadosUsuario);
+				}
+
+				if (deseadosWebIndex == null)
+				{
+					deseadosWebIndex = Herramientas.Deseados.CrearWebIndex(deseadosUsuario);
+				}
+
+				if (opciones != null)
+				{
+					if (entradas == null)
+					{
+						entradas = await BaseDatos.Recompensas.Historial.Leer(usuarioId);
+					}
 				
-				if (usuarioAdmin == true)
-				{
-					usuarioPatreon = true;
-				}
-
-				if (opciones.PatreonOption2 == true)
-				{
-					mostrarMensaje = false;
-				}
-
-				if (opciones.PatreonOption1.HasValue == true)
-				{
-					if (opciones.PatreonOption1 == true)
+					if (usuarioAdmin == true)
 					{
-						await MostrarJuegosNoTiene();
+						usuarioPatreon = true;
 					}
-					else
+
+					if (opciones.PatreonOption2 == true)
 					{
-						await MostrarTodosJuegos();
+						mostrarMensaje = false;
+					}
+
+					if (opciones.PatreonOption1.HasValue == true)
+					{
+						if (opciones.PatreonOption1 == true)
+						{
+							await MostrarJuegosNoTiene();
+						}
+						else
+						{
+							await MostrarTodosJuegos();
+						}
 					}
 				}
 			}
+		}
+		finally
+		{
+			cargandoInicial = false;
 		}
 	}
 

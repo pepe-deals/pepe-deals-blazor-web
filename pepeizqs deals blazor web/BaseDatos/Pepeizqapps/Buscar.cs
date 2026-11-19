@@ -10,7 +10,7 @@ namespace BaseDatos.Pepeizqapps
 	{
 		public static async Task<Noticia> UltimaActualizacion()
 		{
-			string sql = "SELECT id, titulo, fecha FROM noticias WHERE fecha >= DATEADD(DAY, -2, GETDATE());";
+			string sql = "SELECT TOP 1 id, titulo, fecha FROM noticias WHERE fecha >= DATEADD(DAY, -2, GETDATE()) ORDER BY fecha DESC, id DESC;";
 
 			try
 			{

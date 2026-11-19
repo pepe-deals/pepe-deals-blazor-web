@@ -87,9 +87,19 @@
 	<button @onclick="@(e => AñadirCupon(e))" class="boton-pequeño" style="text-align: center; width: fit-content; padding: 10px 40px; font-size: 20px;">Añadir Cupón</button>
 </div>
 
+@if (añadido == true)
+{
+	<div style="margin-top: 20px; padding: 20px; background-color: var(--fondoBien); border: 1px solid rgba(255,255,255,0.1); transition: opacity 0.5s ease; opacity: @(desvaneciendo ? "0" : "1");">
+		Añadido
+	</div>
+}
+
 @code {
 
 	#nullable disable
+
+	private bool añadido = false;
+	private bool desvaneciendo = false;
 
 	private string tiendaElegida = string.Empty;
 
@@ -117,7 +127,7 @@
 		fechaTermina = texto.Value.ToString();
 	}
 
-	private void AñadirCupon(MouseEventArgs e)
+	private async Task AñadirCupon(MouseEventArgs e)
 	{
 		int? porcentaje2 = null;
 
@@ -140,6 +150,34 @@
 			precioRebaja2 = decimal.Parse(precioRebaja);
 		}
 
-		BaseDatos.Cupones.Insertar.Ejecutar(codigo, porcentaje2, precioMinimo2, precioRebaja2, tiendaElegida, DateTime.Parse(fechaEmpieza), DateTime.Parse(fechaTermina));
+		int resultado = await BaseDatos.Cupones.Insertar.Ejecutar(codigo, porcentaje2, precioMinimo2, precioRebaja2, tiendaElegida, DateTime.Parse(fechaEmpieza), DateTime.Parse(fechaTermina));
+
+		if (resultado == 1)
+		{
+			añadido = true;
+		}
+
+		codigo = string.Empty;
+		porcentaje = string.Empty;
+		precioMinimo = string.Empty;
+		precioRebaja = string.Empty;
+		tiendaElegida = string.Empty;
+
+		fechaEmpieza = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
+		fechaTermina = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
+
+		if (resultado == 1)
+		{
+			StateHasChanged(); 
+
+			await Task.Delay(10000);
+
+			desvaneciendo = true;        
+			StateHasChanged();
+
+			await Task.Delay(500);
+
+			añadido = false;  
+		}
 	}
 }

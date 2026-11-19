@@ -244,8 +244,9 @@
 			@if (bundle.Tiers.Count > 0)
 			{
 				int i = 0;
+				var tiersMostrar = OrdenarTiers(bundle.Tiers, bundle.Juegos);
 
-				foreach (var tier in OrdenarTiers(bundle.Tiers))
+				foreach (var tier in tiersMostrar)
 				{
 					List<Bundles2.BundleJuego> juegosTier = new List<Bundles2.BundleJuego>();
 
@@ -253,12 +254,9 @@
 					{
 						foreach (var juego in bundle.Juegos)
 						{
-							if (juego.Tier != null)
+							if (juego.Tier?.Posicion == tier.Posicion)
 							{
-								if (juego.Tier.Posicion == tier.Posicion)
-								{
-									juegosTier.Add(juego);
-								}
+								juegosTier.Add(juego);
 							}
 						}
 					}
@@ -270,7 +268,7 @@
 						if (bundle.Pick == true)
 						{
 							<div class="cuerpo-ancho bundle-espacio2" style="font-size: 18px; display: flex; align-items: center; flex-direction: row; justify-content: space-between; margin-bottom: 20px;">
-								@foreach (var tier2 in OrdenarTiers(bundle.Tiers))
+								@foreach (var tier2 in tiersMostrar)
 								{
 									<div class="bundle-espacio3" style="background: var(--fondoSubsubcabecera); border: 2px solid rgba(0,0,0,.4); border-radius: 10px; text-align: center; display: flex; align-items: center; gap: 5px; width: 100%; justify-content: center;">
 										@if (tier2.CantidadJuegos == 1)
@@ -290,7 +288,7 @@
 
 						string espacioFondo = "margin-bottom: 40px;";
 
-						if (i == bundle.Tiers.Count - 1 || bundle.Pick == true)
+						if (i == tiersMostrar.Count - 1 || bundle.Pick == true)
 						{
 							if (tipo == Tipo.Bundle || tipo == Tipo.Bundles)
 							{
@@ -306,11 +304,11 @@
 
 						if (bundle.Pick == false)
 						{
-							if (bundle.Tiers.Count > 0)
+							if (tiersMostrar.Count > 0)
 							{
 								if (i == 0)
 								{
-									if (bundle.Tiers.Count == 1)
+									if (tiersMostrar.Count == 1)
 									{
 										bordesRedondeado = "border-top-left-radius: 10px; border-top-right-radius: 10px;";
 									}
@@ -319,7 +317,7 @@
 										bordesRedondeado = "border-radius: 10px;";
 									}
 								}
-								else if (i == bundle.Tiers.Count - 1)
+								else if (i == tiersMostrar.Count - 1)
 								{
 									if (tipo == Tipo.Noticia)
 									{
@@ -874,17 +872,29 @@
 		Noticia
 	}
 
-	private List<Bundles2.BundleTier> OrdenarTiers(List<Bundles2.BundleTier> tiers)
+	private List<Bundles2.BundleTier> OrdenarTiers(List<Bundles2.BundleTier> tiers, List<Bundles2.BundleJuego> juegos)
 	{
-		if (tiers != null)
+		if (tiers == null)
 		{
-			tiers.Sort(delegate (Bundles2.BundleTier t1, Bundles2.BundleTier t2)
-			{
-				return t1.Posicion.CompareTo(t2.Posicion);
-			});
+			return tiers;
 		}
 
-		return tiers;
+		tiers.Sort(delegate (Bundles2.BundleTier t1, Bundles2.BundleTier t2)
+		{
+			return t1.Posicion.CompareTo(t2.Posicion);
+		});
+
+		if (juegos == null)
+		{
+			return tiers;
+		}
+
+		HashSet<int> posicionesConJuegos = juegos
+			.Where(j => j.Tier != null)
+			.Select(j => j.Tier.Posicion)
+			.ToHashSet();
+
+		return tiers.Where(t => posicionesConJuegos.Contains(t.Posicion)).ToList();
 	}
 
 	private async void AbrirBundle(MouseEventArgs e, string enlace)

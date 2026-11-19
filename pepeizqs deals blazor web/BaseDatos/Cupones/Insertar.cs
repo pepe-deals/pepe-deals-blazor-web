@@ -6,7 +6,7 @@ namespace BaseDatos.Cupones
 {
 	public static class Insertar
 	{
-		public static async void Ejecutar(string codigo, int? porcentaje, decimal? precioMinimo, decimal? precioRebaja, string tienda, DateTime fechaEmpieza, DateTime fechaAcaba)
+		public static async Task<int> Ejecutar(string codigo, int? porcentaje, decimal? precioMinimo, decimal? precioRebaja, string tienda, DateTime fechaEmpieza, DateTime fechaAcaba)
 		{
 			string colPorcentaje = (porcentaje.HasValue && porcentaje > 0) ? ", porcentaje" : "";
 			string valPorcentaje = (porcentaje.HasValue && porcentaje > 0) ? ", @porcentaje" : "";
@@ -43,11 +43,15 @@ namespace BaseDatos.Cupones
 				{
 					return await conexion.ExecuteAsync(sql, parametros, transaction: sentencia);
 				});
+
+				return 1;
 			}
 			catch (Exception ex)
 			{
 				BaseDatos.Errores.Insertar.Mensaje("Cupones Insertar", ex);
 			}
+
+			return 0;
 		}
 	}
 }

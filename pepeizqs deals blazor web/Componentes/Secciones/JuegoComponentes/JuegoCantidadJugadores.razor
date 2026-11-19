@@ -45,55 +45,54 @@
     [Parameter]
     public string userAgent { get; set; }
 
-    protected override async Task OnInitializedAsync()
-    {
-        if (juego.Tipo == JuegoTipo.Game)
-        {
-            if (juego.Caracteristicas?.FechaLanzamientoSteam != null && Herramientas.Bots.UserAgentEsBot(userAgent) == false)
-            {
-                if (DateTime.Now > juego.Caracteristicas?.FechaLanzamientoSteam)
-                {
-                    bool actualizarCantidadJugadores = false;
-
-                    if (juego.CantidadJugadores == null)
-                    {
-                        actualizarCantidadJugadores = true;
-                    }
-                    else
-                    {
-                        if (juego.CantidadJugadores.Fecha.AddMinutes(30) < DateTime.Now)
-                        {
-                            actualizarCantidadJugadores = true;
-                        }
-                    }
-
-                    if (actualizarCantidadJugadores == true)
-                    {
-                        JuegoCantidadJugadoresSteam cantidadNueva = new JuegoCantidadJugadoresSteam();
-                        cantidadNueva.Cantidad = await APIs.Steam.Juego.CargarCantidadJugadores(juego.IdSteam.ToString());
-                        cantidadNueva.Fecha = DateTime.Now;
-
-                        juego.CantidadJugadores = cantidadNueva;
-
-                        await global::BaseDatos.Juegos.Actualizar.CantidadJugadoresSteam(juego);
-                    }
-                }
-            }
-        }
-    }
-
     private IJSObjectReference moduloJs;
 
     protected override async Task OnAfterRenderAsync(bool primerRender)
     {
         if (primerRender == true)
         {
+            _ = ActualizarCantidadJugadores();
+
             try
             {
                 moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/secciones/juegocomponentes/JuegoCantidadJugadores.razor.js");
             }
             catch { }
         }
+    }
+
+    private async Task ActualizarCantidadJugadores()
+    {
+        try
+        {
+            if (juego.Tipo != JuegoTipo.Game || juego.Caracteristicas?.FechaLanzamientoSteam == null || Herramientas.Bots.UserAgentEsBot(userAgent) == true)
+            {
+                return;
+            }
+
+            if (DateTime.Now <= juego.Caracteristicas.FechaLanzamientoSteam)
+            {
+                return;
+            }
+
+            bool actualizar = juego.CantidadJugadores == null || juego.CantidadJugadores.Fecha.AddMinutes(30) < DateTime.Now;
+
+            if (actualizar == false)
+            {
+                return;
+            }
+
+            JuegoCantidadJugadoresSteam cantidadNueva = new JuegoCantidadJugadoresSteam();
+            cantidadNueva.Cantidad = await APIs.Steam.Juego.CargarCantidadJugadores(juego.IdSteam.ToString());
+            cantidadNueva.Fecha = DateTime.Now;
+
+            juego.CantidadJugadores = cantidadNueva;
+
+            await InvokeAsync(StateHasChanged);   
+
+            await global::BaseDatos.Juegos.Actualizar.CantidadJugadoresSteam(juego);
+        }
+        catch { }
     }
 
     public async ValueTask DisposeAsync()

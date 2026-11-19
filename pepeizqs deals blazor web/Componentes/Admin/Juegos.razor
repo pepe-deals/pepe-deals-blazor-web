@@ -5,7 +5,7 @@
 
 @inject IJSRuntime JavaScript
 
-<div class="caja-admin-juegos">
+<div class="caja-admin-juegos" style="padding: 20px;">
     <div class="perfil-flexible-centrado">
         <label>Precarga</label>
 
@@ -19,10 +19,11 @@
 {
     <div style="display: flex; flex-direction: column; gap: 20px; margin-top: 20px;">
         <div class="caja-admin-juegos">
-            <label>Datos</label>
-            <hr />
+            <div class="caja-admin-juegos-titulo">
+                Datos
+            </div>
 
-            <div style="display: flex; align-items: center; margin-top: 20px; gap: 15px;">
+            <div style="display: flex; align-items: center; padding: 20px; gap: 15px;">
                 <div style="width: 20%; padding: 5px; text-align: right;">
                     <label>Nombre</label>
                 </div>
@@ -33,56 +34,59 @@
         </div>
 
         <div class="caja-admin-juegos">
-            <label>Imágenes</label>
-            <hr />
-
-            <div style="display: flex; align-items: start; margin-top: 20px;  gap: 15px;">
-                <div style="width: 20%; padding: 5px; text-align: right;">
-                    <label>Header (460x215)</label>
-                </div>
-                <div style="width: 80%;">
-                    <input class="entrada-texto" value="@vacioHeader_460x215" @onchange="@(e => CambiarVacioHeader_460x215(e))" />
-                    <img src="@vacioHeader_460x215" style="max-width: 300px; max-height: 300px; margin-top: 10px;" />
-                </div>
+            <div class="caja-admin-juegos-titulo">
+                Imágenes
             </div>
+            
+            <div style="padding: 20px; display: flex; flex-direction: column; gap: 20px;">
+                <div style="display: flex; align-items: start; gap: 15px;">
+                    <div style="width: 20%; padding: 5px; text-align: right;">
+                        <label>Header (460x215)</label>
+                    </div>
+                    <div style="width: 80%;">
+                        <input class="entrada-texto" value="@vacioHeader_460x215" @onchange="@(e => CambiarVacioHeader_460x215(e))" />
+                        <img src="@vacioHeader_460x215" style="max-width: 300px; max-height: 300px; margin-top: 10px;" />
+                    </div>
+                </div>
 
-            <div style="display: flex; align-items: start; margin-top: 20px; gap: 15px;">
-                <div style="width: 20%; padding: 5px; text-align: right;">
-                    <label>Capsule (231x87)</label>
+                <div style="display: flex; align-items: start; gap: 15px;">
+                    <div style="width: 20%; padding: 5px; text-align: right;">
+                        <label>Capsule (231x87)</label>
+                    </div>
+                    <div style="width: 80%;">
+                        <input class="entrada-texto" value="@vacioCapsule_231x87" @onchange="@(e => CambiarVacioCapsule_231x87(e))" />
+                        <img src="@vacioCapsule_231x87" style="max-width: 300px; max-height: 300px; margin-top: 10px;" />
+                    </div>
                 </div>
-                <div style="width: 80%;">
-                    <input class="entrada-texto" value="@vacioCapsule_231x87" @onchange="@(e => CambiarVacioCapsule_231x87(e))" />
-                    <img src="@vacioCapsule_231x87" style="max-width: 300px; max-height: 300px; margin-top: 10px;" />
-                </div>
-            </div>
 
-            <div style="display: flex; align-items: start; margin-top: 20px; gap: 15px;">
-                <div style="width: 20%; padding: 5px; text-align: right;">
-                    <label>Logo</label>
+                <div style="display: flex; align-items: start; gap: 15px;">
+                    <div style="width: 20%; padding: 5px; text-align: right;">
+                        <label>Logo</label>
+                    </div>
+                    <div style="width: 80%;">
+                        <input class="entrada-texto" value="@vacioLogo" @onchange="@(e => CambiarVacioLogo(e))" />
+                        <img src="@vacioLogo" style="max-width: 300px; max-height: 300px; margin-top: 10px;" />
+                    </div>
                 </div>
-                <div style="width: 80%;">
-                    <input class="entrada-texto" value="@vacioLogo" @onchange="@(e => CambiarVacioLogo(e))" />
-                    <img src="@vacioLogo" style="max-width: 300px; max-height: 300px; margin-top: 10px;" />
-                </div>
-            </div>
 
-            <div style="display: flex; align-items: start; margin-top: 20px; gap: 15px;">
-                <div style="width: 20%; padding: 5px; text-align: right;">
-                    <label>Library (600x900)</label>
+                <div style="display: flex; align-items: start; gap: 15px;">
+                    <div style="width: 20%; padding: 5px; text-align: right;">
+                        <label>Library (600x900)</label>
+                    </div>
+                    <div style="width: 80%;">
+                        <input class="entrada-texto" value="@vacioLibrary_600x900" @onchange="@(e => CambiarVacioLibrary_600x900(e))" />
+                        <img src="@vacioLibrary_600x900" style="max-width: 300px; max-height: 300px; margin-top: 10px;" />
+                    </div>
                 </div>
-                <div style="width: 80%;">
-                    <input class="entrada-texto" value="@vacioLibrary_600x900" @onchange="@(e => CambiarVacioLibrary_600x900(e))" />
-                    <img src="@vacioLibrary_600x900" style="max-width: 300px; max-height: 300px; margin-top: 10px;" />
-                </div>
-            </div>
 
-            <div style="display: flex; align-items: start; margin-top: 20px; gap: 15px;">
-                <div style="width: 20%; padding: 5px; text-align: right;">
-                    <label>Library (1920x620)</label>
-                </div>
-                <div style="width: 80%;">
-                    <input class="entrada-texto" value="@vacioLibrary_1920x620" @onchange="@(e => CambiarVacioLibrary_1920x620(e))" />
-                    <img src="@vacioLibrary_1920x620" style="max-width: 300px; max-height: 300px; margin-top: 10px;" />
+                <div style="display: flex; align-items: start; gap: 15px;">
+                    <div style="width: 20%; padding: 5px; text-align: right;">
+                        <label>Library (1920x620)</label>
+                    </div>
+                    <div style="width: 80%;">
+                        <input class="entrada-texto" value="@vacioLibrary_1920x620" @onchange="@(e => CambiarVacioLibrary_1920x620(e))" />
+                        <img src="@vacioLibrary_1920x620" style="max-width: 300px; max-height: 300px; margin-top: 10px;" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -92,111 +96,114 @@ else
 {
     <div style="display: flex; flex-direction: column; gap: 20px; margin-top: 20px;">
         <div class="caja-admin-juegos">
-            <label>Datos</label>
-            <hr />
-
-            @if (string.IsNullOrEmpty(juegoAñadir.Nombre) == false)
-            {
-                <div style="display: flex; align-items: center; margin-top: 20px; gap: 15px;">
-                    <div style="width: 20%; padding: 0px 30px; text-align: right;">
-                        <label>Nombre</label>
-                    </div>
-                    <div style="width: 80%;">
-                        <input class="entrada-texto" value="@juegoAñadir.Nombre" @onchange="@(e => CambiarNombre(e))" />
-                    </div>
-                </div>
-            }
-
-            @if (juegoAñadir.IdSteam > 0)
-            {
-                <div style="display: flex; align-items: center; margin-top: 20px; gap: 15px;">
-                    <div style="width: 20%; padding: 0px 30px; text-align: right;">
-                        <label>ID Steam</label>
-                    </div>
-                    <div style="width: 80%;">
-                        <input class="entrada-texto" value="@juegoAñadir.IdSteam" @onchange="@(e => CambiarIdSteam(e))" />
-                    </div>
-                </div>
-            }
-
-            @if (juegoAñadir.IdGog > 0)
-            {
-                <div style="display: flex; align-items: center; margin-top: 20px; gap: 15px;">
-                    <div style="width: 20%; padding: 0px 30px; text-align: right;">
-                        <label>ID GOG</label>
-                    </div>
-                    <div style="width: 80%;">
-                        <input class="entrada-texto" value="@juegoAñadir.IdGog" @onchange="@(e => CambiarIdGog(e))" />
-                    </div>
-                </div>
-            }
-
-            <div style="display: flex; align-items: center; margin-top: 20px; gap: 15px;">
-                <div style="width: 20%; padding: 0px 30px; text-align: right;">
-                    <label>Tipo</label>
-                </div>
-                <div style="width: 80%;">
-                    <div class="opciones-combobox">
-                        <select @onchange="@(e => CambiarTipo(e))" value="@juegoAñadir.Tipo">
-                            @foreach (var tipo in global::Juegos.JuegoTipos.CargarListado())
-                            {
-                                <option value="@tipo">@tipo</option>
-                            }
-                        </select>
-                    </div>
-                </div>
+            <div class="caja-admin-juegos-titulo">
+                Datos
             </div>
 
-            @if (string.IsNullOrEmpty(juegoAñadir.FechaSteamAPIComprobacion.ToString()) == false)
-            {
-                if (juegoAñadir.FechaSteamAPIComprobacion.Year > 2022)
+            <div style="padding: 20px; display: flex; flex-direction: column; gap: 20px;">
+                @if (string.IsNullOrEmpty(juegoAñadir.Nombre) == false)
                 {
-                    <div style="display: flex; align-items: center; margin-top: 20px; gap: 15px;">
+                    <div style="display: flex; align-items: center; gap: 15px;">
                         <div style="width: 20%; padding: 0px 30px; text-align: right;">
-                            <label style="font-size: 12px;">Fecha Comprobación API Steam</label>
+                            <label>Nombre</label>
                         </div>
                         <div style="width: 80%;">
-                            <input class="entrada-texto" value="@juegoAñadir.FechaSteamAPIComprobacion" @onchange="@(e => CambiarFechaSteamAPIComprobacion(e))" />
+                            <input class="entrada-texto" value="@juegoAñadir.Nombre" @onchange="@(e => CambiarNombre(e))" />
                         </div>
                     </div>
                 }
-            }
 
-            @if (juegoAñadir.IdSteam > 0 && juegoAñadir.Tipo == global::Juegos.JuegoTipo.DLC)
-            {
-                <div style="display: flex; align-items: center; margin-top: 20px; gap: 15px;">
+                @if (juegoAñadir.IdSteam > 0)
+                {
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div style="width: 20%; padding: 0px 30px; text-align: right;">
+                            <label>ID Steam</label>
+                        </div>
+                        <div style="width: 80%;">
+                            <input class="entrada-texto" value="@juegoAñadir.IdSteam" @onchange="@(e => CambiarIdSteam(e))" />
+                        </div>
+                    </div>
+                }
+
+                @if (juegoAñadir.IdGog > 0)
+                {
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div style="width: 20%; padding: 0px 30px; text-align: right;">
+                            <label>ID GOG</label>
+                        </div>
+                        <div style="width: 80%;">
+                            <input class="entrada-texto" value="@juegoAñadir.IdGog" @onchange="@(e => CambiarIdGog(e))" />
+                        </div>
+                    </div>
+                }
+
+                <div style="display: flex; align-items: center; gap: 15px;">
                     <div style="width: 20%; padding: 0px 30px; text-align: right;">
-                        <label>Maestro</label>
+                        <label>Tipo</label>
                     </div>
                     <div style="width: 80%;">
-                        <input class="entrada-texto" value="@juegoAñadir.Maestro" @onchange="@(e => CambiarMaestro(e))" />
+                        <div class="opciones-combobox">
+                            <select @onchange="@(e => CambiarTipo(e))" value="@juegoAñadir.Tipo">
+                                @foreach (var tipo in global::Juegos.JuegoTipos.CargarListado())
+                                {
+                                    <option value="@tipo">@tipo</option>
+                                }
+                            </select>
+                        </div>
                     </div>
                 </div>
-            }
 
-            @if (juegoAñadir.IdSteam > 0 && juegoAñadir.Tipo == global::Juegos.JuegoTipo.Game)
-            {
-                <div style="display: flex; align-items: center; margin-top: 20px; gap: 15px;">
-                    <div style="width: 20%; padding: 0px 30px; text-align: right;">
-                        <label>FreeToPlay</label>
-                    </div>
-                    <div style="width: 80%;">
-                        <input class="entrada-texto" value="@juegoAñadir.FreeToPlay" @onchange="@(e => CambiarFreeToPlay(e))" />
-                    </div>
-                </div>
-            }
+                @if (string.IsNullOrEmpty(juegoAñadir.FechaSteamAPIComprobacion.ToString()) == false)
+                {
+                    if (juegoAñadir.FechaSteamAPIComprobacion.Year > 2022)
+                    {
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="width: 20%; padding: 0px 30px; text-align: right;">
+                                <label style="font-size: 12px;">Fecha Comprobación API Steam</label>
+                            </div>
+                            <div style="width: 80%;">
+                                <input class="entrada-texto" value="@juegoAñadir.FechaSteamAPIComprobacion" @onchange="@(e => CambiarFechaSteamAPIComprobacion(e))" />
+                            </div>
+                        </div>
+                    }
+                }
 
-            @if (string.IsNullOrEmpty(juegoAñadir.Nombre) == false)
-            {
-                <div style="display: flex; align-items: center; margin-top: 20px; gap: 15px;">
-                    <div style="width: 20%; padding: 0px 30px; text-align: right;">
-                        <label>Mayor Edad</label>
+                @if (juegoAñadir.IdSteam > 0 && juegoAñadir.Tipo == global::Juegos.JuegoTipo.DLC)
+                {
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div style="width: 20%; padding: 0px 30px; text-align: right;">
+                            <label>Maestro</label>
+                        </div>
+                        <div style="width: 80%;">
+                            <input class="entrada-texto" value="@juegoAñadir.Maestro" @onchange="@(e => CambiarMaestro(e))" />
+                        </div>
                     </div>
-                    <div style="width: 80%;">
-                        <input class="entrada-texto" value="@juegoAñadir.MayorEdad" @onchange="@(e => CambiarMayorEdad(e))" />
+                }
+
+                @if (juegoAñadir.IdSteam > 0 && juegoAñadir.Tipo == global::Juegos.JuegoTipo.Game)
+                {
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div style="width: 20%; padding: 0px 30px; text-align: right;">
+                            <label>FreeToPlay</label>
+                        </div>
+                        <div style="width: 80%;">
+                            <input class="entrada-texto" value="@juegoAñadir.FreeToPlay" @onchange="@(e => CambiarFreeToPlay(e))" />
+                        </div>
                     </div>
-                </div>
-            }
+                }
+
+                @if (string.IsNullOrEmpty(juegoAñadir.Nombre) == false)
+                {
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div style="width: 20%; padding: 0px 30px; text-align: right;">
+                            <label>Mayor Edad</label>
+                        </div>
+                        <div style="width: 80%;">
+                            <input class="entrada-texto" value="@juegoAñadir.MayorEdad" @onchange="@(e => CambiarMayorEdad(e))" />
+                        </div>
+                    </div>
+                }
+            </div>
         </div>
 
         @if (juegoAñadir.PrecioActualesTiendas?.Count > 0)
@@ -208,69 +215,72 @@ else
                 i += 1;
 
                 <div class="caja-admin-juegos">
-                    <label>Precio @i.ToString()</label>
-                    <hr />
-
-                    <div style="display: flex; align-items: center; margin-top: 20px; gap: 15px;">
-                        <div style="width: 20%; padding: 0px 30px; text-align: right;">
-                            <label>Descuento</label>
-                        </div>
-                        <div style="width: 80%;">
-                            <input class="entrada-texto" value="@precio.Descuento" @onchange="@(e => CambiarDescuento(e, precio))" />
-                        </div>
+                    <div class="caja-admin-juegos-titulo">
+                        Precio @i.ToString()
                     </div>
 
-                    <div style="display: flex; align-items: center; margin-top: 20px; gap: 15px;">
-                        <div style="width: 20%; padding: 0px 30px; text-align: right;">
-                            <label>DRM</label>
+                    <div style="padding: 20px; display: flex; flex-direction: column; gap: 20px;">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="width: 20%; padding: 0px 30px; text-align: right;">
+                                <label>Descuento</label>
+                            </div>
+                            <div style="width: 80%;">
+                                <input class="entrada-texto" value="@precio.Descuento" @onchange="@(e => CambiarDescuento(e, precio))" />
+                            </div>
                         </div>
-                        <div style="width: 80%;">
-                            <input class="entrada-texto" value="@precio.DRM" @onchange="@(e => CambiarDRM(e, precio))" />
-                        </div>
-                    </div>
 
-                    <div style="display: flex; align-items: center; margin-top: 20px; gap: 15px;">
-                        <div style="width: 20%; padding: 0px 30px; text-align: right;">
-                            <label>Precio</label>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="width: 20%; padding: 0px 30px; text-align: right;">
+                                <label>DRM</label>
+                            </div>
+                            <div style="width: 80%;">
+                                <input class="entrada-texto" value="@precio.DRM" @onchange="@(e => CambiarDRM(e, precio))" />
+                            </div>
                         </div>
-                        <div style="width: 80%;">
-                            <input class="entrada-texto" value="@precio.Precio" @onchange="@(e => CambiarPrecio(e, precio))" />
-                        </div>
-                    </div>
 
-                    <div style="display: flex; align-items: center; margin-top: 20px; gap: 15px;">
-                        <div style="width: 20%; padding: 0px 30px; text-align: right;">
-                            <label>Moneda</label>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="width: 20%; padding: 0px 30px; text-align: right;">
+                                <label>Precio</label>
+                            </div>
+                            <div style="width: 80%;">
+                                <input class="entrada-texto" value="@precio.Precio" @onchange="@(e => CambiarPrecio(e, precio))" />
+                            </div>
                         </div>
-                        <div style="width: 80%;">
-                            <input class="entrada-texto" value="@precio.Moneda" @onchange="@(e => CambiarMoneda(e, precio))" />
-                        </div>
-                    </div>
 
-                    <div style="display: flex; align-items: center; margin-top: 20px; gap: 15px;">
-                        <div style="width: 20%; padding: 0px 30px; text-align: right;">
-                            <label>Fecha Detectado</label>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="width: 20%; padding: 0px 30px; text-align: right;">
+                                <label>Moneda</label>
+                            </div>
+                            <div style="width: 80%;">
+                                <input class="entrada-texto" value="@precio.Moneda" @onchange="@(e => CambiarMoneda(e, precio))" />
+                            </div>
                         </div>
-                        <div style="width: 80%;">
-                            <input class="entrada-texto" value="@precio.FechaDetectado" @onchange="@(e => CambiarFechaDetectado(e, precio))" />
-                        </div>
-                    </div>
 
-                    <div style="display: flex; align-items: center; margin-top: 20px; gap: 15px;">
-                        <div style="width: 20%; padding: 0px 30px; text-align: right;">
-                            <label>Enlace</label>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="width: 20%; padding: 0px 30px; text-align: right;">
+                                <label>Fecha Detectado</label>
+                            </div>
+                            <div style="width: 80%;">
+                                <input class="entrada-texto" value="@precio.FechaDetectado" @onchange="@(e => CambiarFechaDetectado(e, precio))" />
+                            </div>
                         </div>
-                        <div style="width: 80%;">
-                            <input class="entrada-texto" value="@precio.Enlace" @onchange="@(e => CambiarEnlace(e, precio))" />
-                        </div>
-                    </div>
 
-                    <div style="display: flex; align-items: center; margin-top: 20px; gap: 15px;">
-                        <div style="width: 20%; padding: 0px 30px; text-align: right;">
-                            <label>Tienda</label>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="width: 20%; padding: 0px 30px; text-align: right;">
+                                <label>Enlace</label>
+                            </div>
+                            <div style="width: 80%;">
+                                <input class="entrada-texto" value="@precio.Enlace" @onchange="@(e => CambiarEnlace(e, precio))" />
+                            </div>
                         </div>
-                        <div style="width: 80%;">
-                            <input class="entrada-texto" value="@precio.Tienda" @onchange="@(e => CambiarTienda(e, precio))" />
+
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="width: 20%; padding: 0px 30px; text-align: right;">
+                                <label>Tienda</label>
+                            </div>
+                            <div style="width: 80%;">
+                                <input class="entrada-texto" value="@precio.Tienda" @onchange="@(e => CambiarTienda(e, precio))" />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -280,123 +290,126 @@ else
         @if (juegoAñadir.Imagenes != null)
         {
             <div class="caja-admin-juegos">
-                <label>Imágenes</label>
-                <hr />
+                <div class="caja-admin-juegos-titulo">
+                    Imágenes
+                </div>
 
-                @if (juegoAñadir.Imagenes.Header_460x215 != null)
-                {
-                    <div style="display: flex; align-items: start; margin-top: 20px; gap: 15px;">
-                        <div style="width: 20%; padding: 5px; text-align: right;">
-                            <label>Header (460x215)</label>
+                <div style="padding: 20px; display: flex; flex-direction: column; gap: 20px;">
+                    @if (juegoAñadir.Imagenes.Header_460x215 != null)
+                    {
+                        <div style="display: flex; align-items: start; gap: 15px;">
+                            <div style="width: 20%; padding: 5px; text-align: right;">
+                                <label>Header (460x215)</label>
+                            </div>
+                            <div style="width: 80%;">
+                                <input class="entrada-texto" value="@juegoAñadir.Imagenes.Header_460x215" @onchange="@(e => CambiarHeader_460x215(e))" />
+                                <img src="@juegoAñadir.Imagenes.Header_460x215" style="max-width: 300px; max-height: 300px; margin-top: 10px;" />
+                            </div>
                         </div>
-                        <div style="width: 80%;">
-                            <input class="entrada-texto" value="@juegoAñadir.Imagenes.Header_460x215" @onchange="@(e => CambiarHeader_460x215(e))" />
-                            <img src="@juegoAñadir.Imagenes.Header_460x215" style="max-width: 300px; max-height: 300px; margin-top: 10px;" />
-                        </div>
-                    </div>
-                }
+                    }
 
-                @if (juegoAñadir.Imagenes.Capsule_231x87 != null)
-                {
-                    <div style="display: flex; align-items: start; margin-top: 20px; gap: 15px;">
-                        <div style="width: 20%; padding: 5px; text-align: right;">
-                            <label>Capsule (231x87)</label>
+                    @if (juegoAñadir.Imagenes.Capsule_231x87 != null)
+                    {
+                        <div style="display: flex; align-items: start; gap: 15px;">
+                            <div style="width: 20%; padding: 5px; text-align: right;">
+                                <label>Capsule (231x87)</label>
+                            </div>
+                            <div style="width: 80%;">
+                                <input class="entrada-texto" value="@juegoAñadir.Imagenes.Capsule_231x87" @onchange="@(e => CambiarCapsule_231x87(e))" />
+                                <img src="@juegoAñadir.Imagenes.Capsule_231x87" style="max-width: 300px; max-height: 300px; margin-top: 10px;" />
+                            </div>
                         </div>
-                        <div style="width: 80%;">
-                            <input class="entrada-texto" value="@juegoAñadir.Imagenes.Capsule_231x87" @onchange="@(e => CambiarCapsule_231x87(e))" />
-                            <img src="@juegoAñadir.Imagenes.Capsule_231x87" style="max-width: 300px; max-height: 300px; margin-top: 10px;" />
-                        </div>
-                    </div>
-                }
+                    }
 
-                @if (juegoAñadir.Imagenes.Logo != null)
-                {
-                    <div style="display: flex; align-items: start; margin-top: 20px; gap: 15px;">
-                        <div style="width: 20%; padding: 5px; text-align: right;">
-                            <label>Logo</label>
+                    @if (juegoAñadir.Imagenes.Logo != null)
+                    {
+                        <div style="display: flex; align-items: start; gap: 15px;">
+                            <div style="width: 20%; padding: 5px; text-align: right;">
+                                <label>Logo</label>
+                            </div>
+                            <div style="width: 80%;">
+                                <input class="entrada-texto" value="@juegoAñadir.Imagenes.Logo" @onchange="@(e => CambiarLogo(e))" />
+                                <img src="@juegoAñadir.Imagenes.Logo" style="max-width: 300px; max-height: 300px; margin-top: 10px;" />
+                            </div>
                         </div>
-                        <div style="width: 80%;">
-                            <input class="entrada-texto" value="@juegoAñadir.Imagenes.Logo" @onchange="@(e => CambiarLogo(e))" />
-                            <img src="@juegoAñadir.Imagenes.Logo" style="max-width: 300px; max-height: 300px; margin-top: 10px;" />
-                        </div>
-                    </div>
-                }
+                    }
 
-                @if (juegoAñadir.Imagenes.Library_600x900 != null)
-                {
-                    <div style="display: flex; align-items: start; margin-top: 20px; gap: 15px;">
-                        <div style="width: 20%; padding: 5px; text-align: right;">
-                            <label>Library (600x900)</label>
+                    @if (juegoAñadir.Imagenes.Library_600x900 != null)
+                    {
+                        <div style="display: flex; align-items: start; gap: 15px;">
+                            <div style="width: 20%; padding: 5px; text-align: right;">
+                                <label>Library (600x900)</label>
+                            </div>
+                            <div style="width: 80%;">
+                                <input class="entrada-texto" value="@juegoAñadir.Imagenes.Library_600x900" @onchange="@(e => CambiarLibrary_600x900(e))" />
+                                <img src="@juegoAñadir.Imagenes.Library_600x900" style="max-width: 300px; max-height: 300px; margin-top: 10px;" />
+                            </div>
                         </div>
-                        <div style="width: 80%;">
-                            <input class="entrada-texto" value="@juegoAñadir.Imagenes.Library_600x900" @onchange="@(e => CambiarLibrary_600x900(e))" />
-                            <img src="@juegoAñadir.Imagenes.Library_600x900" style="max-width: 300px; max-height: 300px; margin-top: 10px;" />
-                        </div>
-                    </div>
-                }
+                    }
 
-                @if (juegoAñadir.Imagenes.Library_1920x620 != null)
-                {
-                    <div style="display: flex; align-items: start; margin-top: 20px; gap: 15px;">
-                        <div style="width: 20%; padding: 5px; text-align: right;">
-                            <label>Library (1920x620)</label>
+                    @if (juegoAñadir.Imagenes.Library_1920x620 != null)
+                    {
+                        <div style="display: flex; align-items: start; gap: 15px;">
+                            <div style="width: 20%; padding: 5px; text-align: right;">
+                                <label>Library (1920x620)</label>
+                            </div>
+                            <div style="width: 80%;">
+                                <input class="entrada-texto" value="@juegoAñadir.Imagenes.Library_1920x620" @onchange="@(e => CambiarLibrary_1920x620(e))" />
+                                <img src="@juegoAñadir.Imagenes.Library_1920x620" style="max-width: 300px; max-height: 300px; margin-top: 10px;" />
+                            </div>
                         </div>
-                        <div style="width: 80%;">
-                            <input class="entrada-texto" value="@juegoAñadir.Imagenes.Library_1920x620" @onchange="@(e => CambiarLibrary_1920x620(e))" />
-                            <img src="@juegoAñadir.Imagenes.Library_1920x620" style="max-width: 300px; max-height: 300px; margin-top: 10px;" />
-                        </div>
-                    </div>
-                }
+                    }
+                </div>
             </div>
         }
 
         @if (juegoAñadir.Caracteristicas != null)
         {
             <div class="caja-admin-juegos">
-                <label>Características</label>
-                <hr />
+                <div class="caja-admin-juegos-titulo">
+                    Características
+                </div>
 
-                @if (string.IsNullOrEmpty(juegoAñadir.Caracteristicas.Windows.ToString()) == false)
-                {
-                    <div style="display: flex; align-items: center; margin-top: 20px; gap: 15px;">
-                        <div style="width: 20%; padding: 0px 30px; text-align: right;">
-                            <label>Windows</label>
-                        </div>
-                        <div style="width: 80%;">
-                            <input class="entrada-texto" value="@juegoAñadir.Caracteristicas.Windows.ToString()" @onchange="@(e => CambiarWindows(e))" />
-                        </div>
-                    </div>
-                }
-
-                @if (string.IsNullOrEmpty(juegoAñadir.Caracteristicas.Mac.ToString()) == false)
-                {
-                    <div style="display: flex; align-items: center; margin-top: 20px; gap: 15px;">
-                        <div style="width: 20%; padding: 0px 30px; text-align: right;">
-                            <label>Mac</label>
-                        </div>
-                        <div style="width: 80%;">
-                            <input class="entrada-texto" value="@juegoAñadir.Caracteristicas.Mac.ToString()" @onchange="@(e => CambiarMac(e))" />
-                        </div>
-                    </div>
-                }
-
-                @if (string.IsNullOrEmpty(juegoAñadir.Caracteristicas.Linux.ToString()) == false)
-                {
-                    <div style="display: flex; align-items: center; margin-top: 20px; gap: 15px;">
-                        <div style="width: 20%; padding: 0px 30px; text-align: right;">
-                            <label>Linux</label>
-                        </div>
-                        <div style="width: 80%;">
-                            <input class="entrada-texto" value="@juegoAñadir.Caracteristicas.Linux.ToString()" @onchange="@(e => CambiarLinux(e))" />
-                        </div>
-                    </div>
-                }
-
-                @if (juegoAñadir.Caracteristicas.Desarrolladores2 != null)
-                {
-                    if (juegoAñadir.Caracteristicas.Desarrolladores2.Count > 0)
+                <div style="padding: 20px; display: flex; flex-direction: column; gap: 20px;">
+                    @if (string.IsNullOrEmpty(juegoAñadir.Caracteristicas.Windows.ToString()) == false)
                     {
-                        <div style="display: flex; align-items: start; margin-top: 20px; gap: 15px;">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="width: 20%; padding: 0px 30px; text-align: right;">
+                                <label>Windows</label>
+                            </div>
+                            <div style="width: 80%;">
+                                <input class="entrada-texto" value="@juegoAñadir.Caracteristicas.Windows.ToString()" @onchange="@(e => CambiarWindows(e))" />
+                            </div>
+                        </div>
+                    }
+
+                    @if (string.IsNullOrEmpty(juegoAñadir.Caracteristicas.Mac.ToString()) == false)
+                    {
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="width: 20%; padding: 0px 30px; text-align: right;">
+                                <label>Mac</label>
+                            </div>
+                            <div style="width: 80%;">
+                                <input class="entrada-texto" value="@juegoAñadir.Caracteristicas.Mac.ToString()" @onchange="@(e => CambiarMac(e))" />
+                            </div>
+                        </div>
+                    }
+
+                    @if (string.IsNullOrEmpty(juegoAñadir.Caracteristicas.Linux.ToString()) == false)
+                    {
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="width: 20%; padding: 0px 30px; text-align: right;">
+                                <label>Linux</label>
+                            </div>
+                            <div style="width: 80%;">
+                                <input class="entrada-texto" value="@juegoAñadir.Caracteristicas.Linux.ToString()" @onchange="@(e => CambiarLinux(e))" />
+                            </div>
+                        </div>
+                    }
+
+                    @if (juegoAñadir.Caracteristicas.Desarrolladores2?.Count > 0)
+                    {
+                        <div style="display: flex; align-items: start; gap: 15px;">
                             <div style="width: 20%; padding: 5px; text-align: right;">
                                 <label>Desarrolladores</label>
                             </div>
@@ -405,13 +418,10 @@ else
                             </div>
                         </div>
                     }
-                }
 
-                @if (juegoAñadir.Caracteristicas.Editores2 != null)
-                {
-                    if (juegoAñadir.Caracteristicas.Editores2.Count > 0)
+                    @if (juegoAñadir.Caracteristicas.Editores2?.Count > 0)
                     {
-                        <div style="display: flex; align-items: start; margin-top: 20px; gap: 15px;">
+                        <div style="display: flex; align-items: start; gap: 15px;">
                             <div style="width: 20%; padding: 5px; text-align: right;">
                                 <label>Editores</label>
                             </div>
@@ -420,38 +430,38 @@ else
                             </div>
                         </div>
                     }
-                }
 
-                @if (string.IsNullOrEmpty(juegoAñadir.Caracteristicas.Descripcion) == false)
-                {
-                    <div style="display: flex; align-items: start; margin-top: 20px; gap: 15px;">
-                        <div style="width: 20%; padding: 5px; text-align: right;">
-                            <label>Descripción</label>
+                    @if (string.IsNullOrEmpty(juegoAñadir.Caracteristicas.Descripcion) == false)
+                    {
+                        <div style="display: flex; align-items: start; gap: 15px;">
+                            <div style="width: 20%; padding: 5px; text-align: right;">
+                                <label>Descripción</label>
+                            </div>
+                            <div style="width: 80%;">
+                                <textarea class="entrada-texto" style="height: 4em;" value="@juegoAñadir.Caracteristicas.Descripcion" @onchange="@(e => CambiarDescripcion(e))" />
+                            </div>
                         </div>
-                        <div style="width: 80%;">
-                            <textarea class="entrada-texto" style="height: 4em;" value="@juegoAñadir.Caracteristicas.Descripcion" @onchange="@(e => CambiarDescripcion(e))" />
-                        </div>
-                    </div>
-                }
+                    }
+                </div>
             </div>
         }
 
         @if (juegoAñadir.Media != null)
         {
             <div class="caja-admin-juegos">
-                <label>Media</label>
-                <hr />
+                <div class="caja-admin-juegos-titulo">
+                    Media
+                </div>
 
-                @if (juegoAñadir.Media.Videos != null)
-                {
-                    if (juegoAñadir.Media.Videos.Count > 0)
+                <div style="padding: 20px; display: flex; flex-direction: column; gap: 20px;">
+                    @if (juegoAñadir.Media.Videos?.Count > 0)
                     {
                         int i = 0;
                         foreach (var video in juegoAñadir.Media.Videos)
                         {
                             i += 1;
 
-                            <div style="display: flex; align-items: start; margin-top: 20px; gap: 15px;">
+                            <div style="display: flex; align-items: start; gap: 15px;">
                                 <div style="width: 20%; padding: 5px; text-align: right;">
                                     <label>Video @i.ToString()</label>
                                 </div>
@@ -462,18 +472,15 @@ else
                             </div>
                         }
                     }
-                }
 
-                @if (juegoAñadir.Media.Capturas2 != null)
-                {
-                    if (juegoAñadir.Media.Capturas2.Count > 0)
+                    @if (juegoAñadir.Media.Capturas2?.Count > 0)
                     {
                         int i = 0;
                         foreach (var captura in juegoAñadir.Media.Capturas2)
                         {
                             i += 1;
 
-                            <div style="display: flex; align-items: start; margin-top: 20px; gap: 15px;">
+                            <div style="display: flex; align-items: start; gap: 15px;">
                                 <div style="width: 20%; padding: 5px; text-align: right;">
                                     <label>Captura @i.ToString()</label>
                                 </div>
@@ -484,28 +491,31 @@ else
                             </div>
                         }
                     }
-                }
+                </div>
             </div>
         }
 
         @if (juegoAñadir.Idiomas?.Count > 0)
         {
             <div class="caja-admin-juegos">
-                <label>Idiomas</label>
-                <hr />
+                <div class="caja-admin-juegos-titulo">
+                    Idiomas
+                </div>
 
-                @foreach (var idioma in juegoAñadir.Idiomas)
-                {
-                    <div>
-                        @idioma.Idioma - Audio: @idioma.Audio.ToString() - Texto: @idioma.Texto.ToString()
-                    </div>
-                }
+                <div style="padding: 20px; display: flex; flex-direction: column; gap: 5px;">
+                    @foreach (var idioma in juegoAñadir.Idiomas)
+                    {
+                        <div>
+                            @idioma.Idioma - Audio: @idioma.Audio.ToString() - Texto: @idioma.Texto.ToString()
+                        </div>
+                    }
+                </div>
             </div>
         }
     </div>   
 }
 
-<div id="caja-admin-añadir" class="caja-admin-juegos" style="margin-top: 20px;">
+<div id="caja-admin-añadir" class="caja-admin-juegos" style="margin-top: 20px; padding: 20px;">
     <button @onclick="@(e => ClickearAñadir(e))" class="boton-pequeño" style="text-align: center; width: fit-content; padding: 10px 40px; font-size: 20px;">Añadir</button>
 </div>
 

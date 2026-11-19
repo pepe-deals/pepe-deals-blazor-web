@@ -1,4 +1,10 @@
-﻿namespace APIs.Digiphile
+﻿#nullable disable
+
+using Herramientas;
+using HtmlAgilityPack;
+using System.Net;
+
+namespace APIs.Digiphile
 {
 	public static class Bundle
 	{
@@ -24,6 +30,29 @@
 			fechaTermina = new DateTime(fechaTermina.Year, fechaTermina.Month, fechaTermina.Day, fechaTermina.Hour, 0, 0);
 
 			bundle.FechaTermina = fechaTermina;
+
+			return bundle;
+		}
+
+		public static async Task<Bundles2.Bundle> ExtraerDatos(Bundles2.Bundle bundle)
+		{
+			if (bundle.Enlace != "https://www.digiphile.co/")
+			{
+				string html = await Decompiladores.Estandar(bundle.Enlace);
+
+				if (string.IsNullOrEmpty(html) == false)
+				{
+					HtmlDocument doc = new HtmlDocument();
+					doc.LoadHtml(html);
+
+					bundle.Nombre = WebUtility.HtmlDecode(doc.DocumentNode.SelectSingleNode("//h1")?.InnerText.Trim());
+
+					string imagen = doc.DocumentNode.SelectSingleNode("//meta[@property='og:image']")?.GetAttributeValue("content", "");
+
+					bundle.Imagen = imagen;
+					bundle.ImagenNoticia = imagen;
+				}
+			}
 
 			return bundle;
 		}

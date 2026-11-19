@@ -1,9 +1,7 @@
 ﻿#nullable disable
 
-using BaseDatos.Juegos;
 using Herramientas;
 using HtmlAgilityPack;
-using Microsoft.VisualBasic;
 using System.Globalization;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -31,9 +29,8 @@ namespace APIs.Humble
 			bundle.FechaEmpieza = fechaEmpieza;
 
 			DateTime fechaTermina = DateTime.Now;
-			fechaTermina = fechaTermina.AddDays(21);
-			fechaTermina = fechaTermina.AddHours(10);
-			fechaTermina = new DateTime(fechaTermina.Year, fechaTermina.Month, fechaTermina.Day, fechaTermina.Hour, 0, 0);
+			fechaTermina = fechaTermina.AddDays(22);
+			fechaTermina = new DateTime(fechaTermina.Year, fechaTermina.Month, fechaTermina.Day, 6, 0, 0);
 
 			bundle.FechaTermina = fechaTermina;
 
@@ -56,7 +53,7 @@ namespace APIs.Humble
 					HtmlDocument doc = new HtmlDocument();
 					doc.LoadHtml(html);
 
-					bundle.Nombre = doc.DocumentNode.SelectSingleNode("//h1")?.InnerText.Trim();
+					bundle.Nombre = WebUtility.HtmlDecode(doc.DocumentNode.SelectSingleNode("//h1")?.InnerText.Trim());
 
 					string imagen = doc.DocumentNode.SelectSingleNode("//meta[@property='og:image']")?.GetAttributeValue("content", "");
 
@@ -65,8 +62,7 @@ namespace APIs.Humble
 
 					string json = html.Replace("\\\"", "\"");
 
-					MatchCollection tiers = Regex.Matches(json,
-						@"""price"":\{""amount"":([\d.]+),""currencyCode"":""([A-Z]{3})""\},""totalMsrpValue"":\{""amount"":([\d.]+)");
+					MatchCollection tiers = Regex.Matches(json, @"""price"":\{""amount"":([\d.]+),""currencyCode"":""([A-Z]{3})""\},""totalMsrpValue""");
 
 					List<Bundles2.BundleTier> tiers2 = new List<Bundles2.BundleTier>();
 

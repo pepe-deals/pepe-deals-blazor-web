@@ -619,6 +619,13 @@
 							{
 								foreach (var historico in historicosMostrar)
 								{
+									string simboloMoneda = "€";
+
+									if (pestañaMostrarHistoricos == 2 || pestañaMostrarHistoricos == 4 || pestañaMostrarHistoricos == 6)
+									{
+										simboloMoneda = "$";
+									}
+
 									string imagenTienda = Tiendas2.TiendasCargar.DevolverTienda(historico.Tienda).ImagenIcono;
 									string imagenDRM = global::Juegos.JuegoDRM2.SacarImagen(historico.DRM);
 
@@ -627,7 +634,7 @@
 											Fecha: @historico.Fecha.ToString("dd/MM/yyyy HH:mm")
 										</div>
 										<div>
-											Precio: @historico.Precio€
+											Precio: @historico.Precio @simboloMoneda
 										</div>
 										<div>
 											<img src="@imagenTienda" style="width: 20px; height: 20px;" />

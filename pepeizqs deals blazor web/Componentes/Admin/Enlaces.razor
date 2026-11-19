@@ -2,11 +2,11 @@
 
 <div style="display: flex; flex-direction: column; gap: 30px;">
     <div class="caja-admin-enlaces">
-        <div>
+        <div class="caja-admin-enlaces-titulo">
             pepe.deals
         </div>
 
-        <div style="display: flex; align-items: center; gap: 20px; margin-top: 20px; flex-wrap: wrap;">
+        <div class="caja-admin-enlaces-contenido">
             <div>
                 <a class="boton-pequeño" href="@dealsVisitas" style="text-decoration: none; text-align: center; padding: 8px 16px;" target="_blank">Visitas</a>
             </div>
@@ -26,15 +26,19 @@
             <div>
                 <a class="boton-pequeño" href="@dealsSteam" style="text-decoration: none; text-align: center; padding: 8px 16px;" target="_blank">Steam Noticias</a>
             </div>
+
+            <div>
+                <a class="boton-pequeño" href="@dealsCloudflare" style="text-decoration: none; text-align: center; padding: 8px 16px;" target="_blank">Cloudflare (Turnstile)</a>
+            </div>
         </div>
     </div>
 
     <div class="caja-admin-enlaces">
-        <div>
+        <div class="caja-admin-enlaces-titulo">
             pepeizqapps.com
         </div>
 
-        <div style="display: flex; align-items: center; gap: 20px; margin-top: 20px; flex-wrap: wrap;">
+        <div class="caja-admin-enlaces-contenido">
             <div>
                 <a class="boton-pequeño" href="@appsVisitas" style="text-decoration: none; text-align: center; padding: 8px 16px;" target="_blank">Visitas</a>
             </div>
@@ -50,11 +54,11 @@
     </div>
 
     <div class="caja-admin-enlaces">
-        <div>
+        <div class="caja-admin-enlaces-titulo">
             Afiliados
         </div>
 
-        <div style="display: flex; align-items: center; flex-flow: wrap; grid-gap: 20px; margin-top: 20px;">
+        <div class="caja-admin-enlaces-contenido">
             <div>
                 <a class="boton-pequeño" href="https://uk.gamesplanet.com/partner/uk/reports" style="text-decoration: none; text-align: center; padding: 8px 16px;" target="_blank">Gamesplanet</a>
             </div>
@@ -88,10 +92,6 @@
             </div>
 
             <div>
-                <a class="boton-pequeño" href="https://partner.dlgamer.com/secure/stats" style="text-decoration: none; text-align: center; padding: 8px 16px;" target="_blank">DLGamer</a>
-            </div>
-
-            <div>
                 <a class="boton-pequeño" href="https://ui.awin.com/dashboard/awin/publisher/2693824/gb" style="text-decoration: none; text-align: center; padding: 8px 16px;" target="_blank">Awin</a>
             </div>
 
@@ -106,11 +106,11 @@
     </div>
 
     <div class="caja-admin-enlaces">
-        <div>
+        <div class="caja-admin-enlaces-titulo">
             Extensión para navegadores web
         </div>
 
-        <div style="display: flex; align-items: center; gap: 20px; margin-top: 20px; flex-wrap: wrap;">
+        <div class="caja-admin-enlaces-contenido">
             <div>
                 <a class="boton-pequeño" href="@extensionChrome" style="text-decoration: none; text-align: center; padding: 8px 16px;" target="_blank">Chrome</a>
             </div>
@@ -134,6 +134,7 @@
     private string dealsVisitas = string.Empty;
     private string dealsBing = string.Empty;
     private string dealsSteam = string.Empty;
+    private string dealsCloudflare = string.Empty;
 
     private string appsGoogleSearch = string.Empty;
     private string appsVisitas = string.Empty;
@@ -149,6 +150,7 @@
         dealsVisitas = Configuracion.GetValue<string>("WebmasterDeals:Visitas");
         dealsBing = Configuracion.GetValue<string>("WebmasterDeals:Bing");
         dealsSteam = Configuracion.GetValue<string>("WebmasterDeals:SteamNews");
+        dealsCloudflare = Configuracion.GetValue<string>("WebmasterDeals:CloudflareTurnstile");
 
         appsGoogleSearch = Configuracion.GetValue<string>("WebmasterApps:GoogleSearch");
         appsVisitas = Configuracion.GetValue<string>("WebmasterApps:Visitas");

@@ -68,6 +68,13 @@ namespace Bundles2
 							nuevoBundle = await APIs.GreenManGaming.Bundle.ExtraerDatos(nuevoBundle);
 							return nuevoBundle;
 						}
+						else if (bundle.BundleTipo == BundleTipo.Digiphile)
+						{
+							Bundle nuevoBundle = bundle;
+							nuevoBundle.Enlace = LimpiarEnlace(enlace);
+							nuevoBundle = await APIs.Digiphile.Bundle.ExtraerDatos(nuevoBundle);
+							return nuevoBundle;
+						}
 						else
 						{
 							Bundle nuevoBundle = bundle;
