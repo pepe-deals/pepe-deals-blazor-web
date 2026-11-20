@@ -51,6 +51,16 @@
         color: var(--colorEnlace);
     }
 
+.menu-usuario {
+    transition: background-color 0.1s ease;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+    .menu-usuario:hover {
+        background-color: rgba(255,255,255,0.1);
+    }
+
 @media (max-width: 1100px) {
     .texto-logo {
         font-size: 18px;

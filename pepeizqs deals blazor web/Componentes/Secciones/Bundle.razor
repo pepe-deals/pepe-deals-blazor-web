@@ -267,19 +267,24 @@
 
 						if (bundle.Pick == true)
 						{
-							<div class="cuerpo-ancho bundle-espacio2" style="font-size: 18px; display: flex; align-items: center; flex-direction: row; justify-content: space-between; margin-bottom: 20px;">
+							<div class="cuerpo-ancho bundle-espacio2" style="display: flex; align-items: center; flex-direction: row; justify-content: space-between; margin-bottom: 20px;">
 								@foreach (var tier2 in tiersMostrar)
 								{
 									<div class="bundle-espacio3" style="background: var(--fondoSubsubcabecera); border: 2px solid rgba(0,0,0,.4); border-radius: 10px; text-align: center; display: flex; align-items: center; gap: 5px; width: 100%; justify-content: center;">
 										@if (tier2.CantidadJuegos == 1)
 										{
-											<label>@tier2.CantidadJuegos.ToString() @Herramientas.Idiomas.BuscarTexto(idioma, "String21", "Bundle") • @Herramientas.Precios.Euro(decimal.Parse(tier2.Precio))</label>
+											<div style="background-color: rgba(0,0,0,0.2); border: 1px solid rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 5px;">
+												@tier2.CantidadJuegos.ToString() @Herramientas.Idiomas.BuscarTexto(idioma, "String21", "Bundle") • @Herramientas.Precios.Euro(decimal.Parse(tier2.Precio))
+											</div>
 										}
 										else if (tier2.CantidadJuegos > 1)
 										{
-											<label>@tier2.CantidadJuegos.ToString() @Herramientas.Idiomas.BuscarTexto(idioma, "String8", "Bundle") • @Herramientas.Precios.Euro(decimal.Parse(tier2.Precio))</label>
-											<label>/</label>
-											<label style="font-size: 14px;">@Herramientas.Precios.Euro(decimal.Parse(tier2.Precio) / tier2.CantidadJuegos) (@Herramientas.Idiomas.BuscarTexto(idioma, "String20", "Bundle"))</label>
+											<div style="background-color: rgba(0,0,0,0.2); border: 1px solid rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 5px;">
+												@tier2.CantidadJuegos.ToString() @Herramientas.Idiomas.BuscarTexto(idioma, "String8", "Bundle") • @Herramientas.Precios.Euro(decimal.Parse(tier2.Precio))
+											</div>
+											<div style="font-size: 14px;">
+												@Herramientas.Precios.Euro(decimal.Parse(tier2.Precio) / tier2.CantidadJuegos) (@Herramientas.Idiomas.BuscarTexto(idioma, "String20", "Bundle"))
+											</div>
 										}
 									</div>
 								}
@@ -884,17 +889,17 @@
 			return t1.Posicion.CompareTo(t2.Posicion);
 		});
 
-		if (juegos == null)
+		if (bundle.Pick == false && juegos?.Count > 0)
 		{
-			return tiers;
+			HashSet<int> posicionesConJuegos = juegos
+				.Where(j => j.Tier != null)
+				.Select(j => j.Tier.Posicion)
+				.ToHashSet();
+
+			return tiers.Where(t => posicionesConJuegos.Contains(t.Posicion)).ToList();
 		}
 
-		HashSet<int> posicionesConJuegos = juegos
-			.Where(j => j.Tier != null)
-			.Select(j => j.Tier.Posicion)
-			.ToHashSet();
-
-		return tiers.Where(t => posicionesConJuegos.Contains(t.Posicion)).ToList();
+		return tiers;
 	}
 
 	private async void AbrirBundle(MouseEventArgs e, string enlace)

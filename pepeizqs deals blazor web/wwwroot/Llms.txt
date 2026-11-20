@@ -23,13 +23,14 @@
 - [Cloud gaming streaming](https://pepe.deals/streaming/): Overview of supported cloud gaming services.
 - [Steam Deck](https://pepe.deals/steamdeck/): Steam Deck compatible deals and info.
 - [SteamOS](https://pepe.deals/steamos/): SteamOS related content.
+- [Steam Machine](https://pepe.deals/steammachine/): Steam Deck compatible deals and info.
+- [Steam Frame](https://pepe.deals/steamframe/): Steam Deck compatible deals and info.
 - [GeForce NOW](https://pepe.deals/geforcenow/): GeForce NOW cloud gaming catalog.
 - [Boosteroid](https://pepe.deals/boosteroid/): Boosteroid cloud gaming catalog.
 
 ## News
 
 - [Last news](https://pepe.deals/last-news/): Latest gaming industry news.
-- [Last updates](https://pepe.deals/last-updates/): Recent changes and updates to tracked games.
 
 ## Other
 

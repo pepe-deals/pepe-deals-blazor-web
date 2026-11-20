@@ -261,7 +261,7 @@
 
                                                     if (drm.Id == JuegoDRM.DRMFree)
                                                     {
-                                                        <button @onclick="@(e => MoverScrollJs(e, drm.Id.ToString()))" class="boton-pequeño" style="@fondoBotonDRM width: 40px; height: 40px; text-align: center; padding: 7px;"><div style="font-weight: bold; font-size: 9px; line-height: 14px;">DRM Free</div></button>
+                                                        <button @onclick="@(e => MoverScrollJs(e, drm.Id.ToString()))" class="boton-cabecera-drm" style="@fondoBotonDRM text-align: center; padding: 7px;"><div style="font-weight: bold; font-size: 9px; line-height: 14px;">DRM Free</div></button>
                                                     }
                                                     else
                                                     {
@@ -269,7 +269,7 @@
                                                         string imagenDRM1 = imagenDRM.Replace(".webp", "-sm.webp");
                                                         string imagenDRM2 = imagenDRM.Replace(".webp", "-md.webp");
 
-                                                        <button @onclick="@(e => MoverScrollJs(e, drm.Id.ToString()))" class="boton-pequeño" style="@fondoBotonDRM width: 40px; height: 40px; padding: 9px;">
+                                                        <button @onclick="@(e => MoverScrollJs(e, drm.Id.ToString()))" class="boton-cabecera-drm" style="@fondoBotonDRM">
                                                             <picture style="display: flex;">
                                                                 <source srcset="@imagenDRM1 1x, @imagenDRM2 2x" type="image/webp">
                                                                 <img src="@imagenDRM" alt="@drm.Nombre" style="max-width: 100%; max-height: 100%; display: block;"/>
@@ -300,7 +300,7 @@
 
                             @if (dlcs?.Count > 0)
                             {
-                                <button @onclick="@(e => MoverScrollJs(e, "dlcs"))" class="boton" style="padding: 8px 10px; background: color-mix(in srgb, var(--fondoBotonPequeño), var(--fondoDlc) 70%); color: var(--colorTextoDlc); font-size: 16px; width: fit-content; box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.28),0px 0px 1px 0px rgba(0, 0, 0, 0.24);">
+                                <button @onclick="@(e => MoverScrollJs(e, "dlcs"))" class="boton-cabecera-drm" style="padding: 8px 10px; background: color-mix(in srgb, var(--fondoBotonPequeño), var(--fondoDlc) 70%); color: var(--colorTextoDlc); font-size: 16px;">
                                     @Herramientas.Idiomas.BuscarTexto(idioma, "String34", "Game") (@dlcs.Count.ToString())
                                 </button>
                             }
@@ -531,7 +531,7 @@
                                         <div class="tooltip-juego" id="trigger-reviews"
                                              @onmouseenter="@(() => ActivarTooltip("trigger-reviews", "tooltip-reviews"))"
                                              @onmouseleave="@(() => DesactivarTooltip("trigger-reviews"))">
-                                            <button @onclick="@(e => MoverScrollJs(e, "reviews"))" class="boton-pequeño boton-reseñas" style="width: fit-content; padding: 0px; color: var(--colorTexto); background: color-mix(in srgb, var(--fondoSubsubcabecera) 33%, var(--fondoBotonPequeño));">
+                                            <button @onclick="@(e => MoverScrollJs(e, "reviews"))" class="boton-reseñas">
                                                 <div style="padding: 10px; display: flex; flex-direction: column; gap: 10px;">
                                                     <div style="display: flex; align-items: center; gap: 10px; justify-content: center;">
                                                         @if (int.Parse(juego.Analisis.Porcentaje) > 74)
@@ -1294,7 +1294,7 @@
                                                     {
                                                         if (usuarioRegion == TiendaRegion.Europa && juego.PrecioMinimosHistoricos?.Count > 0 || (usuarioRegion == TiendaRegion.EstadosUnidos && juego.PrecioMinimosHistoricosUS?.Count > 0))
                                                         {
-                                                            <div style="margin-top: 10px; background: rgba(0,0,0,.15); width: fit-content;">
+                                                            <div style="margin-top: 10px; background: rgba(0,0,0,.15); width: fit-content; border: 1px solid rgba(0,0,0,.3);">
                                                                 <div style="display: flex; align-items: center; width: fit-content;">
                                                                     @{
                                                                         decimal precioMinimoValor = 100000;

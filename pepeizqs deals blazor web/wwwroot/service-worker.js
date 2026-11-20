@@ -52,7 +52,19 @@ self.addEventListener('fetch', event => {
                         event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.put(request, clone)));
                     }
                     return fetchResponse;
-                }).catch(() => Response.error());
+                }).catch(async err => {
+                    console.error('SW fetch falló:', request.url, err);
+
+                    const cached = await caches.match(request);
+                    if (!cached) return Response.error();
+                    if (!cached.redirected) return cached;
+
+                    return new Response(await cached.blob(), {
+                        status: cached.status,
+                        statusText: cached.statusText,
+                        headers: cached.headers
+                    });
+                })
             })
         );
         return;

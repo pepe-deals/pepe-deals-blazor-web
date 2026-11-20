@@ -105,28 +105,38 @@
 								JuegoDRM drmJuego = JuegoDRM.NoEspecificado;
 								string tienda = string.Empty;
 
-								if (usuarioTiendasNoOficial == false && usuarioRegion == TiendaRegion.Europa)
+								if (juego.Juego.PrecioMinimosHistoricos?.Count > 0)
 								{
 									drmJuego = juego.Juego.PrecioMinimosHistoricos[0].DRM;
 									tienda = juego.Juego.PrecioMinimosHistoricos[0].Tienda;
 								}
-								else if (usuarioTiendasNoOficial == false && usuarioRegion == TiendaRegion.EstadosUnidos)
+								else if (juego.Juego.PrecioMinimosHistoricosUS?.Count > 0)
 								{
 									drmJuego = juego.Juego.PrecioMinimosHistoricosUS[0].DRM;
 									tienda = juego.Juego.PrecioMinimosHistoricosUS[0].Tienda;
 								}
-								else if (usuarioTiendasNoOficial == true && usuarioRegion == TiendaRegion.Europa)
+								else if (juego.Juego.PreciosHistoricosNoOficialesEU?.Count > 0)
 								{
-									drmJuego = (juego.Juego.PreciosHistoricosNoOficialesEU?.Count > 0) ? juego.Juego.PreciosHistoricosNoOficialesEU[0].DRM : (juego.Juego.PrecioMinimosHistoricos?.Count > 0) ? juego.Juego.PrecioMinimosHistoricos[0].DRM : JuegoDRM.NoEspecificado;
-									tienda = (juego.Juego.PreciosHistoricosNoOficialesEU?.Count > 0) ? juego.Juego.PreciosHistoricosNoOficialesEU[0].Tienda : (juego.Juego.PrecioMinimosHistoricos?.Count > 0) ? juego.Juego.PrecioMinimosHistoricos[0].Tienda : string.Empty;
+									drmJuego = juego.Juego.PreciosHistoricosNoOficialesEU[0].DRM;
+									tienda = juego.Juego.PreciosHistoricosNoOficialesEU[0].Tienda;
 								}
-								else if (usuarioTiendasNoOficial == true && usuarioRegion == TiendaRegion.EstadosUnidos)
+								else if (juego.Juego.PreciosHistoricosNoOficialesUS?.Count > 0)
 								{
-									drmJuego = (juego.Juego.PreciosHistoricosNoOficialesUS?.Count > 0) ? juego.Juego.PreciosHistoricosNoOficialesUS[0].DRM : (juego.Juego.PrecioMinimosHistoricosUS?.Count > 0) ? juego.Juego.PrecioMinimosHistoricosUS[0].DRM : JuegoDRM.NoEspecificado;
-									tienda = (juego.Juego.PreciosHistoricosNoOficialesUS?.Count > 0) ? juego.Juego.PreciosHistoricosNoOficialesUS[0].Tienda : (juego.Juego.PrecioMinimosHistoricosUS?.Count > 0) ? juego.Juego.PrecioMinimosHistoricosUS[0].Tienda : string.Empty;
+									drmJuego = juego.Juego.PreciosHistoricosNoOficialesUS[0].DRM;
+									tienda = juego.Juego.PreciosHistoricosNoOficialesUS[0].Tienda;
+								}
+								else if (juego.Juego.PreciosHistoricosMarketplacesEU?.Count > 0)
+								{
+									drmJuego = juego.Juego.PreciosHistoricosMarketplacesEU[0].DRM;
+									tienda = juego.Juego.PreciosHistoricosMarketplacesEU[0].Tienda;
+								}
+								else if (juego.Juego.PreciosHistoricosMarketplacesUS?.Count > 0)
+								{
+									drmJuego = juego.Juego.PreciosHistoricosMarketplacesUS[0].DRM;
+									tienda = juego.Juego.PreciosHistoricosMarketplacesUS[0].Tienda;
 								}
 
-                                string keyJuego = juego.Juego.IdMaestra.ToString() + "-" + ((int)drmJuego).ToString() + "-" + tienda;
+								string keyJuego = juego.Juego.IdMaestra.ToString() + "-" + ((int)drmJuego).ToString() + "-" + tienda;
 
 								<div @key="@keyJuego" style="display: flex; align-items: center; gap: 20px; position: relative;" @onmouseenter="(e => MostrarBotonDeseados(e, juego))" @onmouseleave="(e => OcultarBotonDeseados(e, juego))">
 									<div style="width: 100%; overflow: hidden; box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.28),0px 0px 1px 0px rgba(0, 0, 0, 0.24);">
@@ -413,6 +423,7 @@
 	private bool usuarioAdmin = false;
 	private TiendaRegion usuarioRegion = TiendaRegion.Europa;
 	private bool usuarioTiendasNoOficial = false;
+	private bool usuarioTiendasMarketplace = false;
 	[PersistentState] public Usuario opciones { get; set; }
 
 	[PersistentState] public List<JuegoMostrar> juegosMostrar { get; set; }
@@ -430,6 +441,7 @@
 		dominio = datos.Dominio;
 		usuarioRegion = datos.Region;
 		usuarioTiendasNoOficial = datos.NoOficial;
+		usuarioTiendasMarketplace = datos.Marketplace;
 
 		if (string.IsNullOrEmpty(usuarioId) == false)
 		{
@@ -478,6 +490,11 @@
 				if (opciones.NoOfficial.HasValue == true)
 				{
 					usuarioTiendasNoOficial = opciones.NoOfficial.Value;
+				}
+
+				if (opciones.Marketplace.HasValue == true)
+				{
+					usuarioTiendasMarketplace = opciones.Marketplace.Value;
 				}
 
 				if (opciones.GeforceNOWOption1 == true)
@@ -549,6 +566,36 @@
 		}
 	}
 
+	private static JuegoDRM ObtenerDrmParaComparacion(Juegos.Juego juego)
+	{
+		if (juego.PrecioMinimosHistoricos?.Count > 0)
+		{
+			return juego.PrecioMinimosHistoricos[0].DRM;
+		}
+		else if (juego.PrecioMinimosHistoricosUS?.Count > 0)
+		{
+			return juego.PrecioMinimosHistoricosUS[0].DRM;
+		}
+		else if (juego.PreciosHistoricosNoOficialesEU?.Count > 0)
+		{
+			return juego.PreciosHistoricosNoOficialesEU[0].DRM;
+		}
+		else if (juego.PreciosHistoricosNoOficialesUS?.Count > 0)
+		{
+			return juego.PreciosHistoricosNoOficialesUS[0].DRM;
+		}
+		else if (juego.PreciosHistoricosMarketplacesEU?.Count > 0)
+		{
+			return juego.PreciosHistoricosMarketplacesEU[0].DRM;
+		}
+		else if (juego.PreciosHistoricosMarketplacesUS?.Count > 0)
+		{
+			return juego.PreciosHistoricosMarketplacesUS[0].DRM;
+		}
+
+		return JuegoDRM.NoEspecificado;
+	}
+
 	private string fondoSteam = "background: transparent;";
 
 	private async Task MostrarSteam()
@@ -603,7 +650,7 @@
 
 		await ExcluirDRMs();
 
-		var juegos = await BaseDatos.Juegos.Buscar.MinimosStreaming(usuarioTiendasNoOficial, usuarioRegion, "streaminggeforcenow", drmActual, posicionJuegos, descuentoMinimo, precioMaximo, minimoReseñas, textoBuscador, excluirJuegosIds, excluirSteamIds, excluirGogIds);
+		var juegos = await BaseDatos.Juegos.Buscar.MinimosStreaming(usuarioTiendasNoOficial, usuarioTiendasMarketplace, usuarioRegion, "streaminggeforcenow", drmActual, posicionJuegos, descuentoMinimo, precioMaximo, minimoReseñas, textoBuscador, excluirJuegosIds, excluirSteamIds, excluirGogIds);
 
 		if (juegos?.Count == 0 && juegosMostrar?.Count == 0)
 		{
@@ -641,24 +688,7 @@
 
 				if (string.IsNullOrEmpty(usuarioId) == false)
 				{
-					JuegoDRM drmUsar = JuegoDRM.NoEspecificado;
-
-					if (usuarioTiendasNoOficial == false && usuarioRegion == TiendaRegion.Europa)
-					{
-						drmUsar = juego.PrecioMinimosHistoricos[0].DRM;
-					}
-					else if (usuarioTiendasNoOficial == false && usuarioRegion == TiendaRegion.EstadosUnidos)
-					{
-						drmUsar = juego.PrecioMinimosHistoricosUS[0].DRM;
-					}
-					else if (usuarioTiendasNoOficial == true && usuarioRegion == TiendaRegion.Europa)
-					{
-						drmUsar = (juego.PreciosHistoricosNoOficialesEU?.Count > 0) ? juego.PreciosHistoricosNoOficialesEU[0].DRM : (juego.PrecioMinimosHistoricos?.Count > 0) ? juego.PrecioMinimosHistoricos[0].DRM : JuegoDRM.NoEspecificado;
-					}
-					else if (usuarioTiendasNoOficial == true && usuarioRegion == TiendaRegion.EstadosUnidos)
-					{
-						drmUsar = (juego.PreciosHistoricosNoOficialesUS?.Count > 0) ? juego.PreciosHistoricosNoOficialesUS[0].DRM : (juego.PrecioMinimosHistoricosUS?.Count > 0) ? juego.PrecioMinimosHistoricosUS[0].DRM : JuegoDRM.NoEspecificado;
-					}
+					JuegoDRM drmUsar = ObtenerDrmParaComparacion(juego);
 
 					if (drmUsar != JuegoDRM.NoEspecificado)
 					{

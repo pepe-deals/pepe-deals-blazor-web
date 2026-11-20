@@ -21,11 +21,13 @@ namespace Herramientas.Correos
 				string host = configuracion.GetValue<string>("WebmasterDeals:CorreoBot");
 				string contraseña = configuracion.GetValue<string>("WebmasterDeals:CorreoBotContraseña");
 
-				MimeMessage mimeMessage = new MimeMessage();
-				mimeMessage.From.Add(new MailboxAddress("pepe's deals", correoDesde));
-				mimeMessage.To.Add(MailboxAddress.Parse(correoHacia));
-				mimeMessage.Subject = titulo;
-				mimeMessage.Body = new TextPart("html") { Text = html };
+				MimeMessage mimeMensaje = new MimeMessage();
+				mimeMensaje.From.Add(new MailboxAddress("pepe's deals", correoDesde));
+				mimeMensaje.To.Add(MailboxAddress.Parse(correoHacia));
+				mimeMensaje.Subject = titulo;
+				mimeMensaje.Body = new TextPart("html") { Text = html };
+				mimeMensaje.Headers.Add("List-Unsubscribe", "<https://pepe.deals/account/notifications-email/>");
+				mimeMensaje.Headers.Add("List-Unsubscribe-Post", "List-Unsubscribe=One-Click");
 
 				using SmtpClient smtpMailKit = new SmtpClient();
 
@@ -35,7 +37,7 @@ namespace Herramientas.Correos
 					{
 						await smtpMailKit.ConnectAsync("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
 						await smtpMailKit.AuthenticateAsync(correoDesde, contraseña);
-						await smtpMailKit.SendAsync(mimeMessage);
+						await smtpMailKit.SendAsync(mimeMensaje);
 						await smtpMailKit.DisconnectAsync(true);
 						return true;
 					}
@@ -44,9 +46,9 @@ namespace Herramientas.Correos
 						DateTime nuevaFecha = DateTime.Now;
 						nuevaFecha = nuevaFecha.AddMinutes(10);
 
-						await global::BaseDatos.Admin.Actualizar.TareaUso("correosEnviar", nuevaFecha);
+						await BaseDatos.Admin.Actualizar.TareaUso("correosEnviar", nuevaFecha);
 
-						global::BaseDatos.Errores.Insertar.Mensaje("Correo Enviar", ex, false);
+						BaseDatos.Errores.Insertar.Mensaje("Correo Enviar", ex, false);
 						return false;
 					}
 				}
@@ -56,7 +58,7 @@ namespace Herramientas.Correos
 					{
 						await smtpMailKit.ConnectAsync(host, 8889, SecureSocketOptions.None);
 						await smtpMailKit.AuthenticateAsync(correoDesde, contraseña);
-						await smtpMailKit.SendAsync(mimeMessage);
+						await smtpMailKit.SendAsync(mimeMensaje);
 						await smtpMailKit.DisconnectAsync(true);
 						return true;
 					}
@@ -65,9 +67,9 @@ namespace Herramientas.Correos
 						DateTime nuevaFecha = DateTime.Now;
 						nuevaFecha = nuevaFecha.AddMinutes(10);
 
-						await global::BaseDatos.Admin.Actualizar.TareaUso("correosEnviar", nuevaFecha);
+						await BaseDatos.Admin.Actualizar.TareaUso("correosEnviar", nuevaFecha);
 
-						global::BaseDatos.Errores.Insertar.Mensaje("Correo Enviar " + correoDesde + " - " + correoHacia, ex, false);
+						BaseDatos.Errores.Insertar.Mensaje("Correo Enviar " + correoDesde + " - " + correoHacia, ex, false);
 
 						return false;
 					}

@@ -12,107 +12,106 @@ namespace Herramientas
 
 			List<string> sitemaps = [
 				"https://" + dominio + "/sitemap-lastnews-en.xml",
-				"https://" + dominio + "/sitemap-lastnews-es.xml",
 				"https://" + dominio + "/sitemap-main.xml"
 			];
 
-			int cantidadJuegos = await global::BaseDatos.Sitemaps.Buscar.Cantidad("juegos");
+			//int cantidadJuegos = await global::BaseDatos.Sitemaps.Buscar.Cantidad("juegos");
 
-			if (cantidadJuegos > 0)
-			{
-				int segmentacion = cantidadJuegos / 1000;
+			//if (cantidadJuegos > 0)
+			//{
+			//	int segmentacion = cantidadJuegos / 1000;
 
-				int i = 0;
-				while (i <= segmentacion)
-				{
-					sitemaps.Add("https://" + dominio + "/sitemap-games-" + i.ToString() + ".xml");
+			//	int i = 0;
+			//	while (i <= segmentacion)
+			//	{
+			//		sitemaps.Add("https://" + dominio + "/sitemap-games-" + i.ToString() + ".xml");
 
-					i += 1;
-				}
-			}
+			//		i += 1;
+			//	}
+			//}
 
-			int cantidadBundles = await global::BaseDatos.Sitemaps.Buscar.Cantidad("bundles");
+			//int cantidadBundles = await global::BaseDatos.Sitemaps.Buscar.Cantidad("bundles");
 
-			if (cantidadBundles > 0)
-			{
-				int segmentacion = cantidadBundles / 100;
+			//if (cantidadBundles > 0)
+			//{
+			//	int segmentacion = cantidadBundles / 100;
 
-				int i = 0;
-				while (i <= segmentacion)
-				{
-					sitemaps.Add("https://" + dominio + "/sitemap-bundles-" + i.ToString() + ".xml");
+			//	int i = 0;
+			//	while (i <= segmentacion)
+			//	{
+			//		sitemaps.Add("https://" + dominio + "/sitemap-bundles-" + i.ToString() + ".xml");
 
-					i += 1;
-				}
-			}
+			//		i += 1;
+			//	}
+			//}
 
-			int cantidadGratis = await global::BaseDatos.Sitemaps.Buscar.Cantidad("gratis");
+			//int cantidadGratis = await global::BaseDatos.Sitemaps.Buscar.Cantidad("gratis");
 
-			if (cantidadGratis > 0)
-			{
-				int segmentacion = cantidadGratis / 1000;
+			//if (cantidadGratis > 0)
+			//{
+			//	int segmentacion = cantidadGratis / 1000;
 
-				int i = 0;
-				while (i <= segmentacion)
-				{
-					sitemaps.Add("https://" + dominio + "/sitemap-free-" + i.ToString() + ".xml");
+			//	int i = 0;
+			//	while (i <= segmentacion)
+			//	{
+			//		sitemaps.Add("https://" + dominio + "/sitemap-free-" + i.ToString() + ".xml");
 
-					i += 1;
-				}
-			}
+			//		i += 1;
+			//	}
+			//}
 
-			int cantidadSuscripciones = await global::BaseDatos.Sitemaps.Buscar.Cantidad("suscripciones");
+			//int cantidadSuscripciones = await global::BaseDatos.Sitemaps.Buscar.Cantidad("suscripciones");
 
-			if (cantidadSuscripciones > 0)
-			{
-				int segmentacion = cantidadSuscripciones / 1000;
+			//if (cantidadSuscripciones > 0)
+			//{
+			//	int segmentacion = cantidadSuscripciones / 1000;
 
-				int i = 0;
-				while (i <= segmentacion)
-				{
-					sitemaps.Add("https://" + dominio + "/sitemap-subscriptions-" + i.ToString() + ".xml");
+			//	int i = 0;
+			//	while (i <= segmentacion)
+			//	{
+			//		sitemaps.Add("https://" + dominio + "/sitemap-subscriptions-" + i.ToString() + ".xml");
 
-					i += 1;
-				}
-			}
+			//		i += 1;
+			//	}
+			//}
 
-			int cantidadNoticias = await global::BaseDatos.Sitemaps.Buscar.Cantidad("noticias");
+			//int cantidadNoticias = await global::BaseDatos.Sitemaps.Buscar.Cantidad("noticias");
 
-			if (cantidadNoticias > 0)
-			{
-				int segmentacion = cantidadNoticias / 100;
+			//if (cantidadNoticias > 0)
+			//{
+			//	int segmentacion = cantidadNoticias / 100;
 
-				int i = 0;
-				while (i <= segmentacion)
-				{
-					sitemaps.Add("https://" + dominio + "/sitemap-news-" + i.ToString() + ".xml");
+			//	int i = 0;
+			//	while (i <= segmentacion)
+			//	{
+			//		sitemaps.Add("https://" + dominio + "/sitemap-news-" + i.ToString() + ".xml");
 
-					i += 1;
-				}
+			//		i += 1;
+			//	}
 
-				//i = 0;
-				//while (i <= segmentacion)
-				//{
-				//	sitemaps.Add("https://" + dominio + "/sitemap-news-es-" + i.ToString() + ".xml");
+			//	//i = 0;
+			//	//while (i <= segmentacion)
+			//	//{
+			//	//	sitemaps.Add("https://" + dominio + "/sitemap-news-es-" + i.ToString() + ".xml");
 
-				//	i += 1;
-				//}
-			}
+			//	//	i += 1;
+			//	//}
+			//}
 
-			int cantidadCurators = await global::BaseDatos.Sitemaps.Buscar.Cantidad("curators");
+			//int cantidadCurators = await global::BaseDatos.Sitemaps.Buscar.Cantidad("curators");
 
-			if (cantidadCurators > 0)
-			{
-				int segmentacion = cantidadCurators / 1000;
+			//if (cantidadCurators > 0)
+			//{
+			//	int segmentacion = cantidadCurators / 1000;
 
-				int i = 0;
-				while (i <= segmentacion)
-				{
-					sitemaps.Add("https://" + dominio + "/sitemap-curators-" + i.ToString() + ".xml");
+			//	int i = 0;
+			//	while (i <= segmentacion)
+			//	{
+			//		sitemaps.Add("https://" + dominio + "/sitemap-curators-" + i.ToString() + ".xml");
 
-					i += 1;
-				}
-			}
+			//		i += 1;
+			//	}
+			//}
 
 			StringBuilder sb = new StringBuilder();
 			sb.Append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
@@ -152,31 +151,31 @@ namespace Herramientas
 
 			sb.Append(textoBundles);
 
-			List<string> añosBundle = new List<string>();
-			DateTime arranque = new DateTime(2010, 1, 1);
+			//List<string> añosBundle = new List<string>();
+			//DateTime arranque = new DateTime(2010, 1, 1);
 
-			int i = 0;
-			while (i < 100)
-			{
-				if (arranque.Year != DateTime.Now.Year)
-				{
-					añosBundle.Add(arranque.Year.ToString());
-					arranque = arranque.AddYears(1);
-				}
-				i += 1;
-			}
+			//int i = 0;
+			//while (i < 100)
+			//{
+			//	if (arranque.Year != DateTime.Now.Year)
+			//	{
+			//		añosBundle.Add(arranque.Year.ToString());
+			//		arranque = arranque.AddYears(1);
+			//	}
+			//	i += 1;
+			//}
 
-			añosBundle.Add(DateTime.Now.Year.ToString());
+			//añosBundle.Add(DateTime.Now.Year.ToString());
 
-			foreach (var añoBundle in añosBundle)
-			{
-				string textoBundleAño = "<url>" + Environment.NewLine +
-					"<loc>https://" + dominio + "/bundles/archive/" + añoBundle + "/</loc>" + Environment.NewLine +
-					"<changefreq>daily</changefreq>" + Environment.NewLine +
-					"</url>";
+			//foreach (var añoBundle in añosBundle)
+			//{
+			//	string textoBundleAño = "<url>" + Environment.NewLine +
+			//		"<loc>https://" + dominio + "/bundles/archive/" + añoBundle + "/</loc>" + Environment.NewLine +
+			//		"<changefreq>daily</changefreq>" + Environment.NewLine +
+			//		"</url>";
 
-				sb.Append(textoBundleAño);
-			}
+			//	sb.Append(textoBundleAño);
+			//}
 
 			string textoGratis = "<url>" + Environment.NewLine +
 				"<loc>https://" + dominio + "/free/</loc>" + Environment.NewLine +
@@ -291,13 +290,6 @@ namespace Herramientas
 				"</url>";
 
 			sb.Append(textoNoticias);
-
-			string textoActualizaciones = "<url>" + Environment.NewLine +
-				"<loc>https://" + dominio + "/last-updates/</loc>" + Environment.NewLine +
-				"<changefreq>weekly</changefreq>" + Environment.NewLine +
-				"</url>";
-
-			sb.Append(textoActualizaciones);
 
 			string textoAñadidos = "<url>" + Environment.NewLine +
 				"<loc>https://" + dominio + "/last-added/</loc>" + Environment.NewLine +

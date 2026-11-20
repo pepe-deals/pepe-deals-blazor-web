@@ -2447,13 +2447,14 @@ END DESC";
 			return null;
 		}
 
-		public static async Task<List<Juego>> MinimosStreaming(bool noOficial, TiendaRegion region, string tabla, JuegoDRM drm, int posicion = 0, int? minimoDescuento = null, decimal? maximoPrecio = null, int? minimoReseñas = 0, string nombreBusqueda = null, List<int> excluirJuegosIds = null, List<int> excluirSteamIds = null, List<int> excluirGogIds = null)
+		public static async Task<List<Juego>> MinimosStreaming(bool noOficial, bool marketplace, TiendaRegion region, string tabla, JuegoDRM drm, int posicion = 0, int? minimoDescuento = null, decimal? maximoPrecio = null, int? minimoReseñas = 0, string nombreBusqueda = null, List<int> excluirJuegosIds = null, List<int> excluirSteamIds = null, List<int> excluirGogIds = null)
 		{
 			string tablaMinimos = region == TiendaRegion.Europa ? "seccionMinimos" : "seccionMinimosUS";
 			string precioMinimosHistoricos = region == TiendaRegion.Europa ? "precioMinimosHistoricos" : "precioMinimosHistoricosUS";
 
 			string columnaOficialSalida = region == TiendaRegion.Europa ? "precioMinimosHistoricos" : "precioMinimosHistoricosUS";
 			string columnaNoOficialSalida = region == TiendaRegion.Europa ? "preciosHistoricosNoOficialesEU" : "preciosHistoricosNoOficialesUS";
+			string columnaMarketplaceSalida = region == TiendaRegion.Europa ? "preciosHistoricosMarketplacesEU" : "preciosHistoricosMarketplacesUS";
 
 			DynamicParameters parametros = new DynamicParameters();
 
@@ -2516,11 +2517,13 @@ END DESC";
 				dondeMaximoPrecio = " (" + dondeMaximoPrecio + ")";
 			}
 
-			string ConstruirBusqueda(string tablaOrigen, string columnaPrecio, bool esOficial)
+			string ConstruirBusqueda(string tablaOrigen, string columnaPrecio, TiendaTipo tipo)
 			{
-				string columnasPrecio = esOficial
-					? $"j.{columnaPrecio} AS {columnaOficialSalida},\n\t\t\tNULL AS {columnaNoOficialSalida},"
-					: $"NULL AS {columnaOficialSalida},\n\t\t\tj.{columnaPrecio} AS {columnaNoOficialSalida},";
+				string Col(TiendaTipo t) => tipo == t ? $"j.{columnaPrecio}" : "NULL";
+
+				string columnasPrecio = $"{Col(TiendaTipo.Oficial)} AS {columnaOficialSalida}, " +
+										$"{Col(TiendaTipo.NoOficial)} AS {columnaNoOficialSalida}, " +
+										$"{Col(TiendaTipo.Marketplace)} AS {columnaMarketplaceSalida},";
 
 				string consulta = $@"SELECT j.idMaestra, jg.nombre, jg.imagenes, {columnasPrecio} JSON_VALUE(jg.media, '$.Videos[0].Micro') as video,
 					jg.tipo, jg.analisis, jg.idSteam, jg.idGog, jg.freeToPlay, jg.etiquetas,
@@ -2617,16 +2620,26 @@ END DESC";
 				return consulta;
 			}
 
-			string busqueda = ConstruirBusqueda(tablaMinimos, precioMinimosHistoricos, esOficial: true);
+			string busqueda = ConstruirBusqueda(tablaMinimos, precioMinimosHistoricos, TiendaTipo.Oficial);
 
 			if (noOficial == true)
 			{
 				string tablaNoOficial = region == TiendaRegion.Europa ? "seccionMinimosNoOficialesEU" : "seccionMinimosNoOficialesUS";
 				string columnaNoOficial = region == TiendaRegion.Europa ? "preciosHistoricosNoOficialesEU" : "preciosHistoricosNoOficialesUS";
 
-				string busquedaNoOficial = ConstruirBusqueda(tablaNoOficial, columnaNoOficial, esOficial: false);
+				string busquedaNoOficial = ConstruirBusqueda(tablaNoOficial, columnaNoOficial, TiendaTipo.NoOficial);
 
 				busqueda = $"({busqueda}) UNION ALL ({busquedaNoOficial})";
+			}
+
+			if (marketplace == true)
+			{
+				string tablaMarketplace = region == TiendaRegion.Europa ? "seccionMinimosMarketplacesEU" : "seccionMinimosMarketplacesUS";
+				string columnaMarketplace = region == TiendaRegion.Europa ? "preciosHistoricosMarketplacesEU" : "preciosHistoricosMarketplacesUS";
+
+				string busquedaMarketplace = ConstruirBusqueda(tablaMarketplace, columnaMarketplace, TiendaTipo.Marketplace);
+
+				busqueda = $"({busqueda}) UNION ALL ({busquedaMarketplace})";
 			}
 
 			busqueda = busqueda + " ORDER BY OrdenReseñas DESC";
@@ -2677,6 +2690,16 @@ END DESC";
 					if (string.IsNullOrEmpty(fila.preciosHistoricosNoOficialesUS) == false)
 					{
 						juego.PreciosHistoricosNoOficialesUS = JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.preciosHistoricosNoOficialesUS);
+					}
+
+					if (string.IsNullOrEmpty(fila.preciosHistoricosMarketplacesEU) == false)
+					{
+						juego.PreciosHistoricosMarketplacesEU = JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.preciosHistoricosMarketplacesEU);
+					}
+
+					if (string.IsNullOrEmpty(fila.preciosHistoricosMarketplacesUS) == false)
+					{
+						juego.PreciosHistoricosMarketplacesUS = JsonSerializer.Deserialize<List<JuegoPrecio>>(fila.preciosHistoricosMarketplacesUS);
 					}
 
 					if (string.IsNullOrEmpty(fila.video) == false)

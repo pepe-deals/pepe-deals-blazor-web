@@ -16,7 +16,38 @@
 
 .boton-reseñas {
     display: inline-block;
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    width: fit-content;
+    padding: 0px;
+    color: var(--colorTexto);
+    background-color: rgba(0,0,0,.3);
+    border: 1px solid rgba(0,0,0,.4);
+    box-shadow: none;
 }
+
+    .boton-reseñas:hover {
+        transform: scale(1.01);
+        background-color: rgba(0,0,0,.5);
+    }
+
+.boton-cabecera-drm {
+    width: 40px;
+    height: 40px;
+    padding: 9px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background-color: var(--fondoBotonPequeño);
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+    .boton-cabecera-drm:hover {
+        transform: scale(1.05);
+        filter: brightness(1.20);
+    }
 
 .caja-drm {
     display: flex;

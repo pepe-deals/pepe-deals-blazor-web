@@ -3,18 +3,30 @@
 
 @if (preciosActualesOficialesDRM.Count > 0 || preciosActualesNoOficialesDRM.Count > 0 || preciosActualesMarketplacesDRM.Count > 0)
 {
-    <div style="display: flex; flex-direction: column; gap: 20px; padding: 0px 20px;">
+    <div style="display: flex; flex-direction: column; gap: 20px; @(preciosMostrar.Count < 10 ? "padding: 20px;" : "padding: 0px 20px;")">
         @if (preciosMostrar?.Count > 0)
         {
             if (Herramientas.Bots.UserAgentEsBot(userAgent) == false)
             {
-                <Virtualize Context="precio" Items="preciosMostrar">
-                    <ItemContent>
+                if (preciosMostrar.Count < 10)
+                {
+                    foreach (var precio in preciosMostrar)
+                    {
                         <JuegoTiendasEnlace @key="(precio.Enlace + precio.Tienda)" noOficial="@noOficial" region="@region" precio="@precio" usuarioId="@usuarioId" idioma="@idioma" userAgent="@userAgent"
                                             usuarioPatreon="@usuarioPatreon" juegosUsuario="@juegosUsuario" juegoNombre="@juegoNombre"
                                             OnPrecioFinalCalculado="pf => preciosFinalesCalculados[precio.Enlace + precio.Tienda] = pf" />
-                    </ItemContent>
-                </Virtualize>
+                    }
+                }
+                else
+                {
+                    <Virtualize Context="precio" Items="preciosMostrar">
+                        <ItemContent>
+                            <JuegoTiendasEnlace @key="(precio.Enlace + precio.Tienda)" noOficial="@noOficial" region="@region" precio="@precio" usuarioId="@usuarioId" idioma="@idioma" userAgent="@userAgent"
+                                                usuarioPatreon="@usuarioPatreon" juegosUsuario="@juegosUsuario" juegoNombre="@juegoNombre"
+                                                OnPrecioFinalCalculado="pf => preciosFinalesCalculados[precio.Enlace + precio.Tienda] = pf" />
+                        </ItemContent>
+                    </Virtualize>
+                }
             }
             else
             {

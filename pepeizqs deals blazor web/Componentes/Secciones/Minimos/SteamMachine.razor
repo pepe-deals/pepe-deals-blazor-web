@@ -99,25 +99,35 @@
 								JuegoDRM drmJuego = JuegoDRM.NoEspecificado;
 								string tienda = string.Empty;
 
-								if (usuarioTiendasNoOficial == false && usuarioRegion == TiendaRegion.Europa)
+								if (juego.Juego.PrecioMinimosHistoricos?.Count > 0)
 								{
 									drmJuego = juego.Juego.PrecioMinimosHistoricos[0].DRM;
 									tienda = juego.Juego.PrecioMinimosHistoricos[0].Tienda;
 								}
-								else if (usuarioTiendasNoOficial == false && usuarioRegion == TiendaRegion.EstadosUnidos)
+								else if (juego.Juego.PrecioMinimosHistoricosUS?.Count > 0)
 								{
 									drmJuego = juego.Juego.PrecioMinimosHistoricosUS[0].DRM;
 									tienda = juego.Juego.PrecioMinimosHistoricosUS[0].Tienda;
 								}
-								else if (usuarioTiendasNoOficial == true && usuarioRegion == TiendaRegion.Europa)
+								else if (juego.Juego.PreciosHistoricosNoOficialesEU?.Count > 0)
 								{
-									drmJuego = (juego.Juego.PreciosHistoricosNoOficialesEU?.Count > 0) ? juego.Juego.PreciosHistoricosNoOficialesEU[0].DRM : (juego.Juego.PrecioMinimosHistoricos?.Count > 0) ? juego.Juego.PrecioMinimosHistoricos[0].DRM : JuegoDRM.NoEspecificado;
-									tienda = (juego.Juego.PreciosHistoricosNoOficialesEU?.Count > 0) ? juego.Juego.PreciosHistoricosNoOficialesEU[0].Tienda : (juego.Juego.PrecioMinimosHistoricos?.Count > 0) ? juego.Juego.PrecioMinimosHistoricos[0].Tienda : string.Empty;
+									drmJuego = juego.Juego.PreciosHistoricosNoOficialesEU[0].DRM;
+									tienda = juego.Juego.PreciosHistoricosNoOficialesEU[0].Tienda;
 								}
-								else if (usuarioTiendasNoOficial == true && usuarioRegion == TiendaRegion.EstadosUnidos)
+								else if (juego.Juego.PreciosHistoricosNoOficialesUS?.Count > 0)
 								{
-									drmJuego = (juego.Juego.PreciosHistoricosNoOficialesUS?.Count > 0) ? juego.Juego.PreciosHistoricosNoOficialesUS[0].DRM : (juego.Juego.PrecioMinimosHistoricosUS?.Count > 0) ? juego.Juego.PrecioMinimosHistoricosUS[0].DRM : JuegoDRM.NoEspecificado;
-									tienda = (juego.Juego.PreciosHistoricosNoOficialesUS?.Count > 0) ? juego.Juego.PreciosHistoricosNoOficialesUS[0].Tienda : (juego.Juego.PrecioMinimosHistoricosUS?.Count > 0) ? juego.Juego.PrecioMinimosHistoricosUS[0].Tienda : string.Empty;
+									drmJuego = juego.Juego.PreciosHistoricosNoOficialesUS[0].DRM;
+									tienda = juego.Juego.PreciosHistoricosNoOficialesUS[0].Tienda;
+								}
+								else if (juego.Juego.PreciosHistoricosMarketplacesEU?.Count > 0)
+								{
+									drmJuego = juego.Juego.PreciosHistoricosMarketplacesEU[0].DRM;
+									tienda = juego.Juego.PreciosHistoricosMarketplacesEU[0].Tienda;
+								}
+								else if (juego.Juego.PreciosHistoricosMarketplacesUS?.Count > 0)
+								{
+									drmJuego = juego.Juego.PreciosHistoricosMarketplacesUS[0].DRM;
+									tienda = juego.Juego.PreciosHistoricosMarketplacesUS[0].Tienda;
 								}
 
 								string keyJuego = juego.Juego.IdMaestra.ToString() + "-" + ((int)drmJuego).ToString() + "-" + tienda;

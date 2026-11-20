@@ -124,6 +124,7 @@ namespace APIs.Allyouplay
 								{
 									string nombre = WebUtility.HtmlDecode(resultado.Nombre);
 									nombre = nombre.Replace(" - Early Access", null);
+									nombre = nombre.Replace("Early access", null);
 									nombre = nombre.Replace(" - Pre-Order", null);
 									nombre = nombre.Replace("(Steam)", null);
 									nombre = nombre.Replace("(US)", null);
