@@ -127,8 +127,10 @@ namespace APIs.Allyouplay
 									nombre = nombre.Replace("Early access", null);
 									nombre = nombre.Replace(" - Pre-Order", null);
 									nombre = nombre.Replace("(Steam)", null);
+									nombre = nombre.Replace("(STEAM)", null);
 									nombre = nombre.Replace("(US)", null);
 									nombre = nombre.Replace("(US/CA)", null);
+									nombre = nombre.Replace("[Mac]", null);
 									nombre = nombre.Trim();
 
 									JuegoPrecio oferta = new JuegoPrecio
