@@ -2,6 +2,7 @@
 
 using Bundles2;
 using Microsoft.AspNetCore.Components;
+using System.Globalization;
 using Tiendas2;
 
 namespace Herramientas
@@ -20,7 +21,8 @@ namespace Herramientas
 				Region = contexto?.HttpContext?.Request?.Cookies.TryGetValue("user_currency", out string valorRegion) == true && int.TryParse(valorRegion, out int valorRegionInt) && Enum.IsDefined(typeof(TiendaRegion), valorRegionInt) ? (TiendaRegion)valorRegionInt : TiendaRegion.Europa,
 				NoOficial = contexto?.HttpContext?.Request?.Cookies.TryGetValue("noofficial", out string valorNoOficial) == true && bool.TryParse(valorNoOficial, out bool valorNoOficialBool) ? valorNoOficialBool : true,
 				Marketplace = contexto?.HttpContext?.Request?.Cookies.TryGetValue("marketplace", out string valorMarketplace) == true && bool.TryParse(valorMarketplace, out bool valorMarketplaceBool) ? valorMarketplaceBool : true,
-				DiseñoBundle = contexto?.HttpContext?.Request?.Cookies.TryGetValue("user_bundledesign", out string valorDiseño) == true && int.TryParse(valorDiseño, out int valorDiseñoInt) && Enum.IsDefined(typeof(BundleDiseño), valorDiseñoInt) ? (BundleDiseño)valorDiseñoInt : BundleDiseño.Cuadricula
+				DiseñoBundle = contexto?.HttpContext?.Request?.Cookies.TryGetValue("user_bundledesign", out string valorDiseño) == true && int.TryParse(valorDiseño, out int valorDiseñoInt) && Enum.IsDefined(typeof(BundleDiseño), valorDiseñoInt) ? (BundleDiseño)valorDiseñoInt : BundleDiseño.Cuadricula,
+				FechaAvisos = contexto?.HttpContext?.Request?.Cookies.TryGetValue("avisos", out string valorAvisos) == true && DateTime.TryParse(valorAvisos, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out DateTime valorAvisosFecha) ? valorAvisosFecha : DateTime.MinValue
 			};
 
 			return datos;
@@ -37,6 +39,7 @@ namespace Herramientas
 		public bool NoOficial { get; set; } = true;
 		public bool Marketplace { get; set; } = true;
 		public BundleDiseño DiseñoBundle { get; set; } = BundleDiseño.Cuadricula;
+		public DateTime FechaAvisos { get; set; } = DateTime.MinValue;
 	}
 
 	public class ContextoUsuarioServicio : IDisposable

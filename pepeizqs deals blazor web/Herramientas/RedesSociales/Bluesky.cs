@@ -7,7 +7,7 @@ namespace Herramientas.RedesSociales
 {
 	public static class Bluesky
 	{
-		public static async Task<bool> Postear(IConfiguration configuracion, Noticias.Noticia noticia, string dominio)
+		public static async Task<bool> Postear(IConfiguration configuracion, Noticias.Noticia noticia, string dominio, string imagenPostimage)
 		{
 			string correo = configuracion.GetValue<string>("Bluesky:Correo");
 			string contraseña = configuracion.GetValue<string>("Bluesky:Contraseña");
@@ -37,68 +37,68 @@ namespace Herramientas.RedesSociales
 
 				Uri enlaceFinal = new Uri(enlace);
 
-				//bool error = false;
+				bool error = false;
 
-				//try
-				//{
-				//	string tituloEn = noticia.TituloEn;
-				//	tituloEn = tituloEn.Replace("'", null);
-				//	tituloEn = tituloEn.Replace(":", null);
+				try
+				{
+					string tituloEn = noticia.TituloEn;
+					tituloEn = tituloEn.Replace("'", null);
+					tituloEn = tituloEn.Replace(":", null);
 
-				//	string imagenEnlace = noticia.Imagen;
-				//	HttpClient clienteWeb = new HttpClient();
+					string imagenEnlace = imagenPostimage;
+					HttpClient clienteWeb = new HttpClient();
 
-				//	using (HttpResponseMessage respuesta = await clienteWeb.GetAsync(imagenEnlace, HttpCompletionOption.ResponseContentRead))
-				//	{
-				//		byte[] imageBytes = await respuesta.Content.ReadAsByteArrayAsync();
-				//		string tipo = respuesta.Content.Headers.ContentType?.MediaType;
+					using (HttpResponseMessage respuesta = await clienteWeb.GetAsync(imagenEnlace, HttpCompletionOption.ResponseContentRead))
+					{
+						byte[] imageBytes = await respuesta.Content.ReadAsByteArrayAsync();
+						string tipo = respuesta.Content.Headers.ContentType?.MediaType;
 
-				//		if (respuesta.IsSuccessStatusCode == false || tipo != "image/jpeg" || imageBytes?.Length > 950000)
-				//		{
-				//			BaseDatos.Errores.Insertar.Mensaje("Bluesky imagen", $"Estado {(int)respuesta.StatusCode}, tipo {tipo}, bytes {imageBytes.Length}, url {imagenEnlace}");
-				//			error = true;
-				//		}
-				//		else
-				//		{
-				//			if (imageBytes?.Length > 0)
-				//			{
-				//				Image imagen = new Image
-				//				{
-				//					Content = imageBytes,
-				//					Alt = tituloEn,
-				//					MimeType = "image/jpeg"
-				//				};
+						if (respuesta.IsSuccessStatusCode == false || tipo != "image/jpeg" || imageBytes?.Length > 950000)
+						{
+							BaseDatos.Errores.Insertar.Mensaje("Bluesky imagen", $"Estado {(int)respuesta.StatusCode}, tipo {tipo}, bytes {imageBytes.Length}, url {imagenEnlace}");
+							error = true;
+						}
+						else
+						{
+							if (imageBytes?.Length > 0)
+							{
+								Image imagen = new Image
+								{
+									Content = imageBytes,
+									Alt = tituloEn,
+									MimeType = "image/jpeg"
+								};
 
-				//				var post = new Post
-				//				{
-				//					Text = tituloEn + Environment.NewLine + Environment.NewLine + enlaceFinal,
-				//					Images = new[]
-				//					{
-				//						imagen
-				//					},
-				//					Url = enlaceFinal,
-				//					Languages = new[] { "en" }
-				//				};
+								var post = new Post
+								{
+									Text = tituloEn + Environment.NewLine + Environment.NewLine + enlaceFinal,
+									Images = new[]
+									{
+										imagen
+									},
+									Url = enlaceFinal,
+									Languages = new[] { "en" }
+								};
 
-				//				await cliente.Post(post);
+								await cliente.Post(post);
 
-				//				return true;
-				//			}
+								return true;
+							}
 
-				//			return true;
-				//		}
+							return true;
+						}
 
-				//		error = true;
-				//	}
-				//}
-				//catch (Exception ex)
-				//{
-				//	BaseDatos.Errores.Insertar.Mensaje("Bluesky enviar imagen", ex);
-				//	error = true;
-				//}
+						error = true;
+					}
+				}
+				catch (Exception ex)
+				{
+					BaseDatos.Errores.Insertar.Mensaje("Bluesky enviar imagen", ex);
+					error = true;
+				}
 
-				//if (error == true)
-				//{
+				if (error == true)
+				{
 					try
 					{
 						await cliente.Post(noticia.TituloEn + Environment.NewLine + Environment.NewLine + enlaceFinal);
@@ -109,7 +109,7 @@ namespace Herramientas.RedesSociales
 						BaseDatos.Errores.Insertar.Mensaje("Bluesky enviar texto", ex);
 						return false;
 					}
-				//}
+				}
 			}
 
 			return false;

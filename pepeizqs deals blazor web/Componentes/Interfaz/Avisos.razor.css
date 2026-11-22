@@ -1,0 +1,9 @@
+.svg-boton {
+    transition: transform 0.2s;
+    fill: var(--colorEnlace);
+}
+
+.boton-cerrar-aviso:hover .svg-boton {
+    transform: rotate(180deg);
+    fill: var(--colorEnlaceHover);
+}

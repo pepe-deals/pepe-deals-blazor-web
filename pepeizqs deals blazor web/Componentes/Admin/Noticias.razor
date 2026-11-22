@@ -801,11 +801,13 @@ else if (noticiaTipoSeleccionada == NoticiaTipo.Despedidas)
             }
         }
 
+        string imagenPostimage = await Herramientas.Ficheros.PostImage.SubirImagen(noticia.Imagen);
+
         enviandoBluesky = true;
 
         try
         {
-            enviadoBluesky = await Herramientas.RedesSociales.Bluesky.Postear(Configuracion, noticiaAñadir, dominio);
+            enviadoBluesky = await Herramientas.RedesSociales.Bluesky.Postear(Configuracion, noticiaAñadir, dominio, imagenPostimage);
         }
         catch (Exception ex)
         {
@@ -820,7 +822,7 @@ else if (noticiaTipoSeleccionada == NoticiaTipo.Despedidas)
 
         try
         {
-            enviadoTelegram = await Herramientas.RedesSociales.Telegram.Postear(Configuracion, noticiaAñadir, dominio);
+            enviadoTelegram = await Herramientas.RedesSociales.Telegram.Postear(Configuracion, noticiaAñadir, dominio, imagenPostimage);
         }
         catch (Exception ex)
         {

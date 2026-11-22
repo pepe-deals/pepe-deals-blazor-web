@@ -181,6 +181,22 @@
 					</button>
 				</div>
 			</div>
+
+			<div style="display: flex; align-items: center; gap: 20px;">
+				<div style="width: 15%; text-align: right;">
+					PostImage
+				</div>
+
+				<div style="width: 85%; display: flex; align-items: center; gap: 20px;">
+					<button @onclick="SubirImagenPostimage" class="boton-pequeño" style="width: fit-content; padding: 10px 20px;">
+						Subir Imagen
+					</button>
+
+					<div>
+						@imagenPostimage
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 }
@@ -363,12 +379,16 @@
 
 	private async Task EnviarBlueSky(MouseEventArgs e)
 	{
-		await Herramientas.RedesSociales.Bluesky.Postear(Configuracion, noticia, dominio);
+		string imagenPostimage = await Herramientas.Ficheros.PostImage.SubirImagen(noticia.Imagen);
+
+		await Herramientas.RedesSociales.Bluesky.Postear(Configuracion, noticia, dominio, imagenPostimage);
 	}
 
 	private async Task EnviarTelegram(MouseEventArgs e)
 	{
-		await Herramientas.RedesSociales.Telegram.Postear(Configuracion, noticia, dominio);
+		string imagenPostimage = await Herramientas.Ficheros.PostImage.SubirImagen(noticia.Imagen);
+
+		await Herramientas.RedesSociales.Telegram.Postear(Configuracion, noticia, dominio, imagenPostimage);
 	}
 
 	private async Task EnviarReddit(MouseEventArgs e)
@@ -386,5 +406,12 @@
 		noticia = await global::Noticias.Steam.GenerarNoticia(noticia);
 
 		await BaseDatos.Noticias.Actualizar.Steam(noticia);
+	}
+
+	private string imagenPostimage = string.Empty;
+
+	private async Task SubirImagenPostimage()
+	{
+		imagenPostimage = await Herramientas.Ficheros.PostImage.SubirImagen(noticia.Imagen);
 	}
 }

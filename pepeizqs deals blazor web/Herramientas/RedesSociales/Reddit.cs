@@ -70,7 +70,7 @@ namespace Herramientas.RedesSociales
 					}
 					catch (Exception ex)
 					{
-						global::BaseDatos.Errores.Insertar.Mensaje("Reddit Postear Noticia EU", ex);
+						BaseDatos.Errores.Insertar.Mensaje("Reddit Postear Noticia EU", ex);
 					}
 				}
 
@@ -95,7 +95,7 @@ namespace Herramientas.RedesSociales
 					}
 					catch (Exception ex)
 					{
-						global::BaseDatos.Errores.Insertar.Mensaje("Reddit Postear Noticia US", ex);
+						BaseDatos.Errores.Insertar.Mensaje("Reddit Postear Noticia US", ex);
 					}
 				}
 			}
@@ -209,7 +209,7 @@ namespace Herramientas.RedesSociales
 							{
 								if (juego.Juego == null)
 								{
-									juego.Juego = await global::BaseDatos.Juegos.Buscar.UnJuego(juego.JuegoId);
+									juego.Juego = await BaseDatos.Juegos.Buscar.UnJuego(juego.JuegoId);
 								}
 
 								if (juego.Juego?.PrecioMinimosHistoricos != null)

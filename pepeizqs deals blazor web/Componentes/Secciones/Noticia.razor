@@ -688,7 +688,7 @@
 		}
 	}
 
-	private Bundles2.Bundle bundleCache;
+	[PersistentState] public Bundles2.Bundle bundleCache { get; set; }
 
 	private List<Juegos.JuegoGratis> juegosGratisCache = new();
 	private Dictionary<int, Juegos.Juego> juegosCache1 = new();

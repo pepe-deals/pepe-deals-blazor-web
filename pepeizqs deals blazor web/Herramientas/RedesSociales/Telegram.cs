@@ -8,7 +8,7 @@ namespace Herramientas.RedesSociales
 {
 	public static class Telegram
 	{
-		public static async Task<bool> Postear(IConfiguration configuracion, Noticias.Noticia noticia, string dominio)
+		public static async Task<bool> Postear(IConfiguration configuracion, Noticias.Noticia noticia, string dominio, string imagenPostimage)
 		{
 			string token = configuracion.GetValue<string>("Telegram:Token");
 			string chatId = configuracion.GetValue<string>("Telegram:ChatID");
@@ -40,8 +40,7 @@ namespace Herramientas.RedesSociales
 				
 				try
 				{
-					string imagenEnlace = noticia.Imagen;
-					await cliente.SendPhoto(chatId, InputFile.FromUri(WebUtility.HtmlDecode(noticia.Imagen)), noticia.TituloEn + " " + enlace);
+					await cliente.SendPhoto(chatId, InputFile.FromUri(WebUtility.HtmlDecode(imagenPostimage)), noticia.TituloEn + " " + enlace);
 
 					return true;
 				}

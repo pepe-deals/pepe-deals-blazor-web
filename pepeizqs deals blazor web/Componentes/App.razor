@@ -93,6 +93,12 @@
 </head>
 
 <body id="cuerpazo" style="background-color: var(--fondoCuerpo); color: var(--colorTexto); position: relative; margin: 0px;">
+    
+    @if (Herramientas.Idiomas.SacarIdiomaUsuarioWeb(idioma) == "es")
+    {
+        <Avisos fechaAviso="@ultimoAviso" @rendermode="renderizacion" />
+    }
+
     <Routes @rendermode="renderizacion" datos="datosUsuario" />
 
     <PiePagina idioma="@idioma" usuarioId="@usuarioId"/>
@@ -135,6 +141,7 @@
     private string usuarioId = null;
     private string userAgent = null;
     private string dominio = null;
+    private DateTime ultimoAviso = DateTime.MinValue;
     private bool usuarioPatreon = false;
 
     private string enlaceEnNoticia = null;
@@ -150,6 +157,7 @@
             idioma = datosUsuario.Idioma;
             userAgent = datosUsuario.UserAgent;
             dominio = datosUsuario.Dominio;
+            ultimoAviso = datosUsuario.FechaAvisos;
 
             if (string.IsNullOrEmpty(usuarioId) == false)
             {
