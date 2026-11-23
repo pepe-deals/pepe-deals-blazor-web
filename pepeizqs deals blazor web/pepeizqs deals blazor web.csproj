@@ -10,10 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Componentes\Secciones\Bundle.razor~RF1019ab7.TMP" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AspNet.Security.OpenId" Version="11.0.0" />
     <PackageReference Include="AspNet.Security.OpenId.Steam" Version="11.0.0" />
     <PackageReference Include="Blazor-ApexCharts" Version="8.0.0" />

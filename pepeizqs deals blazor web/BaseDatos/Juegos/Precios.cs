@@ -161,7 +161,7 @@ namespace BaseDatos.Juegos
 
 						if (minimo.Moneda != JuegoMoneda.Euro && minimo.Precio > 0 && minimo.PrecioCambiado == 0)
 						{
-							minimo.PrecioCambiado = minimo.Precio;
+							minimo.PrecioCambiado = Herramientas.Divisas.CambioEuro(minimo.Precio, minimo.Moneda);
 						}
 
 						if (nuevaOferta.Moneda != JuegoMoneda.Euro && nuevaOferta.Precio > 0 && nuevaOferta.PrecioCambiado == 0)

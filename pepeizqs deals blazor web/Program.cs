@@ -202,7 +202,7 @@ builder.Services.AddSingleton<IEmailSender<Usuario>, Herramientas.Correos.Identi
 
 #region Servicios
 
-builder.Services.AddScoped<Servicios.Avisos>();
+//builder.Services.AddScoped<Servicios.Avisos>();
 builder.Services.AddScoped<Servicios.TiendaNoOficial>();
 builder.Services.AddScoped<Servicios.Marketplace>();
 builder.Services.AddScoped<Servicios.Moneda>();

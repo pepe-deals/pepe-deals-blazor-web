@@ -1,5 +1,4 @@
-﻿@using System.Security.Claims
-@using pepeizqs_deals_blazor_web.Componentes.Interfaz
+﻿@using pepeizqs_deals_blazor_web.Componentes.Interfaz
 
 @inject IHttpContextAccessor Acceso
 
@@ -94,10 +93,10 @@
 
 <body id="cuerpazo" style="background-color: var(--fondoCuerpo); color: var(--colorTexto); position: relative; margin: 0px;">
     
-    @if (Herramientas.Idiomas.SacarIdiomaUsuarioWeb(idioma) == "es")
+   @*  @if (Herramientas.Idiomas.SacarIdiomaUsuarioWeb(idioma) == "es")
     {
         <Avisos fechaAviso="@ultimoAviso" @rendermode="renderizacion" />
-    }
+    } *@
 
     <Routes @rendermode="renderizacion" datos="datosUsuario" />
 
@@ -157,7 +156,7 @@
             idioma = datosUsuario.Idioma;
             userAgent = datosUsuario.UserAgent;
             dominio = datosUsuario.Dominio;
-            ultimoAviso = datosUsuario.FechaAvisos;
+            // ultimoAviso = datosUsuario.FechaAvisos;
 
             if (string.IsNullOrEmpty(usuarioId) == false)
             {
