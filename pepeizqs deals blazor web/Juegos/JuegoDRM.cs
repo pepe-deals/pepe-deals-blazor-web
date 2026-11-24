@@ -148,7 +148,7 @@ namespace Juegos
 				Id = JuegoDRM.ElderScrolls,
 				Nombre = "Elder Scrolls Online",
 				Imagen = "/imagenes/drm/elderscrolls.webp",
-				Acepciones = new List<string> { "esonline", "the elder scrolls online" }
+				Acepciones = new List<string> { "esonline", "the elder scrolls online", "teso" }
 			};
 
 			drms.Add(elderscrolls);
@@ -268,7 +268,7 @@ namespace Juegos
 				Id = JuegoDRM.ArenaNet,
 				Nombre = "Arena Net",
 				Imagen = "/imagenes/drm/arenanet.webp",
-				Acepciones = new List<string> { "arenanet", "arena net", "guild wars" }
+				Acepciones = new List<string> { "arenanet", "arena net", "guild wars", "arenanet (guild wars 2 game codes)" }
 			};
 
 			drms.Add(arenanet);
@@ -525,6 +525,7 @@ namespace Juegos
 					"charles",
 					"chart house restaurant",
 					"chatgpt",
+					"chatgpt codex",
 					"cherry audio",
 					"cherry credits",
 					"cheryl’s",

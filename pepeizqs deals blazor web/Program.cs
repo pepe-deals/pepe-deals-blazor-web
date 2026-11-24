@@ -24,8 +24,6 @@ using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
 using static Herramientas.Ficheros.Constructor;
 
-ClasesDapper.Registrar();
-
 var builder = WebApplication.CreateBuilder(args);
 
 #region Compresion (Primero)
@@ -202,7 +200,7 @@ builder.Services.AddSingleton<IEmailSender<Usuario>, Herramientas.Correos.Identi
 
 #region Servicios
 
-//builder.Services.AddScoped<Servicios.Avisos>();
+builder.Services.AddScoped<Servicios.Avisos>();
 builder.Services.AddScoped<Servicios.TiendaNoOficial>();
 builder.Services.AddScoped<Servicios.Marketplace>();
 builder.Services.AddScoped<Servicios.Moneda>();
@@ -436,6 +434,8 @@ builder.Services.AddHttpsRedirection(opciones =>
 
 var app = builder.Build();
 
+ClasesDapper.Registrar();
+
 #region Control inicial de peticiones
 
 app.Use(async (contexto, siguiente) =>
@@ -524,7 +524,7 @@ app.Use(async (contexto, siguiente) =>
 	}
 
 	// Redireccionar HTTP a HTTPS
-	#nullable disable
+#nullable disable
 
 	string piscinaApp = builder.Configuration.GetValue<string>("PoolWeb:Contenido");
 	string piscinaUsada = Environment.GetEnvironmentVariable("APP_POOL_ID", EnvironmentVariableTarget.Process);
