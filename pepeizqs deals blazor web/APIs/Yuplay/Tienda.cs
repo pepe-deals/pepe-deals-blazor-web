@@ -70,6 +70,7 @@ namespace APIs.Yuplay
 									string nombre = WebUtility.HtmlDecode(producto.Nombre);
 									nombre = nombre.Replace("(EU)", null);
 									nombre = nombre.Replace("(Steam)", null);
+									nombre = nombre.Replace("EU & NA", null);
 									nombre = nombre.Trim();
 
 									string enlaceJuego = "https://www.yuplay.com" + producto.Enlace;

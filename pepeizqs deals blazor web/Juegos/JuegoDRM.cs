@@ -268,7 +268,7 @@ namespace Juegos
 				Id = JuegoDRM.ArenaNet,
 				Nombre = "Arena Net",
 				Imagen = "/imagenes/drm/arenanet.webp",
-				Acepciones = new List<string> { "arenanet", "arena net", "guild wars", "arenanet (guild wars 2 game codes)" }
+				Acepciones = new List<string> { "arenanet", "arena net", "guild wars", "arenanet (guild wars 2 game codes)", "arenanet (guild wars reforged game codes)" }
 			};
 
 			drms.Add(arenanet);
@@ -778,6 +778,7 @@ namespace Juegos
 					"kammelna",
 					"kaspersky",
 					"kemah boardwalk",
+					"kerish",
 					"kfc",
 					"kincaid's fish chop & steakhouse",
 					"king ranch texas kitchen",
@@ -952,6 +953,7 @@ namespace Juegos
 					"petsmart",
 					"phonepe",
 					"photomatix pro",
+					"picsart",
 					"pinkberry",
 					"pinnacle studio",
 					"platform &gt; linux",

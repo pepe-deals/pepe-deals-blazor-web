@@ -169,6 +169,7 @@ namespace APIs.Playsum
 										}
 
 										nombre = nombre.Replace("- Early Access", null);
+										nombre = nombre.Replace("(Steam)", null);
 										nombre = nombre.Trim();
 
 										string enlace = juego.Enlace;

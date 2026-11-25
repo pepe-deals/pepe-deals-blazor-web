@@ -3,14 +3,26 @@
 
 @if (preciosActualesOficialesDRM.Count > 0 || preciosActualesNoOficialesDRM.Count > 0 || preciosActualesMarketplacesDRM.Count > 0)
 {
-    <div style="display: flex; flex-direction: column; gap: 20px; @(preciosMostrar.Count < 10 ? "padding: 20px;" : "padding: 0px 20px;")">
-        @if (preciosMostrar?.Count > 0)
+    <div class="caja-juego-tiendas" style="display: flex; flex-direction: column; gap: 20px; padding: 15px;">
+        @if (preciosPrincipales?.Count > 0)
         {
+            @if (MostrarFiltro() == true)
+            {
+                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    @foreach (var opcion in OpcionesFiltro())
+                    {
+                        <button class="juego-boton-pequeño" @onclick="() => CambiarFiltro(opcion.Valor)" style="width: fit-content; padding: 8px 12px; font-size: 14px; @(filtroEdicion == opcion.Valor ? "border: 1px solid rgba(255,255,255,0.2);" : "opacity: 0.5;")">
+                            @opcion.Texto
+                        </button>
+                    }
+                </div>
+            }
+
             if (Herramientas.Bots.UserAgentEsBot(userAgent) == false)
             {
-                if (preciosMostrar.Count < 10)
+                if (preciosPrincipales.Count < 10)
                 {
-                    foreach (var precio in preciosMostrar)
+                    foreach (var precio in preciosPrincipales)
                     {
                         <JuegoTiendasEnlace @key="(precio.Enlace + precio.Tienda)" noOficial="@noOficial" region="@region" precio="@precio" usuarioId="@usuarioId" idioma="@idioma" userAgent="@userAgent"
                                             usuarioPatreon="@usuarioPatreon" juegosUsuario="@juegosUsuario" juegoNombre="@juegoNombre"
@@ -19,7 +31,7 @@
                 }
                 else
                 {
-                    <Virtualize Context="precio" Items="preciosMostrar">
+                    <Virtualize Context="precio" Items="preciosPrincipales">
                         <ItemContent>
                             <JuegoTiendasEnlace @key="(precio.Enlace + precio.Tienda)" noOficial="@noOficial" region="@region" precio="@precio" usuarioId="@usuarioId" idioma="@idioma" userAgent="@userAgent"
                                                 usuarioPatreon="@usuarioPatreon" juegosUsuario="@juegosUsuario" juegoNombre="@juegoNombre"
@@ -30,7 +42,7 @@
             }
             else
             {
-                foreach (var precio in preciosMostrar.Take(5))
+                foreach (var precio in preciosPrincipales.Take(5))
                 {
                     <JuegoTiendasEnlace @key="(precio.Enlace + precio.Tienda)" noOficial="@noOficial" region="@region" precio="@precio" usuarioId="@usuarioId" idioma="@idioma" userAgent="@userAgent"
                                         usuarioPatreon="@usuarioPatreon" juegosUsuario="@juegosUsuario" juegoNombre="@juegoNombre"
@@ -39,9 +51,9 @@
             }
         }
 
-        @if (preciosBajos?.Count > 0)
+        @if (preciosCaros?.Count > 0)
         {
-            <button class="juego-boton-pequeño" style="display: block; @(mostrarDescuentosBajos == true ? "" : "margin-bottom: 10px;")" @onclick="(e => DescuentosBajosMostrar(e))">
+            <button class="juego-boton-pequeño" style="border: 1px solid rgba(255,255,255,0.2); display: block; @(mostrarDescuentosBajos == true ? "" : "margin-bottom: 10px;")" @onclick="(e => DescuentosBajosMostrar(e))">
                 <div style="display: flex; align-items: center; padding: 5px;">
                     <div style="max-width: 12px;">
                         <svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" style="transform: rotate(@(mostrarDescuentosBajos == true ? "0deg" : "180deg")); transition: transform 0.2s;">
@@ -72,7 +84,7 @@
             {
                 if (Herramientas.Bots.UserAgentEsBot(userAgent) == false)
                 {
-                    <Virtualize Context="precioBajo" Items="preciosBajos">
+                    <Virtualize Context="precioBajo" Items="preciosCaros">
                         <ItemContent>
                             <JuegoTiendasEnlace @key="(precioBajo.Enlace + precioBajo.Tienda)" noOficial="@noOficial" region="@region" precio="@precioBajo" usuarioId="@usuarioId" idioma="@idioma" userAgent="@userAgent"
                                                 usuarioPatreon="@usuarioPatreon" juegosUsuario="@juegosUsuario" juegoNombre="@juegoNombre" />
@@ -81,7 +93,7 @@
                 }
                 else
                 {
-                    foreach (var precioBajo in preciosBajos.Take(3))
+                    foreach (var precioBajo in preciosCaros.Take(3))
                     {
                         <JuegoTiendasEnlace @key="(precioBajo.Enlace + precioBajo.Tienda)" noOficial="@noOficial" region="@region" precio="@precioBajo" usuarioId="@usuarioId" idioma="@idioma" userAgent="@userAgent"
                                             usuarioPatreon="@usuarioPatreon" juegosUsuario="@juegosUsuario" juegoNombre="@juegoNombre" />
@@ -146,13 +158,13 @@ else
     private bool mostrarDescuentosBajos = false;
 
     [PersistentState] public List<JuegoPrecio> preciosActivos { get; set; }
-    [PersistentState] public List<JuegoPrecio> preciosMostrar { get; set; }
-    [PersistentState] public List<JuegoPrecio> preciosBajos { get; set; }
+    [PersistentState] public List<JuegoPrecio> preciosPrincipales { get; set; }
+    [PersistentState] public List<JuegoPrecio> preciosCaros { get; set; }
 
     protected override void OnInitialized()
     {
-        preciosMostrar = new List<JuegoPrecio>();
-        preciosBajos = new List<JuegoPrecio>();
+        preciosPrincipales = new List<JuegoPrecio>();
+        preciosCaros = new List<JuegoPrecio>();
 
         if (preciosActivos == null)
         {
@@ -168,72 +180,25 @@ else
             return;
         }
 
-        int descuentoMaximo = preciosActivos.Max(p => p.Descuento);
-        int umbralDescuento = descuentoMaximo / 2;
+        #region Filtro
 
-        HashSet<string> enlacesUsados = new HashSet<string>();
-
-        foreach (var precio in preciosActivos)
+        ediciones.Clear();
+        foreach (var p in preciosActivos)
         {
-            if (enlacesUsados.Add(precio.Enlace + precio.Tienda) == false)
-            {
-                continue;
-            }
-
-            if (precio.Descuento >= umbralDescuento ||
-                precio.Tienda == APIs.Steam.Tienda.GenerarBundles().Id ||
-                (precio.Descuento == 0 && Tiendas2.TiendasCargar.DevolverTienda(precio.Tienda).Tipo == TiendaTipo.NoOficial))
-            {
-                preciosMostrar.Add(precio);
-            }
-            else
-            {
-                preciosBajos.Add(precio);
-            }
+            ediciones[p.Enlace + p.Tienda] = ObtenerEdicion(p);
         }
 
-        decimal ObtenerPrecioReal(JuegoPrecio p)
-        {
-            if (region == TiendaRegion.Europa && p.Moneda == Herramientas.JuegoMoneda.Euro)
-            {
-                return p.Precio;
-            }
-            else if (region == TiendaRegion.EstadosUnidos && p.Moneda == Herramientas.JuegoMoneda.Dolar)
-            {
-                return p.Precio;
-            }
+        edicionesDisponibles = ediciones.Values
+            .Where(e => e != null && e != FiltroBundles)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(e => e)
+            .ToList();
 
-            return p.PrecioCambiado;
-        }
+        hayEstandar = ediciones.Values.Any(e => e == null);
+        hayBundles = ediciones.Values.Any(e => e == FiltroBundles);
+        CalcularListas();
 
-        decimal precioMinimoMostrar = preciosMostrar
-            .Select(ObtenerPrecioReal)
-            .Where(p => p > 0)
-            .DefaultIfEmpty(decimal.MaxValue)
-            .Max();
-
-        List<JuegoPrecio> mover = preciosBajos
-            .Where(p =>
-            {
-                decimal precioReal = ObtenerPrecioReal(p);
-                return precioReal > 0 && precioReal < precioMinimoMostrar;
-            }).ToList();
-
-        foreach (JuegoPrecio precio in mover)
-        {
-            preciosBajos.Remove(precio);
-            preciosMostrar.Add(precio);
-        }
-
-        if (preciosMostrar?.Count > 0)
-        {
-            preciosMostrar = preciosMostrar.OrderBy(ObtenerPrecioReal).ToList();
-        }
-
-        if (preciosBajos?.Count > 0)
-        {
-            preciosBajos = preciosBajos.OrderBy(ObtenerPrecioReal).ToList();
-        }
+        #endregion
     }
 
     private Dictionary<string, decimal> preciosFinalesCalculados = new();
@@ -244,58 +209,7 @@ else
         if (preciosFinalesCalculados.Count > preciosFinalesCalculadosContadorAnterior)
         {
             preciosFinalesCalculadosContadorAnterior = preciosFinalesCalculados.Count;
-
-            decimal ObtenerPrecioOrden(JuegoPrecio p)
-            {
-                string key = p.Enlace + p.Tienda;
-
-                if (preciosFinalesCalculados.TryGetValue(key, out decimal pf) && pf > 0)
-                {
-                    return pf;
-                }
-
-                if (region == TiendaRegion.Europa && p.Moneda == Herramientas.JuegoMoneda.Euro)
-                {
-                    return p.Precio;
-                }
-
-                if (region == TiendaRegion.EstadosUnidos && p.Moneda == Herramientas.JuegoMoneda.Dolar)
-                {
-                    return p.Precio;
-                }
-
-                return p.PrecioCambiado;
-            }
-
-            decimal precioMinimoMostrar = preciosMostrar
-                .Select(ObtenerPrecioOrden)
-                .Where(p => p > 0)
-                .DefaultIfEmpty(decimal.MaxValue)
-                .Max();
-
-            List<JuegoPrecio> mover = preciosBajos
-                .Where(p =>
-                {
-                    decimal precioReal = ObtenerPrecioOrden(p);
-                    return precioReal > 0 && precioReal < precioMinimoMostrar;
-                }).ToList();
-
-            foreach (JuegoPrecio precio in mover)
-            {
-                preciosBajos.Remove(precio);
-                preciosMostrar.Add(precio);
-            }
-
-            if (preciosMostrar?.Count > 0)
-            {
-                preciosMostrar = preciosMostrar.OrderBy(ObtenerPrecioOrden).ToList();
-            }
-
-            if (preciosBajos?.Count > 0)
-            {
-                preciosBajos = preciosBajos.OrderBy(ObtenerPrecioOrden).ToList();
-            }
-
+            CalcularListas();
             await InvokeAsync(StateHasChanged);
         }
     }
@@ -304,4 +218,160 @@ else
     {
         mostrarDescuentosBajos = !mostrarDescuentosBajos;
     }
+
+    private decimal ObtenerPrecioOrden(JuegoPrecio p)
+    {
+        if (preciosFinalesCalculados.TryGetValue(p.Enlace + p.Tienda, out decimal pf) && pf > 0)
+        {
+            return pf;
+        }
+
+        if (region == TiendaRegion.Europa && p.Moneda == Herramientas.JuegoMoneda.Euro)
+        {
+            return p.Precio;
+        }
+
+        if (region == TiendaRegion.EstadosUnidos && p.Moneda == Herramientas.JuegoMoneda.Dolar)
+        {
+            return p.Precio;
+        }
+
+        return p.PrecioCambiado;
+    }
+
+    private void CalcularListas()
+    {
+        preciosPrincipales = new List<JuegoPrecio>();
+        preciosCaros = new List<JuegoPrecio>();
+
+        List<JuegoPrecio> filtrados = preciosActivos.Where(CoincideFiltro).ToList();
+
+        if (filtrados.Count == 0)
+        {
+            return;
+        }
+
+        int umbralDescuento = filtrados.Max(p => p.Descuento) / 2;
+        HashSet<string> enlacesUsados = new HashSet<string>();
+
+        foreach (var precio in filtrados)
+        {
+            if (enlacesUsados.Add(precio.Enlace + precio.Tienda) == false)
+            {
+                continue;
+            }
+
+            if (precio.Descuento >= umbralDescuento ||
+                precio.Tienda == APIs.Steam.Tienda.GenerarBundles().Id ||
+                (precio.Descuento == 0 && Tiendas2.TiendasCargar.DevolverTienda(precio.Tienda).Tipo == TiendaTipo.NoOficial))
+            {
+                preciosPrincipales.Add(precio);
+            }
+            else
+            {
+                preciosCaros.Add(precio);
+            }
+        }
+
+        decimal precioMinimoMostrar = preciosPrincipales
+            .Select(ObtenerPrecioOrden)
+            .Where(p => p > 0)
+            .DefaultIfEmpty(decimal.MaxValue)
+            .Max();
+
+        List<JuegoPrecio> mover = preciosCaros
+            .Where(p =>
+            {
+                decimal precioReal = ObtenerPrecioOrden(p);
+                return precioReal > 0 && precioReal < precioMinimoMostrar;
+            }).ToList();
+
+        foreach (JuegoPrecio precio in mover)
+        {
+            preciosCaros.Remove(precio);
+            preciosPrincipales.Add(precio);
+        }
+
+        preciosPrincipales = preciosPrincipales.OrderBy(ObtenerPrecioOrden).ToList();
+        preciosCaros = preciosCaros.OrderBy(ObtenerPrecioOrden).ToList();
+    }
+
+    #region Filtro
+
+    private const string FiltroTodos = "__todos__";
+    private const string FiltroEstandar = "__estandar__";
+    private const string FiltroBundles = "__bundles__";
+    private bool hayBundles = false;
+
+    private string filtroEdicion = FiltroTodos;
+    private Dictionary<string, string> ediciones = new();
+    private List<string> edicionesDisponibles = new();
+    private bool hayEstandar = false;
+
+    private string ObtenerEdicion(JuegoPrecio p)
+    {
+        if (p.Tienda == APIs.Steam.Tienda.GenerarBundles().Id)
+        {
+            return FiltroBundles;
+        }
+
+        string edicion = JuegoTiendasEnlace.ComprobarEdicion(juegoNombre, p.Nombre, idioma);
+        return string.IsNullOrWhiteSpace(edicion) ? null : edicion.Trim();
+    }
+
+    private bool CoincideFiltro(JuegoPrecio p)
+    {
+        if (filtroEdicion == FiltroTodos)
+        {
+            return true;
+        }
+
+        ediciones.TryGetValue(p.Enlace + p.Tienda, out string edicion);
+
+        if (filtroEdicion == FiltroEstandar)
+        {
+            return edicion == null;
+        }
+
+        return string.Equals(edicion, filtroEdicion, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private bool MostrarFiltro()
+    {
+        return Herramientas.Bots.UserAgentEsBot(userAgent) == false && edicionesDisponibles.Count + (hayEstandar ? 1 : 0) + (hayBundles ? 1 : 0) >= 2;
+    }
+
+    private List<(string Valor, string Texto)> OpcionesFiltro()
+    {
+        var opciones = new List<(string Valor, string Texto)>();
+
+        if (hayEstandar == true)
+        {
+            opciones.Add((FiltroEstandar, Herramientas.Idiomas.BuscarTexto(idioma, "String2", "GameEditions")));
+        }
+
+        foreach (var edicion in edicionesDisponibles)
+        {
+            opciones.Add((edicion, edicion));
+        }
+
+        if (hayBundles == true)
+        {
+            opciones.Add((FiltroBundles, Herramientas.Idiomas.BuscarTexto(idioma, "String3", "GameEditions")));
+        }
+
+        opciones = opciones.OrderBy(o => o.Texto, StringComparer.CurrentCultureIgnoreCase).ToList();
+
+        opciones.Insert(0, (FiltroTodos, Herramientas.Idiomas.BuscarTexto(idioma, "String1", "GameEditions")));
+
+        return opciones;
+    }
+
+    private void CambiarFiltro(string valor)
+    {
+        filtroEdicion = valor;
+        CalcularListas();
+    }
+
+    #endregion
 }

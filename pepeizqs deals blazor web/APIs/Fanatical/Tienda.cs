@@ -169,6 +169,10 @@ namespace APIs.Fanatical
 						if (descuento > 0 && juego.Disponible == true)
 						{
 							string nombre = WebUtility.HtmlDecode(juego.Nombre);
+							nombre = nombre.Replace("(Steam)", null);
+							nombre = nombre.Replace("(ArenaNet)", null);
+							nombre = nombre.Trim();
+
 							string imagen = juego.Imagen;
 							string enlace = juego.Enlace;
 							enlace = enlace.Replace("/en/", "/");

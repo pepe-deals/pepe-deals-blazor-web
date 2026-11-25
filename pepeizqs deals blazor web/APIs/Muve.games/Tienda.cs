@@ -60,6 +60,21 @@ namespace APIs.Muvegames
 						foreach (var juego in datos.Juegos)
 						{
 							string nombre = WebUtility.HtmlDecode(juego.Nombre);
+							nombre = nombre.Replace("(PC) Klucz Steam", null);
+							nombre = nombre.Replace("(PC) Klucz Epic", null);
+							nombre = nombre.Replace("(PC) Steam", null);
+							nombre = nombre.Replace("(PC) DIGITAL", null);
+							nombre = nombre.Replace("(PC)", null);
+							nombre = nombre.Replace("(Mac) Klucz Steam", null);
+							nombre = nombre.Replace("(MAC) Steam", null);
+							nombre = nombre.Replace("Klucz Epic Store", null);
+							nombre = nombre.Replace("Klucz Epic", null);
+							nombre = nombre.Replace("Steam key", null);
+							nombre = nombre.Replace(" - Steam", null);
+							nombre = nombre.Replace("(Steam)", null);
+							nombre = nombre.Replace(" - Epic", null);
+							nombre = nombre.Replace("(Epic)", null);
+							nombre = nombre.Trim();
 
 							string enlace = "https://muve.games/p/" + juego.Enlace;
 
@@ -112,13 +127,13 @@ namespace APIs.Muvegames
 						{
 							List<JuegoPrecio> ofertas = new List<JuegoPrecio>();
 
-							string html2 = await Decompiladores.Estandar("https://volkanos.muve.pl/api/matrix/v1/muve/prices/?currency=EUR&country=ES" + ids);
+							string html2 = await Decompiladores.Estandar("https://volkanos.muve.pl/api/matrix/v1/muve/prices/?currency=EUR&country=ES" + ids + "&language=EN");
 
 							if (string.IsNullOrEmpty(html2) == false)
 							{
 								MuvegamesPrecios precios = JsonSerializer.Deserialize<MuvegamesPrecios>(html2);
 
-								if (precios != null)
+								if (precios?.Precios?.Count > 0)
 								{
 									foreach (var precio in precios.Precios)
 									{
@@ -126,13 +141,16 @@ namespace APIs.Muvegames
 										{
 											if (precio.Id == oferta.Id && string.IsNullOrEmpty(precio.PrecioBase) == false && string.IsNullOrEmpty(precio.PrecioRebajado) == false)
 											{
-												decimal precioBase = decimal.Parse(precio.PrecioBase);
-												decimal precioRebajado = decimal.Parse(precio.PrecioRebajado);
+												decimal precioBase = decimal.Parse(precio.PrecioBase, System.Globalization.CultureInfo.InvariantCulture);
+												decimal precioRebajado = decimal.Parse(precio.PrecioRebajado, System.Globalization.CultureInfo.InvariantCulture);
 
 												int descuento = Calculadora.SacarDescuento(precioBase, precioRebajado);
 
 												if (descuento > 0)
 												{
+													oferta.Oferta.Precio = precioRebajado;
+													oferta.Oferta.Descuento = descuento;
+
 													ofertas.Add(oferta.Oferta);
 
 													break;

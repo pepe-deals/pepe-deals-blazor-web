@@ -39,4 +39,8 @@
     <PackageReference Include="X.Bluesky" Version="3.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Idiomas\GameEditions\" />
+  </ItemGroup>
+
 </Project>

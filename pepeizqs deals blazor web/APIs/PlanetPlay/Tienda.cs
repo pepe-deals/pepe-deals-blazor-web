@@ -76,6 +76,8 @@ namespace APIs.PlanetPlay
 								{
 									string nombre = WebUtility.HtmlDecode(juego.Nombre);
 									nombre = nombre.Replace("- Early Access", null);
+									nombre = nombre.Replace("(Steam)", null);
+									nombre = nombre.Replace("(ArenaNet)", null);
 									nombre = nombre.Trim();
 
 									string enlaceJuego = juego.Enlace;

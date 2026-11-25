@@ -123,6 +123,8 @@ namespace APIs.GamersGate
 								if (descuento > 0)
 								{
 									nombre = WebUtility.HtmlDecode(nombre);
+									nombre = nombre.Replace("(Steam)", null);
+									nombre = nombre.Trim();
 
 									if (string.IsNullOrEmpty(enlaceJuego) == false)
 									{

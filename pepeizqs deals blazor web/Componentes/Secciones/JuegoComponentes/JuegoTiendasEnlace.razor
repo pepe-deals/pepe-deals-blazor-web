@@ -69,7 +69,7 @@
                 @if (juegosBundle == null || juegosBundle?.Count == 0)
                 {
                     <div>
-                        @ComprobarEdicion(juegoNombre, precio.Nombre)
+                        @ComprobarEdicion(juegoNombre, precio.Nombre, idioma)
                     </div>
                 }
                 else if (juegosBundle?.Count > 0)
@@ -232,6 +232,21 @@
     [Parameter] 
     public EventCallback<decimal> OnPrecioFinalCalculado { get; set; }
 
+    private static readonly Dictionary<string, string[]> edicionesEquivalentes = new()
+    {
+        { "String2", new[] { "Standard Edition" } },
+        { "String4", new[] { "Deluxe Edition", "Digital Deluxe Edition", "Edition Deluxe", "Digital Deluxe" } },
+        { "String5", new[] { "Premium Edition", "Edition Premium" } },
+        { "String6", new[] { "Ultimate Edition", "Edition Ultimate" } },
+        { "String7", new[] { "Game Of The Year Edition", "Goty Edition" } },
+        { "String8", new[] { "Super Deluxe Edition" } },
+        { "String9", new[] { "Anniversary Edition" } },
+        { "String10", new[] { "Platinum Edition" } },
+        { "String11", new[] { "Day One Edition" } },
+        { "String12", new[] { "Gold Edition" } },
+        { "String13", new[] { "Complete Edition" } }
+    };
+
     protected override async Task OnInitializedAsync()
     {
         enlace = precio.Enlace;
@@ -366,15 +381,19 @@
         return TiendasCargar.GenerarListado().Find(t => t.Id == codigo)?.Tipo ?? TiendaTipo.Oficial;
     }
 
-    private static string ComprobarEdicion(string juego, string oferta)
+    public static string ComprobarEdicion(string juego, string oferta, string idioma)
     {
         if (string.IsNullOrEmpty(juego) == true)
         {
             return juego;
         }
 
+        juego = System.Text.RegularExpressions.Regex.Replace(juego, @"\s+", " ").Trim();
+
         if (string.IsNullOrEmpty(oferta) == false)
         {
+            oferta = System.Text.RegularExpressions.Regex.Replace(oferta, @"\s+", " ").Trim();
+
             if (Herramientas.Buscador.LimpiarNombre(juego) != Herramientas.Buscador.LimpiarNombre(oferta))
             {
                 string nuevoTexto = oferta.Replace(juego, null);
@@ -427,6 +446,7 @@
                 nuevoTexto = nuevoTexto.Replace("(Microsoft Store)", null);
                 nuevoTexto = nuevoTexto.Replace("(ROW)", null);
                 nuevoTexto = nuevoTexto.Replace("(DLC)", null);
+                nuevoTexto = nuevoTexto.Replace("Standard Edition", null);
 
                 if (nuevoTexto.Length > 1)
                 {
@@ -456,10 +476,29 @@
                     }
                     else
                     {
-                        nuevoTexto = oferta;
+                        nuevoTexto = QuitarPalabrasComunes(juego, oferta);
                     }
 
-                    if (nuevoTexto.Length > 4)
+                    string clave = NormalizarEdicion(nuevoTexto);
+
+                    foreach (var grupo in edicionesEquivalentes)
+                    {
+                        if (grupo.Value.Any(variante => NormalizarEdicion(variante) == clave))
+                        {
+                            string resultado = Herramientas.Idiomas.BuscarTexto(idioma, grupo.Key, "GameEditions");
+
+                            if (grupo.Key != "String2") //Edicion estandar
+                            {
+                                return resultado;
+                            }
+                            else
+                            {
+                                return null;
+                            }
+                        }
+                    }
+
+                    if (nuevoTexto.Length > 4 && nuevoTexto != "Edition")
                     {
                         return nuevoTexto;
                     }
@@ -468,6 +507,75 @@
         }
 
         return null;
+    }
+
+    private static string NormalizarEdicion(string texto)
+    {
+        return LimpiarPalabra(texto).ToLowerInvariant();
+    }
+
+    private static string LimpiarPalabra(string palabra)
+    {
+        return new string(palabra.Where(char.IsLetterOrDigit).ToArray());
+    }
+
+    private static string QuitarPalabrasComunes(string juego, string oferta)
+    {
+        string[] palabrasJuego = juego.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+            .Select(LimpiarPalabra)
+            .Where(p => p.Length > 0)
+            .ToArray();
+
+        string[] palabrasOferta = oferta.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        int posJuego = 0;
+        int posOferta = 0;
+
+        while (posOferta < palabrasOferta.Length && posJuego < palabrasJuego.Length)
+        {
+            string palabra = LimpiarPalabra(palabrasOferta[posOferta]);
+
+            if (palabra.Length == 0)
+            {
+                posOferta += 1;
+                continue;
+            }
+
+            if (PalabraIgual(palabra, palabrasJuego[posJuego]) == true)
+            {
+                posOferta += 1;
+                posJuego += 1;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        if (posJuego == 0)
+        {
+            return oferta;
+        }
+
+        return string.Join(" ", palabrasOferta.Skip(posOferta)).Trim(' ', '-', ':');
+    }
+
+    private static bool PalabraIgual(string a, string b)
+    {
+        if (string.Equals(a, b, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        if (a.Length >= 4 && b.Length >= 4 && Math.Abs(a.Length - b.Length) == 1)
+        {
+            string corta = a.Length < b.Length ? a : b;
+            string larga = a.Length < b.Length ? b : a;
+
+            return larga.StartsWith(corta, StringComparison.OrdinalIgnoreCase);
+        }
+
+        return false;
     }
 
     #region Portapapeles
