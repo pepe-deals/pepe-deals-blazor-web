@@ -814,7 +814,7 @@
                                                 }
                                             }
 
-                                            <div style="background-color: var(--fondoBien); padding: 15px 20px; box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.5),0px 0px 1px 0px rgba(0, 0, 0, 0.5);">
+                                            <div style="background-color: var(--fondoBien); padding: 15px 20px; border: 1px solid rgba(0,0,0,.1); box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.5),0px 0px 1px 0px rgba(0, 0, 0, 0.5);">
                                                 <div class="perfil-flexible-centrado" style="gap: 30px;">
                                                     <div style="display: flex; align-items: center; justify-content: center; min-width: 40px; height: 26px;">
                                                         <svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
@@ -881,7 +881,7 @@
                                         }
                                         else if (string.IsNullOrEmpty(usuarioTieneDeseadoMensaje) == false)
                                         {
-                                            <div style="background-color: var(--fondoAlerta); padding: 20px; box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.5),0px 0px 1px 0px rgba(0, 0, 0, 0.5);">
+                                            <div style="background-color: var(--fondoAlerta); padding: 20px; border: 1px solid rgba(0,0,0,.1); box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.5),0px 0px 1px 0px rgba(0, 0, 0, 0.5);">
                                                 <div class="perfil-flexible-centrado" style="gap: 25px;">
                                                     <div style="display: flex; align-items: center; justify-content: center; width: 46px; height: 26px;">
                                                         <svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 512">
@@ -898,7 +898,7 @@
 
                                 @if (string.IsNullOrEmpty(mensajeMinimoOficialDRM) == false || (usuarioTiendasNoOficial == true && string.IsNullOrEmpty(mensajeMinimoNoOficialDRM) == false) || (usuarioTiendasMarketplace == true && string.IsNullOrEmpty(mensajeMinimoMarketplaceDRM) == false) || BundlesComprobar(juego.Bundles, drm.Id) != null || GratisComprobar(juego.Gratis, drm.Id) != null || SuscripcionesComprobar(juego.Suscripciones, drm.Id) != null)
                                 {
-                                    <div class="caja-drm" style="text-align: left; padding: 20px; align-items: center; gap: 30px; background: rgba(0, 0, 0, .2); box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.5),0px 0px 1px 0px rgba(0, 0, 0, 0.5);">
+                                    <div class="caja-drm">
                                         @if (drm.Id == JuegoDRM.DRMFree)
                                         {
                                             <div style="max-width: 45px; text-align: center;">DRM Free</div>
@@ -1692,7 +1692,7 @@
                                                             <div class="tooltip-juego" id="trigger-verifications"
                                                                     @onmouseenter="@(() => ActivarTooltip("trigger-verifications", "tooltip-verifications"))"
                                                                     @onmouseleave="@(() => DesactivarTooltip("trigger-verifications"))">
-                                                                <button @onclick="DeckAbrirCerrar" class="boton-expandir" style="color: var(--colorTexto); text-decoration: none; border: 0px; box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.28),0px 0px 1px 0px rgba(0, 0, 0, 0.24);">
+                                                                <button @onclick="DeckAbrirCerrar" class="boton-expandir" style="color: var(--colorTexto); text-decoration: none; box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.28),0px 0px 1px 0px rgba(0, 0, 0, 0.24);">
                                                                     <div style="display: flex; align-items: center;">
                                                                         @if (juego.Deck != JuegoDeck.Desconocido && enseñarOpcionesSteamDeck == true)
                                                                         {
@@ -1799,7 +1799,7 @@
                                                             <div class="tooltip-juego" id="trigger-gamestreaming"
                                                                 @onmouseenter="@(() => ActivarTooltip("trigger-gamestreaming", "tooltip-gamestreaming"))"
                                                                 @onmouseleave="@(() => DesactivarTooltip("trigger-gamestreaming"))">
-                                                                <button @onclick="@(() => StreamingAbrirCerrar(drm.Id))" class="boton-expandir" style="color: var(--colorTexto); text-decoration: none; border: 0px; box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.28),0px 0px 1px 0px rgba(0, 0, 0, 0.24); height: 34px; padding: 0px 10px;">
+                                                                <button @onclick="@(() => StreamingAbrirCerrar(drm.Id))" class="boton-expandir" style="color: var(--colorTexto); text-decoration: none; box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.28),0px 0px 1px 0px rgba(0, 0, 0, 0.24); height: 34px; padding: 0px 10px;">
                                                                     <div style="display: flex; align-items: center; gap: 10px;">
                                                                         @if (mostrarGeforceNOW == true)
                                                                         {
@@ -1881,7 +1881,7 @@
                                                                         <div class="tooltip-juego" id="trigger-languages-@drm.Id.ToString()"
                                                                              @onmouseenter="@(() => ActivarTooltip($"trigger-languages-{drm.Id.ToString()}", $"tooltip-languages-{drm.Id.ToString()}"))"
                                                                              @onmouseleave="@(() => DesactivarTooltip($"trigger-languages-{drm.Id.ToString()}"))">
-                                                                            <button @onclick="@(e => IdiomasEnseñar(e, drm.Id))" class="boton-expandir" style="color: var(--colorTexto); text-decoration: none; border: 0px; height: 34px; padding: 0px 22px; box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.28),0px 0px 1px 0px rgba(0, 0, 0, 0.24);">
+                                                                            <button @onclick="@(e => IdiomasEnseñar(e, drm.Id))" class="boton-expandir" style="color: var(--colorTexto); text-decoration: none; height: 34px; padding: 0px 22px; box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.28),0px 0px 1px 0px rgba(0, 0, 0, 0.24);">
                                                                                 <div style="display: flex; align-items: center; gap: 10px; flex-direction: row; justify-content: center;">
                                                                                     <img src="@imagenBandera" style="max-width: 20px; max-height: 20px; display: block;" alt="Language"  />
 
@@ -1965,7 +1965,7 @@
                                                             {
                                                                 string imagenBandera = "/imagenes/banderas/" + Herramientas.Idiomas.EncontrarIdiomaImagen(idiomaUsuario) + ".svg";
 
-                                                                <button @onclick="(e => IdiomasEnseñar(e, drm.Id))" class="boton-expandir" style="color: var(--colorTexto); text-decoration: none; border: 0px; height: 34px; padding: 0px 22px; box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.28),0px 0px 1px 0px rgba(0, 0, 0, 0.24);">
+                                                                <button @onclick="(e => IdiomasEnseñar(e, drm.Id))" class="boton-expandir" style="color: var(--colorTexto); text-decoration: none; height: 34px; padding: 0px 22px; box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.28),0px 0px 1px 0px rgba(0, 0, 0, 0.24);">
                                                                     <div style="display: flex; align-items: center; gap: 10px; flex-direction: row; justify-content: center;">
                                                                         <img src="@imagenBandera" style="max-width: 20px; max-height: 20px; display: block;" alt="Language" />
 
@@ -1999,7 +1999,7 @@
                                                             {
                                                                 if (drm.Id == JuegoDRM.Steam && juego.Caracteristicas.RealidadVirtual != null && enseñarOpcionesSteamRV == true)
                                                                 {
-                                                                    <button @onclick="(e => RVEnseñar(e, drm.Id))" class="boton-expandir" style="color: var(--colorTexto); text-decoration: none; border: 0px; height: 34px; padding: 0px 12px; box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.28),0px 0px 1px 0px rgba(0, 0, 0, 0.24);">
+                                                                    <button @onclick="(e => RVEnseñar(e, drm.Id))" class="boton-expandir" style="color: var(--colorTexto); text-decoration: none; height: 34px; padding: 0px 12px; box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.28),0px 0px 1px 0px rgba(0, 0, 0, 0.24);">
                                                                         <div style="font-size: 14px;">
                                                                             @Herramientas.Idiomas.BuscarTexto(idioma, "String98", "Game")
                                                                         </div>
@@ -2019,7 +2019,7 @@
                                                                 <div class="tooltip-juego" id="trigger-demosteam"
                                                                      @onmouseenter="@(() => ActivarTooltip("trigger-demosteam", "tooltip-demosteam"))"
                                                                      @onmouseleave="@(() => DesactivarTooltip("trigger-demosteam"))">
-                                                                    <a href="@Herramientas.EnlaceAcortador.Generar(usuarioRegion, enlaceDemo, APIs.Steam.Tienda.Generar().Id, usuarioPatreon, false)" target="_blank" class="boton-expandir" style="display: inline-flex; line-height: 34px; color: var(--colorTexto); text-decoration: none; border: 0px; height: 34px; padding: 0px 12px; box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.28),0px 0px 1px 0px rgba(0, 0, 0, 0.24);">
+                                                                    <a href="@Herramientas.EnlaceAcortador.Generar(usuarioRegion, enlaceDemo, APIs.Steam.Tienda.Generar().Id, usuarioPatreon, false)" target="_blank" class="boton-expandir" style="display: inline-flex; line-height: 34px; color: var(--colorTexto); text-decoration: none; height: 34px; padding: 0px 12px; box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.28),0px 0px 1px 0px rgba(0, 0, 0, 0.24);">
                                                                         <div style="font-size: 14px;">
                                                                             @Herramientas.Idiomas.BuscarTexto(idioma, "String83", "Game")
                                                                         </div>

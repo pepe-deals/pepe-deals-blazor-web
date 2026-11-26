@@ -16,7 +16,7 @@
 				</h1>
 
 				<div style="display: flex; align-items: center; gap: 30px;">
-					<a href="/bundles/@bundle.BundleTipo.ToString().ToLower()/" class="boton-pequeño" style="width: fit-content; display: flex; align-items: center; gap: 20px; padding: 10px 15px;">
+					<a href="/bundles/@bundle.BundleTipo.ToString().ToLower()/" @onclick="ClickearTipo" @onclick:preventDefault="@(OnTipoSeleccionado.HasDelegate)" class="boton-pequeño" style="width: fit-content; display: flex; align-items: center; gap: 15px; padding: 10px 15px;">
 						<div>
 							<img src="@Bundles2.BundlesCargar.DevolverBundle(bundle.BundleTipo).ImagenIcono" style="max-width: 18px; max-height: 18px; display: block;" alt="@Bundles2.BundlesCargar.DevolverBundle(bundle.BundleTipo).Tienda" />
 						</div>
@@ -26,15 +26,18 @@
 						</div>
 					</a>
 
-					<div style="font-size: 16px;">
-						<span id="contador-bundle-texto">@MostrarFecha(bundle.FechaEmpieza, bundle.FechaTermina)</span>
+					@if (bundle.FechaEmpieza.AddDays(60) > bundle.FechaTermina)
+					{
+						<div style="font-size: 16px;">
+							<span id="contador-bundle-texto">@MostrarFecha(bundle.FechaEmpieza, bundle.FechaTermina)</span>
 
-						<span id="contador-bundle-caja" hidden>
-							<span style="display: flex; align-items: center; gap: 15px;">
-								@Herramientas.Idiomas.BuscarTexto(idioma, "String42", "Bundle") <span id="contador-bundle" data-fin="@bundle.FechaTermina.ToUniversalTime().ToString("o")" style="font-variant-numeric: tabular-nums; background: rgba(0,0,0,.3); padding: 10px;"></span>
+							<span id="contador-bundle-caja" hidden>
+								<span style="display: flex; align-items: center; gap: 15px;">
+									@Herramientas.Idiomas.BuscarTexto(idioma, "String42", "Bundle") <span id="contador-bundle" data-fin="@bundle.FechaTermina.ToUniversalTime().ToString("o")" style="font-variant-numeric: tabular-nums; background: rgba(0,0,0,.3); padding: 10px;"></span>
+								</span>
 							</span>
-						</span>
-					</div>
+						</div>
+					}
 				</div>
 			</div>
 
@@ -160,5 +163,16 @@ else
 		}
 
 		return Herramientas.Idiomas.BuscarTexto(idioma, "String7", "Bundle") + " • " + fechaEmpieza.Day.ToString() + "/" + fechaEmpieza.Month.ToString() + "/" + fechaEmpieza.Year.ToString() + " • " + fechaTermina.Day.ToString() + "/" + fechaTermina.Month.ToString() + "/" + fechaTermina.Year.ToString();
+	}
+
+	[Parameter]
+	public EventCallback<Bundles2.BundleTipo> OnTipoSeleccionado { get; set; }
+
+	private async Task ClickearTipo()
+	{
+		if (OnTipoSeleccionado.HasDelegate == true)
+		{
+			await OnTipoSeleccionado.InvokeAsync(bundle.BundleTipo);
+		}
 	}
 }

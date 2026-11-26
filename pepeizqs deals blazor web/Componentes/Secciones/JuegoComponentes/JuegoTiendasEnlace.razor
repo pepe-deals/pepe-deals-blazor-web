@@ -528,36 +528,46 @@
 
         string[] palabrasOferta = oferta.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-        int posJuego = 0;
-        int posOferta = 0;
-
-        while (posOferta < palabrasOferta.Length && posJuego < palabrasJuego.Length)
+        for (int inicio = 0; inicio < palabrasJuego.Length; inicio++)
         {
-            string palabra = LimpiarPalabra(palabrasOferta[posOferta]);
+            int posJuego = inicio;
+            int posOferta = 0;
 
-            if (palabra.Length == 0)
+            while (posOferta < palabrasOferta.Length && posJuego < palabrasJuego.Length)
             {
-                posOferta += 1;
+                string palabra = LimpiarPalabra(palabrasOferta[posOferta]);
+
+                if (palabra.Length == 0)
+                {
+                    posOferta += 1;
+                    continue;
+                }
+
+                if (PalabraIgual(palabra, palabrasJuego[posJuego]) == true)
+                {
+                    posOferta += 1;
+                    posJuego += 1;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            int coincidentes = posJuego - inicio;
+
+            if (coincidentes == 0)
+            {
                 continue;
             }
 
-            if (PalabraIgual(palabra, palabrasJuego[posJuego]) == true)
+            if (inicio == 0 || (posJuego == palabrasJuego.Length && coincidentes >= 2))
             {
-                posOferta += 1;
-                posJuego += 1;
-            }
-            else
-            {
-                break;
+                return string.Join(" ", palabrasOferta.Skip(posOferta)).Trim(' ', '-', ':');
             }
         }
 
-        if (posJuego == 0)
-        {
-            return oferta;
-        }
-
-        return string.Join(" ", palabrasOferta.Skip(posOferta)).Trim(' ', '-', ':');
+        return oferta;
     }
 
     private static bool PalabraIgual(string a, string b)

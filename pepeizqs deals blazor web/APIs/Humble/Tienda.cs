@@ -1,9 +1,4 @@
-﻿//https://www.humblebundle.com/store/api/recommend?recommendation_attempt=1&machine_name=americanfugitive_storefront
-//https://www.humblebundle.com/store/api/search?sort=discount&filter=all&search=american&request=1
-//https://www.humblebundle.com/api/v1/subscriptions/humble_monthly/subscription_products_with_gamekeys/
-//https://www.humblebundle.com/store/api/lookup?products[]=sonic-mania&request=1
-
-#nullable disable
+﻿#nullable disable
 
 using Dapper;
 using Herramientas;
@@ -144,18 +139,7 @@ namespace APIs.Humble
 
 									if (descuento > 0)
 									{
-										bool añadirChoice = true;
-
-										//if (juego.CosasIncompatibles?.Count > 0)
-										//{
-										//	foreach (var cosa in juego.CosasIncompatibles)
-										//	{
-										//		if (cosa == "subscriber-discount-coupons")
-										//		{
-										//			añadirChoice = false;
-										//		}
-										//	}
-										//}
+										bool añadirChoice = juego.Precio.ChoiceElegible;
 
 										foreach (string drmTexto in juego.DRMs)
 										{
@@ -185,43 +169,51 @@ namespace APIs.Humble
 
 											ofertas.Add(oferta);
 
-											//if (añadirChoice == true)
-											//{
-											//	decimal tempChoice = decimal.Parse(juego.PrecioRebajado.Cantidad.ToString()) * Convert.ToDecimal(DescuentoChoice(juego.DescuentoChoice));
+											if (añadirChoice == true)
+											{
+												int descuentoChoiceUsar = 10;
 
-											//	decimal precioChoice = decimal.Parse(juego.PrecioRebajado.Cantidad.ToString()) - tempChoice;
-											//	precioChoice = Math.Round(precioChoice, 2);
+												if (juego.Precio.ChoiceReducirDescuento > 0)
+												{
+													descuentoChoiceUsar = juego.Precio.ChoiceReducirDescuento;
 
-											//	if (precioChoice < precioRebajado)
-											//	{
-											//		int descuentoChoice = Calculadora.SacarDescuento(decimal.Parse(juego.PrecioBase.Cantidad.ToString()), precioChoice);
+													if (descuentoChoiceUsar > 10)
+													{
+														descuentoChoiceUsar = 10;
+													}
+												}
 
-											//		JuegoPrecio choice = new JuegoPrecio
-											//		{
-											//			Nombre = nombre,
-											//			Enlace = enlace,
-											//			Imagen = imagen,
-											//			Moneda = JuegoMoneda.Euro,
-											//			Precio = precioChoice,
-											//			Descuento = descuentoChoice,
-											//			Tienda = GenerarChoice().Id,
-											//			DRM = drm,
-											//			FechaDetectado = DateTime.Now,
-											//			FechaActualizacion = DateTime.Now
-											//		};
+												decimal precioChoice = Math.Round(precioRebajado * (100 - descuentoChoiceUsar) / 100m, 2, MidpointRounding.AwayFromZero);
 
-											//		if (juego.FechaTermina > 0)
-											//		{
-											//			DateTime fechaTermina = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-											//			fechaTermina = fechaTermina.AddSeconds(juego.FechaTermina);
-											//			fechaTermina = fechaTermina.ToLocalTime();
+												if (precioChoice < precioRebajado)
+												{
+													int descuentoChoiceMostrar = Calculadora.SacarDescuento(decimal.Parse(juego.Precio.PrecioBase.Cantidad.ToString()), precioChoice);
 
-											//			choice.FechaTermina = fechaTermina;
-											//		}
+													JuegoPrecio choice = new JuegoPrecio
+													{
+														Nombre = nombre,
+														Enlace = enlace,
+														Imagen = imagen,
+														Moneda = JuegoMoneda.Euro,
+														Precio = precioChoice,
+														Descuento = descuentoChoiceMostrar,
+														Tienda = GenerarChoice().Id,
+														DRM = drm,
+														FechaDetectado = DateTime.Now,
+														FechaActualizacion = DateTime.Now
+													};
 
-											//		ofertas.Add(choice);
-											//	}
-											//}
+													if (string.IsNullOrEmpty(juego.Precio.FechaTermina) == false)
+													{
+														DateTime fechaTermina = DateTime.Parse(juego.Precio.FechaTermina, CultureInfo.InvariantCulture, DateTimeStyles.AdjustToUniversal);
+														fechaTermina = fechaTermina.AddHours(1);
+
+														choice.FechaTermina = fechaTermina;
+													}
+
+													ofertas.Add(choice);
+												}
+											}
 										}
 									}
 								}
@@ -279,34 +271,6 @@ namespace APIs.Humble
 			{
 				BaseDatos.Errores.Insertar.Mensaje("Humble Buscar Ofertas", ex);
 			}
-		}
-
-		private static double DescuentoChoice(double cantidad)
-		{
-			double descuento = 0;
-
-			if (cantidad == 0.1)
-			{
-				descuento = 0.2;
-			}
-			else if (cantidad == 0.05)
-			{
-				descuento = 0.15;
-			}
-			else if (cantidad == 0.03)
-			{
-				descuento = 0.13;
-			}
-			else if (cantidad == 0.02)
-			{
-				descuento = 0.12;
-			}
-			else if (cantidad == 0)
-			{
-				descuento = 0.10;
-			}
-
-			return descuento;
 		}
 	}
 
@@ -382,7 +346,10 @@ namespace APIs.Humble
 		public string FechaTermina { get; set; }
 
 		[JsonPropertyName("choiceDiscountEligible")]
-		public bool ElegibleChoice { get; set; }
+		public bool ChoiceElegible { get; set; }
+
+		[JsonPropertyName("choiceDiscountReductionPct")]
+		public int ChoiceReducirDescuento { get; set; }
 	}
 
 	public class HumblePrecio

@@ -124,6 +124,7 @@ namespace APIs.GamersGate
 								{
 									nombre = WebUtility.HtmlDecode(nombre);
 									nombre = nombre.Replace("(Steam)", null);
+									nombre = nombre.Replace("(Mac)", null);
 									nombre = nombre.Trim();
 
 									if (string.IsNullOrEmpty(enlaceJuego) == false)

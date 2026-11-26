@@ -110,6 +110,7 @@ namespace APIs.Eneba
 							nombreJuego = nombreJuego.Replace("(incl. Pre-Order Bonus)", null);
 							nombreJuego = nombreJuego.Replace("(incl. Early Access)", null);
 							nombreJuego = nombreJuego.Replace("EN/DE/FR/IT/ZH/ES/ZH", null);
+							nombreJuego = nombreJuego.Replace("EN/DE/FR/IT/ES", null);
 							nombreJuego = nombreJuego.Trim();
 
 							string enlaceJuego = resultado.Enlace;

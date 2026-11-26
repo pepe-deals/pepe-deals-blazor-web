@@ -270,16 +270,16 @@
 							<div class="cuerpo-ancho bundle-espacio2" style="display: flex; align-items: center; flex-direction: row; justify-content: space-between; margin-bottom: 20px;">
 								@foreach (var tier2 in tiersMostrar)
 								{
-									<div class="bundle-espacio3" style="background: var(--fondoSubsubcabecera); border: 2px solid rgba(0,0,0,.4); border-radius: 10px; text-align: center; display: flex; align-items: center; gap: 5px; width: 100%; justify-content: center;">
+									<div class="bundle-espacio3" style="background: var(--fondoSubsubcabecera); border: 2px solid rgba(0,0,0,.4); border-radius: 10px; text-align: center; display: flex; align-items: center; gap: 20px; width: 100%; justify-content: center;">
 										@if (tier2.CantidadJuegos == 1)
 										{
-											<div style="background-color: rgba(0,0,0,0.2); border: 1px solid rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 5px;">
+											<div style="background-color: rgba(0,0,0,0.2); border: 1px solid rgba(0,0,0,0.3); padding: 10px 15px; border-radius: 5px;">
 												@tier2.CantidadJuegos.ToString() @Herramientas.Idiomas.BuscarTexto(idioma, "String21", "Bundle") • @Herramientas.Precios.Euro(decimal.Parse(tier2.Precio))
 											</div>
 										}
 										else if (tier2.CantidadJuegos > 1)
 										{
-											<div style="background-color: rgba(0,0,0,0.2); border: 1px solid rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 5px;">
+											<div style="background-color: rgba(0,0,0,0.2); border: 1px solid rgba(0,0,0,0.3); padding: 10px 15px; border-radius: 5px;">
 												@tier2.CantidadJuegos.ToString() @Herramientas.Idiomas.BuscarTexto(idioma, "String8", "Bundle") • @Herramientas.Precios.Euro(decimal.Parse(tier2.Precio))
 											</div>
 											<div style="font-size: 14px;">
@@ -313,7 +313,7 @@
 							{
 								if (i == 0)
 								{
-									if (tiersMostrar.Count == 1)
+									if (tiersMostrar.Count == 1 && tipo == Tipo.Noticia)
 									{
 										bordesRedondeado = "border-top-left-radius: 10px; border-top-right-radius: 10px;";
 									}
@@ -360,7 +360,7 @@
 											Tier @tier.Posicion
 										</div>
 
-										<div style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,.2); padding: 5px 10px;">
+										<div style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,.2); padding: 5px 10px; border-radius: 5px;">
 											@Herramientas.Precios.Euro(decimal.Parse(tier.Precio))
 										</div>
 									</div>

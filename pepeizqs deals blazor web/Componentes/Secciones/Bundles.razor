@@ -182,20 +182,35 @@
 			{
 				foreach (var bundle in bundlesActuales)
 				{
-					<button @key="bundle.Id" @onclick="@(e => SeleccionarBundle(e, bundle))" class="boton-pequeño" style="padding: 0px;">
-						<div style="width: 100%; text-align: center; padding: 2px; height: 100%; display: flex; flex-direction: column; gap: 10px;">
+					<button @key="bundle.Id" @onclick="@(e => SeleccionarBundle(e, bundle))" class="boton-bundle">
+						<div style="width: 100%; text-align: center; height: 100%; display: flex; flex-direction: column; gap: 15px;">
 							@if (bundle.BundleTipo == Bundles2.BundleTipo.HumbleBundle)
 							{
-								<img src="@Herramientas.Ficheros.Imagenes.ServidorExterno(bundle.ImagenNoticia, 395, 222)" style="max-width: 100%; height: 100%; object-fit: cover; display: block;" alt="@bundle.Nombre" loading="lazy" />
+								<img src="@Herramientas.Ficheros.Imagenes.ServidorExterno(bundle.ImagenNoticia, 395, 222)" class="boton-bundle-imagen" alt="@bundle.Nombre" loading="lazy" />
 							}
 							else
 							{
-								<img src="@Herramientas.Ficheros.Imagenes.ServidorExterno(bundle.Imagen, 395, 222)" style="max-width: 100%; height: 100%; object-fit: cover; display: block;" alt="@bundle.Nombre" loading="lazy" />
+								<img src="@Herramientas.Ficheros.Imagenes.ServidorExterno(bundle.Imagen, 395, 222)" class="boton-bundle-imagen" alt="@bundle.Nombre" loading="lazy" />
 							}
 
-							<div style="margin-top: auto; margin-bottom: 5px; text-align: center;">
-								@MostrarFecha(bundle.FechaEmpieza, bundle.FechaTermina)
-							</div>
+							@if (bundle.FechaEmpieza.AddDays(60) > bundle.FechaTermina)
+							{
+								<div style="text-align: center;">
+									<span class="contador-bundle-caja" hidden>
+										<span style="display: flex; align-items: center; gap: 20px; justify-content: center;">
+											<img src="@Bundles2.BundlesCargar.DevolverBundle(bundle.BundleTipo).ImagenIcono" style="width: 20px; height: 20px; display: block;" alt="@Bundles2.BundlesCargar.DevolverBundle(bundle.BundleTipo).Nombre" loading="lazy" />
+
+											<span class="contador-bundle" data-fin="@bundle.FechaTermina.ToUniversalTime().ToString("o")"></span>
+										</span>
+									</span>
+								</div>
+							}
+							else
+							{
+								<div style="display: flex; align-items: center; gap: 20px; justify-content: center; padding: 8px;">
+									<img src="@Bundles2.BundlesCargar.DevolverBundle(bundle.BundleTipo).ImagenIcono" style="width: 20px; height: 20px; display: block;" alt="@Bundles2.BundlesCargar.DevolverBundle(bundle.BundleTipo).Nombre" loading="lazy" />
+								</div>
+							}
 						</div>
 					</button>
 				}
@@ -456,7 +471,7 @@ else
 			enlaceBundle = Herramientas.EnlaceAcortador.Generar(usuarioRegion, bundleSeleccionado.Enlace, bundleSeleccionado.BundleTipo, usuarioPatreon, false);
 		}
 
-		<BundleCabecera idioma="@idioma" bundle="@bundleSeleccionado" enlaceBundle="@enlaceBundle" OnCerrar="CerrarBundle" />
+		<BundleCabecera idioma="@idioma" bundle="@bundleSeleccionado" enlaceBundle="@enlaceBundle" OnCerrar="CerrarBundle" OnTipoSeleccionado="SeleccionarTipo" />
 
 		if (DateTime.Now < bundleSeleccionado.FechaTermina)
 		{
@@ -634,12 +649,27 @@ else
 				await CambiarTipo(tipoSeleccionado, true);
 			}
 		}
+
+		if (moduloJs != null && mostrarArchivo == false && mostrarBundleSeleccionado == false)
+		{
+			try
+			{
+				await moduloJs.InvokeVoidAsync("iniciarContadores");
+			}
+			catch { }
+		}
 	}
 
 	public async ValueTask DisposeAsync()
 	{
 		if (moduloJs != null)
 		{
+			try
+			{
+				await moduloJs.InvokeVoidAsync("detenerContadores");
+			}
+			catch { }
+
 			try
 			{
 				await moduloJs.DisposeAsync();
@@ -728,6 +758,12 @@ else
 	private Bundles2.BundleTipo tipoSeleccionado = Bundles2.BundleTipo.Desconocido;
 	private List<Bundles2.BundleTipo> tiposActuales = new List<Bundles2.BundleTipo>();
 	private bool mostrarArchivo = false;
+
+	private async Task SeleccionarTipo(Bundles2.BundleTipo tipo)
+	{
+		mostrarBundleSeleccionado = false;
+		await CambiarTipo(tipo, false);
+	}
 
 	private async Task CambiarTipo(MouseEventArgs e, Bundles2.BundleTipo nuevoTipo, bool esArchivo)
 	{

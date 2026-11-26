@@ -92,3 +92,46 @@
     justify-content: center;
     align-items: center;
 }
+
+.contador-bundle {
+    font-variant-numeric: tabular-nums;
+    background: rgba(255,255,255,.1);
+    padding: 5px 10px;
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 5px;
+    transition: border-color 0.2s ease;
+}
+
+.boton-bundle {
+    padding: 15px;
+    background-color: rgba(0,0,0,0.7);
+    border: 2px solid rgba(255,255,255,0.15);
+    border-radius: 10px;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,.28),0 0 1px 0 rgba(0,0,0,.24);
+    transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+    color: var(--colorTexto);
+    font-size: 16px;
+}
+
+    .boton-bundle:hover {
+        transform: scale(1.02);
+        background-color: rgba(0,0,0,0.85);
+        border-color: rgba(255,255,255,0.4);
+    }
+
+.boton-bundle-imagen {
+    max-width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 5px;
+    border: 1px solid rgba(255,255,255,.2);
+    transition: border-color 0.2s ease;
+}
+
+.boton-bundle:hover .boton-bundle-imagen,
+.boton-bundle:hover .contador-bundle,
+.boton-bundle:focus-visible .boton-bundle-imagen,
+.boton-bundle:focus-visible .contador-bundle {
+    border-color: rgba(255,255,255,0.4);
+}
