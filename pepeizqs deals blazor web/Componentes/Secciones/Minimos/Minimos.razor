@@ -3407,29 +3407,4 @@ else
 	}
 
 	#endregion
-
-	private async Task ActivarTooltip(string triggerId, string tooltipId)
-	{
-		if (moduloJs != null)
-		{
-			try
-			{
-				await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
-			}
-			catch { }
-		}
-	}
-
-	private async Task DesactivarTooltip(string triggerId)
-	{
-		if (moduloJs != null)
-		{
-			try
-			{
-				await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
-			}
-			catch { }
-		}
-	}
-
 }

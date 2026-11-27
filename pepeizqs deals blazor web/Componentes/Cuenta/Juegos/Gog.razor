@@ -1,11 +1,7 @@
-﻿@implements IAsyncDisposable
-
-@using APIs.GOG
+﻿@using APIs.GOG
 @using System.Text.Json
 @using global::Juegos
 @using pepeizqs_deals_web.Data
-
-@inject IJSRuntime JavaScript
 
 @if (usuario != null)
 {
@@ -61,19 +57,11 @@
 					@Herramientas.Idiomas.BuscarTexto(idioma, "String16", "AccountGames")
 				</div>
 
-				<div class="tooltip-juego" id="trigger-gog5"
-						 @onmouseenter="@(() => ActivarTooltip("trigger-gog5", "tooltip-gog5"))"
-						 @onmouseleave="@(() => DesactivarTooltip("trigger-gog5"))" style="margin-left: auto;">
+				<div class="tooltip-juego" data-tooltip="@string.Format(Herramientas.Idiomas.BuscarTexto(idioma, "String2", "AccountGames"), "GOG")" style="margin-left: auto;">
 					<div style="width: 24px; height: 24px;">
 						<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
 							<path d="M528 320C528 205.1 434.9 112 320 112C205.1 112 112 205.1 112 320C112 434.9 205.1 528 320 528C434.9 528 528 434.9 528 320zM64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576C178.6 576 64 461.4 64 320zM320 240C302.3 240 288 254.3 288 272C288 285.3 277.3 296 264 296C250.7 296 240 285.3 240 272C240 227.8 275.8 192 320 192C364.2 192 400 227.8 400 272C400 319.2 364 339.2 344 346.5L344 350.3C344 363.6 333.3 374.3 320 374.3C306.7 374.3 296 363.6 296 350.3L296 342.2C296 321.7 310.8 307 326.1 302C332.5 299.9 339.3 296.5 344.3 291.7C348.6 287.5 352 281.7 352 272.1C352 254.4 337.7 240.1 320 240.1zM288 432C288 414.3 302.3 400 320 400C337.7 400 352 414.3 352 432C352 449.7 337.7 464 320 464C302.3 464 288 449.7 288 432z" />
 						</svg>
-					</div>
-
-					<div id="tooltip-gog5" class="tooltip-relleno">
-						<div style="margin: 8px; max-width: 300px; font-size: 14px;">
-							@string.Format(Herramientas.Idiomas.BuscarTexto(idioma, "String2", "AccountGames"), "GOG")
-						</div>
 					</div>
 				</div>
 			</div>
@@ -147,19 +135,11 @@
 						@Herramientas.Idiomas.BuscarTexto(idioma, "String31", "AccountGames")
 					</div>
 
-					<div class="tooltip-juego" id="trigger-gog1"
-						 @onmouseenter="@(() => ActivarTooltip("trigger-gog1", "tooltip-gog1"))"
-						 @onmouseleave="@(() => DesactivarTooltip("trigger-gog1"))">
+					<div class="tooltip-juego" data-tooltip="@Herramientas.Idiomas.BuscarTexto(idioma, "String32", "AccountGames")">
 						<div style="width: 24px; height: 24px;">
 							<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
 								<path d="M528 320C528 205.1 434.9 112 320 112C205.1 112 112 205.1 112 320C112 434.9 205.1 528 320 528C434.9 528 528 434.9 528 320zM64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576C178.6 576 64 461.4 64 320zM320 240C302.3 240 288 254.3 288 272C288 285.3 277.3 296 264 296C250.7 296 240 285.3 240 272C240 227.8 275.8 192 320 192C364.2 192 400 227.8 400 272C400 319.2 364 339.2 344 346.5L344 350.3C344 363.6 333.3 374.3 320 374.3C306.7 374.3 296 363.6 296 350.3L296 342.2C296 321.7 310.8 307 326.1 302C332.5 299.9 339.3 296.5 344.3 291.7C348.6 287.5 352 281.7 352 272.1C352 254.4 337.7 240.1 320 240.1zM288 432C288 414.3 302.3 400 320 400C337.7 400 352 414.3 352 432C352 449.7 337.7 464 320 464C302.3 464 288 449.7 288 432z" />
 							</svg>
-						</div>
-
-						<div id="tooltip-gog1" class="tooltip-relleno">
-							<div style="margin: 8px; max-width: 300px; font-size: 14px;">
-								@Herramientas.Idiomas.BuscarTexto(idioma, "String32", "AccountGames")
-							</div>
 						</div>
 					</div>
 				</div>
@@ -175,19 +155,11 @@
 						@Herramientas.Idiomas.BuscarTexto(idioma, "String33", "AccountGames")
 					</div>
 
-					<div class="tooltip-juego" id="trigger-gog2"
-						 @onmouseenter="@(() => ActivarTooltip("trigger-gog2", "tooltip-gog2"))"
-						 @onmouseleave="@(() => DesactivarTooltip("trigger-gog2"))">
+					<div class="tooltip-juego" data-tooltip="@Herramientas.Idiomas.BuscarTexto(idioma, "String34", "AccountGames")">
 						<div style="width: 24px; height: 24px;">
 							<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
 								<path d="M528 320C528 205.1 434.9 112 320 112C205.1 112 112 205.1 112 320C112 434.9 205.1 528 320 528C434.9 528 528 434.9 528 320zM64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576C178.6 576 64 461.4 64 320zM320 240C302.3 240 288 254.3 288 272C288 285.3 277.3 296 264 296C250.7 296 240 285.3 240 272C240 227.8 275.8 192 320 192C364.2 192 400 227.8 400 272C400 319.2 364 339.2 344 346.5L344 350.3C344 363.6 333.3 374.3 320 374.3C306.7 374.3 296 363.6 296 350.3L296 342.2C296 321.7 310.8 307 326.1 302C332.5 299.9 339.3 296.5 344.3 291.7C348.6 287.5 352 281.7 352 272.1C352 254.4 337.7 240.1 320 240.1zM288 432C288 414.3 302.3 400 320 400C337.7 400 352 414.3 352 432C352 449.7 337.7 464 320 464C302.3 464 288 449.7 288 432z" />
 							</svg>
-						</div>
-
-						<div id="tooltip-gog2" class="tooltip-relleno">
-							<div style="margin: 8px; max-width: 300px; font-size: 14px;">
-								@Herramientas.Idiomas.BuscarTexto(idioma, "String34", "AccountGames")
-							</div>
 						</div>
 					</div>
 				</div>
@@ -201,19 +173,11 @@
 							@Herramientas.Idiomas.BuscarTexto(idioma, "String37", "AccountGames")
 						</button>
 
-						<div class="tooltip-juego" id="trigger-gog3"
-							 @onmouseenter="@(() => ActivarTooltip("trigger-gog3", "tooltip-gog3"))"
-							 @onmouseleave="@(() => DesactivarTooltip("trigger-gog3"))">
+						<div class="tooltip-juego" data-tooltip="@Herramientas.Idiomas.BuscarTexto(idioma, "String38", "AccountGames")">
 							<div style="width: 24px; height: 24px;">
 								<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
 									<path d="M528 320C528 205.1 434.9 112 320 112C205.1 112 112 205.1 112 320C112 434.9 205.1 528 320 528C434.9 528 528 434.9 528 320zM64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576C178.6 576 64 461.4 64 320zM320 240C302.3 240 288 254.3 288 272C288 285.3 277.3 296 264 296C250.7 296 240 285.3 240 272C240 227.8 275.8 192 320 192C364.2 192 400 227.8 400 272C400 319.2 364 339.2 344 346.5L344 350.3C344 363.6 333.3 374.3 320 374.3C306.7 374.3 296 363.6 296 350.3L296 342.2C296 321.7 310.8 307 326.1 302C332.5 299.9 339.3 296.5 344.3 291.7C348.6 287.5 352 281.7 352 272.1C352 254.4 337.7 240.1 320 240.1zM288 432C288 414.3 302.3 400 320 400C337.7 400 352 414.3 352 432C352 449.7 337.7 464 320 464C302.3 464 288 449.7 288 432z" />
 								</svg>
-							</div>
-
-							<div id="tooltip-gog3" class="tooltip-relleno">
-								<div style="margin: 8px; max-width: 300px; font-size: 14px;">
-									@Herramientas.Idiomas.BuscarTexto(idioma, "String38", "AccountGames")
-								</div>
 							</div>
 						</div>
 					</div>
@@ -228,19 +192,11 @@
 							@Herramientas.Idiomas.BuscarTexto(idioma, "String39", "AccountGames")
 						</button>
 
-						<div class="tooltip-juego" id="trigger-gog4"
-							 @onmouseenter="@(() => ActivarTooltip("trigger-gog4", "tooltip-gog4"))"
-							 @onmouseleave="@(() => DesactivarTooltip("trigger-gog4"))">
+						<div class="tooltip-juego" data-tooltip="@Herramientas.Idiomas.BuscarTexto(idioma, "String40", "AccountGames")">
 							<div style="width: 24px; height: 24px;">
 								<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
 									<path d="M528 320C528 205.1 434.9 112 320 112C205.1 112 112 205.1 112 320C112 434.9 205.1 528 320 528C434.9 528 528 434.9 528 320zM64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576C178.6 576 64 461.4 64 320zM320 240C302.3 240 288 254.3 288 272C288 285.3 277.3 296 264 296C250.7 296 240 285.3 240 272C240 227.8 275.8 192 320 192C364.2 192 400 227.8 400 272C400 319.2 364 339.2 344 346.5L344 350.3C344 363.6 333.3 374.3 320 374.3C306.7 374.3 296 363.6 296 350.3L296 342.2C296 321.7 310.8 307 326.1 302C332.5 299.9 339.3 296.5 344.3 291.7C348.6 287.5 352 281.7 352 272.1C352 254.4 337.7 240.1 320 240.1zM288 432C288 414.3 302.3 400 320 400C337.7 400 352 414.3 352 432C352 449.7 337.7 464 320 464C302.3 464 288 449.7 288 432z" />
 								</svg>
-							</div>
-
-							<div id="tooltip-gog4" class="tooltip-relleno">
-								<div style="margin: 8px; max-width: 300px; font-size: 14px;">
-									@Herramientas.Idiomas.BuscarTexto(idioma, "String40", "AccountGames")
-								</div>
 							</div>
 						</div>
 					</div>
@@ -253,19 +209,11 @@
 						@Herramientas.Idiomas.BuscarTexto(idioma, "String42", "AccountGames")
 					</button>
 
-					<div class="tooltip-juego" id="trigger-gog6"
-						 @onmouseenter="@(() => ActivarTooltip("trigger-gog6", "tooltip-gog6"))"
-						 @onmouseleave="@(() => DesactivarTooltip("trigger-gog6"))">
+					<div class="tooltip-juego" data-tooltip="@string.Format(Herramientas.Idiomas.BuscarTexto(idioma, "String43", "AccountGames"), "GOG")">
 						<div style="width: 24px; height: 24px;">
 							<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
 								<path d="M528 320C528 205.1 434.9 112 320 112C205.1 112 112 205.1 112 320C112 434.9 205.1 528 320 528C434.9 528 528 434.9 528 320zM64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576C178.6 576 64 461.4 64 320zM320 240C302.3 240 288 254.3 288 272C288 285.3 277.3 296 264 296C250.7 296 240 285.3 240 272C240 227.8 275.8 192 320 192C364.2 192 400 227.8 400 272C400 319.2 364 339.2 344 346.5L344 350.3C344 363.6 333.3 374.3 320 374.3C306.7 374.3 296 363.6 296 350.3L296 342.2C296 321.7 310.8 307 326.1 302C332.5 299.9 339.3 296.5 344.3 291.7C348.6 287.5 352 281.7 352 272.1C352 254.4 337.7 240.1 320 240.1zM288 432C288 414.3 302.3 400 320 400C337.7 400 352 414.3 352 432C352 449.7 337.7 464 320 464C302.3 464 288 449.7 288 432z" />
 							</svg>
-						</div>
-
-						<div id="tooltip-gog6" class="tooltip-relleno">
-							<div style="margin: 8px; max-width: 300px; font-size: 14px;">
-								@string.Format(Herramientas.Idiomas.BuscarTexto(idioma, "String43", "AccountGames"), "GOG")
-							</div>
 						</div>
 					</div>
 				</div>
@@ -382,32 +330,6 @@
 					estadoDeseados = null;
 				}
 			}
-		}
-	}
-
-	private IJSObjectReference moduloJs;
-
-	protected override async Task OnAfterRenderAsync(bool primerRender)
-	{
-		if (primerRender == true)
-		{
-			try
-			{
-				moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/cuenta/juegos/Gog.razor.js");
-			}
-			catch {}
-		}
-	}
-
-	public async ValueTask DisposeAsync()
-	{
-		if (moduloJs != null)
-		{
-			try
-			{
-				await moduloJs.DisposeAsync();
-			}
-			catch { }
 		}
 	}
 
@@ -594,29 +516,5 @@
 		await BaseDatos.Usuarios.Actualizar.Opcion("GogId", null, usuario.Id);
 		await BaseDatos.Usuarios.Actualizar.Opcion("GogWishlist", null, usuario.Id);
 		await BaseDatos.Usuarios.Actualizar.Opcion("GogWishlistAllow", null, usuario.Id);
-	}
-
-	private async Task ActivarTooltip(string triggerId, string tooltipId)
-	{
-		if (moduloJs != null)
-		{
-			try
-			{
-				await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
-			}
-			catch { }
-		}
-	}
-
-	private async Task DesactivarTooltip(string triggerId)
-	{
-		if (moduloJs != null)
-		{
-			try
-			{
-				await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
-			}
-			catch { }
-		}
 	}
 }

@@ -119,7 +119,7 @@
   "String119": "Sie können eine Demo des Spiels spielen, um zu sehen, ob es für Sie funktioniert und ob es Ihnen gefällt.",
   "String120": "Überprüfen Sie die Aufzeichnung der historisch niedrigen Preise für {0}.",
   "String121": "Vollständige Spielinformationen: Funktionen, Preis, verfügbare Angebote und Bezugsquellen. Alles, was Sie vor dem Spielen wissen müssen. Probieren Sie es aus!",
-  "String122": "Auf Ihren Wunsch wird es ausgeschlossen. Das bedeutet, dass es nicht auf der Website angezeigt wird. Wenn Sie den Ausschluss jedoch entfernen möchten, klicken Sie einfach auf die Schaltfläche daneben.",
+  "String122": "Auf Ihren Wunsch hin wurde dieser Eintrag ausgeschlossen. Das bedeutet, dass es nicht auf der Homepage, in den historischen Tiefststandslisten oder in einem anderen Bereich der Website erscheint.",
   "String123": "Optionsspiel",
   "String124": "Steam",
   "String125": "Kompatibilität mit {0} anzeigen",
@@ -143,5 +143,6 @@
   "String143": "Marktplatz",
   "String144": "Konto erforderlich: {0}",
   "String145": "DRM extern: {0}",
-  "String146": "Anti-Cheat: {0}"
+  "String146": "Anti-Cheat: {0}",
+  "String147": "Spiel ausschließen"
 }

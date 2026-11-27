@@ -119,7 +119,7 @@
   "String119": "Puedes jugar a una demo del juego para ver si te funciona y te gusta.",
   "String120": "Comprueba el registro de precios mínimos históricos para {0}.",
   "String121": "Información completa del juego: características, precio, ofertas disponibles y dónde comprarlo. Todo lo que necesitas saber antes de jugar.",
-  "String122": "Por petición tuya esta excluido. Esto significa que no aparecerá en la web pero si deseas quitar la exclusión basta con pulsar el botón de al lado.",
+  "String122": "Por petición tuya esta ficha esta excluido. Esto significa que no aparecerá ni en portada, en mínimos históricos ni ninguna otra sección de la web.",
   "String123": "Opciones Juego",
   "String124": "Steam",
   "String125": "Mostrar la compatibilidad con {0}",
@@ -143,5 +143,6 @@
   "String143": "Marketplace",
   "String144": "Cuenta requerida: {0}",
   "String145": "DRM externo: {0}",
-  "String146": "Anticheat: {0}"
+  "String146": "Anticheat: {0}",
+  "String147": "Excluir Juego"
 }

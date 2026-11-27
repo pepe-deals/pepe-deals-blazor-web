@@ -1405,9 +1405,11 @@
     {
         if (string.IsNullOrEmpty(usuarioId) == false)
         {
-            await BaseDatos.Usuarios.Actualizar.Opcion("WishlistData", null, usuarioId);
             datosDeseados?.Juegos?.Clear();
             datosDeseados?.Cantidad = 0;
+
+            await BaseDatos.Usuarios.Actualizar.Opcion("WishlistData", JsonSerializer.Serialize(datosDeseados), usuarioId);
+
             enlaceDeseados = "/wishlist/";
             mostrarDeseadosDropdown = false;
         }
@@ -2021,34 +2023,6 @@
         {
             return true;
         }
-        else if (enlaceTexto == "/steamdeck")
-        {
-            return true;
-        }
-        else if (enlaceTexto == "/steammachine")
-        {
-            return true;
-        }
-        else if (enlaceTexto == "/steamframe")
-        {
-            return true;
-        }
-        else if (enlaceTexto == "/steamos")
-        {
-            return true;
-        }
-        else if (enlaceTexto == "/geforcenow")
-        {
-            return true;
-        }
-        else if (enlaceTexto == "/boosteroid")
-        {
-            return true;
-        }
-        else if (enlaceTexto.Contains("/game/") == true)
-        {
-            return true;
-        }
 
         return false;
     }
@@ -2065,34 +2039,6 @@
         else if (enlaceTexto == "/wishlist")
         {
             return Herramientas.Idiomas.BuscarTexto(idioma, "String12", "Wishlist");
-        }
-        else if (enlaceTexto == "/steamdeck")
-        {
-            return Herramientas.Idiomas.BuscarTexto(idioma, "String10", "SteamDeck");
-        }
-        else if (enlaceTexto == "/steammachine")
-        {
-            return Herramientas.Idiomas.BuscarTexto(idioma, "String10", "SteamMachine");
-        }
-        else if (enlaceTexto == "/steamframe")
-        {
-            return Herramientas.Idiomas.BuscarTexto(idioma, "String10", "SteamFrame");
-        }
-        else if (enlaceTexto == "/steamos")
-        {
-            return Herramientas.Idiomas.BuscarTexto(idioma, "String10", "SteamOS");
-        }
-        else if (enlaceTexto == "/geforcenow")
-        {
-            return Herramientas.Idiomas.BuscarTexto(idioma, "String10", "GeforceNOW");
-        }
-        else if (enlaceTexto == "/boosteroid")
-        {
-            return Herramientas.Idiomas.BuscarTexto(idioma, "String10", "Boosteroid");
-        }
-        else if (enlaceTexto.Contains("/game/") == true)
-        {
-            return Herramientas.Idiomas.BuscarTexto(idioma, "String123", "Game");
         }
 
         return Herramientas.Idiomas.BuscarTexto(idioma, "String19", "Header");
@@ -2121,30 +2067,6 @@
     }
 
     #endregion
-
-    private async Task ActivarTooltip(string triggerId, string tooltipId)
-    {
-        if (moduloJs != null)
-        {
-            try
-            {
-                await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
-            }
-            catch { }
-        }
-    }
-
-    private async Task DesactivarTooltip(string triggerId)
-    {
-        if (moduloJs != null)
-        {
-            try
-            {
-                await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
-            }
-            catch { }
-        }
-    }
 
     private bool usuarioEncimaBuscadorClipboard = false;
     private bool usuarioEncimaBuscadorCerrar = false;

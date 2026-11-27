@@ -97,15 +97,17 @@
                     @(mediaMostrarPosicion + 1) / @(capturas?.Count)
                 </div>
 
-                @if (difuminar == false)
-                {
-                    <img src="@mediaMostrar" style="width: 100%; height: calc(100vh - 190px); object-fit: contain;" alt="@nombre" loading="lazy">
-                }
-                else
-                {
-                    <img src="@mediaMostrar" style="width: 100%; height: calc(100vh - 190px); object-fit: contain; filter: blur(10px);" alt="@nombre" loading="lazy">
-                }
+                <img @key="mediaMostrar" src="@mediaMostrar" style="width: 100%; height: calc(100vh - 190px); object-fit: contain; @(difuminar == true ? "filter: blur(10px);" : "")" alt="@nombre" fetchpriority="high">
             </div>
+
+            @if (capturas?.Count > 1 && mediaMostrarPosicion < capturas?.Count)
+            {
+                int siguiente = (mediaMostrarPosicion + 1) % capturas.Count;
+                int anterior = (mediaMostrarPosicion - 1 + capturas.Count) % capturas.Count;
+
+                <img src="@LimpiarEnlace(capturas[siguiente].Imagen)" style="display: none;" alt="">
+                <img src="@LimpiarEnlace(capturas[anterior].Imagen)" style="display: none;" alt="">
+            }
 
             <a class="juego-galeria-atras" @onclick="@(e => CambiarMediaMostrar(e, mediaMostrarPosicion - 1))">&#10094;</a>
             <a class="juego-galeria-siguiente" @onclick="@(e => CambiarMediaMostrar(e, mediaMostrarPosicion + 1))">&#10095;</a>
@@ -119,9 +121,10 @@
                     {
                         int videoPosicion = j - 99999;
                         string capturaVideo = videos[videoPosicion].CapturaPequeña;
+                        capturaVideo = capturaVideo.Replace("movie_600x337", "movie_232x130");
 
                         <div class="juego-galeria-columna" @onclick="@(e => CambiarMediaMostrar(e, videoPosicion + 99999))" style="position: relative;">
-                            <img class="juego-galeria-capturas juego-galeria-cursor" src="@Herramientas.Ficheros.Imagenes.ServidorExterno(capturaVideo, 232, 130)" style="width: 100%;" alt="@videos[videoPosicion].Nombre" loading="lazy">
+                            <img class="juego-galeria-capturas juego-galeria-cursor" src="@Herramientas.Ficheros.Imagenes.ServidorExterno(capturaVideo, 232, 130)" style="width: 100%;" alt="@videos[videoPosicion].Nombre" loading="eager" decoding="async">
 
                             <div style="max-width: 42px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
                                 <svg class="svg-boton" style="cursor: pointer;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
@@ -136,7 +139,7 @@
                 while (i < capturas?.Count)
                 {
                     int nuevaPosicion = i;
-                    string capturaMiniatura = capturas[i].Imagen.Replace(".jpg", ".600x338.jpg");
+                    string capturaMiniatura = capturas[i].Imagen.Replace(".jpg", ".116x65.jpg");
                     bool difuminarMiniatura = false;
 
                     if (string.IsNullOrEmpty(usuarioId) == true)
@@ -155,18 +158,9 @@
                         }
                     }
 
-                    if (difuminarMiniatura == false)
-                    {
-                        <div class="juego-galeria-columna" @onclick="@(e => CambiarMediaMostrar(e, nuevaPosicion))">
-                            <img class="juego-galeria-capturas juego-galeria-cursor" src="@Herramientas.Ficheros.Imagenes.ServidorExterno(capturaMiniatura, 220, 124)" style="width: 100%;" alt="@nombre" loading="lazy">
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="juego-galeria-columna" @onclick="@(e => CambiarMediaMostrar(e, nuevaPosicion))" style="overflow: hidden;">
-                            <img class="juego-galeria-capturas juego-galeria-cursor" src="@Herramientas.Ficheros.Imagenes.ServidorExterno(capturaMiniatura, 220, 124)" style="width: 100%; filter: blur(10px);" alt="@nombre" loading="lazy">
-                        </div>
-                    }
+                    <div class="juego-galeria-columna" @onclick="@(e => CambiarMediaMostrar(e, nuevaPosicion))" style="@(difuminarMiniatura == true ? "overflow: hidden;" : "")">
+                        <img class="juego-galeria-capturas juego-galeria-cursor" src="@Herramientas.Ficheros.Imagenes.ServidorExterno(capturaMiniatura, 220, 124)" width="220" height="124" loading="@(i < 6 ? "eager" : "lazy")" decoding="async" style="width: 100%; height: auto; @(difuminarMiniatura == true ? "filter: blur(10px);" : "")" alt="@nombre">
+                    </div>
 
                     i += 1;
                 }
@@ -303,7 +297,7 @@
     private string mediaMostrarTipo = string.Empty;
     private string mediaMostrarCaptura = string.Empty;
 
-    private async void CambiarMediaMostrar(MouseEventArgs e, int nuevaCaptura)
+    private async Task CambiarMediaMostrar(MouseEventArgs e, int nuevaCaptura)
     {
         if (nuevaCaptura == 99999)
         {
@@ -502,4 +496,9 @@
     }
 
     #endregion
+
+    private static string LimpiarEnlace(string enlace)
+    {
+        return enlace?.Replace("http://", "https://").Split('?')[0];
+    }
 }

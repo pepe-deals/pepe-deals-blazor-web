@@ -1,15 +1,10 @@
 ﻿@page "/geforcenow"
 
-@implements IAsyncDisposable
-
 @using Juegos
 @using Tiendas2
 @using pepeizqs_deals_blazor_web.Componentes.Interfaz
 @using pepeizqs_deals_web.Data
 @using static pepeizqs_deals_blazor_web.Componentes.Secciones.Minimos.Minimos
-
-@inject IJSRuntime JavaScript
-@inject Servicios.Opciones ServicioOpciones
 
 <Titulo tipo="@Titulo.Tipo.GeforceNOW" idioma="@idioma" dominio="@dominio" />
 
@@ -55,9 +50,7 @@
 			</div>
 
 			<div style="display: flex; align-items: center; gap: 25px; max-width: 500px; height: 45px; margin-left: 40px; @anchoBuscador">
-				<div class="tooltip-juego" id="trigger-geforcenow-search"
-					@onmouseenter="@(() => ActivarTooltip("trigger-geforcenow-search", "tooltip-geforcenow-search"))"
-					@onmouseleave="@(() => DesactivarTooltip("trigger-geforcenow-search"))">
+				<div class="tooltip-juego" data-tooltip="@Herramientas.Idiomas.BuscarTexto(idioma, "String3", "GeforceNOW")">
 					<button @onclick="MostrarOcultarBuscador" style="background: transparent; border: 0px;">
 						<div style="width: 24px; height: 24px;">
 							<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
@@ -65,18 +58,25 @@
 							</svg>
 						</div>
 					</button>
-
-					<div id="tooltip-geforcenow-search" class="tooltip-relleno">
-						<div style="margin: 8px; max-width: 300px; font-size: 14px;">
-							@Herramientas.Idiomas.BuscarTexto(idioma, "String3", "GeforceNOW")
-						</div>
-					</div>
 				</div>
 
 				<div class="caja-geforcenow caja-geforcenow-animacion @(mostrarBuscador ? "visible" : "")">
 					<input type="text" @bind-value="textoBuscador" @bind-value:event="oninput" @bind-value:after="TextoCambiaBuscador" @onclick="ClickBuscador" @onfocusout="PerderBuscador" class="entrada-texto" style="border-radius: inherit; color: var(--colorTexto); padding: 5px 15px; border: 0px; transition: background-color 1000ms linear; @fondoBuscador" placeholder="@Herramientas.Idiomas.BuscarTexto(idioma, "String3", "GeforceNOW")" />
 				</div>
 			</div>
+
+			@if (string.IsNullOrEmpty(usuarioId) == false)
+			{
+				<div class="tooltip-juego" style="margin-left: 20px;" data-tooltip="@Herramientas.Idiomas.BuscarTexto(idioma, "String10", "GeforceNOW")">
+					<button @onclick="MostrarOcultarOpciones" @onmouseenter="_ => usuarioEncimaOpciones = true" @onmouseleave="_ => usuarioEncimaOpciones = false" style="background-color: transparent; border: 0px;">
+						<div style="width: 24px; height: 24px;">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" style="fill: var(--colorTexto); transform: rotate(@(usuarioEncimaOpciones == true ? "180deg" : "0deg")); transition: transform 0.2s;">
+								<path fill="var(--colorTexto)" d="M259.1 73.5C262.1 58.7 275.2 48 290.4 48L350.2 48C365.4 48 378.5 58.7 381.5 73.5L396 143.5C410.1 149.5 423.3 157.2 435.3 166.3L503.1 143.8C517.5 139 533.3 145 540.9 158.2L570.8 210C578.4 223.2 575.7 239.8 564.3 249.9L511 297.3C511.9 304.7 512.3 312.3 512.3 320C512.3 327.7 511.8 335.3 511 342.7L564.4 390.2C575.8 400.3 578.4 417 570.9 430.1L541 481.9C533.4 495 517.6 501.1 503.2 496.3L435.4 473.8C423.3 482.9 410.1 490.5 396.1 496.6L381.7 566.5C378.6 581.4 365.5 592 350.4 592L290.6 592C275.4 592 262.3 581.3 259.3 566.5L244.9 496.6C230.8 490.6 217.7 482.9 205.6 473.8L137.5 496.3C123.1 501.1 107.3 495.1 99.7 481.9L69.8 430.1C62.2 416.9 64.9 400.3 76.3 390.2L129.7 342.7C128.8 335.3 128.4 327.7 128.4 320C128.4 312.3 128.9 304.7 129.7 297.3L76.3 249.8C64.9 239.7 62.3 223 69.8 209.9L99.7 158.1C107.3 144.9 123.1 138.9 137.5 143.7L205.3 166.2C217.4 157.1 230.6 149.5 244.6 143.4L259.1 73.5zM320.3 400C364.5 399.8 400.2 363.9 400 319.7C399.8 275.5 363.9 239.8 319.7 240C275.5 240.2 239.8 276.1 240 320.3C240.2 364.5 276.1 400.2 320.3 400z" />
+							</svg>
+						</div>
+					</button>
+				</div>
+			}
 		</div>
 
 		@if (mostrarNoResultados == true)
@@ -520,38 +520,10 @@
 				{
 					minimoReseñas = opciones.GeforceNOWOption4.Value;
 				}
-
-				ServicioOpciones.OnMostrarOpcionesChanged += StateHasChanged;
 			}
 		}
 
 		await MostrarSteam();
-	}
-
-	private IJSObjectReference moduloJs;
-
-	protected override async Task OnAfterRenderAsync(bool primerRender)
-	{
-		if (primerRender == true)
-		{
-			try
-			{
-				moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/secciones/minimos/GeforceNOW.razor.js");
-			}
-			catch { }
-		}
-	}
-
-	public async ValueTask DisposeAsync()
-	{
-		if (moduloJs != null)
-		{
-			try
-			{
-				await moduloJs.DisposeAsync();
-			}
-			catch { }
-		}
 	}
 
 	private async Task ExcluirDRMs()
@@ -862,16 +834,16 @@
 
 	#region Opciones
 
-	private bool mostrarOpciones => ServicioOpciones.MostrarOpciones;
+	private bool mostrarOpciones = false;
 
 	private async Task MostrarOcultarOpciones()
 	{
-		ServicioOpciones.AlternarOpciones();
-	}
+		mostrarOpciones = !mostrarOpciones;
 
-	async ValueTask IAsyncDisposable.DisposeAsync()
-	{
-		ServicioOpciones.OnMostrarOpcionesChanged -= StateHasChanged;
+		if (mostrarOpciones == true)
+		{
+			usuarioEncimaOpciones = false;
+		}
 	}
 
 	private bool usuarioEncimaOpciones = false;
@@ -945,28 +917,4 @@
 	}
 
 	#endregion
-
-	private async Task ActivarTooltip(string triggerId, string tooltipId)
-	{
-		if (moduloJs != null)
-		{
-			try
-			{
-				await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
-			}
-			catch { }
-		}
-	}
-
-	private async Task DesactivarTooltip(string triggerId)
-	{
-		if (moduloJs != null)
-		{
-			try
-			{
-				await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
-			}
-			catch { }
-		}
-	}
 }

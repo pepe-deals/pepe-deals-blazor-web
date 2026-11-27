@@ -119,7 +119,7 @@
   "String119": "Vous pouvez jouer à une démo du jeu pour voir si cela fonctionne pour vous et si vous l'aimez.",
   "String120": "Consultez l'historique des prix les plus bas pour {0}.",
   "String121": "Informations complètes sur le jeu : fonctionnalités, prix, offres disponibles et où acheter. Tout ce que vous devez savoir avant de jouer. Découvrez-le !",
-  "String122": "A votre demande, elle est exclue. Cela signifie qu'elle n'apparaîtra pas sur le site, mais si vous souhaitez supprimer l'exclusion, cliquez simplement sur le bouton à côté.",
+  "String122": "À votre demande, cette entrée a été exclue. Cela signifie qu’il n’apparaîtra pas sur la page d’accueil, dans les listes historiques ou dans toute autre section du site Web.",
   "String123": "Exclure ce jeu",
   "String124": "Steam",
   "String125": "Afficher la compatibilité avec {0}",
@@ -143,5 +143,6 @@
   "String143": "Marché",
   "String144": "Compte requis : {0}",
   "String145": "DRM externe : {0}",
-  "String146": "Anti-triche : {0}"
+  "String146": "Anti-triche : {0}",
+  "String147": "Exclure le jeu"
 }

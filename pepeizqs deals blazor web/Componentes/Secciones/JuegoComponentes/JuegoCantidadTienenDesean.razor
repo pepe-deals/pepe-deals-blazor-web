@@ -1,9 +1,5 @@
 ﻿@attribute [StreamRendering(true)]
 
-@implements IAsyncDisposable
-
-@inject IJSRuntime JavaScript
-
 @if (Herramientas.Bots.UserAgentEsBot(userAgent) == false)
 {
     if (cuantosLoTienen > 0 || cuantosLoDesean > 0)
@@ -17,34 +13,18 @@
 
             @if (cuantosLoTienen > 0)
             {
-                <div class="tooltip-juego" id="trigger-howmanyhave-@drm.Id.ToString()"
-                     @onmouseenter="@(() => ActivarTooltip($"trigger-howmanyhave-{drm.Id.ToString()}", $"tooltip-howmanyhave-{drm.Id.ToString()}"))"
-                     @onmouseleave="@(() => DesactivarTooltip($"trigger-howmanyhave-{drm.Id.ToString()}"))">
+                <div class="tooltip-juego" data-tooltip="@string.Format(Herramientas.Idiomas.BuscarTexto(idioma, "String78", "Game"), drm.Nombre)">
                     <div style="font-size: 14px; padding: 4px 10px; background-color: var(--fondoBien);">
                         @cuantosLoTienen.ToString()
-                    </div>
-
-                    <div id="tooltip-howmanyhave-@drm.Id.ToString()" class="tooltip-relleno">
-                        <div style="margin: 8px; max-width: 300px; font-size: 14px;">
-                            @string.Format(Herramientas.Idiomas.BuscarTexto(idioma, "String78", "Game"), drm.Nombre)
-                        </div>
                     </div>
                 </div>
             }
 
             @if (cuantosLoDesean > 0)
             {
-                <div class="tooltip-juego" id="trigger-howmanywish-@drm.Id.ToString()"
-                     @onmouseenter="@(() => ActivarTooltip($"trigger-howmanywish-{drm.Id.ToString()}", $"tooltip-howmanywish-{drm.Id.ToString()}"))"
-                     @onmouseleave="@(() => DesactivarTooltip($"trigger-howmanywish-{drm.Id.ToString()}"))">
+                <div class="tooltip-juego" data-tooltip="@string.Format(Herramientas.Idiomas.BuscarTexto(idioma, "String79", "Game"), drm.Nombre)">
                     <div style="font-size: 14px; padding: 4px 10px; background-color: var(--fondoAlerta);">
                         @cuantosLoDesean.ToString()
-                    </div>
-
-                    <div id="tooltip-howmanywish-@drm.Id.ToString()" class="tooltip-relleno">
-                        <div style="margin: 8px; max-width: 300px; font-size: 14px;">
-                            @string.Format(Herramientas.Idiomas.BuscarTexto(idioma, "String79", "Game"), drm.Nombre)
-                        </div>
                     </div>
                 </div>
             }
@@ -84,56 +64,6 @@
         if (cuantosLoDesean == 0)
         {
             cuantosLoDesean = await BaseDatos.Usuarios.Buscar.CuantosUsuariosTienenDeseado(juegoId.ToString(), drm.Id);
-        }
-    }
-
-    private IJSObjectReference moduloJs;
-
-	protected override async Task OnAfterRenderAsync(bool primerRender)
-	{
-		if (primerRender == true)
-		{
-            try
-            {
-                moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/secciones/juegocomponentes/JuegoCantidadTienenDesean.razor.js");
-            }
-            catch {}
-        }
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        if (moduloJs != null)
-        {
-            try
-            {
-                await moduloJs.DisposeAsync();
-            }
-            catch { }
-        }
-    }
-
-    private async Task ActivarTooltip(string triggerId, string tooltipId)
-    {
-        if (moduloJs != null)
-        {
-            try
-            {
-                await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
-            }
-            catch { }
-        }
-    }
-
-    private async Task DesactivarTooltip(string triggerId)
-    {
-        if (moduloJs != null)
-        {
-            try
-            {
-                await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
-            }
-            catch { }
         }
     }
 }

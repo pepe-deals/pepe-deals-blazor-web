@@ -1,12 +1,6 @@
 ﻿@using Noticias
 
-@implements IAsyncDisposable
-
-@inject IJSRuntime JavaScript
-
-<div @key="@noticia.Id" class="tooltip-juego" id="trigger-@idTooltip"
-	 @onmouseenter="@(() => ActivarTooltip($"trigger-{idTooltip}", $"tooltip-{idTooltip}"))"
-	 @onmouseleave="@(() => DesactivarTooltip($"trigger-{idTooltip}"))" style="width: 100%; display: flex; align-items: center; flex: 0 0 400px;">
+<div @key="@noticia.Id" class="tooltip-juego" style="width: 100%; display: flex; align-items: center; flex: 0 0 400px;" data-tooltip="@titulo">
 	<a href="/news/@noticia.Id/@Herramientas.EnlaceAdaptador.Nombre(titulo)/" style="cursor: pointer; text-decoration: none; color: var(--colorTexto); height: 100%;">
 		<div class="cnoticia-expandir" title="@titulo">
 			<div style="display: flex; align-items: center; gap: 15px; background-color: rgba(0,0,0,.5); padding: 15px 20px; width: 100%; box-sizing: border-box;">
@@ -68,12 +62,6 @@
 			</div>
 		</div>
 	</a>
-
-	<div id="tooltip-@idTooltip" class="tooltip-relleno">
-		<div style="margin: 8px; max-width: 300px; font-size: 14px;">
-			@titulo
-		</div>
-	</div>
 </div>
 
 @code {
@@ -100,56 +88,9 @@
 	private string mensajeTiempo = string.Empty;
 	private string idTooltip => $"news-{noticia?.Id.ToString()}";
 
-	private IJSObjectReference moduloJs;
-
-	protected override async Task OnAfterRenderAsync(bool primerRender)
+	protected override async Task OnInitializedAsync()
 	{
-		if (primerRender == true)
-		{
-			try
-			{
-				moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/interfaz/CajaNoticia.razor.js");
-			}
-			catch {}
-		}
-
 		titulo = Herramientas.Idiomas.ElegirTexto(idioma, noticia.TituloEn, noticia.TituloEs);
 		mensajeTiempo = Herramientas.Calculadora.DiferenciaTiempo(noticia.FechaEmpieza, idioma);
-	}
-
-	public async ValueTask DisposeAsync()
-	{
-		if (moduloJs != null)
-		{
-			try
-			{
-				await moduloJs.DisposeAsync();
-			}
-			catch { }
-		}
-	}
-
-	private async Task ActivarTooltip(string triggerId, string tooltipId)
-	{
-		if (moduloJs != null)
-		{
-			try
-			{
-				await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
-			}
-			catch { }
-		}
-	}
-
-	private async Task DesactivarTooltip(string triggerId)
-	{
-		if (moduloJs != null)
-		{
-			try
-			{
-				await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
-			}
-			catch { }
-		}
 	}
 }

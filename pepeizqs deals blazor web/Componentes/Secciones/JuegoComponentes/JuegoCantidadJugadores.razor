@@ -1,18 +1,12 @@
 ﻿@attribute [StreamRendering(true)]
 
-@implements IAsyncDisposable
-
 @using Juegos
-
-@inject IJSRuntime JavaScript
 
 @if (juego.CantidadJugadores != null && juego.Caracteristicas?.FechaLanzamientoSteam != null)
 {
     if (juego.CantidadJugadores.Cantidad > 0 && DateTime.Now > juego.Caracteristicas?.FechaLanzamientoSteam)
     {
-        <div class="tooltip-juego" id="trigger-players"
-            @onmouseenter="@(() => ActivarTooltip($"trigger-players", "tooltip-players"))"
-            @onmouseleave="@(() => DesactivarTooltip("trigger-players"))">
+        <div class="tooltip-juego" data-tooltip="@Herramientas.Idiomas.BuscarTexto(idioma, "String107", "Game")">
             <div class="caja-jugadores" style="padding: 10px; flex-direction: column; gap: 10px; min-height: 82px;">
                 <div style="font-size: 17px; text-align: center; line-height: 30px;">
                     @juego.CantidadJugadores.Cantidad.ToString("N0")
@@ -20,12 +14,6 @@
 
                 <div style="font-size: 14px;">
                     @Herramientas.Idiomas.BuscarTexto(idioma, "String80", "Game")
-                </div>
-            </div>
-
-            <div id="tooltip-players" class="tooltip-relleno">
-                <div style="margin: 8px; max-width: 300px; font-size: 14px;">
-                    @Herramientas.Idiomas.BuscarTexto(idioma, "String107", "Game")
                 </div>
             </div>
         </div>
@@ -45,87 +33,38 @@
     [Parameter]
     public string userAgent { get; set; }
 
-    private IJSObjectReference moduloJs;
-
     protected override async Task OnAfterRenderAsync(bool primerRender)
     {
         if (primerRender == true)
         {
-            _ = ActualizarCantidadJugadores();
-
             try
             {
-                moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/secciones/juegocomponentes/JuegoCantidadJugadores.razor.js");
-            }
-            catch { }
-        }
-    }
+                if (juego.Tipo != JuegoTipo.Game || juego.Caracteristicas?.FechaLanzamientoSteam == null || Herramientas.Bots.UserAgentEsBot(userAgent) == true)
+                {
+                    return;
+                }
 
-    private async Task ActualizarCantidadJugadores()
-    {
-        try
-        {
-            if (juego.Tipo != JuegoTipo.Game || juego.Caracteristicas?.FechaLanzamientoSteam == null || Herramientas.Bots.UserAgentEsBot(userAgent) == true)
-            {
-                return;
-            }
+                if (DateTime.Now <= juego.Caracteristicas.FechaLanzamientoSteam)
+                {
+                    return;
+                }
 
-            if (DateTime.Now <= juego.Caracteristicas.FechaLanzamientoSteam)
-            {
-                return;
-            }
+                bool actualizar = juego.CantidadJugadores == null || juego.CantidadJugadores.Fecha.AddMinutes(30) < DateTime.Now;
 
-            bool actualizar = juego.CantidadJugadores == null || juego.CantidadJugadores.Fecha.AddMinutes(30) < DateTime.Now;
+                if (actualizar == false)
+                {
+                    return;
+                }
 
-            if (actualizar == false)
-            {
-                return;
-            }
+                JuegoCantidadJugadoresSteam cantidadNueva = new JuegoCantidadJugadoresSteam();
+                cantidadNueva.Cantidad = await APIs.Steam.Juego.CargarCantidadJugadores(juego.IdSteam.ToString());
+                cantidadNueva.Fecha = DateTime.Now;
 
-            JuegoCantidadJugadoresSteam cantidadNueva = new JuegoCantidadJugadoresSteam();
-            cantidadNueva.Cantidad = await APIs.Steam.Juego.CargarCantidadJugadores(juego.IdSteam.ToString());
-            cantidadNueva.Fecha = DateTime.Now;
+                juego.CantidadJugadores = cantidadNueva;
 
-            juego.CantidadJugadores = cantidadNueva;
+                await InvokeAsync(StateHasChanged);
 
-            await InvokeAsync(StateHasChanged);   
-
-            await global::BaseDatos.Juegos.Actualizar.CantidadJugadoresSteam(juego);
-        }
-        catch { }
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        if (moduloJs != null)
-        {
-            try
-            {
-                await moduloJs.DisposeAsync();
-            }
-            catch { }
-        }
-    }
-
-    private async Task ActivarTooltip(string triggerId, string tooltipId)
-    {
-        if (moduloJs != null)
-        {
-            try
-            {
-                await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
-            }
-            catch { }
-        }
-    }
-
-    private async Task DesactivarTooltip(string triggerId)
-    {
-        if (moduloJs != null)
-        {
-            try
-            {
-                await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
+                await global::BaseDatos.Juegos.Actualizar.CantidadJugadoresSteam(juego);
             }
             catch { }
         }
