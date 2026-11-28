@@ -1,13 +1,9 @@
 ﻿@page "/last-news"
 
-@implements IAsyncDisposable
-
 @using Microsoft.AspNetCore.Components.Web
 @using Noticias
 @using pepeizqs_deals_blazor_web.Componentes.Interfaz
 @using Tiendas2
-
-@inject IJSRuntime JavaScript
 
 @{
 	string keywords = "news";
@@ -84,9 +80,7 @@
 			}
 		</div>
 
-		<div class="tooltip-juego" id="trigger-news-archive"
-			 @onmouseenter="@(() => ActivarTooltip($"trigger-news-archive", $"tooltip-news-archive"))"
-			 @onmouseleave="@(() => DesactivarTooltip($"trigger-news-archive"))">
+		<div class="tooltip-juego" data-tooltip="@Herramientas.Idiomas.BuscarTexto(idioma, "String1", "LastNews")">
 			<button @onclick="@(e => CambiarTipo(e, Noticias.NoticiaTipo.Desconocido, true))" style="@CambiarEstilo(Noticias.NoticiaTipo.Desconocido, true) border: 0px; @(mostrarArchivo ? "margin-left: 35px;" : "margin-left: 25px;") padding: 10px 15px; border-radius: 10px; display: flex; align-items: center; gap: 10px;" title="@Herramientas.Idiomas.BuscarTexto(idioma, "String1", "LastNews")">
 				<div style="width: 24px; height: 24px;">
 					<svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
@@ -101,12 +95,6 @@
 					</div>
 				}
 			</button>
-
-			<div id="tooltip-news-archive" class="tooltip-relleno">
-				<div style="margin: 8px; max-width: 300px; font-size: 14px;">
-					@Herramientas.Idiomas.BuscarTexto(idioma, "String1", "LastNews")
-				</div>
-			</div>
 		</div>
 	</div>
 
@@ -332,32 +320,6 @@
 		años.Reverse();
 	}
 
-	private IJSObjectReference moduloJs;
-
-	protected override async Task OnAfterRenderAsync(bool primerRender)
-	{
-		if (primerRender == true)
-		{
-			try
-			{
-				moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/secciones/juegocomponentes/JuegoCantidadTienenDesean.razor.js");
-			}
-			catch {}
-		}
-	}
-
-	public async ValueTask DisposeAsync()
-	{
-		if (moduloJs != null)
-		{
-			try
-			{
-				await moduloJs.DisposeAsync();
-			}
-			catch { }
-		}
-	}
-
 	private Noticias.NoticiaTipo tipoSeleccionado = Noticias.NoticiaTipo.Desconocido;
 	private List<Noticias.NoticiaTipo> tiposActuales = new List<Noticias.NoticiaTipo>();
 	private bool mostrarArchivo = false;
@@ -409,29 +371,5 @@
 		añoSeleccionado = nuevoAño;
 
 		noticiasAntiguas = await BaseDatos.Noticias.Buscar.Año(añoSeleccionado);
-	}
-	
-	private async Task ActivarTooltip(string triggerId, string tooltipId)
-	{
-		if (moduloJs != null)
-		{
-			try
-			{
-				await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
-			}
-			catch {}
-		}
-	}
-
-	private async Task DesactivarTooltip(string triggerId)
-	{
-		if (moduloJs != null)
-		{
-			try
-			{
-				await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
-			}
-			catch { }
-		}
 	}
 }

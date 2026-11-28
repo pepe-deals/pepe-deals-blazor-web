@@ -1,6 +1,4 @@
-﻿@rendermode @(new InteractiveServerRenderMode(prerender: false))
-
-@attribute [StreamRendering(true)]
+﻿@attribute [StreamRendering(true)]
 
 @implements IAsyncDisposable
 
@@ -1047,13 +1045,13 @@
 
     protected override async Task OnInitializedAsync()
     {
-        idioma = datos.Idioma;
-        usuarioId = datos.UsuarioId;
-        userAgent = datos.UserAgent;
-        dominio = datos.Dominio;
-        usuarioRegion = datos.Region;
-        usuarioTiendasNoOficial = datos.NoOficial;
-        usuarioMarketplace = datos.Marketplace;
+        idioma = datos?.Idioma;
+        usuarioId = datos?.UsuarioId;
+        userAgent = datos?.UserAgent;
+        dominio = datos?.Dominio;
+        usuarioRegion = datos?.Region ?? TiendaRegion.Europa;
+        usuarioTiendasNoOficial = datos?.NoOficial ?? false;
+        usuarioMarketplace = datos?.Marketplace ?? false;
 
         if (string.IsNullOrEmpty(usuarioId) == false)
         {

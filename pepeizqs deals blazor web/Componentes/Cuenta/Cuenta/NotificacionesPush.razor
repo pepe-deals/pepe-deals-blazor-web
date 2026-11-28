@@ -1,6 +1,4 @@
-﻿@implements IAsyncDisposable
-
-@using pepeizqs_deals_web.Data
+﻿@using pepeizqs_deals_web.Data
 
 @inject IJSRuntime JavaScript
 @inject HttpClient Http
@@ -63,19 +61,11 @@ else
                                             @Herramientas.Idiomas.BuscarTexto(idioma, "String19", "AccountNotificationsPush")
                                         </div>
 
-                                        <div class="tooltip-juego" id="trigger-push6"
-                                             @onmouseenter="@(() => ActivarTooltip("trigger-push6", "tooltip-push6"))"
-                                             @onmouseleave="@(() => DesactivarTooltip("trigger-push6"))">
+                                        <div class="tooltip-juego" data-tooltip="@Herramientas.Idiomas.BuscarTexto(idioma, "String17", "AccountNotificationsPush")">
                                             <div style="width: 24px; height: 24px;">
                                                 <svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                                                     <path d="M528 320C528 205.1 434.9 112 320 112C205.1 112 112 205.1 112 320C112 434.9 205.1 528 320 528C434.9 528 528 434.9 528 320zM64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576C178.6 576 64 461.4 64 320zM320 240C302.3 240 288 254.3 288 272C288 285.3 277.3 296 264 296C250.7 296 240 285.3 240 272C240 227.8 275.8 192 320 192C364.2 192 400 227.8 400 272C400 319.2 364 339.2 344 346.5L344 350.3C344 363.6 333.3 374.3 320 374.3C306.7 374.3 296 363.6 296 350.3L296 342.2C296 321.7 310.8 307 326.1 302C332.5 299.9 339.3 296.5 344.3 291.7C348.6 287.5 352 281.7 352 272.1C352 254.4 337.7 240.1 320 240.1zM288 432C288 414.3 302.3 400 320 400C337.7 400 352 414.3 352 432C352 449.7 337.7 464 320 464C302.3 464 288 449.7 288 432z" />
                                                 </svg>
-                                            </div>
-
-                                            <div id="tooltip-push6" class="tooltip-relleno">
-                                                <div style="margin: 8px; max-width: 300px; font-size: 14px;">
-                                                    @Herramientas.Idiomas.BuscarTexto(idioma, "String17", "AccountNotificationsPush")
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -104,19 +94,11 @@ else
                                         @Herramientas.Idiomas.BuscarTexto(idioma, "String6", "AccountNotificationsPush")
                                     </div>
 
-                                    <div class="tooltip-juego" id="trigger-push1"
-                                         @onmouseenter="@(() => ActivarTooltip("trigger-push1", "tooltip-push1"))"
-                                         @onmouseleave="@(() => DesactivarTooltip("trigger-push1"))">
+                                    <div class="tooltip-juego" data-tooltip="@Herramientas.Idiomas.BuscarTexto(idioma, "String7", "AccountNotificationsPush")">
                                         <div style="width: 24px; height: 24px;">
                                             <svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                                                 <path d="M528 320C528 205.1 434.9 112 320 112C205.1 112 112 205.1 112 320C112 434.9 205.1 528 320 528C434.9 528 528 434.9 528 320zM64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576C178.6 576 64 461.4 64 320zM320 240C302.3 240 288 254.3 288 272C288 285.3 277.3 296 264 296C250.7 296 240 285.3 240 272C240 227.8 275.8 192 320 192C364.2 192 400 227.8 400 272C400 319.2 364 339.2 344 346.5L344 350.3C344 363.6 333.3 374.3 320 374.3C306.7 374.3 296 363.6 296 350.3L296 342.2C296 321.7 310.8 307 326.1 302C332.5 299.9 339.3 296.5 344.3 291.7C348.6 287.5 352 281.7 352 272.1C352 254.4 337.7 240.1 320 240.1zM288 432C288 414.3 302.3 400 320 400C337.7 400 352 414.3 352 432C352 449.7 337.7 464 320 464C302.3 464 288 449.7 288 432z" />
                                             </svg>
-                                        </div>
-
-                                        <div id="tooltip-push1" class="tooltip-relleno">
-                                            <div style="margin: 8px; max-width: 300px; font-size: 14px;">
-                                                @Herramientas.Idiomas.BuscarTexto(idioma, "String7", "AccountNotificationsPush")
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -132,19 +114,11 @@ else
                                         @Herramientas.Idiomas.BuscarTexto(idioma, "String8", "AccountNotificationsPush")
                                     </div>
 
-                                    <div class="tooltip-juego" id="trigger-push2"
-                                         @onmouseenter="@(() => ActivarTooltip("trigger-push2", "tooltip-push2"))"
-                                         @onmouseleave="@(() => DesactivarTooltip("trigger-push2"))">
+                                    <div class="tooltip-juego" data-tooltip="@Herramientas.Idiomas.BuscarTexto(idioma, "String9", "AccountNotificationsPush")">
                                         <div style="width: 24px; height: 24px;">
                                             <svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                                                 <path d="M528 320C528 205.1 434.9 112 320 112C205.1 112 112 205.1 112 320C112 434.9 205.1 528 320 528C434.9 528 528 434.9 528 320zM64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576C178.6 576 64 461.4 64 320zM320 240C302.3 240 288 254.3 288 272C288 285.3 277.3 296 264 296C250.7 296 240 285.3 240 272C240 227.8 275.8 192 320 192C364.2 192 400 227.8 400 272C400 319.2 364 339.2 344 346.5L344 350.3C344 363.6 333.3 374.3 320 374.3C306.7 374.3 296 363.6 296 350.3L296 342.2C296 321.7 310.8 307 326.1 302C332.5 299.9 339.3 296.5 344.3 291.7C348.6 287.5 352 281.7 352 272.1C352 254.4 337.7 240.1 320 240.1zM288 432C288 414.3 302.3 400 320 400C337.7 400 352 414.3 352 432C352 449.7 337.7 464 320 464C302.3 464 288 449.7 288 432z" />
                                             </svg>
-                                        </div>
-
-                                        <div id="tooltip-push2" class="tooltip-relleno">
-                                            <div style="margin: 8px; max-width: 300px; font-size: 14px;">
-                                                @Herramientas.Idiomas.BuscarTexto(idioma, "String9", "AccountNotificationsPush")
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -160,19 +134,11 @@ else
                                         @Herramientas.Idiomas.BuscarTexto(idioma, "String10", "AccountNotificationsPush")
                                     </div>
 
-                                    <div class="tooltip-juego" id="trigger-push3"
-                                         @onmouseenter="@(() => ActivarTooltip("trigger-push3", "tooltip-push3"))"
-                                         @onmouseleave="@(() => DesactivarTooltip("trigger-push3"))">
+                                    <div class="tooltip-juego" data-tooltip="@Herramientas.Idiomas.BuscarTexto(idioma, "String11", "AccountNotificationsPush")">
                                         <div style="width: 24px; height: 24px;">
                                             <svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                                                 <path d="M528 320C528 205.1 434.9 112 320 112C205.1 112 112 205.1 112 320C112 434.9 205.1 528 320 528C434.9 528 528 434.9 528 320zM64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576C178.6 576 64 461.4 64 320zM320 240C302.3 240 288 254.3 288 272C288 285.3 277.3 296 264 296C250.7 296 240 285.3 240 272C240 227.8 275.8 192 320 192C364.2 192 400 227.8 400 272C400 319.2 364 339.2 344 346.5L344 350.3C344 363.6 333.3 374.3 320 374.3C306.7 374.3 296 363.6 296 350.3L296 342.2C296 321.7 310.8 307 326.1 302C332.5 299.9 339.3 296.5 344.3 291.7C348.6 287.5 352 281.7 352 272.1C352 254.4 337.7 240.1 320 240.1zM288 432C288 414.3 302.3 400 320 400C337.7 400 352 414.3 352 432C352 449.7 337.7 464 320 464C302.3 464 288 449.7 288 432z" />
                                             </svg>
-                                        </div>
-
-                                        <div id="tooltip-push3" class="tooltip-relleno">
-                                            <div style="margin: 8px; max-width: 300px; font-size: 14px;">
-                                                @Herramientas.Idiomas.BuscarTexto(idioma, "String11", "AccountNotificationsPush")
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -188,19 +154,11 @@ else
                                         @Herramientas.Idiomas.BuscarTexto(idioma, "String12", "AccountNotificationsPush")
                                     </div>
 
-                                    <div class="tooltip-juego" id="trigger-push4"
-                                         @onmouseenter="@(() => ActivarTooltip("trigger-push4", "tooltip-push4"))"
-                                         @onmouseleave="@(() => DesactivarTooltip("trigger-push4"))">
+                                    <div class="tooltip-juego" data-tooltip="@Herramientas.Idiomas.BuscarTexto(idioma, "String13", "AccountNotificationsPush")">
                                         <div style="width: 24px; height: 24px;">
                                             <svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                                                 <path d="M528 320C528 205.1 434.9 112 320 112C205.1 112 112 205.1 112 320C112 434.9 205.1 528 320 528C434.9 528 528 434.9 528 320zM64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576C178.6 576 64 461.4 64 320zM320 240C302.3 240 288 254.3 288 272C288 285.3 277.3 296 264 296C250.7 296 240 285.3 240 272C240 227.8 275.8 192 320 192C364.2 192 400 227.8 400 272C400 319.2 364 339.2 344 346.5L344 350.3C344 363.6 333.3 374.3 320 374.3C306.7 374.3 296 363.6 296 350.3L296 342.2C296 321.7 310.8 307 326.1 302C332.5 299.9 339.3 296.5 344.3 291.7C348.6 287.5 352 281.7 352 272.1C352 254.4 337.7 240.1 320 240.1zM288 432C288 414.3 302.3 400 320 400C337.7 400 352 414.3 352 432C352 449.7 337.7 464 320 464C302.3 464 288 449.7 288 432z" />
                                             </svg>
-                                        </div>
-
-                                        <div id="tooltip-push4" class="tooltip-relleno">
-                                            <div style="margin: 8px; max-width: 300px; font-size: 14px;">
-                                                @Herramientas.Idiomas.BuscarTexto(idioma, "String13", "AccountNotificationsPush")
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -216,19 +174,11 @@ else
                                         @Herramientas.Idiomas.BuscarTexto(idioma, "String14", "AccountNotificationsPush")
                                     </div>
 
-                                    <div class="tooltip-juego" id="trigger-push5"
-                                         @onmouseenter="@(() => ActivarTooltip("trigger-push5", "tooltip-push5"))"
-                                         @onmouseleave="@(() => DesactivarTooltip("trigger-push5"))">
+                                    <div class="tooltip-juego" data-tooltip="@Herramientas.Idiomas.BuscarTexto(idioma, "String15", "AccountNotificationsPush")">
                                         <div style="width: 24px; height: 24px;">
                                             <svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
                                                 <path d="M528 320C528 205.1 434.9 112 320 112C205.1 112 112 205.1 112 320C112 434.9 205.1 528 320 528C434.9 528 528 434.9 528 320zM64 320C64 178.6 178.6 64 320 64C461.4 64 576 178.6 576 320C576 461.4 461.4 576 320 576C178.6 576 64 461.4 64 320zM320 240C302.3 240 288 254.3 288 272C288 285.3 277.3 296 264 296C250.7 296 240 285.3 240 272C240 227.8 275.8 192 320 192C364.2 192 400 227.8 400 272C400 319.2 364 339.2 344 346.5L344 350.3C344 363.6 333.3 374.3 320 374.3C306.7 374.3 296 363.6 296 350.3L296 342.2C296 321.7 310.8 307 326.1 302C332.5 299.9 339.3 296.5 344.3 291.7C348.6 287.5 352 281.7 352 272.1C352 254.4 337.7 240.1 320 240.1zM288 432C288 414.3 302.3 400 320 400C337.7 400 352 414.3 352 432C352 449.7 337.7 464 320 464C302.3 464 288 449.7 288 432z" />
                                             </svg>
-                                        </div>
-
-                                        <div id="tooltip-push5" class="tooltip-relleno">
-                                            <div style="margin: 8px; max-width: 300px; font-size: 14px;">
-                                                @Herramientas.Idiomas.BuscarTexto(idioma, "String15", "AccountNotificationsPush")
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -262,8 +212,6 @@ else
     private string estadoWeb = null;
     private string estadoOtros = null;
 
-    private IJSObjectReference moduloJs;
-
     protected override void OnInitialized()
     {
         AuthenticationStateProvider.AuthenticationStateChanged += OnAuthStateChanged;
@@ -283,12 +231,6 @@ else
     {
         if (primerRender == true)
         {
-            try
-            {
-                moduloJs = await JavaScript.InvokeAsync<IJSObjectReference>("import", "/componentes/cuenta/cuenta/NotificacionesPush.razor.js");
-            }
-            catch {}
-
             try
             {
                 navegadorSoportaNotificaciones = await JavaScript.InvokeAsync<bool>("supportsNotifications");
@@ -417,18 +359,6 @@ else
             {
                 BaseDatos.Errores.Insertar.Mensaje("AfterRender Notificaciones Push", ex, false);
             }
-        }
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        if (moduloJs != null)
-        {
-            try
-            {
-                await moduloJs.DisposeAsync();
-            }
-            catch { }
         }
     }
 
@@ -649,30 +579,6 @@ else
             usuario.NotificationPushOthers = estado;
 
             await BaseDatos.Usuarios.Actualizar.Opcion("NotificationPushOthers", estado, usuarioId);
-        }
-    }
-
-    private async Task ActivarTooltip(string triggerId, string tooltipId)
-    {
-        if (moduloJs != null)
-        {
-            try
-            {
-                await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
-            }
-            catch { }
-        }
-    }
-
-    private async Task DesactivarTooltip(string triggerId)
-    {
-        if (moduloJs != null)
-        {
-            try
-            {
-                await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
-            }
-            catch { }
         }
     }
 }

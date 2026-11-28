@@ -179,10 +179,8 @@
 
 	Herramientas.ToolTipDatos tooltip = null;
 
-	<div class="tooltip-juego" id="trigger-@idTooltip" style="width: auto;"
-		 @onmouseenter="@(() => ActivarTooltip($"trigger-{idTooltip}", $"tooltip-{idTooltip}"))"
-		 @onmouseleave="@(() => DesactivarTooltip($"trigger-{idTooltip}"))">
-		<div id="tooltip-@idTooltip" class="tooltip-relleno">
+	<div class="tooltip-juego" style="width: auto;" data-tooltip="" @onmouseenter="@(() => enseñarTooltip = !Herramientas.Bots.UserAgentEsBot(userAgent))">
+		<div class="tooltip-relleno" data-tooltip-directo>
 			@if (enseñarTooltip == true)
 			{
 				tooltip = Herramientas.Tooltip.Generar(idioma, tipo, juego, drmUsar, usuarioConectado, idBundle, tipoGratis, tipoSuscripcion);
@@ -982,6 +980,8 @@
 	public string fondoColor = "background-color: var(--fondoBotonPequeño);";
 	public string fondoDescuento = "background-color: darkgreen;";
 
+	public bool enseñarTooltip = false;
+
 	protected override async Task OnParametersSetAsync()
 	{
 		bool tieneJuego = false;
@@ -1254,41 +1254,6 @@
 		if (cronometro != null)
 		{
 			cronometro.Dispose();
-		}
-	}
-
-	#endregion
-
-	#region Enseñar Tooltip Juego
-
-	bool enseñarTooltip = false;
-
-	private async Task ActivarTooltip(string triggerId, string tooltipId)
-	{
-		if (Herramientas.Bots.UserAgentEsBot(userAgent) == false)
-		{
-			enseñarTooltip = true;
-		}
-
-		if (moduloJs != null)
-		{		
-			try
-			{
-				await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
-			}
-			catch { }
-		}
-	}
-
-	private async Task DesactivarTooltip(string triggerId)
-	{
-		if (moduloJs != null)
-		{
-			try
-			{
-				await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
-			}
-			catch { }
 		}
 	}
 

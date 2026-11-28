@@ -172,9 +172,7 @@
         }
     </div>
 
-    <div class="tooltip-juego" id="trigger-free-archive"
-         @onmouseenter="@(() => ActivarTooltip("trigger-free-archive", "tooltip-free-archive"))"
-         @onmouseleave="@(() => DesactivarTooltip("trigger-free-archive"))">
+    <div class="tooltip-juego" data-tooltip="@Herramientas.Idiomas.BuscarTexto(idioma, "String2", "Free")">
         <button @onclick="@(e => CambiarTipo(e, Gratis2.GratisTipo.Desconocido, true))" style="@CambiarEstilo(Gratis2.GratisTipo.Desconocido, true) border: 0px; margin-left: 30px; padding: 10px 15px; border-radius: 10px; display: flex; align-items: center; gap: 10px;" title="@Herramientas.Idiomas.BuscarTexto(idioma, "String2", "Free")">
             <div style="width: 24px; height: 24px;">
                 <svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
@@ -189,12 +187,6 @@
                 </div>
             }
         </button>
-
-        <div id="tooltip-free-archive" class="tooltip-relleno">
-            <div style="margin: 8px; max-width: 300px; font-size: 14px;">
-                @Herramientas.Idiomas.BuscarTexto(idioma, "String2", "Free")
-            </div>
-        </div>
     </div>
 </div>
 
@@ -613,30 +605,6 @@ else
             try
             {
                 await moduloJs.InvokeVoidAsync("moverScroll", id);
-            }
-            catch { }
-        }
-    }
-
-    private async Task ActivarTooltip(string triggerId, string tooltipId)
-    {
-        if (moduloJs != null)
-        {
-            try
-            {
-                await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
-            }
-            catch { }
-        }
-    }
-
-    private async Task DesactivarTooltip(string triggerId)
-    {
-        if (moduloJs != null)
-        {
-            try
-            {
-                await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
             }
             catch { }
         }

@@ -54,8 +54,8 @@
 
 	private async Task CambiarFechaAviso()
 	{
-		await ServicioAvisos.AsignarFecha(DateTime.Now);
-
 		ultimoAviso = null;
+
+		await ServicioAvisos.AsignarFecha(DateTime.Now);
 	}
 }

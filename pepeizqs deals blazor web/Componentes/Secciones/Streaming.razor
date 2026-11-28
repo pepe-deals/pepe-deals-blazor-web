@@ -62,24 +62,14 @@ else
     {
         if (string.IsNullOrEmpty(usuarioId) == false)
         {
-            <div class="tooltip-juego" id="trigger-streaming-show"
-                 @onmouseenter="@(() => ActivarTooltip("trigger-streaming-show", "tooltip-streaming-show"))"
-                 @onmouseleave="@(() => DesactivarTooltip("trigger-streaming-show"))">
+            <div class="tooltip-juego" data-tooltip="@Herramientas.Idiomas.BuscarTexto(idioma, "String6", "Streaming")">
                 <button @onclick="MostrarOcultarMostrar" style="background: transparent; border: 0px; margin-left: 30px; color: var(--colorTexto); font-size: 16px;">
                     @Herramientas.Idiomas.BuscarTexto(idioma, "String6", "Streaming")
                 </button>
-
-                <div id="tooltip-streaming-show" class="tooltip-relleno">
-                    <div style="margin: 8px; max-width: 300px; font-size: 14px;">
-                        @Herramientas.Idiomas.BuscarTexto(idioma, "String6", "Streaming")
-                    </div>
-                </div>
             </div>
         }
 
-        <div class="tooltip-juego" id="trigger-streaming-order"
-             @onmouseenter="@(() => ActivarTooltip("trigger-streaming-order", "tooltip-streaming-order"))"
-             @onmouseleave="@(() => DesactivarTooltip("trigger-streaming-order"))">
+        <div class="tooltip-juego" data-tooltip="@Herramientas.Idiomas.BuscarTexto(idioma, "String2", "Streaming")">
             <button @onclick="MostrarOcultarOrdenar" style="background: transparent; border: 0px; margin-left: 30px;">
                 <div style="width: 24px; height: 24px;">
                     <svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
@@ -87,18 +77,10 @@ else
                     </svg>
                 </div>
             </button>
-
-            <div id="tooltip-streaming-order" class="tooltip-relleno">
-                <div style="margin: 8px; max-width: 300px; font-size: 14px;">
-                    @Herramientas.Idiomas.BuscarTexto(idioma, "String2", "Streaming")
-                </div>
-            </div>
         </div>
 
         <div style="display: flex; align-items: center; gap: 25px; max-width: 500px; height: 45px; margin-left: 30px; @anchoBuscador">
-            <div class="tooltip-juego" id="trigger-streaming-search"
-                 @onmouseenter="@(() => ActivarTooltip("trigger-streaming-search", "tooltip-streaming-search"))"
-                 @onmouseleave="@(() => DesactivarTooltip("trigger-streaming-search"))">
+            <div class="tooltip-juego" data-tooltip="@Herramientas.Idiomas.BuscarTexto(idioma, "String10", "Streaming")">
                 <button @onclick="MostrarOcultarBuscador" style="background: transparent; border: 0px;">
                     <div style="width: 24px; height: 24px;">
                         <svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
@@ -106,12 +88,6 @@ else
                         </svg>
                     </div>
                 </button>
-
-                <div id="tooltip-streaming-search" class="tooltip-relleno">
-                    <div style="margin: 8px; max-width: 300px; font-size: 14px;">
-                        @Herramientas.Idiomas.BuscarTexto(idioma, "String10", "Streaming")
-                    </div>
-                </div>
             </div>
 
             <div class="caja-streaming caja-streaming-animacion @(mostrarBuscador ? "visible" : "")">
@@ -674,28 +650,4 @@ else
     }
 
     #endregion
-
-    private async Task ActivarTooltip(string triggerId, string tooltipId)
-    {
-        if (moduloJs != null)
-        {
-            try
-            {
-                await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
-            }
-            catch { }
-        }
-    }
-
-    private async Task DesactivarTooltip(string triggerId)
-    {
-        if (moduloJs != null)
-        {
-            try
-            {
-                await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
-            }
-            catch { }
-        }
-    }
 }

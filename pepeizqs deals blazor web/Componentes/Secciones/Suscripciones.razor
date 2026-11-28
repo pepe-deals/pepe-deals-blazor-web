@@ -111,9 +111,7 @@ else
 
                 if (mostrarUltimas == false)
                 {
-                    <div class="tooltip-juego" id="trigger-subscriptions-archive"
-                         @onmouseenter="@(() => ActivarTooltip("trigger-subscriptions-archive", "tooltip-subscriptions-archive"))"
-                         @onmouseleave="@(() => DesactivarTooltip("trigger-subscriptions-archive"))">
+                    <div class="tooltip-juego" data-tooltip="@Herramientas.Idiomas.BuscarTexto(idioma, "String1", "Subscriptions")">
                         <button @onclick="@(e => CargarArchivo(e))" style="border: 0px; @(mostrarArchivo ? "background-color: var(--botonSeleccionado); margin-left: 30px" : "background-color: transparent; margin-left: 20px"); padding: 10px 15px; border-radius: 10px; display: flex; align-items: center; gap: 10px;" title="@Herramientas.Idiomas.BuscarTexto(idioma, "String1", "Subscriptions")">
                             <div style="width: 24px; height: 24px;">
                                 <svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
@@ -128,12 +126,6 @@ else
                                 </div>
                             }
                         </button>
-
-                        <div id="tooltip-subscriptions-archive" class="tooltip-relleno">
-                            <div style="margin: 8px; max-width: 300px; font-size: 14px;">
-                                @Herramientas.Idiomas.BuscarTexto(idioma, "String1", "Subscriptions")
-                            </div>
-                        </div>
                     </div>
                 }
             }
@@ -146,9 +138,7 @@ else
                     </div>
                 }
 
-                <div class="tooltip-juego" id="trigger-subscriptions-order"
-                     @onmouseenter="@(() => ActivarTooltip("trigger-subscriptions-order", "tooltip-subscriptions-order"))"
-                     @onmouseleave="@(() => DesactivarTooltip("trigger-subscriptions-order"))">                 
+                <div class="tooltip-juego" data-tooltip="@Herramientas.Idiomas.BuscarTexto(idioma, "String15", "Subscriptions")">
                     <button @onclick="MostrarOcultarOrdenar" style="background: transparent; border: 0px;" title="@Herramientas.Idiomas.BuscarTexto(idioma, "String15", "Subscriptions")">
                         <div style="width: 24px; height: 24px;">
                             <svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
@@ -156,18 +146,10 @@ else
                             </svg>
                         </div>
                     </button>
-
-                    <div id="tooltip-subscriptions-order" class="tooltip-relleno">
-                        <div style="margin: 8px; max-width: 300px; font-size: 14px;">
-                            @Herramientas.Idiomas.BuscarTexto(idioma, "String15", "Subscriptions")
-                        </div>
-                    </div>
                 </div>
 
                 <div style="display: flex; align-items: center; gap: 25px; max-width: 500px; height: 45px; margin-left: 20px; @anchoBuscador">
-                    <div class="tooltip-juego" id="trigger-subscriptions-search"
-                         @onmouseenter="@(() => ActivarTooltip("trigger-subscriptions-search", "tooltip-subscriptions-search"))"
-                         @onmouseleave="@(() => DesactivarTooltip("trigger-subscriptions-search"))">
+                    <div class="tooltip-juego" data-tooltip="@Herramientas.Idiomas.BuscarTexto(idioma, "String13", "Subscriptions")">
                         <button @onclick="MostrarOcultarBuscador" style="background: transparent; border: 0px;" title="@Herramientas.Idiomas.BuscarTexto(idioma, "String13", "Subscriptions")">
                             <div style="width: 24px; height: 24px;">
                                 <svg class="svg-boton" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
@@ -175,12 +157,6 @@ else
                                 </svg>
                             </div>
                         </button>
-
-                        <div id="tooltip-subscriptions-search" class="tooltip-relleno">
-                            <div style="margin: 8px; max-width: 300px; font-size: 14px;">
-                                @Herramientas.Idiomas.BuscarTexto(idioma, "String13", "Subscriptions")
-                            </div>
-                        </div>
                     </div>
 
                     <div class="caja-suscripciones caja-suscripciones-animacion @(mostrarBuscador ? "visible" : "")" style="background-color: @colorSuscripcion">
@@ -951,28 +927,4 @@ else
     }
 
     #endregion
-
-    private async Task ActivarTooltip(string triggerId, string tooltipId)
-    {
-        if (moduloJs != null)
-        {
-            try
-            {
-                await moduloJs.InvokeVoidAsync("activarTooltip", triggerId, tooltipId);
-            }
-            catch { }
-        }
-    }
-
-    private async Task DesactivarTooltip(string triggerId)
-    {
-        if (moduloJs != null)
-        {
-            try
-            {
-                await moduloJs.InvokeVoidAsync("desactivarTooltip", triggerId);
-            }
-            catch { }
-        }
-    }
 }
